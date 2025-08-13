@@ -36,7 +36,7 @@
       <br>
       The library uses fractal-tree addressing.
       <br>
-      The maximum size of the database is _16\*\*32=340282366920938463463374607431768211456_ branches,
+      The maximum size of the database is _16^32=340282366920938463463374607431768211456_ branches,
       each branch can store one or more keys.
       <br>
       The value of any key can be obtained in 32 steps, thereby achieving high performance.
