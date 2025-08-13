@@ -1,0 +1,67 @@
+name: Test
+
+on:
+  push:
+    paths-ignore:
+      - ".vscode/**"
+      - "assets/**"
+      - ".gitignore"
+      - "README.md"
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - ".vscode/**"
+      - "assets/**"
+      - ".gitignore"
+      - "README.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-latest", "windows-latest", "macOS-latest"]
+        python-version: ["3.12", "3.13"]
+        uv-version: ["latest"]
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.os }} Python ${{ matrix.python-version }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install UV and set the Python version
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: ${{ matrix.uv-version }}
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies of project
+        run: uv sync --locked --dev --group lint test type
+
+      - name: Run checking of code
+        run: |
+          uv run ruff check --output-format=github --config pyproject.toml
+          uv run mypy --config-file pyproject.toml
+
+      - name: Run tests
+        run: uv run pytest -v tests/
+
+  success:
+    permissions:
+      contents: none
+    needs: build
+    runs-on: ubuntu-latest
+    name: Test Successful
+    steps:
+      - name: Success
+        run: echo Test Successful

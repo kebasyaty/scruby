@@ -1,0 +1,81 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "UV: Run Upgrade",
+      "type": "shell",
+      "command": ["uv sync --upgrade"],
+      "problemMatcher": []
+    },
+    {
+      "label": "UV: Run Lock",
+      "type": "shell",
+      "command": ["uv lock"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Ruff: Run Check",
+      "type": "shell",
+      "command": [
+        "uv run ruff check --fix --show-fixes --config pyproject.toml"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "MyPy: Run Check",
+      "type": "shell",
+      "command": ["uv run mypy --config-file pyproject.toml"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Pre-Commit: Run Install",
+      "type": "shell",
+      "command": ["uv run pre-commit install"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Pre-Commit: Run Autoupdate",
+      "type": "shell",
+      "command": ["uv run pre-commit autoupdate"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Pre-Commit: Run Check",
+      "type": "shell",
+      "command": [
+        "uv run pre-commit run --show-diff-on-failure --color=always --all-files"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "PyTest: Run Tests",
+      "type": "shell",
+      "command": ["uv run pytest -v tests/"],
+      "problemMatcher": []
+    },
+    {
+      "label": "MkDocs: Create New Docs",
+      "type": "shell",
+      "command": ["uv run mkdocs new ."],
+      "problemMatcher": []
+    },
+    {
+      "label": "MkDocs: Run Build",
+      "type": "shell",
+      "command": ["uv run mkdocs build"],
+      "problemMatcher": []
+    },
+    {
+      "label": "MkDocs: Run Serve",
+      "type": "shell",
+      "command": ["uv run mkdocs serve"],
+      "problemMatcher": []
+    },
+    {
+      "label": "MkDocs: Run Deploy",
+      "type": "shell",
+      "command": ["uv run mkdocs gh-deploy"],
+      "problemMatcher": []
+    }
+  ]
+}

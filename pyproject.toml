@@ -1,0 +1,184 @@
+[project]
+name = "scruby"
+version = "0.1.0"
+description = "A fast key-value storage library."
+readme = "README.md"
+authors = [{ name = "kebasyaty", email = "kebasyaty@gmail.com" }]
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.12,<4.0"
+keywords = ["database", "scruby"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Implementation :: CPython",
+    # "Programming Language :: Python :: Implementation :: PyPy",
+    "Topic :: Database",
+    "Typing :: Typed",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/kebasyaty/scruby"
+Repository = "https://github.com/kebasyaty/scruby"
+Source = "https://github.com/kebasyaty/scruby"
+"Bug Tracker" = "https://github.com/kebasyaty/scruby/issues"
+Changelog = "https://github.com/kebasyaty/scruby/blob/v0/CHANGELOG.md"
+
+[tool.uv]
+package = true
+default-groups = ["dev", "lint", "test", "docs", "type"]
+compile-bytecode = true
+check-url = "https://pypi.org/simple"
+
+[tool.uv.build-backend]
+module-root = "src"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = []
+lint=[
+    "mypy>=1.17.1",
+    "pre-commit>=4.3.0",
+    "ruff>=0.12.8",
+]
+test = [
+    "pytest>=8.4.1",
+    "pytest-asyncio>=1.1.0",
+    "pytest-httpx>=0.35.0",
+    "pytest-mock>=3.14.1",
+]
+docs = [
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.6.16",
+    "mkdocstrings[python]>=0.30.0",
+    "pymdown-extensions>=10.16.1",
+]
+type = []
+
+[tool.ruff]
+fix = true
+line-length = 120
+indent-width = 4
+required-version = ">=0.12.8"
+src = ["src", "tests"]
+include = ["src/**/*.py"]
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+    ".github",
+    "assets",
+    "docs",
+    "tests",
+]
+
+[tool.ruff.lint]
+preview = true
+select = [
+    "D",    # pydocstyle
+    "I",    # isort
+    "E",    # flake8-errors
+    "W",    # flake8-warnings
+    "F",    # flake8-pyflakes
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "S",    # flake8-bandit
+    "BLE",  # flake8-blind-except
+    "T20",  # flake8-print
+    "T10",  # flake8-debugger
+    "PT",   # flake8-pytest-style
+    "RUF",  # Ruff
+    "DTZ",  # flake8-datetimez
+    "ERA",  # eradicate
+    "FURB", # refurb
+]
+ignore = [
+    "D417",
+    "D206",
+    "C408",
+    "RUF001",
+    "RUF002",
+    "RUF003",
+    "RUF022",
+    "E722",
+    "S110",
+]
+fixable = ["I"]
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.flake8-bandit]
+check-typed-exception = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+docstring-code-line-length = 100
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.mypy]
+strict = true
+show_error_codes = true
+pretty = true
+files = ["src/**/*.py", "tests/**/*.py"]
+disable_error_code = [
+    "type-arg",
+    "no-any-return",
+    "attr-defined",
+    "index",
+    "operator",
+]
+
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+disable_error_code = [
+    "arg-type",
+    "no-untyped-def",
+    "no-untyped-call",
+    "func-returns-value",
+    "union-attr",
+    "import-not-found",
+    "misc",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

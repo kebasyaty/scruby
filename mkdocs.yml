@@ -1,0 +1,67 @@
+site_name: Scruby Docs
+site_description: "A fast key-value storage library."
+site_url: https://kebasyaty.github.io/scruby/
+site_author: Gennady Kostyunin
+copyright: Copyright &copy; 2025 Maintained by <a href="https://github.com/kebasyaty">Gennady Kostyunin</a>
+repo_name: kebasyaty/scruby
+repo_url: https://github.com/kebasyaty/scruby
+
+theme:
+  name: material
+  language: en
+  custom_dir: docs/overrides
+  font:
+    text: Roboto
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - search.suggest
+    - search.highlight
+    - search.share
+    - navigation.tracking
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - toc.follow
+  palette:
+    scheme: slate
+    # github_black: indigo | github_blue: blue
+    primary: blue
+    accent: blue
+
+extra_css:
+  - custom_style/github_blue.css
+
+plugins:
+  - search
+  - tags:
+      tags_slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            docstring_style: google
+
+markdown_extensions:
+  - markdown.extensions.toc:
+      permalink: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/kebasyaty
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com
+    - icon: fontawesome/brands/x-twitter
+      link: https://twitter.com
+
+nav:
+  - Scruby: index.md
