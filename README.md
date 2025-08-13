@@ -55,12 +55,6 @@
   </a>
 </p>
 
-<br>
-<br>
-
-<img src="https://raw.githubusercontent.com/kebasyaty/scruby/v0/assets/attention.svg" alt="Attention">
-<p>Some text ...</a>
-
 ## Documentation
 
 Online browsable documentation is available at [https://kebasyaty.github.io/scruby/](https://kebasyaty.github.io/scruby/ "Documentation").
