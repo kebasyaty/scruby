@@ -734,7 +734,7 @@ test = [
     { name = "pytest-httpx", specifier = ">=0.35.0" },
     { name = "pytest-mock", specifier = ">=3.14.1" },
 ]
-type = []
+types = []
 
 [[package]]
 name = "six"

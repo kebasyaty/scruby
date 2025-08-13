@@ -35,7 +35,7 @@ Changelog = "https://github.com/kebasyaty/scruby/blob/v0/CHANGELOG.md"
 
 [tool.uv]
 package = true
-default-groups = ["dev", "lint", "test", "docs", "type"]
+default-groups = ["dev", "lint", "test", "docs", "types"]
 compile-bytecode = true
 check-url = "https://pypi.org/simple"
 
@@ -65,7 +65,7 @@ docs = [
     "mkdocstrings[python]>=0.30.0",
     "pymdown-extensions>=10.16.1",
 ]
-type = []
+types = []
 
 [tool.ruff]
 fix = true
