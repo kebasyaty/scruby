@@ -38,10 +38,3 @@ jobs:
 
       - name: Run tests
         run: uv run pytest -v tests/
-
-  success:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Success
-        run: echo Test Successful
