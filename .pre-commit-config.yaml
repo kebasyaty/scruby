@@ -2,7 +2,7 @@ default_language_version:
   python: python3.13
 
 # For `uv run pre-commit run --all-files`
-exclude: "^(dist|site|.venv|.pytest_cache|.ruff_cache|.mypy_cache)$"
+exclude: "^(dist|site|.git|.venv|.pytest_cache|.ruff_cache|.mypy_cache)$"
 
 minimum_pre_commit_version: "4.3.0"
 
