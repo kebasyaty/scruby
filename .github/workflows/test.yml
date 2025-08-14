@@ -2,18 +2,8 @@ name: Test
 
 on:
   push:
-    paths-ignore:
-      - ".vscode/**"
-      - "assets/**"
-      - ".gitignore"
-      - "README.md"
-  pull_request:
     branches: [main]
-    paths-ignore:
-      - ".vscode/**"
-      - "assets/**"
-      - ".gitignore"
-      - "README.md"
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -39,19 +29,19 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Install UV and set the Python version
-        uses: astral-sh/setup-uv@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - uses: astral-sh/setup-uv@v5
         with:
           version: ${{ matrix.uv-version }}
-          python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies of project
         run: uv sync --locked --no-group docs
 
       - name: Run checking of code
-        run: |
-          uv run ruff check --output-format=github --config pyproject.toml
-          uv run mypy --config-file pyproject.toml
+        run: uv run pre-commit run --show-diff-on-failure --color=always --all-files
 
       - name: Run tests
         run: uv run pytest -v tests/
