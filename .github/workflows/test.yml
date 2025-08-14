@@ -29,11 +29,13 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Install UV and set the Python version
-        uses: astral-sh/setup-uv@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - uses: astral-sh/setup-uv@v5
         with:
           version: ${{ matrix.uv-version }}
-          python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies of project
         run: uv sync --locked --no-group docs
