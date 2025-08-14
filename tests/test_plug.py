@@ -4,4 +4,4 @@ import pytest
 
 def test_plug() -> None:
     """Test plug."""
-    assert None == None
+    assert True == True
