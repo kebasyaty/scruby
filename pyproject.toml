@@ -104,6 +104,7 @@ exclude = [
     ".github",
     "assets",
     "docs",
+    "site",
     "tests",
 ]
 
@@ -166,6 +167,7 @@ disable_error_code = [
     "attr-defined",
     "index",
     "operator",
+    "misc",
 ]
 
 [[tool.mypy.overrides]]

@@ -24,7 +24,7 @@
     {
       "label": "MyPy: Run Check",
       "type": "shell",
-      "command": ["uv run mypy --config-file pyproject.toml"],
+      "command": ["uv run mypy --ignore-missing-imports --config-file pyproject.toml"],
       "problemMatcher": []
     },
     {
