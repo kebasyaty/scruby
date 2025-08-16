@@ -27,12 +27,11 @@ theme:
     - toc.follow
   palette:
     scheme: slate
-    # github_black: indigo | github_blue: blue
-    primary: blue
-    accent: blue
+    primary: indigo
+    accent: indigo
 
 extra_css:
-  - custom_style/github_blue.css
+  - custom_style/github_indigo.css
 
 plugins:
   - search
