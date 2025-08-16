@@ -48,6 +48,12 @@
       "problemMatcher": []
     },
     {
+      "label": "Pre-Commit: Fix conflict with auto-fixes",
+      "type": "shell",
+      "command": ["git add ."],
+      "problemMatcher": []
+    },
+    {
       "label": "PyTest: Run Tests",
       "type": "shell",
       "command": ["uv run pytest -v tests/"],
