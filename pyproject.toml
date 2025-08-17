@@ -73,7 +73,7 @@ line-length = 120
 indent-width = 4
 required-version = ">=0.12.8"
 src = ["src", "tests"]
-include = ["src/**/*.py"]
+include = ["src/**/*.py", "tests/**/*.py"]
 exclude = [
     ".bzr",
     ".direnv",
@@ -105,7 +105,6 @@ exclude = [
     "assets",
     "docs",
     "site",
-    "tests",
 ]
 
 [tool.ruff.lint]
@@ -138,6 +137,8 @@ ignore = [
     "RUF022",
     "E722",
     "S110",
+    "S101",
+    "T201",
 ]
 fixable = ["I"]
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
