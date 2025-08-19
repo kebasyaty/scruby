@@ -148,6 +148,9 @@ ignore = [
     "E722",   # Do not use bare except
     "S110",   # try-except-pass detected, consider logging the exception
     "S101",   # Use of `assert` detected
+    "PLR",    # Design related pylint codes
+    "EM101",  # Exception must not use a string literal, assign to variable first
+    "EM102",  # Exception must not use an f-string literal, assign to variable first
 ]
 fixable = ["I"]
 unfixable = [
@@ -169,7 +172,7 @@ convention = "google"
 quote-style = "double"
 indent-style = "space"
 docstring-code-format = true
-docstring-code-line-length = 100
+docstring-code-line-length = 120
 skip-magic-trailing-comma = false
 line-ending = "auto"
 
