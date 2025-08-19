@@ -12,6 +12,8 @@ The value of any key can be obtained in 32 steps, thereby achieving high perform
 There is no need to iterate through all the keys in search of the desired value.
 """
 
+from __future__ import annotations
+
 
 def hello() -> str:
     """Hello."""
