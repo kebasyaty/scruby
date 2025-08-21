@@ -24,7 +24,9 @@ classifiers = [
     "Topic :: Database",
     "Typing :: Typed",
 ]
-dependencies = []
+dependencies = [
+    "anyio>=4.10.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/kebasyaty/scruby"

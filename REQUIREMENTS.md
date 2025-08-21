@@ -6,7 +6,7 @@
 
 #### Dependencies
 
-- [project_name](https://pypi.org/project/project_name/ "project_name")
+- [anyio](https://pypi.org/project/anyio/ "anyio")
 
 #### Dev-Dependencies
 
