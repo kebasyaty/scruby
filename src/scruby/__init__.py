@@ -20,6 +20,8 @@ from typing import Literal
 import orjson
 from anyio import Path
 
+type ValueOfKey = str | int | float | list | dict | Literal[True] | Literal[False] | None
+
 
 class Scruby:
     """Creation and management of the database.
@@ -67,7 +69,7 @@ class Scruby:
     async def set(
         self,
         key: str,
-        value: str | int | float | list | dict | Literal[True] | Literal[False] | None,
+        value: ValueOfKey,
     ) -> None:
         """Asynchronous method for adding and updating values of keys to database.
 
