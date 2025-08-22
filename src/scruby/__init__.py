@@ -15,10 +15,11 @@ from __future__ import annotations
 __all__ = ("Scruby",)
 
 import hashlib
+from shutil import rmtree
 from typing import Literal
 
 import orjson
-from anyio import Path
+from anyio import Path, to_thread
 
 type ValueOfKey = str | int | float | list | dict | Literal[True] | Literal[False] | None
 
@@ -37,34 +38,34 @@ class Scruby:
         True
         >>> await db.delete("key name")
         None
-        >>> await db.clear()
+        >>> await db.clean_store()
         None
         >>> await db.napalm()
         None
 
     Args:
-        root_store: Root directory for databases. Defaule by = "ScrubyDB"
-        db_name: Database name. Defaule by = "store_one"
+        db_name: Root directory for databases. Defaule by = "ScrubyDB"
+        store_name: Storage name. Defaule by = "store_one"
     """
 
     def __init__(  # noqa: D107
         self,
-        root_store: str = "ScrubyDB",
+        store_name: str = "ScrubyDB",
         db_name: str = "store",
     ) -> None:
         super().__init__()
-        self.__root_store = root_store
+        self.__store_name = store_name
         self.__db_name = db_name
 
     @property
-    def root_store(self) -> str:
-        """Get name of root directory of database."""
-        return self.__root_store
+    def db_name(self) -> str:
+        """Get database name."""
+        return self.__db_name
 
     @property
-    def db_name(self) -> str:
-        """Add or update key-value pair(s) to the database."""
-        return self.__db_name
+    def store_name(self) -> str:
+        """Get store name."""
+        return self.__store_name
 
     async def get_leaf_path(self, key: str) -> Path:
         """Get the path to the database cell by key.
@@ -77,7 +78,9 @@ class Scruby:
         # Convert md5 sum in the segment of path.
         segment_path_md5: str = key_md5.split().join("/")
         # The path of the branch to the database.
-        branch_path: Path = Path(*(self.root_store, self.db_name, segment_path_md5))
+        branch_path: Path = Path(
+            *(self.__db_name, self.__store_name, segment_path_md5),
+        )
         # If the branch does not exist, need to create it.
         if not await branch_path.exists():
             await branch_path.mkdir(parents=True)
@@ -140,7 +143,7 @@ class Scruby:
             return data[key]
         return None
 
-    async def has_key(self, key: str) -> bool:
+    async def has(self, key: str) -> bool:
         """Check the presence of a key in the database.
 
         Example:
@@ -193,3 +196,23 @@ class Scruby:
             await leaf_path.write_bytes(orjson.dumps(data))
             return
         raise KeyError()
+
+    async def clean_store(self) -> None:
+        """Remove storage (Arg: store_name).
+
+        Warning:
+            - `Be careful, this will remove all keys.`
+
+        Example:
+            >>> from scruby import Scruby
+            >>> db = Scruby()
+            >>> await db.set("key name", "Some text")
+            None
+            >>> await db.clear()
+            None
+            >>> await db.clear()
+            KeyError
+        """
+        store_path = Path(*(self.db_name, self.store_name))
+        await to_thread.run_sync(rmtree, store_path)
+        return
