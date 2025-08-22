@@ -15,12 +15,10 @@ from __future__ import annotations
 __all__ = ("Scruby",)
 
 import hashlib
-import json
-from os import makedirs
-from os.path import exists
 from typing import Literal
 
-from anyio import Path, to_thread
+import orjson
+from anyio import Path
 
 
 class Scruby:
@@ -69,7 +67,7 @@ class Scruby:
     async def set(
         self,
         key: str,
-        value: str | int | float | list | dict | tuple | Literal[True] | Literal[False] | None,
+        value: str | int | float | list | dict | Literal[True] | Literal[False] | None,
     ) -> None:
         """Asynchronous method for adding and updating values of keys to database.
 
@@ -90,20 +88,17 @@ class Scruby:
         # The path of the branch to the database cell.
         branch_path: Path = Path(*(self.root_store, self.db_name, path_md5))
         # If the branch does not exist, need to create it.
-        if not await to_thread.run_sync(exists, branch_path):
-            await to_thread.run_sync(makedirs, branch_path)
+        if not await branch_path.exists():
+            await branch_path.mkdir(parents=True)
         # The path to the database cell.
         leaf_path: Path = Path(*(branch_path, "leaf.json"))
         # Write key-value to the database.
-        if not await to_thread.run_sync(exists, leaf_path):
-            # Add new data to a blank leaf.
-            await leaf_path.write_text(
-                data=json.dumps({key: value}),
-                encoding="utf-8",
-            )
-        else:
-            # Add new data or update existing.
-            data_json: str = await leaf_path.read_text()
-            data: dict = json.loads(data_json)
+        if await leaf_path.exists():
+            # Add new key or update existing.
+            data_json: bytes = await leaf_path.read_bytes()
+            data: dict = orjson.loads(data_json) or {}
             data[key] = value
-            await leaf_path.write_text(json.dumps(data))
+            await leaf_path.write_bytes(orjson.dumps(data))
+        else:
+            # Add new key to a blank leaf.
+            await leaf_path.write_bytes(data=orjson.dumps({key: value}))

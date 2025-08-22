@@ -26,6 +26,7 @@ classifiers = [
 ]
 dependencies = [
     "anyio>=4.10.0",
+    "orjson>=3.11.2",
 ]
 
 [project.urls]
