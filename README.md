@@ -31,11 +31,11 @@
       <a href="https://github.com/kebasyaty/scruby/releases/" alt="GitHub release"><img src="https://img.shields.io/github/release/kebasyaty/scruby" alt="GitHub release"></a>
     </p>
     <p align="center">
-      **Scruby** is a fast key-value storage library that provides an ordered mapping from string keys to string values.
+      Scruby is a fast key-value storage library that provides an ordered mapping from string keys to string values.
       <br>
       The library uses fractal-tree addressing.
       <br>
-      The maximum size of the database is 16^32=340282366920938463463374607431768211456 branches,
+      The maximum size of the database is 16**32=340282366920938463463374607431768211456 branches,
       each branch can store one or more keys.
       <br>
       The value of any key can be obtained in 32 steps, thereby achieving high performance.
@@ -44,15 +44,6 @@
     </p>
   </p>
 </div>
-
-##
-
-<p>
-  <a href="https://github.com/kebasyaty/scruby" alt="Project Status">
-    <img src="https://raw.githubusercontent.com/kebasyaty/scruby/v0/assets/project_status/project-status-pre-alpha.svg"
-      alt="Project Status">
-  </a>
-</p>
 
 ## Documentation
 
@@ -70,10 +61,28 @@ uv add scruby
 
 ## Usage
 
-[It is recommended to look at examples here](https://github.com/kebasyaty/scruby/tree/main/examples "Examples").
-
 ```python
-import scruby
+import anyio
+from scruby import Scruby
+
+
+async def main() -> None:
+    """Example."""
+
+    db = Scruby()
+    await db.set_key("key name", "Some text")
+    await db.get_key("key name")  # => "Some text"
+    await db.get_key("key missing")  # => KeyError
+    await db.has_key("key name")  # => True
+    await db.has_key("key missing")  # => False
+    await db.delete_key("key name")
+    await db.delete_key("key missing")  # => KeyError
+    await db.napalm()
+    await db.napalm()  # => FileNotFoundError
+
+
+if __name__ == "__main__":
+    anyio.run(main)
 ```
 
 ## Changelog
