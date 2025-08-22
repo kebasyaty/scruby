@@ -30,3 +30,5 @@ class TestPositive:
         assert db.db_path == "ScrubyDB"
         assert db.store_name == "store_one"
         assert await db.get_leaf_path("key name") == control_path
+        # Delete DB.
+        await db.napalm()
