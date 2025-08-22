@@ -213,6 +213,6 @@ class Scruby:
             >>> await db.clear()
             KeyError
         """
-        store_path = Path(*(self.db_name, self.store_name))
+        store_path = f"{self.db_name}/{self.store_name}"
         await to_thread.run_sync(rmtree, store_path)
         return
