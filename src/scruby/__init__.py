@@ -44,7 +44,7 @@ class Scruby:
         None
 
     Args:
-        db_path: Path to root directory of databases. Defaule by = "ScrubyDB"
+        db_path: Path to root directory of databases. Defaule by = "ScrubyDB" (in root of project)
         store_name: Storage name for keys. Defaule by = "store_one"
     """
 
