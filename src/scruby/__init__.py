@@ -76,7 +76,7 @@ class Scruby:
         # Key to md5 sum.
         key_md5: str = hashlib.md5(key.encode("utf-8")).hexdigest()  # noqa: S324
         # Convert md5 sum in the segment of path.
-        segment_path_md5: str = "/".join(key_md5.split())
+        segment_path_md5: str = "/".join(list(key_md5))
         # The path of the branch to the database.
         branch_path: Path = Path(
             *(self.__db_path, self.__store_name, segment_path_md5),
