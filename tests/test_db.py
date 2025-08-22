@@ -2,7 +2,22 @@
 
 from __future__ import annotations
 
+import pytest
 
-def test_stub() -> None:
-    """Testing stub."""
-    assert True
+pytestmark = pytest.mark.asyncio(loop_scope="module")
+
+
+class TestNegative:
+    """Negative tests."""
+
+    async def test_stub(self) -> None:
+        """Testing stub."""
+        assert True
+
+
+class TestPositive:
+    """Positive tests."""
+
+    async def test_stub(self) -> None:
+        """Testing stub."""
+        assert True
