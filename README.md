@@ -31,7 +31,7 @@
       <a href="https://github.com/kebasyaty/scruby/releases/" alt="GitHub release"><img src="https://img.shields.io/github/release/kebasyaty/scruby" alt="GitHub release"></a>
     </p>
     <p align="center">
-      **Scruby** is a fast key-value storage library that provides an ordered mapping from string keys to string values.
+      Scruby is a fast key-value storage library that provides an ordered mapping from string keys to string values.
       <br>
       The library uses fractal-tree addressing.
       <br>
