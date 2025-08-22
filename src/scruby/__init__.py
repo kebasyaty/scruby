@@ -164,3 +164,32 @@ class Scruby:
             data: dict = orjson.loads(data_json) or {}
             return data.get(key) is not None
         return False
+
+    async def delete(self, key: str) -> None:
+        """Delete the key from the database.
+
+        Example:
+            >>> from scruby import Scruby
+            >>> db = Scruby()
+            >>> await db.set("key name", "Some text")
+            None
+            >>> await db.delete("key name")
+            None
+            >>> await db.delete("key missing")
+            KeyError
+
+        Args:
+            key: Key name.
+        """
+        # The path to the database cell.
+        leaf_path: Path = await self.get_leaf_path(key)
+        # Deleting key.
+        if await leaf_path.exists():
+            data_json: bytes = await leaf_path.read_bytes()
+            data: dict = orjson.loads(data_json) or {}
+            if data.get(key) is None:
+                raise KeyError()
+            del data[key]
+            await leaf_path.write_bytes(orjson.dumps(data))
+            return
+        raise KeyError()
