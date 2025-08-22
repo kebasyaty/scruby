@@ -66,4 +66,4 @@ nav:
   - Scruby: index.md
   - Installation: md_pages/installation.md
   - Usage: md_pages/usage.md
-  - Scruby: md_pages/db.md
+  - Details: md_pages/db.md

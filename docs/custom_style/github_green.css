@@ -30,11 +30,11 @@ h6 {
 }
 
 .md-top {
-  background-color: #2e6a30;
+  background-color: #224e24;
   color: #becada;
 }
 .md-top:hover {
-  background-color: #46a049;
+  background-color: #3a853c;
   color: #becada;
 }
 
@@ -63,25 +63,25 @@ h6 {
 }
 
 .md-header {
-  background-color: #2e6a30;
+  background-color: #224e24;
   color: #becada;
 }
 
 .md-tabs {
-  background-color: #2e6a30;
+  background-color: #224e24;
   color: #becada;
 }
 
 .md-search__form {
-  background-color: #3a853c;
+  background-color: #2e6a30;
   color: #becada;
 }
 .md-search__form:hover {
-  background-color: #46a049;
+  background-color: #3a853c;
 }
 
 [data-md-toggle="search"]:checked ~ .md-header .md-search__form {
-  background-color: #3a853c;
+  background-color: #2e6a30;
   color: #becada;
 }
 

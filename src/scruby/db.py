@@ -1,6 +1,6 @@
 """Creation and management of the database.
 
-Example:
+Examples:
     >>> from scruby import Scruby
     >>> db = Scruby()
     >>> await db.set_key("key name", "Some text")
@@ -32,7 +32,7 @@ type ValueOfKey = str | int | float | list | dict | Literal[True] | Literal[Fals
 class Scruby:
     """Creation and management of the database.
 
-    Example:
+    Examples:
         >>> from scruby import Scruby
         >>> db = Scruby()
         >>> await db.set_key("key name", "Some text")
@@ -90,7 +90,7 @@ class Scruby:
     ) -> None:
         """Asynchronous method for adding and updating keys to database.
 
-        Example:
+        Examples:
             >>> from scruby import Scruby
             >>> db = Scruby()
             >>> await db.set_key("key name", "Some text")
@@ -116,7 +116,7 @@ class Scruby:
     async def get_key(self, key: str) -> ValueOfKey:
         """Asynchronous method for getting key from database.
 
-        Example:
+        Examples:
             >>> from scruby import Scruby
             >>> db = Scruby()
             >>> await db.set_key("key name", "Some text")
@@ -141,7 +141,7 @@ class Scruby:
     async def has_key(self, key: str) -> bool:
         """Asynchronous method for checking presence of  key in database.
 
-        Example:
+        Examples:
             >>> from scruby import Scruby
             >>> db = Scruby()
             >>> await db.set_key("key name", "Some text")
@@ -170,7 +170,7 @@ class Scruby:
     async def delete_key(self, key: str) -> None:
         """Asynchronous method for deleting key from database.
 
-        Example:
+        Examples:
             >>> from scruby import Scruby
             >>> db = Scruby()
             >>> await db.set_key("key name", "Some text")
@@ -200,7 +200,7 @@ class Scruby:
         Warning:
             - `Be careful, this will remove all keys.`
 
-        Example:
+        Examples:
             >>> from scruby import Scruby
             >>> db = Scruby()
             >>> await db.set_key("key name", "Some text")
