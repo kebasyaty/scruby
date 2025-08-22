@@ -50,12 +50,12 @@ class Scruby:
 
     def __init__(  # noqa: D107
         self,
-        db_path: str = "store",
-        store_name: str = "ScrubyDB",
+        db_path: str = "ScrubyDB",
+        store_name: str = "store_one",
     ) -> None:
         super().__init__()
-        self.__store_name = store_name
         self.__db_path = db_path
+        self.__store_name = store_name
 
     @property
     def db_path(self) -> str:
