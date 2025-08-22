@@ -66,6 +66,25 @@ class Scruby:
         """Add or update key-value pair(s) to the database."""
         return self.__db_name
 
+    async def get_leaf_path(self, key: str) -> Path:
+        """Get the path to the database cell by key.
+
+        Args:
+            key: Key name.
+        """
+        # Key to md5 sum.
+        key_md5: str = hashlib.md5(key.encode("utf-8")).hexdigest()  # noqa: S324
+        # Convert md5 sum in the segment of path.
+        segment_path_md5: str = key_md5.split().join("/")
+        # The path of the branch to the database.
+        branch_path: Path = Path(*(self.root_store, self.db_name, segment_path_md5))
+        # If the branch does not exist, need to create it.
+        if not await branch_path.exists():
+            await branch_path.mkdir(parents=True)
+        # The path to the database cell.
+        leaf_path: Path = Path(*(branch_path, "leaf.json"))
+        return leaf_path
+
     async def set(
         self,
         key: str,
@@ -83,17 +102,8 @@ class Scruby:
             key: Key name.
             value: Value of key.
         """
-        # Key to md5 sum.
-        key_md5: str = hashlib.md5(key.encode("utf-8")).hexdigest()  # noqa: S324
-        # Convert md5 sum in the segment of path.
-        segment_path_md5: str = key_md5.split().join("/")
-        # The path of the branch to the database.
-        branch_path: Path = Path(*(self.root_store, self.db_name, segment_path_md5))
-        # If the branch does not exist, need to create it.
-        if not await branch_path.exists():
-            await branch_path.mkdir(parents=True)
         # The path to the database cell.
-        leaf_path: Path = Path(*(branch_path, "leaf.json"))
+        leaf_path: Path = await self.get_leaf_path(key)
         # Write key-value to the database.
         if await leaf_path.exists():
             # Add new key or update existing.
@@ -121,17 +131,36 @@ class Scruby:
         Args:
             key: Key name.
         """
-        # Key to md5 sum.
-        key_md5: str = hashlib.md5(key.encode("utf-8")).hexdigest()  # noqa: S324
-        # Convert md5 sum in the segment of path.
-        segment_path_md5: str = key_md5.split().join("/")
-        # The path of the branch to the database.
-        branch_path: Path = Path(*(self.root_store, self.db_name, segment_path_md5))
         # The path to the database cell.
-        leaf_path: Path = Path(*(branch_path, "leaf.json"))
+        leaf_path: Path = await self.get_leaf_path(key)
         # Get value of key.
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
             return data[key]
         return None
+
+    async def has_key(self, key: str) -> bool:
+        """Check the presence of a key in the database.
+
+        Example:
+            >>> from scruby import Scruby
+            >>> db = Scruby()
+            >>> await db.set("key name", "Some text")
+            None
+            >>> await db.has_key("key name")
+            True
+            >>> await db.has_key("key missing")
+            False
+
+        Args:
+            key: Key name.
+        """
+        # The path to the database cell.
+        leaf_path: Path = await self.get_leaf_path(key)
+        # Checking whether there is a key.
+        if await leaf_path.exists():
+            data_json: bytes = await leaf_path.read_bytes()
+            data: dict = orjson.loads(data_json) or {}
+            return data.get(key) is not None
+        return False
