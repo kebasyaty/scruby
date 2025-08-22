@@ -45,27 +45,19 @@ class Scruby:
 
     Args:
         db_path: Path to root directory of databases. Defaule by = "ScrubyDB" (in root of project)
-        store_name: Storage name for keys. Defaule by = "store_one"
     """
 
     def __init__(  # noqa: D107
         self,
         db_path: str = "ScrubyDB",
-        store_name: str = "store_one",
     ) -> None:
         super().__init__()
         self.__db_path = db_path
-        self.__store_name = store_name
 
     @property
     def db_path(self) -> str:
         """Get database name."""
         return self.__db_path
-
-    @property
-    def store_name(self) -> str:
-        """Get store name."""
-        return self.__store_name
 
     async def get_leaf_path(self, key: str) -> Path:
         """Get the path to the database cell by key.
@@ -79,7 +71,7 @@ class Scruby:
         segment_path_md5: str = "/".join(list(key_md5))
         # The path of the branch to the database.
         branch_path: Path = Path(
-            *(self.__db_path, self.__store_name, segment_path_md5),
+            *(self.__db_path, segment_path_md5),
         )
         # If the branch does not exist, need to create it.
         if not await branch_path.exists():
@@ -197,8 +189,8 @@ class Scruby:
             return
         raise KeyError()
 
-    async def clean_store(self) -> None:
-        """Remove current storage (Arg: store_name).
+    async def napalm(self) -> None:
+        """Complete database deletion (Arg: db_path).
 
         Warning:
             - `Be careful, this will remove all keys.`
@@ -208,30 +200,10 @@ class Scruby:
             >>> db = Scruby()
             >>> await db.set("key name", "Some text")
             None
-            >>> await db.clear()
-            None
-            >>> await db.clear()
-            KeyError
-        """
-        store_path = f"{self.__db_path}/{self.__store_name}"
-        await to_thread.run_sync(rmtree, store_path)
-        return
-
-    async def napalm(self) -> None:
-        """Complete database deletion (Arg: db_path).
-
-        Warning:
-            - `Be careful, this will remove all stores with keys.`
-
-        Example:
-            >>> from scruby import Scruby
-            >>> db = Scruby()
-            >>> await db.set("key name", "Some text")
-            None
             >>> await db.napalm()
             None
             >>> await db.napalm()
-            KeyError
+            FileNotFoundError
         """
         await to_thread.run_sync(rmtree, self.__db_path)
         return
