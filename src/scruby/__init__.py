@@ -76,7 +76,7 @@ class Scruby:
         # Key to md5 sum.
         key_md5: str = hashlib.md5(key.encode("utf-8")).hexdigest()  # noqa: S324
         # Convert md5 sum in the segment of path.
-        segment_path_md5: str = key_md5.split().join("/")
+        segment_path_md5: str = "/".join(key_md5.split())
         # The path of the branch to the database.
         branch_path: Path = Path(
             *(self.__db_path, self.__store_name, segment_path_md5),
@@ -85,7 +85,7 @@ class Scruby:
         if not await branch_path.exists():
             await branch_path.mkdir(parents=True)
         # The path to the database cell.
-        leaf_path: Path = Path(*(branch_path, "leaf.json"))
+        leaf_path: Path = Path(*(branch_path, "leaf.txt"))
         return leaf_path
 
     async def set(
