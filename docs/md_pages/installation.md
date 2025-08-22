@@ -1,0 +1,3 @@
+```shell
+uv add scruby
+```

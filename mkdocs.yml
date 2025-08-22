@@ -27,11 +27,11 @@ theme:
     - toc.follow
   palette:
     scheme: slate
-    primary: indigo
-    accent: indigo
+    primary: green
+    accent: green
 
 extra_css:
-  - custom_style/github_indigo.css
+  - custom_style/github_green.css
 
 plugins:
   - search
@@ -64,3 +64,6 @@ extra:
 
 nav:
   - Scruby: index.md
+  - Installation: md_pages/installation.md
+  - Usage: md_pages/usage.md
+  - Details: md_pages/db.md
