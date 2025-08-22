@@ -30,15 +30,13 @@ class Scruby:
     Example:
         >>> from scruby import Scruby
         >>> db = Scruby()
-        >>> await db.set("key name", "Some text")
+        >>> await db.set_key("key name", "Some text")
         None
-        >>> await db.get("key name")
+        >>> await db.get_key("key name")
         "Some text"
-        >>> await db.has("key name")
+        >>> await db.has_key("key name")
         True
-        >>> await db.delete("key name")
-        None
-        >>> await db.clean_store()
+        >>> await db.delete_key("key name")
         None
         >>> await db.napalm()
         None
@@ -77,7 +75,7 @@ class Scruby:
         if not await branch_path.exists():
             await branch_path.mkdir(parents=True)
         # The path to the database cell.
-        leaf_path: Path = Path(*(branch_path, "leaf.txt"))
+        leaf_path: Path = Path(*(branch_path, "leaf.json"))
         return leaf_path
 
     async def set_key(
@@ -90,7 +88,7 @@ class Scruby:
         Example:
             >>> from scruby import Scruby
             >>> db = Scruby()
-            >>> await db.set("key name", "Some text")
+            >>> await db.set_key("key name", "Some text")
             None
 
         Args:
@@ -116,12 +114,12 @@ class Scruby:
         Example:
             >>> from scruby import Scruby
             >>> db = Scruby()
-            >>> await db.set("key name", "Some text")
+            >>> await db.set_key("key name", "Some text")
             None
-            >>> await db.get("key name")
+            >>> await db.get_key("key name")
             "Some text"
-            >>> await db.get("key missing")
-            None
+            >>> await db.get_key("key missing")
+            KeyError
 
         Args:
             key: Key name.
@@ -133,7 +131,7 @@ class Scruby:
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
             return data[key]
-        return None
+        raise KeyError()
 
     async def has_key(self, key: str) -> bool:
         """Asynchronous method for checking presence of  key in database.
@@ -141,7 +139,7 @@ class Scruby:
         Example:
             >>> from scruby import Scruby
             >>> db = Scruby()
-            >>> await db.set("key name", "Some text")
+            >>> await db.set_key("key name", "Some text")
             None
             >>> await db.has_key("key name")
             True
@@ -157,7 +155,11 @@ class Scruby:
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            return data.get(key) is not None
+            try:
+                data[key]
+                return True
+            except KeyError:
+                return False
         return False
 
     async def delete_key(self, key: str) -> None:
@@ -166,11 +168,11 @@ class Scruby:
         Example:
             >>> from scruby import Scruby
             >>> db = Scruby()
-            >>> await db.set("key name", "Some text")
+            >>> await db.set_key("key name", "Some text")
             None
-            >>> await db.delete("key name")
+            >>> await db.delete_key("key name")
             None
-            >>> await db.delete("key missing")
+            >>> await db.delete_key("key missing")
             KeyError
 
         Args:
@@ -182,8 +184,6 @@ class Scruby:
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            if data.get(key) is None:
-                raise KeyError()
             del data[key]
             await leaf_path.write_bytes(orjson.dumps(data))
             return
@@ -198,7 +198,7 @@ class Scruby:
         Example:
             >>> from scruby import Scruby
             >>> db = Scruby()
-            >>> await db.set("key name", "Some text")
+            >>> await db.set_key("key name", "Some text")
             None
             >>> await db.napalm()
             None
