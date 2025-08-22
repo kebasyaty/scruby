@@ -44,7 +44,7 @@ class Scruby:
 
     Args:
         root_store: Root directory for databases. Defaule by = "ScrubyDB"
-        db_name: Database name. Defaule by = "store"
+        db_name: Database name. Defaule by = "store_one"
     """
 
     def __init__(  # noqa: D107
@@ -86,9 +86,9 @@ class Scruby:
         # Key to md5 sum.
         key_md5: str = hashlib.md5(key.encode("utf-8")).hexdigest()  # noqa: S324
         # Convert md5 sum in the segment of path.
-        path_md5: str = key_md5.split().join("/")
-        # The path of the branch to the database cell.
-        branch_path: Path = Path(*(self.root_store, self.db_name, path_md5))
+        segment_path_md5: str = key_md5.split().join("/")
+        # The path of the branch to the database.
+        branch_path: Path = Path(*(self.root_store, self.db_name, segment_path_md5))
         # If the branch does not exist, need to create it.
         if not await branch_path.exists():
             await branch_path.mkdir(parents=True)
@@ -104,3 +104,34 @@ class Scruby:
         else:
             # Add new key to a blank leaf.
             await leaf_path.write_bytes(data=orjson.dumps({key: value}))
+
+    async def get(self, key: str) -> ValueOfKey:
+        """Get the value by key from the database.
+
+        Example:
+            >>> from scruby import Scruby
+            >>> db = Scruby()
+            >>> await db.set("key name", "Some text")
+            None
+            >>> await db.get("key name")
+            "Some text"
+            >>> await db.get("key missing")
+            None
+
+        Args:
+            key: Key name.
+        """
+        # Key to md5 sum.
+        key_md5: str = hashlib.md5(key.encode("utf-8")).hexdigest()  # noqa: S324
+        # Convert md5 sum in the segment of path.
+        segment_path_md5: str = key_md5.split().join("/")
+        # The path of the branch to the database.
+        branch_path: Path = Path(*(self.root_store, self.db_name, segment_path_md5))
+        # The path to the database cell.
+        leaf_path: Path = Path(*(branch_path, "leaf.json"))
+        # Get value of key.
+        if await leaf_path.exists():
+            data_json: bytes = await leaf_path.read_bytes()
+            data: dict = orjson.loads(data_json) or {}
+            return data[key]
+        return None
