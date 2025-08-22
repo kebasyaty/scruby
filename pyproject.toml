@@ -7,7 +7,7 @@ authors = [{ name = "kebasyaty", email = "kebasyaty@gmail.com" }]
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.12,<4.0"
-keywords = ["database", "scruby"]
+keywords = ["database", "db", "store", "scruby"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -24,10 +24,7 @@ classifiers = [
     "Topic :: Database",
     "Typing :: Typed",
 ]
-dependencies = [
-    "anyio>=4.10.0",
-    "orjson>=3.11.2",
-]
+dependencies = ["anyio>=4.10.0", "orjson>=3.11.2"]
 
 [project.urls]
 Homepage = "https://github.com/kebasyaty/scruby"
