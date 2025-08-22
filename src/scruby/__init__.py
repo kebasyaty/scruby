@@ -80,12 +80,12 @@ class Scruby:
         leaf_path: Path = Path(*(branch_path, "leaf.txt"))
         return leaf_path
 
-    async def set(
+    async def set_key(
         self,
         key: str,
         value: ValueOfKey,
     ) -> None:
-        """Asynchronous method for adding and updating values of keys to database.
+        """Asynchronous method for adding and updating keys to database.
 
         Example:
             >>> from scruby import Scruby
@@ -110,8 +110,8 @@ class Scruby:
             # Add new key to a blank leaf.
             await leaf_path.write_bytes(data=orjson.dumps({key: value}))
 
-    async def get(self, key: str) -> ValueOfKey:
-        """Get the value by key from the database.
+    async def get_key(self, key: str) -> ValueOfKey:
+        """Asynchronous method for getting key from database.
 
         Example:
             >>> from scruby import Scruby
@@ -135,8 +135,8 @@ class Scruby:
             return data[key]
         return None
 
-    async def has(self, key: str) -> bool:
-        """Check the presence of a key in the database.
+    async def has_key(self, key: str) -> bool:
+        """Asynchronous method for checking presence of  key in database.
 
         Example:
             >>> from scruby import Scruby
@@ -160,8 +160,8 @@ class Scruby:
             return data.get(key) is not None
         return False
 
-    async def delete(self, key: str) -> None:
-        """Delete the key from the database.
+    async def delete_key(self, key: str) -> None:
+        """Asynchronous method for deleting key from database.
 
         Example:
             >>> from scruby import Scruby
@@ -190,7 +190,7 @@ class Scruby:
         raise KeyError()
 
     async def napalm(self) -> None:
-        """Complete database deletion (Arg: db_path).
+        """Asynchronous method for full database deletion (Arg: db_path).
 
         Warning:
             - `Be careful, this will remove all keys.`
