@@ -34,7 +34,7 @@ h6 {
   color: #becada;
 }
 .md-top:hover {
-  background-color: #3a853c;
+  background-color: #2e6931;
   color: #becada;
 }
 
@@ -73,15 +73,15 @@ h6 {
 }
 
 .md-search__form {
-  background-color: #2e6a30;
+  background-color: #1c401e;
   color: #becada;
 }
 .md-search__form:hover {
-  background-color: #3a853c;
+  background-color: #2e6931;
 }
 
 [data-md-toggle="search"]:checked ~ .md-header .md-search__form {
-  background-color: #2e6a30;
+  background-color: #1c401e;
   color: #becada;
 }
 
