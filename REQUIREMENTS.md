@@ -21,3 +21,4 @@
 - [mkdocstrings](https://pypi.org/project/mkdocstrings/ "mkdocstrings")
 - [mkdocs-material](https://pypi.org/project/mkdocs-material/ "mkdocs-material")
 - [pymdown-extensions](https://pypi.org/project/pymdown-extensions/ "pymdown-extensions")
+- [mike](https://pypi.org/project/mike/ "mike")
