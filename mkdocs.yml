@@ -27,11 +27,11 @@ theme:
     - toc.follow
   palette:
     scheme: slate
-    primary: green
-    accent: green
+    primary: light green
+    accent: light green
 
 extra_css:
-  - custom_style/github_green.css
+  - custom_style/github_light_green.css
 
 plugins:
   - search
