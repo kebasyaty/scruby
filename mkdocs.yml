@@ -12,6 +12,7 @@ theme:
   custom_dir: docs/overrides
   font:
     text: Roboto
+    code: Roboto Mono
   icon:
     repo: fontawesome/brands/github
   features:
@@ -47,7 +48,7 @@ plugins:
             docstring_style: google
 
 markdown_extensions:
-  - markdown.extensions.toc:
+  - toc:
       permalink: true
       slugify: !!python/object/apply:pymdownx.slugs.slugify
         kwds:
@@ -68,6 +69,6 @@ extra:
 
 nav:
   - Scruby: index.md
-  - Installation: md_pages/installation.md
-  - Usage: md_pages/usage.md
-  - Details: md_pages/db.md
+  - Installation: pages/installation.md
+  - Usage: pages/usage.md
+  - Details: pages/db.md

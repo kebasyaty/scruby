@@ -78,10 +78,12 @@
       "problemMatcher": []
     },
     {
-      "label": "MkDocs: Run Deploy",
+      "label": "MkDocs: Run Deploy Vx.x",
       "type": "shell",
-      "command": ["uv run mkdocs gh-deploy"],
+      "command": [
+        "uv run mike deploy --push --update-aliases 0.8 latest;",
+        "uv run mike set-default --push latest"
+      ],
       "problemMatcher": []
-    }
-  ]
+    },  ]
 }
