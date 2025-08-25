@@ -24,7 +24,9 @@
     {
       "label": "MyPy: Run Check",
       "type": "shell",
-      "command": ["uv run mypy --ignore-missing-imports --config-file pyproject.toml"],
+      "command": [
+        "uv run mypy --ignore-missing-imports --config-file pyproject.toml"
+      ],
       "problemMatcher": []
     },
     {
@@ -81,9 +83,10 @@
       "label": "MkDocs: Run Deploy Vx.x",
       "type": "shell",
       "command": [
-        "uv run mike deploy --push --update-aliases 0.8 latest;",
+        "uv run mike deploy --push --update-aliases 0.1 latest;",
         "uv run mike set-default --push latest"
       ],
       "problemMatcher": []
-    },  ]
+    }
+  ]
 }
