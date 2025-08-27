@@ -2,18 +2,23 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "UV: Run Upgrade",
-      "type": "shell",
-      "command": ["uv sync --upgrade"],
-      "problemMatcher": []
-    },
-    {
       "label": "UV: Run Lock",
       "type": "shell",
       "command": ["uv lock"],
       "problemMatcher": []
     },
     {
+      "label": "UV: Run Deploy",
+      "type": "shell",
+      "command": ["uv build --wheel;", "uv publish"],
+      "problemMatcher": []
+    },
+    {
+      "label": "UV: Run Upgrade",
+      "type": "shell",
+      "command": ["uv sync --upgrade"],
+      "problemMatcher": []
+    },    {
       "label": "Ruff: Run Check",
       "type": "shell",
       "command": [
