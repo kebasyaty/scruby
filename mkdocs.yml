@@ -2,7 +2,7 @@ site_name: Scruby Docs
 site_description: "A fast key-value storage library."
 site_url: https://kebasyaty.github.io/scruby/
 site_author: Gennady Kostyunin
-copyright: Copyright &copy; 2025 Maintained by <a href="https://github.com/kebasyaty">Gennady Kostyunin</a>
+copyright: Copyright &copy; 2025 Maintained by <a href="https://github.com/kebasyaty">Kebasyaty</a>
 repo_name: kebasyaty/scruby
 repo_url: https://github.com/kebasyaty/scruby
 
