@@ -60,6 +60,13 @@ class TestPositive:
         """Testing a set_key method."""
         db = Scruby()
         assert await db.set_key("key name", "Some text") is None
+        user_details = {
+            "first name": "John",
+            "last name": "Smith",
+            "email": "John_Smith@gmail.com",
+            "phone": "+447986123456",
+        }
+        await db.set_key("+447986123456", user_details)
         # Delete DB.
         await db.napalm()
 
@@ -68,6 +75,14 @@ class TestPositive:
         db = Scruby()
         assert await db.set_key("key name", "Some text") is None
         assert await db.get_key("key name") == "Some text"
+        user_details = {
+            "first name": "John",
+            "last name": "Smith",
+            "email": "John_Smith@gmail.com",
+            "phone": "+447986123456",
+        }
+        await db.set_key("+447986123456", user_details)
+        assert await db.get_key("+447986123456") == user_details
         # Delete DB.
         await db.napalm()
 

@@ -18,7 +18,8 @@
       "type": "shell",
       "command": ["uv sync --upgrade"],
       "problemMatcher": []
-    },    {
+    },
+    {
       "label": "Ruff: Run Check",
       "type": "shell",
       "command": [
@@ -85,10 +86,10 @@
       "problemMatcher": []
     },
     {
-      "label": "MkDocs: Run Deploy 0.2",
+      "label": "MkDocs: Run Deploy 0.3",
       "type": "shell",
       "command": [
-        "uv run mike deploy --push --update-aliases 0.2 latest;",
+        "uv run mike deploy --push --update-aliases 0.3 latest;",
         "uv run mike set-default --push latest"
       ],
       "problemMatcher": []
