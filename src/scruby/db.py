@@ -1,19 +1,4 @@
-"""Creation and management of the database.
-
-Examples:
-    >>> from scruby import Scruby
-    >>> db = Scruby()
-    >>> await db.set_key("key name", "Some text")
-    None
-    >>> await db.get_key("key name")
-    "Some text"
-    >>> await db.has_key("key name")
-    True
-    >>> await db.delete_key("key name")
-    None
-    >>> await db.napalm()
-    None
-"""
+"""Creation and management of the database."""
 
 from __future__ import annotations
 
@@ -21,46 +6,33 @@ __all__ = ("Scruby",)
 
 import hashlib
 from shutil import rmtree
-from typing import Literal
+from typing import Generic, TypeVar
 
 import orjson
 from anyio import Path, to_thread
 
-type ValueOfKey = str | int | float | list | dict | Literal[True] | Literal[False] | None
+T = TypeVar("T")
 
 
-class Scruby:
+class Scruby(Generic[T]):  # noqa: UP046
     """Creation and management of the database.
 
-    Examples:
-        >>> from scruby import Scruby
-        >>> db = Scruby()
-        >>> await db.set_key("key name", "Some text")
-        None
-        >>> await db.get_key("key name")
-        "Some text"
-        >>> await db.has_key("key name")
-        True
-        >>> await db.delete_key("key name")
-        None
-        >>> await db.napalm()
-        None
-
     Args:
-        db_path: Path to root directory of databases. Defaule by = "ScrubyDB" (in root of project)
+        db_name: Path to root directory of databases. By default = "ScrubyDB" (in root of project)
     """
 
     def __init__(  # noqa: D107
         self,
-        db_path: str = "ScrubyDB",
+        class_model: T,
+        db_name: str = "ScrubyDB",
     ) -> None:
-        super().__init__()
-        self.__db_path = db_path
+        self.__class_model = class_model
+        self.__db_name = db_name
 
     @property
-    def db_path(self) -> str:
+    def db_name(self) -> str:
         """Get database name."""
-        return self.__db_path
+        return self.__db_name
 
     async def get_leaf_path(self, key: str) -> Path:
         """Get the path to the database cell by key.
@@ -71,10 +43,10 @@ class Scruby:
         # Key to md5 sum.
         key_md5: str = hashlib.md5(key.encode("utf-8")).hexdigest()  # noqa: S324
         # Convert md5 sum in the segment of path.
-        segment_path_md5: str = "/".join(list(key_md5))
+        separated_md5: str = "/".join(list(key_md5))
         # The path of the branch to the database.
         branch_path: Path = Path(
-            *(self.__db_path, segment_path_md5),
+            *(self.__db_name, self.__class_model.__name__, separated_md5),
         )
         # If the branch does not exist, need to create it.
         if not await branch_path.exists():
@@ -86,15 +58,9 @@ class Scruby:
     async def set_key(
         self,
         key: str,
-        value: ValueOfKey,
+        value: T,
     ) -> None:
         """Asynchronous method for adding and updating keys to database.
-
-        Examples:
-            >>> from scruby import Scruby
-            >>> db = Scruby()
-            >>> await db.set_key("key name", "Some text")
-            None
 
         Args:
             key: Key name.
@@ -102,29 +68,20 @@ class Scruby:
         """
         # The path to the database cell.
         leaf_path: Path = await self.get_leaf_path(key)
+        value_json: str = value.model_dump_json()
         # Write key-value to the database.
         if await leaf_path.exists():
             # Add new key or update existing.
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            data[key] = value
+            data[key] = value_json
             await leaf_path.write_bytes(orjson.dumps(data))
         else:
             # Add new key to a blank leaf.
-            await leaf_path.write_bytes(data=orjson.dumps({key: value}))
+            await leaf_path.write_bytes(orjson.dumps({key: value_json}))
 
-    async def get_key(self, key: str) -> ValueOfKey:
+    async def get_key(self, key: str) -> T:
         """Asynchronous method for getting key from database.
-
-        Examples:
-            >>> from scruby import Scruby
-            >>> db = Scruby()
-            >>> await db.set_key("key name", "Some text")
-            None
-            >>> await db.get_key("key name")
-            "Some text"
-            >>> await db.get_key("key missing")
-            KeyError
 
         Args:
             key: Key name.
@@ -135,21 +92,12 @@ class Scruby:
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            return data[key]
+            obj: T = self.__class_model.model_validate_json(data[key])
+            return obj
         raise KeyError()
 
     async def has_key(self, key: str) -> bool:
         """Asynchronous method for checking presence of  key in database.
-
-        Examples:
-            >>> from scruby import Scruby
-            >>> db = Scruby()
-            >>> await db.set_key("key name", "Some text")
-            None
-            >>> await db.has_key("key name")
-            True
-            >>> await db.has_key("key missing")
-            False
 
         Args:
             key: Key name.
@@ -170,16 +118,6 @@ class Scruby:
     async def delete_key(self, key: str) -> None:
         """Asynchronous method for deleting key from database.
 
-        Examples:
-            >>> from scruby import Scruby
-            >>> db = Scruby()
-            >>> await db.set_key("key name", "Some text")
-            None
-            >>> await db.delete_key("key name")
-            None
-            >>> await db.delete_key("key missing")
-            KeyError
-
         Args:
             key: Key name.
         """
@@ -195,20 +133,10 @@ class Scruby:
         raise KeyError()
 
     async def napalm(self) -> None:
-        """Asynchronous method for full database deletion (Arg: db_path).
+        """Asynchronous method for full database deletion (Arg: db_name).
 
         Warning:
             - `Be careful, this will remove all keys.`
-
-        Examples:
-            >>> from scruby import Scruby
-            >>> db = Scruby()
-            >>> await db.set_key("key name", "Some text")
-            None
-            >>> await db.napalm()
-            None
-            >>> await db.napalm()
-            FileNotFoundError
         """
-        await to_thread.run_sync(rmtree, self.__db_path)
+        await to_thread.run_sync(rmtree, self.__db_name)
         return
