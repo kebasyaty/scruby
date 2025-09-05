@@ -7,7 +7,8 @@
 #### Dependencies
 
 - [anyio](https://pypi.org/project/anyio/ "anyio")
-- [orjson](https://pypi.org/project/anyio/ "orjson")
+- [orjson](https://pypi.org/project/orjson/ "orjson")
+- [pydantic](https://pypi.org/project/pydantic/ "pydantic")
 
 #### Dev-Dependencies
 

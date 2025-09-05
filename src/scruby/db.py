@@ -21,15 +21,15 @@ __all__ = ("Scruby",)
 
 import hashlib
 from shutil import rmtree
-from typing import Literal
+from typing import Generic, TypeVar
 
 import orjson
 from anyio import Path, to_thread
 
-type ValueOfKey = str | int | float | list | dict | Literal[True] | Literal[False] | None
+T = TypeVar("T")
 
 
-class Scruby:
+class Scruby(Generic[T]):  # noqa: UP046
     """Creation and management of the database.
 
     Examples:
@@ -47,20 +47,21 @@ class Scruby:
         None
 
     Args:
-        db_path: Path to root directory of databases. Defaule by = "ScrubyDB" (in root of project)
+        db_name: Path to root directory of databases. Defaule by = "ScrubyDB" (in root of project)
     """
 
     def __init__(  # noqa: D107
         self,
-        db_path: str = "ScrubyDB",
+        model: T,
+        db_name: str = "ScrubyDB",
     ) -> None:
-        super().__init__()
-        self.__db_path = db_path
+        self.__model_class = model
+        self.__db_name = db_name
 
     @property
-    def db_path(self) -> str:
+    def db_name(self) -> str:
         """Get database name."""
-        return self.__db_path
+        return self.__db_name
 
     async def get_leaf_path(self, key: str) -> Path:
         """Get the path to the database cell by key.
@@ -74,7 +75,7 @@ class Scruby:
         segment_path_md5: str = "/".join(list(key_md5))
         # The path of the branch to the database.
         branch_path: Path = Path(
-            *(self.__db_path, segment_path_md5),
+            *(self.__db_name, segment_path_md5),
         )
         # If the branch does not exist, need to create it.
         if not await branch_path.exists():
@@ -86,7 +87,7 @@ class Scruby:
     async def set_key(
         self,
         key: str,
-        value: ValueOfKey,
+        value: T,
     ) -> None:
         """Asynchronous method for adding and updating keys to database.
 
@@ -102,18 +103,19 @@ class Scruby:
         """
         # The path to the database cell.
         leaf_path: Path = await self.get_leaf_path(key)
+        value_json: str = value.model_dump_json()
         # Write key-value to the database.
         if await leaf_path.exists():
             # Add new key or update existing.
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            data[key] = value
+            data[key] = value_json
             await leaf_path.write_bytes(orjson.dumps(data))
         else:
             # Add new key to a blank leaf.
-            await leaf_path.write_bytes(data=orjson.dumps({key: value}))
+            await leaf_path.write_bytes(orjson.dumps({key: value_json}))
 
-    async def get_key(self, key: str) -> ValueOfKey:
+    async def get_key(self, key: str) -> T:
         """Asynchronous method for getting key from database.
 
         Examples:
@@ -135,7 +137,8 @@ class Scruby:
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            return data[key]
+            obj: T = self.__model_class.model_validate_json(data[key])
+            return obj
         raise KeyError()
 
     async def has_key(self, key: str) -> bool:
@@ -195,7 +198,7 @@ class Scruby:
         raise KeyError()
 
     async def napalm(self) -> None:
-        """Asynchronous method for full database deletion (Arg: db_path).
+        """Asynchronous method for full database deletion (Arg: db_name).
 
         Warning:
             - `Be careful, this will remove all keys.`
@@ -210,5 +213,5 @@ class Scruby:
             >>> await db.napalm()
             FileNotFoundError
         """
-        await to_thread.run_sync(rmtree, self.__db_path)
+        await to_thread.run_sync(rmtree, self.__db_name)
         return

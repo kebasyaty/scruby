@@ -63,6 +63,8 @@ uv add scruby
 
 ```python
 import anyio
+import datetime
+from zoneinfo import ZoneInfo
 from scruby import Scruby
 
 
@@ -77,6 +79,7 @@ async def main() -> None:
     user_details = {
         "first name": "John",
         "last name": "Smith",
+        "birthday": datetime.datetime(2025, 9, 5, tzinfo=ZoneInfo("UTC")),
         "email": "John_Smith@gmail.com",
         "phone": "+447986123456",
     }
