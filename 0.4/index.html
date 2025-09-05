@@ -313,24 +313,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Usage
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#requirements" class="md-nav__link">
     <span class="md-ellipsis">
       Requirements
@@ -471,24 +453,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Usage
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#requirements" class="md-nav__link">
     <span class="md-ellipsis">
       Requirements
@@ -618,48 +582,6 @@ There is no need to iterate through all the keys in search of the desired value.
 
 </div><hr>
 
-<h4 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h4>
-<pre><code class="language-shell">uv add scruby
-</code></pre>
-<h4 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h4>
-<pre><code class="language-python">import anyio
-from scruby import Scruby
-
-
-async def main() -&gt; None:
-    &quot;&quot;&quot;Example.&quot;&quot;&quot;
-
-    db = Scruby()
-    await db.set_key(&quot;key name&quot;, &quot;Some text&quot;)
-    # Update key
-    await db.set_key(&quot;key name&quot;, &quot;Some new text&quot;)
-
-    user_details = {
-        &quot;first name&quot;: &quot;John&quot;,
-        &quot;last name&quot;: &quot;Smith&quot;,
-        &quot;email&quot;: &quot;John_Smith@gmail.com&quot;,
-        &quot;phone&quot;: &quot;+447986123456&quot;,
-    }
-    await db.set_key(&quot;+447986123456&quot;, user_details)
-
-    await db.get_key(&quot;key name&quot;)  # =&gt; &quot;Some text&quot;
-    await db.get_key(&quot;key missing&quot;)  # =&gt; KeyError
-
-    await db.has_key(&quot;key name&quot;)  # =&gt; True
-    await db.has_key(&quot;key missing&quot;)  # =&gt; False
-
-    await db.delete_key(&quot;key name&quot;)
-    await db.delete_key(&quot;key name&quot;)  # =&gt; KeyError
-    await db.delete_key(&quot;key missing&quot;)  # =&gt; KeyError
-
-    # Full database deletion.
-    await db.napalm()
-    await db.napalm()  # =&gt; FileNotFoundError
-
-
-if __name__ == &quot;__main__&quot;:
-    anyio.run(main)
-</code></pre>
 <h4 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h4>
 <p><a href="https://github.com/kebasyaty/scruby/blob/main/REQUIREMENTS.md" title="View the list of requirements.">View the list of requirements.</a></p>
 <h4 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h4>
