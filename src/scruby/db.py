@@ -1,19 +1,4 @@
-"""Creation and management of the database.
-
-Examples:
-    >>> from scruby import Scruby
-    >>> db = Scruby()
-    >>> await db.set_key("key name", "Some text")
-    None
-    >>> await db.get_key("key name")
-    "Some text"
-    >>> await db.has_key("key name")
-    True
-    >>> await db.delete_key("key name")
-    None
-    >>> await db.napalm()
-    None
-"""
+"""Creation and management of the database."""
 
 from __future__ import annotations
 
@@ -32,30 +17,16 @@ T = TypeVar("T")
 class Scruby(Generic[T]):  # noqa: UP046
     """Creation and management of the database.
 
-    Examples:
-        >>> from scruby import Scruby
-        >>> db = Scruby()
-        >>> await db.set_key("key name", "Some text")
-        None
-        >>> await db.get_key("key name")
-        "Some text"
-        >>> await db.has_key("key name")
-        True
-        >>> await db.delete_key("key name")
-        None
-        >>> await db.napalm()
-        None
-
     Args:
-        db_name: Path to root directory of databases. Defaule by = "ScrubyDB" (in root of project)
+        db_name: Path to root directory of databases. By default = "ScrubyDB" (in root of project)
     """
 
     def __init__(  # noqa: D107
         self,
-        model: T,
+        class_model: T,
         db_name: str = "ScrubyDB",
     ) -> None:
-        self.__model_class = model
+        self.__class_model = class_model
         self.__db_name = db_name
 
     @property
@@ -72,10 +43,10 @@ class Scruby(Generic[T]):  # noqa: UP046
         # Key to md5 sum.
         key_md5: str = hashlib.md5(key.encode("utf-8")).hexdigest()  # noqa: S324
         # Convert md5 sum in the segment of path.
-        segment_path_md5: str = "/".join(list(key_md5))
+        separated_md5: str = "/".join(list(key_md5))
         # The path of the branch to the database.
         branch_path: Path = Path(
-            *(self.__db_name, segment_path_md5),
+            *(self.__db_name, self.__class_model.__name__, separated_md5),
         )
         # If the branch does not exist, need to create it.
         if not await branch_path.exists():
@@ -90,12 +61,6 @@ class Scruby(Generic[T]):  # noqa: UP046
         value: T,
     ) -> None:
         """Asynchronous method for adding and updating keys to database.
-
-        Examples:
-            >>> from scruby import Scruby
-            >>> db = Scruby()
-            >>> await db.set_key("key name", "Some text")
-            None
 
         Args:
             key: Key name.
@@ -118,16 +83,6 @@ class Scruby(Generic[T]):  # noqa: UP046
     async def get_key(self, key: str) -> T:
         """Asynchronous method for getting key from database.
 
-        Examples:
-            >>> from scruby import Scruby
-            >>> db = Scruby()
-            >>> await db.set_key("key name", "Some text")
-            None
-            >>> await db.get_key("key name")
-            "Some text"
-            >>> await db.get_key("key missing")
-            KeyError
-
         Args:
             key: Key name.
         """
@@ -137,22 +92,12 @@ class Scruby(Generic[T]):  # noqa: UP046
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            obj: T = self.__model_class.model_validate_json(data[key])
+            obj: T = self.__class_model.model_validate_json(data[key])
             return obj
         raise KeyError()
 
     async def has_key(self, key: str) -> bool:
         """Asynchronous method for checking presence of  key in database.
-
-        Examples:
-            >>> from scruby import Scruby
-            >>> db = Scruby()
-            >>> await db.set_key("key name", "Some text")
-            None
-            >>> await db.has_key("key name")
-            True
-            >>> await db.has_key("key missing")
-            False
 
         Args:
             key: Key name.
@@ -173,16 +118,6 @@ class Scruby(Generic[T]):  # noqa: UP046
     async def delete_key(self, key: str) -> None:
         """Asynchronous method for deleting key from database.
 
-        Examples:
-            >>> from scruby import Scruby
-            >>> db = Scruby()
-            >>> await db.set_key("key name", "Some text")
-            None
-            >>> await db.delete_key("key name")
-            None
-            >>> await db.delete_key("key missing")
-            KeyError
-
         Args:
             key: Key name.
         """
@@ -202,16 +137,6 @@ class Scruby(Generic[T]):  # noqa: UP046
 
         Warning:
             - `Be careful, this will remove all keys.`
-
-        Examples:
-            >>> from scruby import Scruby
-            >>> db = Scruby()
-            >>> await db.set_key("key name", "Some text")
-            None
-            >>> await db.napalm()
-            None
-            >>> await db.napalm()
-            FileNotFoundError
         """
         await to_thread.run_sync(rmtree, self.__db_name)
         return
