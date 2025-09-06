@@ -130,7 +130,7 @@ class Scruby[T]:
     async def napalm(self) -> None:
         """Asynchronous method for full database deletion (Arg: db_name).
 
-        X.
+        The main purpose is tests.
 
         Warning:
             - `Be careful, this will remove all keys.`
