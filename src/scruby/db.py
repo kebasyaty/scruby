@@ -6,33 +6,28 @@ __all__ = ("Scruby",)
 
 import hashlib
 from shutil import rmtree
-from typing import Generic, TypeVar
+from typing import TypeVar
 
 import orjson
 from anyio import Path, to_thread
 
+from scruby import constants
+
 T = TypeVar("T")
 
 
-class Scruby(Generic[T]):  # noqa: UP046
+class Scruby[T]:
     """Creation and management of the database.
 
     Args:
-        db_name: Path to root directory of databases. By default = "ScrubyDB" (in root of project)
+        class_model: Class of Model (Pydantic).
     """
 
     def __init__(  # noqa: D107
         self,
         class_model: T,
-        db_name: str = "ScrubyDB",
     ) -> None:
         self.__class_model = class_model
-        self.__db_name = db_name
-
-    @property
-    def db_name(self) -> str:
-        """Get database name."""
-        return self.__db_name
 
     async def get_leaf_path(self, key: str) -> Path:
         """Get the path to the database cell by key.
@@ -46,7 +41,7 @@ class Scruby(Generic[T]):  # noqa: UP046
         separated_md5: str = "/".join(list(key_md5))
         # The path of the branch to the database.
         branch_path: Path = Path(
-            *(self.__db_name, self.__class_model.__name__, separated_md5),
+            *(constants.DB_ROOT, self.__class_model.__name__, separated_md5),
         )
         # If the branch does not exist, need to create it.
         if not await branch_path.exists():
@@ -135,8 +130,10 @@ class Scruby(Generic[T]):  # noqa: UP046
     async def napalm(self) -> None:
         """Asynchronous method for full database deletion (Arg: db_name).
 
+        The main purpose is tests.
+
         Warning:
             - `Be careful, this will remove all keys.`
         """
-        await to_thread.run_sync(rmtree, self.__db_name)
+        await to_thread.run_sync(rmtree, constants.DB_ROOT)
         return

@@ -12,6 +12,10 @@ There is no need to iterate through all the keys in search of the desired value.
 
 from __future__ import annotations
 
-__all__ = ("Scruby",)
+__all__ = (
+    "Scruby",
+    "constants",
+)
 
+from scruby import constants
 from scruby.db import Scruby
