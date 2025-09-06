@@ -1,7 +1,8 @@
 ```python
 import anyio
 import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
+from pydantic_extra_types.phone_numbers import PhoneNumber
 from scruby import Scruby, constants
 
 constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
@@ -12,8 +13,8 @@ class User(BaseModel):
     first_name: str
     last_name: str
     birthday: datetime.datetime
-    email: str
-    phone: str
+    email: EmailStr
+    phone: PhoneNumber
 
 async def main() -> None:
     """Example."""
