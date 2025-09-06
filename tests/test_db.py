@@ -8,9 +8,11 @@ import pytest
 from anyio import Path
 from pydantic import BaseModel
 
-from scruby import Scruby
+from scruby import Scruby, constants
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
+
+constants.DB_ROOT = "ScrubyDB"
 
 
 class User(BaseModel):
@@ -28,7 +30,7 @@ class TestNegative:
 
     async def test_get_non_existent_key(self) -> None:
         """Get a non-existent key."""
-        db = Scruby(class_model=User)
+        db = Scruby(User)
         with pytest.raises(KeyError):
             await db.get_key("key missing")
         # Delete DB.
@@ -36,7 +38,7 @@ class TestNegative:
 
     async def test_del_non_existent_key(self) -> None:
         """Delete a non-existent key."""
-        db = Scruby(class_model=User, db_name="ScrubyDB")
+        db = Scruby(User)
         with pytest.raises(KeyError):
             await db.delete_key("key missing")
         # Delete DB.
@@ -44,7 +46,7 @@ class TestNegative:
 
     async def test_del_non_existent_db(self) -> None:
         """Delete a non-existent database."""
-        db = Scruby(class_model=User)
+        db = Scruby(User)
         with pytest.raises(FileNotFoundError):
             await db.napalm()
 
@@ -54,18 +56,17 @@ class TestPositive:
 
     async def test_create_db(self) -> None:
         """Create instance of database by default."""
-        db = Scruby(class_model=User)
+        db = Scruby(User)
         control_path = Path(
             "ScrubyDB/User/a/b/6/9/2/e/6/a/3/5/e/2/6/7/2/5/a/b/5/2/0/c/4/d/0/0/0/e/a/7/d/b/leaf.json",
         )
-        assert db.db_name == "ScrubyDB"
         assert await db.get_leaf_path("key name") == control_path
         # Delete DB.
         await db.napalm()
 
     async def test_set_key(self) -> None:
         """Testing a set_key method."""
-        db = Scruby(class_model=User)
+        db = Scruby(User)
         user = User(
             first_name="John",
             last_name="Smith",
@@ -79,7 +80,7 @@ class TestPositive:
 
     async def test_get_key(self) -> None:
         """Testing a get_key method."""
-        db = Scruby(class_model=User)
+        db = Scruby(User)
         user = User(
             first_name="John",
             last_name="Smith",
@@ -95,7 +96,7 @@ class TestPositive:
 
     async def test_has_key(self) -> None:
         """Testing a has_key method."""
-        db = Scruby(class_model=User)
+        db = Scruby(User)
         user = User(
             first_name="John",
             last_name="Smith",
@@ -111,7 +112,7 @@ class TestPositive:
 
     async def test_delete_key(self) -> None:
         """Testing a delete_key method."""
-        db = Scruby(class_model=User)
+        db = Scruby(User)
         user = User(
             first_name="John",
             last_name="Smith",
