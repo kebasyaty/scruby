@@ -71,4 +71,5 @@ nav:
   - Scruby: index.md
   - Installation: pages/installation.md
   - Usage: pages/usage.md
+  - Constants: pages/constants.md
   - Details: pages/db.md
