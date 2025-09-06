@@ -2,31 +2,27 @@
 import anyio
 import datetime
 from pydantic import BaseModel
-from scruby import Scruby
+from scruby import Scruby, constants
 
+constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
+
+class User(BaseModel):
+    """Model of User."""
+
+    first_name: str
+    last_name: str
+    birthday: datetime.datetime
+    email: str
+    phone: str
 
 async def main() -> None:
     """Example."""
-
-  class User(BaseModel):
-      """User model."""
-
-      first_name: str
-      last_name: str
-      birthday: datetime.datetime
-      email: str
-      phone: str
-
-
-    db = Scruby(
-        class_model=User,
-        db_name="ScrubyDB",  # By default = "ScrubyDB"
-    )
+    db = Scruby(User)
 
     user = User(
         first_name="John",
         last_name="Smith",
-        birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+        birthday=datetime.datetime(1970, 1, 1),
         email="John_Smith@gmail.com",
         phone="+447986123456",
     )
@@ -44,6 +40,7 @@ async def main() -> None:
     await db.delete_key("key missing")  # => KeyError
 
     # Full database deletion.
+    # Hint: The main purpose is tests.
     await db.napalm()
     await db.napalm()  # => FileNotFoundError
 
