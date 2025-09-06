@@ -12,13 +12,13 @@
         <meta name="author" content="Kebasyaty">
       
       
-        <link rel="canonical" href="https://kebasyaty.github.io/scruby/0.5/pages/usage/">
+        <link rel="canonical" href="https://kebasyaty.github.io/scruby/0.5/pages/constants/">
       
       
-        <link rel="prev" href="../installation/">
+        <link rel="prev" href="../usage/">
       
       
-        <link rel="next" href="../constants/">
+        <link rel="next" href="../db/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -26,7 +26,7 @@
     
     
       
-        <title>Usage - Scruby Docs</title>
+        <title>Constants - Scruby Docs</title>
       
     
     
@@ -79,6 +79,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#scruby.constants" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -127,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Usage
+              Constants
             
           </span>
         </div>
@@ -295,17 +300,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
         
   
   
@@ -316,7 +314,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -325,10 +322,30 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../constants/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Constants
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -339,6 +356,33 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scruby.constants" class="md-nav__link">
+    <span class="md-ellipsis">
+      constants
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -383,6 +427,23 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scruby.constants" class="md-nav__link">
+    <span class="md-ellipsis">
+      constants
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -401,57 +462,46 @@
   
 
 
-  <h1>Usage</h1>
+  <h1>Constants</h1>
 
-<pre><code class="language-python">import anyio
-import datetime
-from pydantic import BaseModel
-from scruby import Scruby, constants
-
-constants.DB_ROOT = &quot;ScrubyDB&quot;  # By default = &quot;ScrubyDB&quot;
-
-class User(BaseModel):
-    &quot;&quot;&quot;Model of User.&quot;&quot;&quot;
-
-    first_name: str
-    last_name: str
-    birthday: datetime.datetime
-    email: str
-    phone: str
-
-async def main() -&gt; None:
-    &quot;&quot;&quot;Example.&quot;&quot;&quot;
-    db = Scruby(User)
-
-    user = User(
-        first_name=&quot;John&quot;,
-        last_name=&quot;Smith&quot;,
-        birthday=datetime.datetime(1970, 1, 1),
-        email=&quot;John_Smith@gmail.com&quot;,
-        phone=&quot;+447986123456&quot;,
-    )
-
-    await db.set_key(&quot;+447986123456&quot;, user)
-
-    await db.get_key(&quot;+447986123456&quot;)  # =&gt; user
-    await db.get_key(&quot;key missing&quot;)  # =&gt; KeyError
-
-    await db.has_key(&quot;+447986123456&quot;)  # =&gt; True
-    await db.has_key(&quot;key missing&quot;)  # =&gt; False
-
-    await db.delete_key(&quot;+447986123456&quot;)
-    await db.delete_key(&quot;+447986123456&quot;)  # =&gt; KeyError
-    await db.delete_key(&quot;key missing&quot;)  # =&gt; KeyError
-
-    # Full database deletion.
-    # Hint: The main purpose is tests.
-    await db.napalm()
-    await db.napalm()  # =&gt; FileNotFoundError
+<div class="doc doc-object doc-module">
 
 
-if __name__ == &quot;__main__&quot;:
-    anyio.run(main)
-</code></pre>
+
+<a id="scruby.constants"></a>
+    <div class="doc doc-contents first">
+
+        <p>Constant variables.</p>
+<p>The module contains the following variables:</p>
+<ul>
+<li><code>DB_ROOT</code> - Path to root directory of database. By default = "ScrubyDB" (in root of project).</li>
+</ul>
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
 
 
 
@@ -489,7 +539,7 @@ if __name__ == &quot;__main__&quot;:
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../installation/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Installation">
+          <a href="../usage/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Usage">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -499,20 +549,20 @@ if __name__ == &quot;__main__&quot;:
                 Previous
               </span>
               <div class="md-ellipsis">
-                Installation
+                Usage
               </div>
             </div>
           </a>
         
         
           
-          <a href="../constants/" class="md-footer__link md-footer__link--next" aria-label="Next: Constants">
+          <a href="../db/" class="md-footer__link md-footer__link--next" aria-label="Next: Details">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Constants
+                Details
               </div>
             </div>
             <div class="md-footer__button md-icon">
