@@ -9,6 +9,8 @@
 - [anyio](https://pypi.org/project/anyio/ "anyio")
 - [orjson](https://pypi.org/project/orjson/ "orjson")
 - [pydantic](https://pypi.org/project/pydantic/ "pydantic")
+- [pydantic-extra-types](https://pypi.org/project/pydantic-extra-types/ "pydantic-extra-types")
+- [phonenumbers](https://pypi.org/project/phonenumbers/ "phonenumbers")
 
 #### Dev-Dependencies
 
