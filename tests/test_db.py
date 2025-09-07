@@ -35,7 +35,7 @@ class TestNegative:
         with pytest.raises(KeyError):
             await db.get_key("key missing")
         # Delete DB.
-        await db.napalm()
+        await Scruby.napalm()
 
     async def test_del_non_existent_key(self) -> None:
         """Delete a non-existent key."""
@@ -43,13 +43,37 @@ class TestNegative:
         with pytest.raises(KeyError):
             await db.delete_key("key missing")
         # Delete DB.
-        await db.napalm()
+        await Scruby.napalm()
 
-    async def test_del_non_existent_db(self) -> None:
-        """Delete a non-existent database."""
+    async def test_key_not_str(self) -> None:
+        """The key is not a type of `str`."""
         db = Scruby(User)
-        with pytest.raises(FileNotFoundError):
-            await db.napalm()
+        user = User(
+            first_name="John",
+            last_name="Smith",
+            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            email="John_Smith@gmail.com",
+            phone="+447986123456",
+        )
+        with pytest.raises(KeyError):
+            await db.set_key(123, user)
+        # Delete DB.
+        await Scruby.napalm()
+
+    async def test_key_is_empty(self) -> None:
+        """The key should not be empty."""
+        db = Scruby(User)
+        user = User(
+            first_name="John",
+            last_name="Smith",
+            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            email="John_Smith@gmail.com",
+            phone="+447986123456",
+        )
+        with pytest.raises(KeyError):
+            await db.set_key("", user)
+        # Delete DB.
+        await Scruby.napalm()
 
 
 class TestPositive:
@@ -59,11 +83,11 @@ class TestPositive:
         """Create instance of database by default."""
         db = Scruby(User)
         control_path = Path(
-            "ScrubyDB/User/a/b/6/9/2/e/6/a/3/5/e/2/6/7/2/5/a/b/5/2/0/c/4/d/0/0/0/e/a/7/d/b/leaf.json",
+            "ScrubyDB/User/a/3/a/6/d/2/d/1/leaf.json",
         )
         assert await db.get_leaf_path("key name") == control_path
         # Delete DB.
-        await db.napalm()
+        await Scruby.napalm()
 
     async def test_set_key(self) -> None:
         """Testing a set_key method."""
@@ -77,7 +101,7 @@ class TestPositive:
         )
         assert await db.set_key("+447986123456", user) is None
         # Delete DB.
-        await db.napalm()
+        await Scruby.napalm()
 
     async def test_get_key(self) -> None:
         """Testing a get_key method."""
@@ -93,7 +117,7 @@ class TestPositive:
         data: User = await db.get_key("+447986123456")
         assert data.model_dump() == user.model_dump()
         # Delete DB.
-        await db.napalm()
+        await Scruby.napalm()
 
     async def test_has_key(self) -> None:
         """Testing a has_key method."""
@@ -109,7 +133,7 @@ class TestPositive:
         assert await db.has_key("+447986123456")
         assert not await db.has_key("key missing")
         # Delete DB.
-        await db.napalm()
+        await Scruby.napalm()
 
     async def test_delete_key(self) -> None:
         """Testing a delete_key method."""
@@ -125,4 +149,4 @@ class TestPositive:
         assert await db.delete_key("+447986123456") is None
         assert not await db.has_key("key missing")
         # Delete DB.
-        await db.napalm()
+        await Scruby.napalm()

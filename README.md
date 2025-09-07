@@ -32,15 +32,15 @@
     </p>
     <p align="center">
       Scruby is a fast key-value storage library that provides an ordered mapping from string keys to string values.
-      <br>
       The library uses fractal-tree addressing.
       <br>
-      The maximum size of the database is 16**32=340282366920938463463374607431768211456 branches,
+      The database consists of collections.
+      The maximum size of the one collection is 16**8=4294967296 branches,
       each branch can store one or more keys.
       <br>
-      The value of any key can be obtained in 32 steps, thereby achieving high performance.
+      The value of any key in collection can be obtained in 8 steps, thereby achieving high performance.
       <br>
-      There is no need to iterate through all the keys in search of the desired value.
+      In the future, to search by value of key, the use of a quantum loop is supposed.
     </p>
   </p>
 </div>
@@ -72,7 +72,6 @@ constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 
 class User(BaseModel):
     """Model of User."""
-
     first_name: str
     last_name: str
     birthday: datetime.datetime
@@ -81,7 +80,8 @@ class User(BaseModel):
 
 async def main() -> None:
     """Example."""
-    db = Scruby(User)
+    # Get collection of `User`.
+    user_coll = Scruby(User)
 
     user = User(
         first_name="John",
@@ -91,23 +91,21 @@ async def main() -> None:
         phone="+447986123456",
     )
 
-    await db.set_key("+447986123456", user)
+    await user_coll.set_key("+447986123456", user)
 
-    await db.get_key("+447986123456")  # => user
-    await db.get_key("key missing")  # => KeyError
+    await user_coll.get_key("+447986123456")  # => user
+    await user_coll.get_key("key missing")  # => KeyError
 
-    await db.has_key("+447986123456")  # => True
-    await db.has_key("key missing")  # => False
+    await user_coll.has_key("+447986123456")  # => True
+    await user_coll.has_key("key missing")  # => False
 
-    await db.delete_key("+447986123456")
-    await db.delete_key("+447986123456")  # => KeyError
-    await db.delete_key("key missing")  # => KeyError
+    await user_coll.delete_key("+447986123456")
+    await user_coll.delete_key("+447986123456")  # => KeyError
+    await user_coll.delete_key("key missing")  # => KeyError
 
     # Full database deletion.
     # Hint: The main purpose is tests.
-    await db.napalm()
-    await db.napalm()  # => FileNotFoundError
-
+    await Scruby.napalm()
 
 if __name__ == "__main__":
     anyio.run(main)

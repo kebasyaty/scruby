@@ -4,7 +4,8 @@ from __future__ import annotations
 
 __all__ = ("Scruby",)
 
-import hashlib
+import contextlib
+import zlib
 from shutil import rmtree
 from typing import TypeVar
 
@@ -29,19 +30,31 @@ class Scruby[T]:
     ) -> None:
         self.__class_model = class_model
 
+    def check_key(self, key: str) -> None:
+        """Check the key."""
+        if not isinstance(key, str):
+            raise KeyError("The key is not a type of `str`.")
+        if len(key) == 0:
+            raise KeyError("The key should not be empty.")
+
     async def get_leaf_path(self, key: str) -> Path:
         """Get the path to the database cell by key.
 
         Args:
             key: Key name.
         """
-        # Key to md5 sum.
-        key_md5: str = hashlib.md5(key.encode("utf-8")).hexdigest()  # noqa: S324
-        # Convert md5 sum in the segment of path.
-        separated_md5: str = "/".join(list(key_md5))
+        self.check_key(key)
+        # Key to crc32 sum.
+        key_crc32: str = f"{zlib.crc32(key.encode('utf-8')):08x}"
+        # Convert crc32 sum in the segment of path.
+        separated_crc32: str = "/".join(list(key_crc32))
         # The path of the branch to the database.
         branch_path: Path = Path(
-            *(constants.DB_ROOT, self.__class_model.__name__, separated_md5),
+            *(
+                constants.DB_ROOT,
+                self.__class_model.__name__,
+                separated_crc32,
+            ),
         )
         # If the branch does not exist, need to create it.
         if not await branch_path.exists():
@@ -127,7 +140,8 @@ class Scruby[T]:
             return
         raise KeyError()
 
-    async def napalm(self) -> None:
+    @classmethod
+    async def napalm(cls) -> None:
         """Asynchronous method for full database deletion (Arg: db_name).
 
         The main purpose is tests.
@@ -135,5 +149,6 @@ class Scruby[T]:
         Warning:
             - `Be careful, this will remove all keys.`
         """
-        await to_thread.run_sync(rmtree, constants.DB_ROOT)
+        with contextlib.suppress(FileNotFoundError):
+            await to_thread.run_sync(rmtree, constants.DB_ROOT)
         return
