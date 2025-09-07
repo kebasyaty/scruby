@@ -32,9 +32,11 @@
     </p>
     <p align="center">
       Scruby is a fast key-value storage library that provides an ordered mapping from string keys to string values.
+      <br>
       The library uses fractal-tree addressing.
       <br>
       The database consists of collections.
+      <br>
       The maximum size of the one collection is 16**8=4294967296 branches,
       each branch can store one or more keys.
       <br>

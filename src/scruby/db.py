@@ -30,30 +30,26 @@ class Scruby[T]:
     ) -> None:
         self.__class_model = class_model
 
-    def check_key(self, key: str) -> None:
-        """Check the key."""
-        if not isinstance(key, str):
-            raise KeyError("The key is not a type of `str`.")
-        if len(key) == 0:
-            raise KeyError("The key should not be empty.")
-
     async def get_leaf_path(self, key: str) -> Path:
         """Get the path to the database cell by key.
 
         Args:
             key: Key name.
         """
-        self.check_key(key)
-        # Key to crc32 sum.
-        key_crc32: str = f"{zlib.crc32(key.encode('utf-8')):08x}"
-        # Convert crc32 sum in the segment of path.
-        separated_crc32: str = "/".join(list(key_crc32))
+        if not isinstance(key, str):
+            raise KeyError("The key is not a type of `str`.")
+        if len(key) == 0:
+            raise KeyError("The key should not be empty.")
+        # Key to adler32 sum.
+        key_adler32: str = f"{zlib.adler32(key.encode('utf-8')):08x}"
+        # Convert adler32 sum in the segment of path.
+        separated_adler32: str = "/".join(list(key_adler32))
         # The path of the branch to the database.
         branch_path: Path = Path(
             *(
                 constants.DB_ROOT,
                 self.__class_model.__name__,
-                separated_crc32,
+                separated_adler32,
             ),
         )
         # If the branch does not exist, need to create it.
