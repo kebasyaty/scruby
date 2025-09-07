@@ -1,5 +1,11 @@
 ### CHANGELOG
 
+#### v0.6.1 2025-09-07
+
+- Trunsion from `crc32` to `adler32`.
+- Updated documentation.
+- Updated README.md
+
 #### v0.6.0 2025-09-07
 
 - Transition from MD5 to CRC32.
