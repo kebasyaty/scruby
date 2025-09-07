@@ -140,7 +140,8 @@ class Scruby[T]:
             return
         raise KeyError()
 
-    async def napalm(self) -> None:
+    @classmethod
+    async def napalm(cls) -> None:
         """Asynchronous method for full database deletion (Arg: db_name).
 
         The main purpose is tests.

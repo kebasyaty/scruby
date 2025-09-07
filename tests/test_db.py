@@ -35,7 +35,7 @@ class TestNegative:
         with pytest.raises(KeyError):
             await db.get_key("key missing")
         # Delete DB.
-        await db.napalm()
+        await Scruby.napalm()
 
     async def test_del_non_existent_key(self) -> None:
         """Delete a non-existent key."""
@@ -43,7 +43,7 @@ class TestNegative:
         with pytest.raises(KeyError):
             await db.delete_key("key missing")
         # Delete DB.
-        await db.napalm()
+        await Scruby.napalm()
 
     async def test_key_not_str(self) -> None:
         """The key is not a type of `str`."""
@@ -58,7 +58,7 @@ class TestNegative:
         with pytest.raises(KeyError):
             await db.set_key(123, user)
         # Delete DB.
-        await db.napalm()
+        await Scruby.napalm()
 
     async def test_key_is_empty(self) -> None:
         """The key should not be empty."""
@@ -73,7 +73,7 @@ class TestNegative:
         with pytest.raises(KeyError):
             await db.set_key("", user)
         # Delete DB.
-        await db.napalm()
+        await Scruby.napalm()
 
 
 class TestPositive:
@@ -87,7 +87,7 @@ class TestPositive:
         )
         assert await db.get_leaf_path("key name") == control_path
         # Delete DB.
-        await db.napalm()
+        await Scruby.napalm()
 
     async def test_set_key(self) -> None:
         """Testing a set_key method."""
@@ -101,7 +101,7 @@ class TestPositive:
         )
         assert await db.set_key("+447986123456", user) is None
         # Delete DB.
-        await db.napalm()
+        await Scruby.napalm()
 
     async def test_get_key(self) -> None:
         """Testing a get_key method."""
@@ -117,7 +117,7 @@ class TestPositive:
         data: User = await db.get_key("+447986123456")
         assert data.model_dump() == user.model_dump()
         # Delete DB.
-        await db.napalm()
+        await Scruby.napalm()
 
     async def test_has_key(self) -> None:
         """Testing a has_key method."""
@@ -133,7 +133,7 @@ class TestPositive:
         assert await db.has_key("+447986123456")
         assert not await db.has_key("key missing")
         # Delete DB.
-        await db.napalm()
+        await Scruby.napalm()
 
     async def test_delete_key(self) -> None:
         """Testing a delete_key method."""
@@ -149,4 +149,4 @@ class TestPositive:
         assert await db.delete_key("+447986123456") is None
         assert not await db.has_key("key missing")
         # Delete DB.
-        await db.napalm()
+        await Scruby.napalm()
