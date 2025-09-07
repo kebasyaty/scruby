@@ -45,11 +45,35 @@ class TestNegative:
         # Delete DB.
         await db.napalm()
 
-    async def test_del_non_existent_db(self) -> None:
-        """Delete a non-existent database."""
+    async def test_key_not_str(self) -> None:
+        """The key is not a type of `str`."""
         db = Scruby(User)
-        with pytest.raises(FileNotFoundError):
-            await db.napalm()
+        user = User(
+            first_name="John",
+            last_name="Smith",
+            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            email="John_Smith@gmail.com",
+            phone="+447986123456",
+        )
+        with pytest.raises(KeyError):
+            await db.set_key(123, user)
+        # Delete DB.
+        await db.napalm()
+
+    async def test_key_is_empty(self) -> None:
+        """The key should not be empty."""
+        db = Scruby(User)
+        user = User(
+            first_name="John",
+            last_name="Smith",
+            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            email="John_Smith@gmail.com",
+            phone="+447986123456",
+        )
+        with pytest.raises(KeyError):
+            await db.set_key("", user)
+        # Delete DB.
+        await db.napalm()
 
 
 class TestPositive:

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 __all__ = ("Scruby",)
 
+import contextlib
 import zlib
 from shutil import rmtree
 from typing import TypeVar
@@ -29,12 +30,20 @@ class Scruby[T]:
     ) -> None:
         self.__class_model = class_model
 
+    def check_key(self, key: str) -> None:
+        """Check the key."""
+        if not isinstance(key, str):
+            raise KeyError("The key is not a type of `str`.")
+        if len(key) == 0:
+            raise KeyError("The key should not be empty.")
+
     async def get_leaf_path(self, key: str) -> Path:
         """Get the path to the database cell by key.
 
         Args:
             key: Key name.
         """
+        self.check_key(key)
         # Key to crc32 sum.
         key_crc32: str = f"{zlib.crc32(key.encode('utf-8')):08x}"
         # Convert crc32 sum in the segment of path.
@@ -139,5 +148,6 @@ class Scruby[T]:
         Warning:
             - `Be careful, this will remove all keys.`
         """
-        await to_thread.run_sync(rmtree, constants.DB_ROOT)
+        with contextlib.suppress(FileNotFoundError):
+            await to_thread.run_sync(rmtree, constants.DB_ROOT)
         return
