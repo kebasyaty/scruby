@@ -4,7 +4,7 @@ from __future__ import annotations
 
 __all__ = ("Scruby",)
 
-import hashlib
+import zlib
 from shutil import rmtree
 from typing import TypeVar
 
@@ -35,13 +35,17 @@ class Scruby[T]:
         Args:
             key: Key name.
         """
-        # Key to md5 sum.
-        key_md5: str = hashlib.md5(key.encode("utf-8")).hexdigest()  # noqa: S324
-        # Convert md5 sum in the segment of path.
-        separated_md5: str = "/".join(list(key_md5))
+        # Key to crc32 sum.
+        key_crc32: str = f"{zlib.crc32(key.encode('utf-8')):08x}"
+        # Convert crc32 sum in the segment of path.
+        separated_crc32: str = "/".join(list(key_crc32))
         # The path of the branch to the database.
         branch_path: Path = Path(
-            *(constants.DB_ROOT, self.__class_model.__name__, separated_md5),
+            *(
+                constants.DB_ROOT,
+                self.__class_model.__name__,
+                separated_crc32,
+            ),
         )
         # If the branch does not exist, need to create it.
         if not await branch_path.exists():
