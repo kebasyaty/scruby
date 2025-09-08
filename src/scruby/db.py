@@ -40,9 +40,11 @@ class Scruby[T]:
             raise KeyError("The key is not a type of `str`.")
         if len(key) == 0:
             raise KeyError("The key should not be empty.")
-        # Key to adler32 sum.
-        key_as_hash: str = f"{zlib.crc32(key.encode('utf-8')):08x}"
-        # Convert adler32 sum in the segment of path.
+        # Get length of hash.
+        length_hash = constants.LENGTH_SEPARATED_HASH
+        # Key to crc32 sum.
+        key_as_hash: str = f"{zlib.crc32(key.encode('utf-8')):08x}"[0:length_hash]
+        # Convert crc32 sum in the segment of path.
         separated_hash: str = "/".join(list(key_as_hash))
         # The path of the branch to the database.
         branch_path: Path = Path(
