@@ -83,7 +83,7 @@ class TestPositive:
         """Create instance of database by default."""
         db = Scruby(User)
         control_path = Path(
-            "ScrubyDB/User/0/d/b/3/0/3/0/b/leaf.json",
+            "ScrubyDB/User/a/3/a/6/d/2/d/1/leaf.json",
         )
         assert await db.get_leaf_path("key name") == control_path
         # Delete DB.

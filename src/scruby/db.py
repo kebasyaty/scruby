@@ -18,7 +18,7 @@ T = TypeVar("T")
 
 
 class Scruby[T]:
-    """Creation and management of the database.
+    """Creation and management of database.
 
     Args:
         class_model: Class of Model (Pydantic).
@@ -31,7 +31,7 @@ class Scruby[T]:
         self.__class_model = class_model
 
     async def get_leaf_path(self, key: str) -> Path:
-        """Get the path to the database cell by key.
+        """Asynchronous method for getting path to collection cell by key.
 
         Args:
             key: Key name.
@@ -41,15 +41,15 @@ class Scruby[T]:
         if len(key) == 0:
             raise KeyError("The key should not be empty.")
         # Key to adler32 sum.
-        key_adler32: str = f"{zlib.adler32(key.encode('utf-8')):08x}"
+        key_as_hash: str = f"{zlib.crc32(key.encode('utf-8')):08x}"
         # Convert adler32 sum in the segment of path.
-        separated_adler32: str = "/".join(list(key_adler32))
+        separated_hash: str = "/".join(list(key_as_hash))
         # The path of the branch to the database.
         branch_path: Path = Path(
             *(
                 constants.DB_ROOT,
                 self.__class_model.__name__,
-                separated_adler32,
+                separated_hash,
             ),
         )
         # If the branch does not exist, need to create it.
@@ -64,7 +64,7 @@ class Scruby[T]:
         key: str,
         value: T,
     ) -> None:
-        """Asynchronous method for adding and updating keys to database.
+        """Asynchronous method for adding and updating keys to collection.
 
         Args:
             key: Key name.
@@ -85,7 +85,7 @@ class Scruby[T]:
             await leaf_path.write_bytes(orjson.dumps({key: value_json}))
 
     async def get_key(self, key: str) -> T:
-        """Asynchronous method for getting key from database.
+        """Asynchronous method for getting value of key from collection.
 
         Args:
             key: Key name.
@@ -101,7 +101,7 @@ class Scruby[T]:
         raise KeyError()
 
     async def has_key(self, key: str) -> bool:
-        """Asynchronous method for checking presence of  key in database.
+        """Asynchronous method for checking presence of key in collection.
 
         Args:
             key: Key name.
@@ -120,7 +120,7 @@ class Scruby[T]:
         return False
 
     async def delete_key(self, key: str) -> None:
-        """Asynchronous method for deleting key from database.
+        """Asynchronous method for deleting key from collection.
 
         Args:
             key: Key name.
@@ -138,7 +138,7 @@ class Scruby[T]:
 
     @classmethod
     async def napalm(cls) -> None:
-        """Asynchronous method for full database deletion (Arg: db_name).
+        """Asynchronous method for full database deletion.
 
         The main purpose is tests.
 
