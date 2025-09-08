@@ -16,10 +16,6 @@ In the future, to search by value of key, the use of a quantum loop is supposed.
 
 from __future__ import annotations
 
-__all__ = (
-    "Scruby",
-    "constants",
-)
+__all__ = ("Scruby",)
 
-from scruby import constants
 from scruby.db import Scruby
