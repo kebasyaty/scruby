@@ -4,6 +4,7 @@
 
 - Added variable `LENGTH_SEPARATED_HASH`.
 - Trunsion from `adler32` to `crc32`.
+- Updated tests.
 - Updated documentation.
 - Updated README.md
 
