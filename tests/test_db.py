@@ -9,7 +9,7 @@ from anyio import Path
 from pydantic import BaseModel, EmailStr
 from pydantic_extra_types.phone_numbers import PhoneNumber
 
-from scruby import Scruby
+from scruby import Scruby, constants
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
@@ -146,5 +146,36 @@ class TestPositive:
         await db.set_key("+447986123456", user)
         assert await db.delete_key("+447986123456") is None
         assert not await db.has_key("key missing")
+        # Delete DB.
+        await Scruby.napalm()
+
+    async def test_length_separated_hash(self) -> None:
+        """Length of separated hash."""
+        db = Scruby(User)
+        #
+        constants.LENGTH_SEPARATED_HASH = 2
+        control_path = Path(
+            "ScrubyDB/User/a/3/leaf.json",
+        )
+        assert await db.get_leaf_path("key name") == control_path
+        #
+        constants.LENGTH_SEPARATED_HASH = 4
+        control_path = Path(
+            "ScrubyDB/User/a/3/a/6/leaf.json",
+        )
+        assert await db.get_leaf_path("key name") == control_path
+        #
+        constants.LENGTH_SEPARATED_HASH = 6
+        control_path = Path(
+            "ScrubyDB/User/a/3/a/6/d/2/leaf.json",
+        )
+        assert await db.get_leaf_path("key name") == control_path
+        #
+        constants.LENGTH_SEPARATED_HASH = 8
+        control_path = Path(
+            "ScrubyDB/User/a/3/a/6/d/2/d/1/leaf.json",
+        )
+        assert await db.get_leaf_path("key name") == control_path
+        #
         # Delete DB.
         await Scruby.napalm()
