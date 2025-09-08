@@ -6,6 +6,7 @@ dist/
 wheels/
 *.egg-info
 site/
+ScrubyDB/
 
 # Virtual environments
 .venv

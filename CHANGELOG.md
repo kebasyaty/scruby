@@ -1,5 +1,13 @@
 ### CHANGELOG
 
+#### v0.6.2 2025-09-08
+
+- Added variable `LENGTH_SEPARATED_HASH`.
+- Trunsion from `adler32` to `crc32`.
+- Updated tests.
+- Updated documentation.
+- Updated README.md
+
 #### v0.6.1 2025-09-07
 
 - Trunsion from `crc32` to `adler32`.
