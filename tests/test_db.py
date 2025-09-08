@@ -9,11 +9,9 @@ from anyio import Path
 from pydantic import BaseModel, EmailStr
 from pydantic_extra_types.phone_numbers import PhoneNumber
 
-from scruby import Scruby, constants
+from scruby import Scruby
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
-
-constants.DB_ROOT = "ScrubyDB"
 
 
 class User(BaseModel):
