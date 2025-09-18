@@ -26,14 +26,14 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - uses: pre-commit/action@v3.0.1
-
       - uses: astral-sh/setup-uv@v6
         with:
           version: ${{ matrix.uv-version }}
 
       - name: Install dependencies with uv
         run: uv sync --locked --dev --group test
+
+      - uses: pre-commit/action@v3.0.1
 
       - name: Run tests
         run: uv run pytest -v tests/
