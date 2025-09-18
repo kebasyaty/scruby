@@ -2,11 +2,20 @@
 
 The module contains the following variables:
 
-- `DB_ROOT` - Path to root directory of database. By default = "ScrubyDB" (in root of project).
+- `DB_ROOT` - Path to root directory of database. `By default = "ScrubyDB"` (*in root of project*).
 - `LENGTH_SEPARATED_HASH` - Length of separated hash for create path inside collection.
+    - `2` - 256 branche (main purpose is tests).
+    - `4` - 65536 branche.
+    - `6` - 16777216 branche.
+    - `8` - 4294967296 branche (by default).
 """
 
 from __future__ import annotations
+
+__all__ = (
+    "DB_ROOT",
+    "LENGTH_SEPARATED_HASH",
+)
 
 from typing import Literal
 
