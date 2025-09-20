@@ -923,6 +923,7 @@ docs = [
     { name = "mkdocs" },
     { name = "mkdocs-material" },
     { name = "mkdocstrings", extra = ["python"] },
+    { name = "pygments" },
     { name = "pymdown-extensions" },
 ]
 lint = [
@@ -953,6 +954,7 @@ docs = [
     { name = "mkdocs", specifier = ">=1.6.1" },
     { name = "mkdocs-material", specifier = ">=9.6.16" },
     { name = "mkdocstrings", extras = ["python"], specifier = ">=0.30.0" },
+    { name = "pygments", specifier = ">=2.19.2" },
     { name = "pymdown-extensions", specifier = ">=10.16.1" },
 ]
 lint = [
