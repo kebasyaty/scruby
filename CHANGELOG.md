@@ -1,5 +1,9 @@
 ### CHANGELOG
 
+#### v0.6.3 2025-09-20
+
+- Updated dependencies.
+
 #### v0.6.2 2025-09-08
 
 - Added variable `LENGTH_SEPARATED_HASH`.
