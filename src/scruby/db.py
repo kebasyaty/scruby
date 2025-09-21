@@ -201,7 +201,15 @@ class Scruby[T]:
     ) -> T | None:
         """Asynchronous method for find a single document.
 
-        The search is based on the effect of a quantum loop.
+            The search is based on the effect of a quantum loop.
+
+        Args:
+            filter_fn: A function that execute the conditions of filtering.
+            max_workers: The maximum number of processes that can be used to
+                         execute the given calls. If None or not given then as many
+                         worker processes will be created as the machine has processors.
+            timeout: The number of seconds to wait for the result if the future isn't done.
+                     If None, then there is no limit on the wait time.
         """
         branches_range: range = range(1, self.__max_num_branches)
         search_task_fn: Callable = self.search_task
