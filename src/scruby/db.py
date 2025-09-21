@@ -196,7 +196,10 @@ class Scruby[T]:
         max_workers: int | None = None,
         timeout: float | None = None,
     ) -> T | None:
-        """Asynchronous method for find a single document."""
+        """Asynchronous method for find a single document.
+
+        The search is based on the effect of a quantum loop.
+        """
         branches_range: range = range(1, self.__max_num_branches)
         search_task_fn: Callable = self.search_task
         with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
