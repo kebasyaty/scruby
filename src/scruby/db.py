@@ -8,6 +8,7 @@ import concurrent.futures
 import contextlib
 import zlib
 from collections.abc import Callable
+from pathlib import Path as SyncPath
 from shutil import rmtree
 from typing import Never, TypeVar, assert_never
 
@@ -31,6 +32,7 @@ class Scruby[T]:
         class_model: T,
     ) -> None:
         self.__class_model = class_model
+        self.__db_root = constants.DB_ROOT
         self.__length_hash = constants.LENGTH_SEPARATED_HASH
         # The maximum number of branches.
         match self.__length_hash:
@@ -62,7 +64,7 @@ class Scruby[T]:
         # The path of the branch to the database.
         branch_path: Path = Path(
             *(
-                constants.DB_ROOT,
+                self.__db_root,
                 self.__class_model.__name__,
                 separated_hash,
             ),
@@ -164,18 +166,42 @@ class Scruby[T]:
             await to_thread.run_sync(rmtree, constants.DB_ROOT)
         return
 
+    def search_task(
+        self,
+        branch_num: int,
+        filter_fn: Callable,
+    ) -> T | None:
+        """Search task."""
+        branch_num_as_hash: str = f"{branch_num:08x}"[0 : self.__length_hash]
+        separated_hash: str = "/".join(list(branch_num_as_hash))
+        branch_path: Path = Path(
+            *(
+                self.__db_root,
+                self.__class_model.__name__,
+                separated_hash,
+            ),
+        )
+        if branch_path.exists():
+            leaf_path: SyncPath = SyncPath(*(branch_path, "leaf.json"))
+            data_json: bytes = leaf_path.read_bytes()
+            data: dict = orjson.loads(data_json) or {}
+            for _, doc in data.items():
+                if filter_fn(doc):
+                    return self.__class_model.model_validate_json(doc)
+        return None
+
     def find_one(
         self,
-        task: Callable,
-        filter: Callable,
+        filter_fn: Callable,
         max_workers: int | None = None,
         timeout: float | None = None,
     ) -> T | None:
         """Asynchronous method for find a single document."""
-        branches_range = range(1, self.__max_num_branches)
+        branches_range: range = range(1, self.__max_num_branches)
+        search_task_fn: Callable = self.search_task
         with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
-            for num in branches_range:
-                future = executor.submit(task, num, filter)
+            for branch_num in branches_range:
+                future = executor.submit(search_task_fn, branch_num, filter_fn)
                 result = future.result(timeout)
                 if result is not None:
                     return result
