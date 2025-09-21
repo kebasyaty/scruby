@@ -4,10 +4,12 @@ from __future__ import annotations
 
 __all__ = ("Scruby",)
 
+import concurrent.futures
 import contextlib
 import zlib
+from collections.abc import Callable
 from shutil import rmtree
-from typing import TypeVar
+from typing import Never, TypeVar, assert_never
 
 import orjson
 from anyio import Path, to_thread
@@ -29,6 +31,19 @@ class Scruby[T]:
         class_model: T,
     ) -> None:
         self.__class_model = class_model
+        self.__length_hash = constants.LENGTH_SEPARATED_HASH
+        # The maximum number of branches.
+        match self.__length_hash:
+            case 2:
+                self.__max_num_branches = 256
+            case 4:
+                self.__max_num_branches = 65536
+            case 6:
+                self.__max_num_branches = 16777216
+            case 8:
+                self.__max_num_branches = 4294967296
+            case _ as unreachable:
+                assert_never(Never(unreachable))
 
     async def get_leaf_path(self, key: str) -> Path:
         """Asynchronous method for getting path to collection cell by key.
@@ -40,10 +55,8 @@ class Scruby[T]:
             raise KeyError("The key is not a type of `str`.")
         if len(key) == 0:
             raise KeyError("The key should not be empty.")
-        # Get length of hash.
-        length_hash = constants.LENGTH_SEPARATED_HASH
         # Key to crc32 sum.
-        key_as_hash: str = f"{zlib.crc32(key.encode('utf-8')):08x}"[0:length_hash]
+        key_as_hash: str = f"{zlib.crc32(key.encode('utf-8')):08x}"[0 : self.__length_hash]
         # Convert crc32 sum in the segment of path.
         separated_hash: str = "/".join(list(key_as_hash))
         # The path of the branch to the database.
@@ -150,3 +163,20 @@ class Scruby[T]:
         with contextlib.suppress(FileNotFoundError):
             await to_thread.run_sync(rmtree, constants.DB_ROOT)
         return
+
+    def find_one(
+        self,
+        task: Callable,
+        filter: Callable,
+        max_workers: int | None = None,
+        timeout: float | None = None,
+    ) -> T | None:
+        """Asynchronous method for find a single document."""
+        branches_range = range(1, self.__max_num_branches)
+        with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
+            for num in branches_range:
+                future = executor.submit(task, num, filter)
+                result = future.result(timeout)
+                if result is not None:
+                    return result
+        return None
