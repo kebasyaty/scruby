@@ -153,8 +153,8 @@ class Scruby[T]:
             return
         raise KeyError()
 
-    @classmethod
-    async def napalm(cls) -> None:
+    @staticmethod
+    async def napalm() -> None:
         """Asynchronous method for full database deletion.
 
         The main purpose is tests.
@@ -166,18 +166,21 @@ class Scruby[T]:
             await to_thread.run_sync(rmtree, constants.DB_ROOT)
         return
 
+    @staticmethod
     def search_task(
-        self,
         branch_num: int,
         filter_fn: Callable,
+        length_hash: str,
+        db_root: str,
+        class_model: T,
     ) -> T | None:
         """Search task."""
-        branch_num_as_hash: str = f"{branch_num:08x}"[0 : self.__length_hash]
+        branch_num_as_hash: str = f"{branch_num:08x}"[0:length_hash]
         separated_hash: str = "/".join(list(branch_num_as_hash))
         branch_path: Path = Path(
             *(
-                self.__db_root,
-                self.__class_model.__name__,
+                db_root,
+                class_model.__name__,
                 separated_hash,
             ),
         )
@@ -187,7 +190,7 @@ class Scruby[T]:
             data: dict = orjson.loads(data_json) or {}
             for _, doc in data.items():
                 if filter_fn(doc):
-                    return self.__class_model.model_validate_json(doc)
+                    return class_model.model_validate_json(doc)
         return None
 
     def find_one(
@@ -202,9 +205,19 @@ class Scruby[T]:
         """
         branches_range: range = range(1, self.__max_num_branches)
         search_task_fn: Callable = self.search_task
+        length_hash: int = self.__length_hash
+        db_root: str = self.__db_root
+        class_model: T = self.__class_model
         with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
             for branch_num in branches_range:
-                future = executor.submit(search_task_fn, branch_num, filter_fn)
+                future = executor.submit(
+                    search_task_fn,
+                    branch_num,
+                    filter_fn,
+                    length_hash,
+                    db_root,
+                    class_model,
+                )
                 result = future.result(timeout)
                 if result is not None:
                     return result
