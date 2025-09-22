@@ -1,5 +1,12 @@
 ### CHANGELOG
 
+#### v0.7.1 2025-09-22
+
+- Renamed constant from `LENGTH_SEPARATED_HASH` to `LENGTH_REDUCTION_HASH`.
+- Updated tests.
+- Updated documentation.
+- Updated README.md
+
 #### v0.7.0 2025-09-22
 
 - Added a `find_one` method.
@@ -13,7 +20,7 @@
 
 #### v0.6.2 2025-09-08
 
-- Added variable `LENGTH_REDUCTION_HASH`.
+- Added variable `LENGTH_SEPARATED_HASH`.
 - Trunsion from `adler32` to `crc32`.
 - Updated tests.
 - Updated documentation.
