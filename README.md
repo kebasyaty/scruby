@@ -126,6 +126,7 @@ if __name__ == "__main__":
 
 The search is based on the effect of a quantum loop.
 The search effectiveness depends on the number of processor threads.
+Ideally, hundreds and even thousands of streams are required.
 """
 
 import anyio
