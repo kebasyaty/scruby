@@ -202,7 +202,8 @@ class Scruby[T]:
     ) -> T | None:
         """Find a single document.
 
-            The search is based on the effect of a quantum loop.
+        The search is based on the effect of a quantum loop.
+        The search effectiveness depends on the number of processor threads.
 
         Args:
             filter_fn: A function that execute the conditions of filtering.
