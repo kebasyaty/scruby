@@ -10,7 +10,7 @@ import zlib
 from collections.abc import Callable
 from pathlib import Path as SyncPath
 from shutil import rmtree
-from typing import Never, TypeVar, assert_never
+from typing import Any, Never, TypeVar, assert_never
 
 import orjson
 from anyio import Path, to_thread
@@ -36,14 +36,14 @@ class Scruby[T]:
         self.__length_hash = constants.LENGTH_SEPARATED_HASH
         # The maximum number of keys.
         match self.__length_hash:
+            case 0:
+                self.__max_num_keys = 4294967296
             case 2:
-                self.__max_num_keys = 256
+                self.__max_num_keys = 16777216
             case 4:
                 self.__max_num_keys = 65536
             case 6:
-                self.__max_num_keys = 16777216
-            case 8:
-                self.__max_num_keys = 4294967296
+                self.__max_num_keys = 256
             case _ as unreachable:
                 assert_never(Never(unreachable))
 
@@ -58,7 +58,7 @@ class Scruby[T]:
         if len(key) == 0:
             raise KeyError("The key should not be empty.")
         # Key to crc32 sum.
-        key_as_hash: str = f"{zlib.crc32(key.encode('utf-8')):08x}"[0 : self.__length_hash]
+        key_as_hash: str = f"{zlib.crc32(key.encode('utf-8')):08x}"[self.__length_hash :]
         # Convert crc32 sum in the segment of path.
         separated_hash: str = "/".join(list(key_as_hash))
         # The path of the branch to the database.
@@ -173,24 +173,25 @@ class Scruby[T]:
         length_hash: str,
         db_root: str,
         class_model: T,
-    ) -> T | None:
+    ) -> dict[str, Any] | None:
         """Search task."""
-        key_as_hash: str = f"{key:08x}"[0:length_hash]
+        key_as_hash: str = f"{key:08x}"[length_hash:]
         separated_hash: str = "/".join(list(key_as_hash))
-        branch_path: SyncPath = SyncPath(
+        leaf_path: SyncPath = SyncPath(
             *(
                 db_root,
                 class_model.__name__,
                 separated_hash,
+                "leaf.json",
             ),
         )
-        if branch_path.exists():
-            leaf_path: SyncPath = SyncPath(*(branch_path, "leaf.json"))
+        if leaf_path.exists():
             data_json: bytes = leaf_path.read_bytes()
-            data: dict = orjson.loads(data_json) or {}
-            for _, doc in data.items():
+            data: dict[str, str] = orjson.loads(data_json) or {}
+            for _, val in data.items():
+                doc = class_model.model_validate_json(val)
                 if filter_fn(doc):
-                    return class_model.model_validate_json(doc)
+                    return doc
         return None
 
     def find_one(
@@ -199,7 +200,7 @@ class Scruby[T]:
         max_workers: int | None = None,
         timeout: float | None = None,
     ) -> T | None:
-        """Asynchronous method for find a single document.
+        """Find a single document.
 
             The search is based on the effect of a quantum loop.
 

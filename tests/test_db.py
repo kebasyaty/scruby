@@ -151,33 +151,61 @@ class TestPositive:
 
     async def test_length_separated_hash(self) -> None:
         """Length of separated hash."""
-        constants.LENGTH_SEPARATED_HASH = 2
-        db = Scruby(User)
-        control_path = Path(
-            "ScrubyDB/User/a/3/leaf.json",
-        )
-        assert await db.get_leaf_path("key name") == control_path
-        #
-        constants.LENGTH_SEPARATED_HASH = 4
-        db = Scruby(User)
-        control_path = Path(
-            "ScrubyDB/User/a/3/a/6/leaf.json",
-        )
-        assert await db.get_leaf_path("key name") == control_path
-        #
-        constants.LENGTH_SEPARATED_HASH = 6
-        db = Scruby(User)
-        control_path = Path(
-            "ScrubyDB/User/a/3/a/6/d/2/leaf.json",
-        )
-        assert await db.get_leaf_path("key name") == control_path
-        #
-        constants.LENGTH_SEPARATED_HASH = 8
+        constants.LENGTH_SEPARATED_HASH = 0  # 4294967296 keys (by default).
         db = Scruby(User)
         control_path = Path(
             "ScrubyDB/User/a/3/a/6/d/2/d/1/leaf.json",
         )
         assert await db.get_leaf_path("key name") == control_path
+        #
+        constants.LENGTH_SEPARATED_HASH = 2  # 16777216 keys.
+        db = Scruby(User)
+        control_path = Path(
+            "ScrubyDB/User/a/6/d/2/d/1/leaf.json",
+        )
+        assert await db.get_leaf_path("key name") == control_path
+        constants.LENGTH_SEPARATED_HASH = 4  # 65536 keys.
+        db = Scruby(User)
+        control_path = Path(
+            "ScrubyDB/User/d/2/d/1/leaf.json",
+        )
+        assert await db.get_leaf_path("key name") == control_path
+        #
+        constants.LENGTH_SEPARATED_HASH = 6  # 256 keys (main purpose is tests).
+        db = Scruby(User)
+        control_path = Path(
+            "ScrubyDB/User/d/1/leaf.json",
+        )
+        assert await db.get_leaf_path("key name") == control_path
+        #
+        # Delete DB.
+        await Scruby.napalm()
+
+    async def test_find_one(self) -> None:
+        """Find a single document."""
+        constants.LENGTH_SEPARATED_HASH = 6  # 256 keys (main purpose is tests).
+        db = Scruby(User)
+        user = User(
+            first_name="John",
+            last_name="Smith",
+            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            email="John_Smith@gmail.com",
+            phone="+447986123456",
+        )
+        await db.set_key("+447986123456", user)
+        #
+        # by email
+        result: User | None = db.find_one(
+            filter_fn=lambda doc: doc.email == "John_Smith@gmail.com",
+        )
+        assert result is not None
+        assert result.email == user.email
+        # by birthday
+        result = db.find_one(
+            filter_fn=lambda doc: doc.birthday == datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+        )
+        assert result is not None
+        assert result.birthday == user.birthday
         #
         # Delete DB.
         await Scruby.napalm()
