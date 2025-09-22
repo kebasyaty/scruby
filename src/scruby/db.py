@@ -33,9 +33,9 @@ class Scruby[T]:
     ) -> None:
         self.__class_model = class_model
         self.__db_root = constants.DB_ROOT
-        self.__length_hash = constants.LENGTH_SEPARATED_HASH
+        self.__length_reduction_hash = constants.LENGTH_REDUCTION_HASH
         # The maximum number of keys.
-        match self.__length_hash:
+        match self.__length_reduction_hash:
             case 0:
                 self.__max_num_keys = 4294967296
             case 2:
@@ -58,7 +58,7 @@ class Scruby[T]:
         if len(key) == 0:
             raise KeyError("The key should not be empty.")
         # Key to crc32 sum.
-        key_as_hash: str = f"{zlib.crc32(key.encode('utf-8')):08x}"[self.__length_hash :]
+        key_as_hash: str = f"{zlib.crc32(key.encode('utf-8')):08x}"[self.__length_reduction_hash :]
         # Convert crc32 sum in the segment of path.
         separated_hash: str = "/".join(list(key_as_hash))
         # The path of the branch to the database.
@@ -170,12 +170,12 @@ class Scruby[T]:
     def search_task(
         key: int,
         filter_fn: Callable,
-        length_hash: str,
+        length_reduction_hash: str,
         db_root: str,
         class_model: T,
     ) -> dict[str, Any] | None:
         """Search task."""
-        key_as_hash: str = f"{key:08x}"[length_hash:]
+        key_as_hash: str = f"{key:08x}"[length_reduction_hash:]
         separated_hash: str = "/".join(list(key_as_hash))
         leaf_path: SyncPath = SyncPath(
             *(
@@ -216,7 +216,7 @@ class Scruby[T]:
         """
         keys: range = range(1, self.__max_num_keys)
         search_task_fn: Callable = self.search_task
-        length_hash: int = self.__length_hash
+        length_reduction_hash: int = self.__length_reduction_hash
         db_root: str = self.__db_root
         class_model: T = self.__class_model
         with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
@@ -225,7 +225,7 @@ class Scruby[T]:
                     search_task_fn,
                     key,
                     filter_fn,
-                    length_hash,
+                    length_reduction_hash,
                     db_root,
                     class_model,
                 )

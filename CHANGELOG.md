@@ -1,5 +1,12 @@
 ### CHANGELOG
 
+#### v0.7.1 2025-09-22
+
+- Renamed constant from `LENGTH_SEPARATED_HASH` to `LENGTH_REDUCTION_HASH`.
+- Updated tests.
+- Updated documentation.
+- Updated README.md
+
 #### v0.7.0 2025-09-22
 
 - Added a `find_one` method.
