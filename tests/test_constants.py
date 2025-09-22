@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from scruby.constants import DB_ROOT, LENGTH_SEPARATED_HASH
+from scruby.constants import DB_ROOT, LENGTH_REDUCTION_HASH
 
 
 def test_db_root() -> None:
@@ -10,6 +10,6 @@ def test_db_root() -> None:
     assert DB_ROOT == "ScrubyDB"
 
 
-def test_length_separated_hash() -> None:
-    """Test a LENGTH_SEPARATED_HASH variable."""
-    assert LENGTH_SEPARATED_HASH == 0
+def test_LENGTH_REDUCTION_HASH() -> None:
+    """Test a LENGTH_REDUCTION_HASH variable."""
+    assert LENGTH_REDUCTION_HASH == 0

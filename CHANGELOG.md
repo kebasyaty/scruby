@@ -13,7 +13,7 @@
 
 #### v0.6.2 2025-09-08
 
-- Added variable `LENGTH_SEPARATED_HASH`.
+- Added variable `LENGTH_REDUCTION_HASH`.
 - Trunsion from `adler32` to `crc32`.
 - Updated tests.
 - Updated documentation.

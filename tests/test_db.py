@@ -149,29 +149,29 @@ class TestPositive:
         # Delete DB.
         await Scruby.napalm()
 
-    async def test_length_separated_hash(self) -> None:
-        """Length of separated hash."""
-        constants.LENGTH_SEPARATED_HASH = 0  # 4294967296 keys (by default).
+    async def test_length_reduction_hash(self) -> None:
+        """Length of reduction hash."""
+        constants.LENGTH_REDUCTION_HASH = 0  # 4294967296 keys (by default).
         db = Scruby(User)
         control_path = Path(
             "ScrubyDB/User/a/3/a/6/d/2/d/1/leaf.json",
         )
         assert await db.get_leaf_path("key name") == control_path
         #
-        constants.LENGTH_SEPARATED_HASH = 2  # 16777216 keys.
+        constants.LENGTH_REDUCTION_HASH = 2  # 16777216 keys.
         db = Scruby(User)
         control_path = Path(
             "ScrubyDB/User/a/6/d/2/d/1/leaf.json",
         )
         assert await db.get_leaf_path("key name") == control_path
-        constants.LENGTH_SEPARATED_HASH = 4  # 65536 keys.
+        constants.LENGTH_REDUCTION_HASH = 4  # 65536 keys.
         db = Scruby(User)
         control_path = Path(
             "ScrubyDB/User/d/2/d/1/leaf.json",
         )
         assert await db.get_leaf_path("key name") == control_path
         #
-        constants.LENGTH_SEPARATED_HASH = 6  # 256 keys (main purpose is tests).
+        constants.LENGTH_REDUCTION_HASH = 6  # 256 keys (main purpose is tests).
         db = Scruby(User)
         control_path = Path(
             "ScrubyDB/User/d/1/leaf.json",
@@ -183,7 +183,7 @@ class TestPositive:
 
     async def test_find_one(self) -> None:
         """Find a single document."""
-        constants.LENGTH_SEPARATED_HASH = 6  # 256 keys (main purpose is tests).
+        constants.LENGTH_REDUCTION_HASH = 6  # 256 keys (main purpose is tests).
         db = Scruby(User)
         user = User(
             first_name="John",

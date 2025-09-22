@@ -71,7 +71,7 @@ from scruby import Scruby, constants
 from pprint import pprint as pp
 
 constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
-constants.LENGTH_SEPARATED_HASH = 6  # 256 keys (main purpose is tests).
+constants.LENGTH_REDUCTION_HASH = 6  # 256 keys (main purpose is tests).
 
 class User(BaseModel):
     """Model of User."""
