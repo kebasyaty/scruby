@@ -34,16 +34,16 @@ class Scruby[T]:
         self.__class_model = class_model
         self.__db_root = constants.DB_ROOT
         self.__length_hash = constants.LENGTH_SEPARATED_HASH
-        # The maximum number of branches.
+        # The maximum number of keys.
         match self.__length_hash:
             case 2:
-                self.__max_num_branches = 256
+                self.__max_num_keys = 256
             case 4:
-                self.__max_num_branches = 65536
+                self.__max_num_keys = 65536
             case 6:
-                self.__max_num_branches = 16777216
+                self.__max_num_keys = 16777216
             case 8:
-                self.__max_num_branches = 4294967296
+                self.__max_num_keys = 4294967296
             case _ as unreachable:
                 assert_never(Never(unreachable))
 
@@ -168,16 +168,16 @@ class Scruby[T]:
 
     @staticmethod
     def search_task(
-        branch_num: int,
+        key: int,
         filter_fn: Callable,
         length_hash: str,
         db_root: str,
         class_model: T,
     ) -> T | None:
         """Search task."""
-        branch_num_as_hash: str = f"{branch_num:08x}"[0:length_hash]
-        separated_hash: str = "/".join(list(branch_num_as_hash))
-        branch_path: Path = Path(
+        key_as_hash: str = f"{key:08x}"[0:length_hash]
+        separated_hash: str = "/".join(list(key_as_hash))
+        branch_path: SyncPath = SyncPath(
             *(
                 db_root,
                 class_model.__name__,
@@ -211,16 +211,16 @@ class Scruby[T]:
             timeout: The number of seconds to wait for the result if the future isn't done.
                      If None, then there is no limit on the wait time.
         """
-        branches_range: range = range(1, self.__max_num_branches)
+        keys: range = range(1, self.__max_num_keys)
         search_task_fn: Callable = self.search_task
         length_hash: int = self.__length_hash
         db_root: str = self.__db_root
         class_model: T = self.__class_model
         with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
-            for branch_num in branches_range:
+            for key in keys:
                 future = executor.submit(
                     search_task_fn,
-                    branch_num,
+                    key,
                     filter_fn,
                     length_hash,
                     db_root,
