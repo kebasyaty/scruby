@@ -201,11 +201,11 @@ class TestPositive:
         assert result is not None
         assert result.email == user.email
         # by birthday
-        result = db.find_one(
+        result_2: User | None = db.find_one(
             filter_fn=lambda doc: doc.birthday == datetime.datetime(1970, 1, 1),  # noqa: DTZ001
         )
-        assert result is not None
-        assert result.birthday == user.birthday
+        assert result_2 is not None
+        assert result_2.birthday == user.birthday
         #
         # Delete DB.
         await Scruby.napalm()
