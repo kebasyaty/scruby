@@ -56,6 +56,12 @@ if __name__ == "__main__":
 #### Find a single document
 
 ```py title="main.py" linenums="1"
+"""Find a single document.
+
+The search is based on the effect of a quantum loop.
+The search effectiveness depends on the number of processor threads.
+"""
+
 import anyio
 import datetime
 from pydantic import BaseModel, EmailStr
