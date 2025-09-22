@@ -4,10 +4,13 @@ from __future__ import annotations
 
 __all__ = ("Scruby",)
 
+import concurrent.futures
 import contextlib
 import zlib
+from collections.abc import Callable
+from pathlib import Path as SyncPath
 from shutil import rmtree
-from typing import TypeVar
+from typing import Any, Never, TypeVar, assert_never
 
 import orjson
 from anyio import Path, to_thread
@@ -29,6 +32,20 @@ class Scruby[T]:
         class_model: T,
     ) -> None:
         self.__class_model = class_model
+        self.__db_root = constants.DB_ROOT
+        self.__length_hash = constants.LENGTH_SEPARATED_HASH
+        # The maximum number of keys.
+        match self.__length_hash:
+            case 0:
+                self.__max_num_keys = 4294967296
+            case 2:
+                self.__max_num_keys = 16777216
+            case 4:
+                self.__max_num_keys = 65536
+            case 6:
+                self.__max_num_keys = 256
+            case _ as unreachable:
+                assert_never(Never(unreachable))
 
     async def get_leaf_path(self, key: str) -> Path:
         """Asynchronous method for getting path to collection cell by key.
@@ -40,16 +57,14 @@ class Scruby[T]:
             raise KeyError("The key is not a type of `str`.")
         if len(key) == 0:
             raise KeyError("The key should not be empty.")
-        # Get length of hash.
-        length_hash = constants.LENGTH_SEPARATED_HASH
         # Key to crc32 sum.
-        key_as_hash: str = f"{zlib.crc32(key.encode('utf-8')):08x}"[0:length_hash]
+        key_as_hash: str = f"{zlib.crc32(key.encode('utf-8')):08x}"[self.__length_hash :]
         # Convert crc32 sum in the segment of path.
         separated_hash: str = "/".join(list(key_as_hash))
         # The path of the branch to the database.
         branch_path: Path = Path(
             *(
-                constants.DB_ROOT,
+                self.__db_root,
                 self.__class_model.__name__,
                 separated_hash,
             ),
@@ -138,8 +153,8 @@ class Scruby[T]:
             return
         raise KeyError()
 
-    @classmethod
-    async def napalm(cls) -> None:
+    @staticmethod
+    async def napalm() -> None:
         """Asynchronous method for full database deletion.
 
         The main purpose is tests.
@@ -150,3 +165,71 @@ class Scruby[T]:
         with contextlib.suppress(FileNotFoundError):
             await to_thread.run_sync(rmtree, constants.DB_ROOT)
         return
+
+    @staticmethod
+    def search_task(
+        key: int,
+        filter_fn: Callable,
+        length_hash: str,
+        db_root: str,
+        class_model: T,
+    ) -> dict[str, Any] | None:
+        """Search task."""
+        key_as_hash: str = f"{key:08x}"[length_hash:]
+        separated_hash: str = "/".join(list(key_as_hash))
+        leaf_path: SyncPath = SyncPath(
+            *(
+                db_root,
+                class_model.__name__,
+                separated_hash,
+                "leaf.json",
+            ),
+        )
+        if leaf_path.exists():
+            data_json: bytes = leaf_path.read_bytes()
+            data: dict[str, str] = orjson.loads(data_json) or {}
+            for _, val in data.items():
+                doc = class_model.model_validate_json(val)
+                if filter_fn(doc):
+                    return doc
+        return None
+
+    def find_one(
+        self,
+        filter_fn: Callable,
+        max_workers: int | None = None,
+        timeout: float | None = None,
+    ) -> T | None:
+        """Find a single document.
+
+        The search is based on the effect of a quantum loop.
+        The search effectiveness depends on the number of processor threads.
+        Ideally, hundreds and even thousands of streams are required.
+
+        Args:
+            filter_fn: A function that execute the conditions of filtering.
+            max_workers: The maximum number of processes that can be used to
+                         execute the given calls. If None or not given then as many
+                         worker processes will be created as the machine has processors.
+            timeout: The number of seconds to wait for the result if the future isn't done.
+                     If None, then there is no limit on the wait time.
+        """
+        keys: range = range(1, self.__max_num_keys)
+        search_task_fn: Callable = self.search_task
+        length_hash: int = self.__length_hash
+        db_root: str = self.__db_root
+        class_model: T = self.__class_model
+        with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
+            for key in keys:
+                future = executor.submit(
+                    search_task_fn,
+                    key,
+                    filter_fn,
+                    length_hash,
+                    db_root,
+                    class_model,
+                )
+                result = future.result(timeout)
+                if result is not None:
+                    return result
+        return None

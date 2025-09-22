@@ -4,10 +4,10 @@ The module contains the following variables:
 
 - `DB_ROOT` - Path to root directory of database. `By default = "ScrubyDB"` (*in root of project*).
 - `LENGTH_SEPARATED_HASH` - Length of separated hash for create path inside collection.
-    - `2` - 256 branches (main purpose is tests).
-    - `4` - 65536 branches.
-    - `6` - 16777216 branches.
-    - `8` - 4294967296 branches (by default).
+    - `0` - 4294967296 keys (by default).
+    - `2` - 16777216 keys.
+    - `4` - 65536 keys.
+    - `6` - 256 keys (main purpose is tests).
 """
 
 from __future__ import annotations
@@ -24,9 +24,8 @@ from typing import Literal
 DB_ROOT: str = "ScrubyDB"
 
 # Length of separated hash for create path inside collection.
-# By default = 8
-# 2 = 256 branches (main purpose is tests).
-# 4 = 65536 branches.
-# 6 = 16777216 branches.
-# 8 = 4294967296 branches (by default).
-LENGTH_SEPARATED_HASH: Literal[2, 4, 6, 8] = 8
+# 0 = 4294967296 keys (by default).
+# 2 = 16777216 keys.
+# 4 = 65536 keys.
+# 6 = 256 keys (main purpose is tests).
+LENGTH_SEPARATED_HASH: Literal[0, 2, 4, 6] = 0

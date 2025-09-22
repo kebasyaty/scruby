@@ -1,5 +1,12 @@
 ### CHANGELOG
 
+#### v0.7.0 2025-09-22
+
+- Added a `find_one` method.
+- Updated tests.
+- Updated documentation.
+- Updated README.md
+
 #### v0.6.3 2025-09-20
 
 - Updated dependencies.
