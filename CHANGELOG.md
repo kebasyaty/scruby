@@ -1,5 +1,12 @@
 ### CHANGELOG
 
+#### v0.8.0 2025-09-23
+
+- Added a `find_many` method.
+- Updated tests.
+- Updated documentation.
+- Updated README.md
+
 #### v0.7.2 2025-09-23
 
 - Updated tests.
