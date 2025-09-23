@@ -204,7 +204,7 @@ class Scruby[T]:
 
         The search is based on the effect of a quantum loop.
         The search effectiveness depends on the number of processor threads.
-        Ideally, hundreds and even thousands of streams are required.
+        Ideally, hundreds and even thousands of threads are required.
 
         Args:
             filter_fn: A function that execute the conditions of filtering.
