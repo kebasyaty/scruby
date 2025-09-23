@@ -280,3 +280,7 @@ class Scruby[T]:
                     results.append(doc)
                     counter += 1
         return results or None
+
+    def collection_name(self) -> str:
+        """Get collection name."""
+        return self.__class_model.__name__
