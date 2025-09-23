@@ -126,7 +126,7 @@ if __name__ == "__main__":
 
 The search is based on the effect of a quantum loop.
 The search effectiveness depends on the number of processor threads.
-Ideally, hundreds and even thousands of streams are required.
+Ideally, hundreds and even thousands of threads are required.
 """
 
 import anyio
@@ -137,7 +137,8 @@ from scruby import Scruby, constants
 from pprint import pprint as pp
 
 constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
-constants.LENGTH_REDUCTION_HASH = 6  # 256 keys (main purpose is tests).
+constants.LENGTH_REDUCTION_HASH = 6  # 256 branches in collection
+                                     # (main purpose is tests).
 
 class User(BaseModel):
     """Model of User."""
