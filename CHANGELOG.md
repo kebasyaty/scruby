@@ -1,5 +1,12 @@
 ### CHANGELOG
 
+#### v0.8.1 2025-09-23
+
+- Changed number format to `E164`.
+- Updated tests.
+- Updated documentation.
+- Updated README.md
+
 #### v0.8.0 2025-09-23
 
 - Added a `find_many` method.
