@@ -190,6 +190,8 @@ if __name__ == "__main__":
     anyio.run(main)
 ```
 
+#### Get collection name
+
 ```py title="main.py" linenums="1"
 """Get collection name."""
 
