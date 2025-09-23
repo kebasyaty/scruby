@@ -1,5 +1,11 @@
 ### CHANGELOG
 
+#### v0.7.2 2025-09-23
+
+- Updated tests.
+- Updated documentation.
+- Updated README.md
+
 #### v0.7.1 2025-09-22
 
 - Renamed constant from `LENGTH_SEPARATED_HASH` to `LENGTH_REDUCTION_HASH`.

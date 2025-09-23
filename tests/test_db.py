@@ -151,27 +151,27 @@ class TestPositive:
 
     async def test_length_reduction_hash(self) -> None:
         """Length of reduction hash."""
-        constants.LENGTH_REDUCTION_HASH = 0  # 4294967296 keys (by default).
+        constants.LENGTH_REDUCTION_HASH = 0  # 4294967296 branches in collection (by default).
         db = Scruby(User)
         control_path = Path(
             "ScrubyDB/User/a/3/a/6/d/2/d/1/leaf.json",
         )
         assert await db.get_leaf_path("key name") == control_path
         #
-        constants.LENGTH_REDUCTION_HASH = 2  # 16777216 keys.
+        constants.LENGTH_REDUCTION_HASH = 2  # 16777216 branches in collection.
         db = Scruby(User)
         control_path = Path(
             "ScrubyDB/User/a/6/d/2/d/1/leaf.json",
         )
         assert await db.get_leaf_path("key name") == control_path
-        constants.LENGTH_REDUCTION_HASH = 4  # 65536 keys.
+        constants.LENGTH_REDUCTION_HASH = 4  # 65536 branches in collection.
         db = Scruby(User)
         control_path = Path(
             "ScrubyDB/User/d/2/d/1/leaf.json",
         )
         assert await db.get_leaf_path("key name") == control_path
         #
-        constants.LENGTH_REDUCTION_HASH = 6  # 256 keys (main purpose is tests).
+        constants.LENGTH_REDUCTION_HASH = 6  # 256 branches in collection (main purpose is tests).
         db = Scruby(User)
         control_path = Path(
             "ScrubyDB/User/d/1/leaf.json",
@@ -183,29 +183,31 @@ class TestPositive:
 
     async def test_find_one(self) -> None:
         """Find a single document."""
-        constants.LENGTH_REDUCTION_HASH = 6  # 256 keys (main purpose is tests).
+        constants.LENGTH_REDUCTION_HASH = 6  # 256 branches in collection (main purpose is tests).
         db = Scruby(User)
-        user = User(
-            first_name="John",
-            last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
-            email="John_Smith@gmail.com",
-            phone="+447986123456",
-        )
-        await db.set_key("+447986123456", user)
+
+        for num in range(1, 10):
+            user = User(
+                first_name="John",
+                last_name="Smith",
+                birthday=datetime.datetime(1970, 1, num),  # noqa: DTZ001
+                email=f"John_Smith_{num}@gmail.com",
+                phone=f"+44798612345{num}",
+            )
+            await db.set_key(f"+44798612345{num}", user)
         #
         # by email
         result: User | None = db.find_one(
-            filter_fn=lambda doc: doc.email == "John_Smith@gmail.com",
+            filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com",
         )
         assert result is not None
-        assert result.email == user.email
+        assert result.email == "John_Smith_5@gmail.com"
         # by birthday
         result_2: User | None = db.find_one(
-            filter_fn=lambda doc: doc.birthday == datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            filter_fn=lambda doc: doc.birthday == datetime.datetime(1970, 1, 8),  # noqa: DTZ001
         )
         assert result_2 is not None
-        assert result_2.birthday == user.birthday
+        assert result_2.birthday == datetime.datetime(1970, 1, 8)  # noqa: DTZ001
         #
         # Delete DB.
         await Scruby.napalm()
