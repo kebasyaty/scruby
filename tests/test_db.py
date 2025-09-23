@@ -241,7 +241,12 @@ class TestPositive:
         # Delete DB.
         await Scruby.napalm()
 
-    def test_collection_name(self) -> None:
+    async def test_collection_name(self) -> None:
         """Test a collection_name method."""
         db = Scruby(User)
         assert db.collection_name() == "User"
+
+    async def test_collection_full_name(self) -> None:
+        """Test a collection_full_name method."""
+        db = Scruby(User)
+        assert db.collection_full_name() == "ScrubyDB/User"
