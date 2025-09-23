@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import datetime
+from typing import Annotated
 
 import pytest
 from anyio import Path
 from pydantic import BaseModel, EmailStr
-from pydantic_extra_types.phone_numbers import PhoneNumber
+from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
 from scruby import Scruby, constants
 
@@ -21,7 +22,7 @@ class User(BaseModel):
     last_name: str
     birthday: datetime.datetime
     email: EmailStr
-    phone: PhoneNumber
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
 
 
 class TestNegative:
@@ -114,6 +115,7 @@ class TestPositive:
         await db.set_key("+447986123456", user)
         data: User = await db.get_key("+447986123456")
         assert data.model_dump() == user.model_dump()
+        assert data.phone == "+447986123456"
         # Delete DB.
         await Scruby.napalm()
 
