@@ -211,3 +211,30 @@ class TestPositive:
         #
         # Delete DB.
         await Scruby.napalm()
+
+    async def test_find_many(self) -> None:
+        """Find documents."""
+        constants.LENGTH_REDUCTION_HASH = 6  # 256 branches in collection (main purpose is tests).
+        db = Scruby(User)
+
+        for num in range(1, 10):
+            user = User(
+                first_name="John",
+                last_name="Smith",
+                birthday=datetime.datetime(1970, 1, num),  # noqa: DTZ001
+                email=f"John_Smith_{num}@gmail.com",
+                phone=f"+44798612345{num}",
+            )
+            await db.set_key(f"+44798612345{num}", user)
+        #
+        # by emails
+        results: list[User] | None = db.find_many(
+            filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
+        )
+        assert results is not None
+        assert len(results) == 2
+        assert results[0].email in ["John_Smith_5@gmail.com", "John_Smith_8@gmail.com"]
+        assert results[1].email in ["John_Smith_5@gmail.com", "John_Smith_8@gmail.com"]
+        #
+        # Delete DB.
+        await Scruby.napalm()
