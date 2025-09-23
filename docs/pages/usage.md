@@ -1,6 +1,8 @@
 #### Working with keys
 
 ```py title="main.py" linenums="1"
+"""Working with keys."""
+
 import anyio
 import datetime
 from typing import Annotated
