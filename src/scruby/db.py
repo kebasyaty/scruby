@@ -229,7 +229,54 @@ class Scruby[T]:
                     db_root,
                     class_model,
                 )
-                result = future.result(timeout)
-                if result is not None:
-                    return result
+                doc = future.result(timeout)
+                if doc is not None:
+                    return doc
         return None
+
+    def find_many(
+        self,
+        filter_fn: Callable,
+        db_query_docs_limit: int = 1000,
+        max_workers: int | None = None,
+        timeout: float | None = None,
+    ) -> list[T] | None:
+        """Find documents.
+
+        The search is based on the effect of a quantum loop.
+        The search effectiveness depends on the number of processor threads.
+        Ideally, hundreds and even thousands of threads are required.
+
+        Args:
+            filter_fn: A function that execute the conditions of filtering.
+            db_query_docs_limit: Limiting the number of request results. By default = 1000.
+            max_workers: The maximum number of processes that can be used to
+                         execute the given calls. If None or not given then as many
+                         worker processes will be created as the machine has processors.
+            timeout: The number of seconds to wait for the result if the future isn't done.
+                     If None, then there is no limit on the wait time.
+        """
+        keys: range = range(1, self.__max_num_keys)
+        search_task_fn: Callable = self.search_task
+        length_reduction_hash: int = self.__length_reduction_hash
+        db_root: str = self.__db_root
+        class_model: T = self.__class_model
+        counter: int = 0
+        with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
+            results = []
+            for key in keys:
+                if counter == db_query_docs_limit:
+                    break
+                future = executor.submit(
+                    search_task_fn,
+                    key,
+                    filter_fn,
+                    length_reduction_hash,
+                    db_root,
+                    class_model,
+                )
+                doc = future.result(timeout)
+                if doc is not None:
+                    results.append(doc)
+                    counter += 1
+        return results or None
