@@ -1,5 +1,12 @@
 ### CHANGELOG
 
+#### v0.9.0 2025-09-23
+
+- Added a `collection_name` and `collection_full_name` methods.
+- Updated tests.
+- Updated documentation.
+- Updated README.md
+
 #### v0.8.1 2025-09-23
 
 - Changed number format to `E164`.
