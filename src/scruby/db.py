@@ -280,3 +280,11 @@ class Scruby[T]:
                     results.append(doc)
                     counter += 1
         return results or None
+
+    def collection_name(self) -> str:
+        """Get collection name."""
+        return self.__class_model.__name__
+
+    def collection_full_name(self) -> str:
+        """Get full name of collection."""
+        return f"{self.__db_root}/{self.__class_model.__name__}"
