@@ -178,14 +178,17 @@ class Scruby[T]:
         return
 
     @staticmethod
-    def search_task(
+    def _search_task(
         key: int,
         filter_fn: Callable,
         length_reduction_hash: str,
         db_root: str,
         class_model: T,
     ) -> dict[str, Any] | None:
-        """Search task."""
+        """Task for searching for documents.
+
+        This method is for internal use.
+        """
         key_as_hash: str = f"{key:08x}"[length_reduction_hash:]
         separated_hash: str = "/".join(list(key_as_hash))
         leaf_path: SyncPath = SyncPath(
@@ -226,7 +229,7 @@ class Scruby[T]:
                      If None, then there is no limit on the wait time.
         """
         keys: range = range(1, self.__max_num_keys)
-        search_task_fn: Callable = self.search_task
+        search_task_fn: Callable = self._search_task
         length_reduction_hash: int = self.__length_reduction_hash
         db_root: str = self.__db_root
         class_model: T = self.__class_model
@@ -268,7 +271,7 @@ class Scruby[T]:
                      If None, then there is no limit on the wait time.
         """
         keys: range = range(1, self.__max_num_keys)
-        search_task_fn: Callable = self.search_task
+        search_task_fn: Callable = self._search_task
         length_reduction_hash: int = self.__length_reduction_hash
         db_root: str = self.__db_root
         class_model: T = self.__class_model
