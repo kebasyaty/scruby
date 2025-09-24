@@ -6,6 +6,7 @@ __all__ = ("Scruby",)
 
 import concurrent.futures
 import contextlib
+import datetime
 import logging
 import zlib
 from collections.abc import Callable
@@ -15,12 +16,21 @@ from typing import Any, Never, TypeVar, assert_never
 
 import orjson
 from anyio import Path, to_thread
+from pydantic import BaseModel
 
 from scruby import constants
 
 logger = logging.getLogger(__name__)
 
 T = TypeVar("T")
+
+
+class _Meta(BaseModel):
+    """Metadata of collection."""
+
+    count_documents: int
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
 
 
 class Scruby[T]:
@@ -34,6 +44,7 @@ class Scruby[T]:
         self,
         class_model: T,
     ) -> None:
+        self.__meta = _Meta
         self.__class_model = class_model
         self.__db_root = constants.DB_ROOT
         self.__length_reduction_hash = constants.LENGTH_REDUCTION_HASH
@@ -51,9 +62,75 @@ class Scruby[T]:
                 msg: str = f"{unreachable} - Unacceptable value for LENGTH_REDUCTION_HASH."
                 logger.critical(msg)
                 assert_never(Never(unreachable))
+        # Create metadata if absent.
+        self._create_metadata()
 
-    async def get_leaf_path(self, key: str) -> Path:
+    def _create_metadata(self) -> None:
+        """Create metadata for collection if absent.
+
+        This method is for internal use.
+        """
+        key: int = 0
+        key_as_hash: str = f"{key:08x}"[self.__length_reduction_hash :]
+        separated_hash: str = "/".join(list(key_as_hash))
+        branch_path = SyncPath(
+            *(
+                self.__db_root,
+                self.__class_model.__name__,
+                separated_hash,
+            ),
+        )
+        if not branch_path.exists():
+            branch_path.mkdir(parents=True)
+            meta = _Meta(
+                count_documents=0,
+                created_at=datetime.datetime.now(),  # noqa: DTZ005
+                updated_at=datetime.datetime.now(),  # noqa: DTZ005
+            )
+            meta_json = meta.model_dump_json()
+            meta_path = SyncPath(*(branch_path, "meta.json"))
+            meta_path.write_text(meta_json, "utf-8")
+
+    async def _get_meta_path(self) -> Path:
+        """Asynchronous method for getting path to metadata of collection.
+
+        This method is for internal use.
+        """
+        key: int = 0
+        key_as_hash: str = f"{key:08x}"[self.__length_reduction_hash :]
+        separated_hash: str = "/".join(list(key_as_hash))
+        return Path(
+            *(
+                self.__db_root,
+                self.__class_model.__name__,
+                separated_hash,
+                "meta.json",
+            ),
+        )
+
+    async def _get_meta(self) -> _Meta:
+        """Asynchronous method for getting metadata of collection.
+
+        This method is for internal use.
+        """
+        meta_path = await self._get_meta_path()
+        meta_json = await meta_path.read_text()
+        meta: _Meta = self.__meta.model_validate_json(meta_json)
+        return meta
+
+    async def _set_meta(self, meta: _Meta) -> None:
+        """Asynchronous method for updating metadata of collection.
+
+        This method is for internal use.
+        """
+        meta_path = await self._get_meta_path()
+        meta_json = meta.model_dump_json()
+        await meta_path.write_text(meta_json, "utf-8")
+
+    async def _get_leaf_path(self, key: str) -> Path:
         """Asynchronous method for getting path to collection cell by key.
+
+        This method is for internal use.
 
         Args:
             key: Key name.
@@ -95,7 +172,7 @@ class Scruby[T]:
             value: Value of key.
         """
         # The path to the database cell.
-        leaf_path: Path = await self.get_leaf_path(key)
+        leaf_path: Path = await self._get_leaf_path(key)
         value_json: str = value.model_dump_json()
         # Write key-value to the database.
         if await leaf_path.exists():
@@ -115,7 +192,7 @@ class Scruby[T]:
             key: Key name.
         """
         # The path to the database cell.
-        leaf_path: Path = await self.get_leaf_path(key)
+        leaf_path: Path = await self._get_leaf_path(key)
         # Get value of key.
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
@@ -133,7 +210,7 @@ class Scruby[T]:
             key: Key name.
         """
         # The path to the database cell.
-        leaf_path: Path = await self.get_leaf_path(key)
+        leaf_path: Path = await self._get_leaf_path(key)
         # Checking whether there is a key.
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
@@ -152,7 +229,7 @@ class Scruby[T]:
             key: Key name.
         """
         # The path to the database cell.
-        leaf_path: Path = await self.get_leaf_path(key)
+        leaf_path: Path = await self._get_leaf_path(key)
         # Deleting key.
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
@@ -178,14 +255,17 @@ class Scruby[T]:
         return
 
     @staticmethod
-    def search_task(
+    def _search_task(
         key: int,
         filter_fn: Callable,
         length_reduction_hash: str,
         db_root: str,
         class_model: T,
     ) -> dict[str, Any] | None:
-        """Search task."""
+        """Task for searching for documents.
+
+        This method is for internal use.
+        """
         key_as_hash: str = f"{key:08x}"[length_reduction_hash:]
         separated_hash: str = "/".join(list(key_as_hash))
         leaf_path: SyncPath = SyncPath(
@@ -226,7 +306,7 @@ class Scruby[T]:
                      If None, then there is no limit on the wait time.
         """
         keys: range = range(1, self.__max_num_keys)
-        search_task_fn: Callable = self.search_task
+        search_task_fn: Callable = self._search_task
         length_reduction_hash: int = self.__length_reduction_hash
         db_root: str = self.__db_root
         class_model: T = self.__class_model
@@ -268,7 +348,7 @@ class Scruby[T]:
                      If None, then there is no limit on the wait time.
         """
         keys: range = range(1, self.__max_num_keys)
-        search_task_fn: Callable = self.search_task
+        search_task_fn: Callable = self._search_task
         length_reduction_hash: int = self.__length_reduction_hash
         db_root: str = self.__db_root
         class_model: T = self.__class_model

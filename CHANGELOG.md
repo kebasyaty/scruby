@@ -1,5 +1,11 @@
 ### CHANGELOG
 
+#### v0.10.0 2025-09-24
+
+- Added metadata support for collections.
+- Updated tests.
+- Updated documentation.
+
 #### v0.9.3 2025-09-24
 
 - Renamed method `find_many` to `find`.
