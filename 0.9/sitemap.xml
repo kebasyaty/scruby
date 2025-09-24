@@ -2,22 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.9/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-24</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.9/pages/constants/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-24</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.9/pages/db/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-24</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.9/pages/installation/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-24</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.9/pages/usage/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-24</lastmod>
+    </url>
+    <url>
+         <loc>https://kebasyaty.github.io/scruby/0.9/pages/usage/find_a_single_document/</loc>
+         <lastmod>2025-09-24</lastmod>
+    </url>
+    <url>
+         <loc>https://kebasyaty.github.io/scruby/0.9/pages/usage/find_documents/</loc>
+         <lastmod>2025-09-24</lastmod>
+    </url>
+    <url>
+         <loc>https://kebasyaty.github.io/scruby/0.9/pages/usage/get_collection_name/</loc>
+         <lastmod>2025-09-24</lastmod>
+    </url>
+    <url>
+         <loc>https://kebasyaty.github.io/scruby/0.9/pages/usage/working_with_keys/</loc>
+         <lastmod>2025-09-24</lastmod>
     </url>
 </urlset>

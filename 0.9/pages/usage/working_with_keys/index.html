@@ -12,28 +12,28 @@
         <meta name="author" content="Kebasyaty">
       
       
-        <link rel="canonical" href="https://kebasyaty.github.io/scruby/0.9/pages/constants/">
+        <link rel="canonical" href="https://kebasyaty.github.io/scruby/0.9/pages/usage/working_with_keys/">
       
       
-        <link rel="prev" href="../usage/get_collection_name/">
+        <link rel="prev" href="../">
       
       
-        <link rel="next" href="../db/">
+        <link rel="next" href="../find_a_single_document/">
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.20">
     
     
       
-        <title>Constants - Scruby Docs</title>
+        <title>Working with keys - Scruby Docs</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.e53b48f4.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.e53b48f4.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -52,11 +52,11 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../../custom_style/github_light_green.css">
+      <link rel="stylesheet" href="../../../custom_style/github_light_green.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -79,11 +79,6 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#scruby.constants" class="md-skip">
-          Skip to content
-        </a>
-      
     </div>
     <div data-md-component="announce">
       
@@ -95,12 +90,12 @@
             <div class="md-banner__inner md-grid md-typeset">
               
   You're not viewing the latest version.
-  <a href="../../..">
+  <a href="../../../..">
     <strong>Click here to go to latest.</strong>
   </a>
 
             </div>
-            <script>var el=document.querySelector("[data-md-component=outdated]"),base=new URL("../.."),outdated=__md_get("__outdated",sessionStorage,base);!0===outdated&&el&&(el.hidden=!1)</script>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),base=new URL("../../.."),outdated=__md_get("__outdated",sessionStorage,base);!0===outdated&&el&&(el.hidden=!1)</script>
           </aside>
         
       </div>
@@ -112,7 +107,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Scruby Docs" class="md-header__button md-logo" aria-label="Scruby Docs" data-md-component="logo">
+    <a href="../../.." title="Scruby Docs" class="md-header__button md-logo" aria-label="Scruby Docs" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -132,7 +127,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Constants
+              Working with keys
             
           </span>
         </div>
@@ -229,7 +224,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Scruby Docs" class="md-nav__button md-logo" aria-label="Scruby Docs" data-md-component="logo">
+    <a href="../../.." title="Scruby Docs" class="md-nav__button md-logo" aria-label="Scruby Docs" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -259,7 +254,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         
   
   
@@ -281,7 +276,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../installation/" class="md-nav__link">
+      <a href="../../installation/" class="md-nav__link">
         
   
   
@@ -300,6 +295,8 @@
       
   
   
+    
+  
   
   
     
@@ -326,17 +323,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../usage/" class="md-nav__link ">
+            <a href="../" class="md-nav__link ">
               
   
   
@@ -355,7 +350,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Usage
@@ -368,10 +363,17 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../usage/working_with_keys/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -382,6 +384,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -394,7 +397,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../usage/find_a_single_document/" class="md-nav__link">
+      <a href="../find_a_single_document/" class="md-nav__link">
         
   
   
@@ -417,7 +420,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../usage/find_documents/" class="md-nav__link">
+      <a href="../find_documents/" class="md-nav__link">
         
   
   
@@ -440,7 +443,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../usage/get_collection_name/" class="md-nav__link">
+      <a href="../get_collection_name/" class="md-nav__link">
         
   
   
@@ -467,30 +470,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Constants
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../constants/" class="md-nav__link">
         
   
   
@@ -501,33 +484,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#scruby.constants" class="md-nav__link">
-    <span class="md-ellipsis">
-      constants
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -539,7 +495,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../db/" class="md-nav__link">
+      <a href="../../db/" class="md-nav__link">
         
   
   
@@ -572,23 +528,6 @@
   
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#scruby.constants" class="md-nav__link">
-    <span class="md-ellipsis">
-      constants
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -607,55 +546,114 @@
   
 
 
-  <h1>Constants</h1>
+  <h1>Working with keys</h1>
 
-<div class="doc doc-object doc-module">
-
-
-
-<a id="scruby.constants"></a>
-    <div class="doc doc-contents first">
-
-        <p>Constant variables.</p>
-<p>The module contains the following variables:</p>
-<ul>
-<li><code>DB_ROOT</code> - Path to root directory of database. <code>By default = "ScrubyDB"</code> (<em>in root of project</em>).</li>
-<li><code>LENGTH_REDUCTION_HASH</code> - The length of the hash reduction on the left side.<ul>
-<li><code>0</code> - 4294967296 branches in collection (by default).</li>
-<li><code>2</code> - 16777216 branches in collectionю</li>
-<li><code>4</code> - 65536 branches in collectionю</li>
-<li><code>6</code> - 256 branches in collection (main purpose is tests).</li>
-</ul>
-</li>
-</ul>
-
-
-
-
-
-
-
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
+<div class="language-py highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">main.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-0-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-0-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-0-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-0-10">10</a></span>
+<span class="normal"><a href="#__codelineno-0-11">11</a></span>
+<span class="normal"><a href="#__codelineno-0-12">12</a></span>
+<span class="normal"><a href="#__codelineno-0-13">13</a></span>
+<span class="normal"><a href="#__codelineno-0-14">14</a></span>
+<span class="normal"><a href="#__codelineno-0-15">15</a></span>
+<span class="normal"><a href="#__codelineno-0-16">16</a></span>
+<span class="normal"><a href="#__codelineno-0-17">17</a></span>
+<span class="normal"><a href="#__codelineno-0-18">18</a></span>
+<span class="normal"><a href="#__codelineno-0-19">19</a></span>
+<span class="normal"><a href="#__codelineno-0-20">20</a></span>
+<span class="normal"><a href="#__codelineno-0-21">21</a></span>
+<span class="normal"><a href="#__codelineno-0-22">22</a></span>
+<span class="normal"><a href="#__codelineno-0-23">23</a></span>
+<span class="normal"><a href="#__codelineno-0-24">24</a></span>
+<span class="normal"><a href="#__codelineno-0-25">25</a></span>
+<span class="normal"><a href="#__codelineno-0-26">26</a></span>
+<span class="normal"><a href="#__codelineno-0-27">27</a></span>
+<span class="normal"><a href="#__codelineno-0-28">28</a></span>
+<span class="normal"><a href="#__codelineno-0-29">29</a></span>
+<span class="normal"><a href="#__codelineno-0-30">30</a></span>
+<span class="normal"><a href="#__codelineno-0-31">31</a></span>
+<span class="normal"><a href="#__codelineno-0-32">32</a></span>
+<span class="normal"><a href="#__codelineno-0-33">33</a></span>
+<span class="normal"><a href="#__codelineno-0-34">34</a></span>
+<span class="normal"><a href="#__codelineno-0-35">35</a></span>
+<span class="normal"><a href="#__codelineno-0-36">36</a></span>
+<span class="normal"><a href="#__codelineno-0-37">37</a></span>
+<span class="normal"><a href="#__codelineno-0-38">38</a></span>
+<span class="normal"><a href="#__codelineno-0-39">39</a></span>
+<span class="normal"><a href="#__codelineno-0-40">40</a></span>
+<span class="normal"><a href="#__codelineno-0-41">41</a></span>
+<span class="normal"><a href="#__codelineno-0-42">42</a></span>
+<span class="normal"><a href="#__codelineno-0-43">43</a></span>
+<span class="normal"><a href="#__codelineno-0-44">44</a></span>
+<span class="normal"><a href="#__codelineno-0-45">45</a></span>
+<span class="normal"><a href="#__codelineno-0-46">46</a></span>
+<span class="normal"><a href="#__codelineno-0-47">47</a></span>
+<span class="normal"><a href="#__codelineno-0-48">48</a></span>
+<span class="normal"><a href="#__codelineno-0-49">49</a></span>
+<span class="normal"><a href="#__codelineno-0-50">50</a></span>
+<span class="normal"><a href="#__codelineno-0-51">51</a></span>
+<span class="normal"><a href="#__codelineno-0-52">52</a></span>
+<span class="normal"><a href="#__codelineno-0-53">53</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="sd">&quot;&quot;&quot;Working with keys.&quot;&quot;&quot;</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">anyio</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">EmailStr</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic_extra_types.phone_numbers</span><span class="w"> </span><span class="kn">import</span> <span class="n">PhoneNumber</span><span class="p">,</span> <span class="n">PhoneNumberValidator</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="kn">from</span><span class="w"> </span><span class="nn">scruby</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scruby</span><span class="p">,</span> <span class="n">constants</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9"></a>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="n">constants</span><span class="o">.</span><span class="n">DB_ROOT</span> <span class="o">=</span> <span class="s2">&quot;ScrubyDB&quot;</span>  <span class="c1"># By default = &quot;ScrubyDB&quot;</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11"></a>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Model of User.&quot;&quot;&quot;</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14"></a>    <span class="n">first_name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15"></a>    <span class="n">last_name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16"></a>    <span class="n">birthday</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17"></a>    <span class="n">email</span><span class="p">:</span> <span class="n">EmailStr</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18"></a>    <span class="n">phone</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">PhoneNumber</span><span class="p">,</span> <span class="n">PhoneNumberValidator</span><span class="p">(</span><span class="n">number_format</span><span class="o">=</span><span class="s2">&quot;E164&quot;</span><span class="p">)]</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19"></a>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Example.&quot;&quot;&quot;</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22"></a>    <span class="c1"># Get collection of `User`.</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23"></a>    <span class="n">user_coll</span> <span class="o">=</span> <span class="n">Scruby</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24"></a>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25"></a>    <span class="c1"># Create user.</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26"></a>    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27"></a>        <span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;John&quot;</span><span class="p">,</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28"></a>        <span class="n">last_name</span><span class="o">=</span><span class="s2">&quot;Smith&quot;</span><span class="p">,</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29"></a>        <span class="n">birthday</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1970</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30"></a>        <span class="n">email</span><span class="o">=</span><span class="s2">&quot;John_Smith@gmail.com&quot;</span><span class="p">,</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31"></a>        <span class="n">phone</span><span class="o">=</span><span class="s2">&quot;+447986123456&quot;</span><span class="p">,</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32"></a>    <span class="p">)</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33"></a>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34"></a>    <span class="c1"># Add user to collection.</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35"></a>    <span class="k">await</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="s2">&quot;+447986123456&quot;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36"></a>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37"></a>    <span class="c1"># Get user from collection.</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38"></a>    <span class="k">await</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">get_key</span><span class="p">(</span><span class="s2">&quot;+447986123456&quot;</span><span class="p">)</span>  <span class="c1"># =&gt; user</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39"></a>    <span class="k">await</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">get_key</span><span class="p">(</span><span class="s2">&quot;key missing&quot;</span><span class="p">)</span>  <span class="c1"># =&gt; KeyError</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40"></a>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="k">await</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s2">&quot;+447986123456&quot;</span><span class="p">)</span>  <span class="c1"># =&gt; True</span>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42"></a>    <span class="k">await</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s2">&quot;key missing&quot;</span><span class="p">)</span>  <span class="c1"># =&gt; False</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43"></a>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44"></a>    <span class="k">await</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">delete_key</span><span class="p">(</span><span class="s2">&quot;+447986123456&quot;</span><span class="p">)</span>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45"></a>    <span class="k">await</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">delete_key</span><span class="p">(</span><span class="s2">&quot;+447986123456&quot;</span><span class="p">)</span>  <span class="c1"># =&gt; KeyError</span>
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46"></a>    <span class="k">await</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">delete_key</span><span class="p">(</span><span class="s2">&quot;key missing&quot;</span><span class="p">)</span>  <span class="c1"># =&gt; KeyError</span>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47"></a>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48"></a>    <span class="c1"># Full database deletion.</span>
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49"></a>    <span class="c1"># Hint: The main purpose is tests.</span>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="k">await</span> <span class="n">Scruby</span><span class="o">.</span><span class="n">napalm</span><span class="p">()</span>
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51"></a>
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a>    <span class="n">anyio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
 
 
 
@@ -693,7 +691,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../usage/get_collection_name/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Get collection name">
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Models">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -703,20 +701,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Get collection name
+                Models
               </div>
             </div>
           </a>
         
         
           
-          <a href="../db/" class="md-footer__link md-footer__link--next" aria-label="Next: Details">
+          <a href="../find_a_single_document/" class="md-footer__link md-footer__link--next" aria-label="Next: Find a single document">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Details
+                Find a single document
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -794,10 +792,10 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "../..", "features": ["search.suggest", "search.highlight", "search.share", "content.code.copy", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["search.suggest", "search.highlight", "search.share", "content.code.copy", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.f55a23d4.min.js"></script>
       
     
   </body>

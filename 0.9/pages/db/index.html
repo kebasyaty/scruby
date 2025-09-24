@@ -300,9 +300,42 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../usage/" class="md-nav__link">
+    
+    
+      
         
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../usage/" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -311,7 +344,119 @@
   </span>
   
 
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Usage
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/working_with_keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Working with keys
+    
+  </span>
+  
+
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/find_a_single_document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Find a single document
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/find_documents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Find documents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/get_collection_name/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Get collection name
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -1221,7 +1366,7 @@
 </span><span id="__span-0-200"><a id="__codelineno-0-200" name="__codelineno-0-200"></a>        <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-201"><a id="__codelineno-0-201" name="__codelineno-0-201"></a>        <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-202"><a id="__codelineno-0-202" name="__codelineno-0-202"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-203"><a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Find a single document.</span>
+</span><span id="__span-0-203"><a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Find a single document matching the filter.</span>
 </span><span id="__span-0-204"><a id="__codelineno-0-204" name="__codelineno-0-204"></a>
 </span><span id="__span-0-205"><a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">        The search is based on the effect of a quantum loop.</span>
 </span><span id="__span-0-206"><a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="sd">        The search effectiveness depends on the number of processor threads.</span>
@@ -1262,7 +1407,7 @@
 </span><span id="__span-0-241"><a id="__codelineno-0-241" name="__codelineno-0-241"></a>        <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-242"><a id="__codelineno-0-242" name="__codelineno-0-242"></a>        <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-243"><a id="__codelineno-0-243" name="__codelineno-0-243"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-244"><a id="__codelineno-0-244" name="__codelineno-0-244"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Find documents.</span>
+</span><span id="__span-0-244"><a id="__codelineno-0-244" name="__codelineno-0-244"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Find one or more documents matching the filter.</span>
 </span><span id="__span-0-245"><a id="__codelineno-0-245" name="__codelineno-0-245"></a>
 </span><span id="__span-0-246"><a id="__codelineno-0-246" name="__codelineno-0-246"></a><span class="sd">        The search is based on the effect of a quantum loop.</span>
 </span><span id="__span-0-247"><a id="__codelineno-0-247" name="__codelineno-0-247"></a><span class="sd">        The search effectiveness depends on the number of processor threads.</span>
@@ -1478,7 +1623,7 @@
 
     <div class="doc doc-contents ">
 
-        <p>Find documents.</p>
+        <p>Find one or more documents matching the filter.</p>
 <p>The search is based on the effect of a quantum loop.
 The search effectiveness depends on the number of processor threads.
 Ideally, hundreds and even thousands of threads are required.</p>
@@ -1620,7 +1765,7 @@ Ideally, hundreds and even thousands of threads are required.</p>
 </span><span id="__span-0-241"><a id="__codelineno-0-241" name="__codelineno-0-241"></a>    <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-242"><a id="__codelineno-0-242" name="__codelineno-0-242"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-243"><a id="__codelineno-0-243" name="__codelineno-0-243"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-244"><a id="__codelineno-0-244" name="__codelineno-0-244"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Find documents.</span>
+</span><span id="__span-0-244"><a id="__codelineno-0-244" name="__codelineno-0-244"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Find one or more documents matching the filter.</span>
 </span><span id="__span-0-245"><a id="__codelineno-0-245" name="__codelineno-0-245"></a>
 </span><span id="__span-0-246"><a id="__codelineno-0-246" name="__codelineno-0-246"></a><span class="sd">    The search is based on the effect of a quantum loop.</span>
 </span><span id="__span-0-247"><a id="__codelineno-0-247" name="__codelineno-0-247"></a><span class="sd">    The search effectiveness depends on the number of processor threads.</span>
@@ -1676,7 +1821,7 @@ Ideally, hundreds and even thousands of threads are required.</p>
 
     <div class="doc doc-contents ">
 
-        <p>Find a single document.</p>
+        <p>Find a single document matching the filter.</p>
 <p>The search is based on the effect of a quantum loop.
 The search effectiveness depends on the number of processor threads.
 Ideally, hundreds and even thousands of threads are required.</p>
@@ -1794,7 +1939,7 @@ Ideally, hundreds and even thousands of threads are required.</p>
 </span><span id="__span-0-200"><a id="__codelineno-0-200" name="__codelineno-0-200"></a>    <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-201"><a id="__codelineno-0-201" name="__codelineno-0-201"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-202"><a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-203"><a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Find a single document.</span>
+</span><span id="__span-0-203"><a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Find a single document matching the filter.</span>
 </span><span id="__span-0-204"><a id="__codelineno-0-204" name="__codelineno-0-204"></a>
 </span><span id="__span-0-205"><a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">    The search is based on the effect of a quantum loop.</span>
 </span><span id="__span-0-206"><a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="sd">    The search effectiveness depends on the number of processor threads.</span>
