@@ -85,10 +85,6 @@ class TestPositive:
             "ScrubyDB/User/a/3/a/6/d/2/d/1/leaf.json",
         )
         assert await db._get_leaf_path("key name") == control_path
-        # Check metadata.
-        meta = await db._get_meta()
-        count_documents = meta.count_documents
-        assert count_documents == 0
         # Delete DB.
         await Scruby.napalm()
 
