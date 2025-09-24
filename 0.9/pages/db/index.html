@@ -582,9 +582,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#scruby.db.Scruby.find_many" class="md-nav__link">
+  <a href="#scruby.db.Scruby.find" class="md-nav__link">
     <span class="md-ellipsis">
-      find_many
+      find
     </span>
   </a>
   
@@ -737,9 +737,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#scruby.db.Scruby.find_many" class="md-nav__link">
+  <a href="#scruby.db.Scruby.find" class="md-nav__link">
     <span class="md-ellipsis">
-      find_many
+      find
     </span>
   </a>
   
@@ -1416,7 +1416,7 @@
 </span><span id="__span-0-245"><a id="__codelineno-0-245" name="__codelineno-0-245"></a>                    <span class="k">return</span> <span class="n">doc</span>
 </span><span id="__span-0-246"><a id="__codelineno-0-246" name="__codelineno-0-246"></a>        <span class="k">return</span> <span class="kc">None</span>
 </span><span id="__span-0-247"><a id="__codelineno-0-247" name="__codelineno-0-247"></a>
-</span><span id="__span-0-248"><a id="__codelineno-0-248" name="__codelineno-0-248"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">find_many</span><span class="p">(</span>
+</span><span id="__span-0-248"><a id="__codelineno-0-248" name="__codelineno-0-248"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span>
 </span><span id="__span-0-249"><a id="__codelineno-0-249" name="__codelineno-0-249"></a>        <span class="bp">self</span><span class="p">,</span>
 </span><span id="__span-0-250"><a id="__codelineno-0-250" name="__codelineno-0-250"></a>        <span class="n">filter_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
 </span><span id="__span-0-251"><a id="__codelineno-0-251" name="__codelineno-0-251"></a>        <span class="n">db_query_docs_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
@@ -1635,10 +1635,10 @@
 <div class="doc doc-object doc-function">
 
 
-<h3 id="scruby.db.Scruby.find_many" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">find_many</span><span class="p">(</span><span class="n">filter_fn</span><span class="p">,</span> <span class="n">db_query_docs_limit</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+<h3 id="scruby.db.Scruby.find" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">find</span><span class="p">(</span><span class="n">filter_fn</span><span class="p">,</span> <span class="n">db_query_docs_limit</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
-<a href="#scruby.db.Scruby.find_many" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#scruby.db.Scruby.find" class="headerlink" title="Permanent link">&para;</a></h3>
 
 
     <div class="doc doc-contents ">
@@ -1778,7 +1778,7 @@ Ideally, hundreds and even thousands of threads are required.</p>
 <span class="normal"><a href="#__codelineno-0-290">290</a></span>
 <span class="normal"><a href="#__codelineno-0-291">291</a></span>
 <span class="normal"><a href="#__codelineno-0-292">292</a></span>
-<span class="normal"><a href="#__codelineno-0-293">293</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-248"><a id="__codelineno-0-248" name="__codelineno-0-248"></a><span class="k">def</span><span class="w"> </span><span class="nf">find_many</span><span class="p">(</span>
+<span class="normal"><a href="#__codelineno-0-293">293</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-248"><a id="__codelineno-0-248" name="__codelineno-0-248"></a><span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span>
 </span><span id="__span-0-249"><a id="__codelineno-0-249" name="__codelineno-0-249"></a>    <span class="bp">self</span><span class="p">,</span>
 </span><span id="__span-0-250"><a id="__codelineno-0-250" name="__codelineno-0-250"></a>    <span class="n">filter_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
 </span><span id="__span-0-251"><a id="__codelineno-0-251" name="__codelineno-0-251"></a>    <span class="n">db_query_docs_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
