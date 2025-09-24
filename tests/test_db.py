@@ -84,7 +84,23 @@ class TestPositive:
         control_path = Path(
             "ScrubyDB/User/a/3/a/6/d/2/d/1/leaf.json",
         )
-        assert await db.get_leaf_path("key name") == control_path
+        assert await db._get_leaf_path("key name") == control_path
+        # Check metadata.
+        meta = await db._get_meta()
+        count_documents = meta.count_documents
+        assert count_documents == 0
+        # Delete DB.
+        await Scruby.napalm()
+
+    async def test_metadata(self) -> None:
+        """Test metadata of collection."""
+        db = Scruby(User)
+        meta = await db._get_meta()
+        assert meta.count_documents == 0
+        meta.count_documents = 1
+        await db._set_meta(meta)
+        meta_2 = await db._get_meta()
+        assert meta_2.count_documents == 1
         # Delete DB.
         await Scruby.napalm()
 
@@ -158,27 +174,27 @@ class TestPositive:
         control_path = Path(
             "ScrubyDB/User/a/3/a/6/d/2/d/1/leaf.json",
         )
-        assert await db.get_leaf_path("key name") == control_path
+        assert await db._get_leaf_path("key name") == control_path
         #
         constants.LENGTH_REDUCTION_HASH = 2  # 16777216 branches in collection.
         db = Scruby(User)
         control_path = Path(
             "ScrubyDB/User/a/6/d/2/d/1/leaf.json",
         )
-        assert await db.get_leaf_path("key name") == control_path
+        assert await db._get_leaf_path("key name") == control_path
         constants.LENGTH_REDUCTION_HASH = 4  # 65536 branches in collection.
         db = Scruby(User)
         control_path = Path(
             "ScrubyDB/User/d/2/d/1/leaf.json",
         )
-        assert await db.get_leaf_path("key name") == control_path
+        assert await db._get_leaf_path("key name") == control_path
         #
         constants.LENGTH_REDUCTION_HASH = 6  # 256 branches in collection (main purpose is tests).
         db = Scruby(User)
         control_path = Path(
             "ScrubyDB/User/d/1/leaf.json",
         )
-        assert await db.get_leaf_path("key name") == control_path
+        assert await db._get_leaf_path("key name") == control_path
         #
         # Delete DB.
         await Scruby.napalm()
