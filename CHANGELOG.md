@@ -1,5 +1,12 @@
 ### CHANGELOG
 
+#### v0.9.3 2025-09-24
+
+- Renamed method `find_many` to `find`.
+- Updated tests.
+- Updated documentation.
+- Updated README.md
+
 #### v0.9.1 2025-09-24
 
 - Added `logging`.
