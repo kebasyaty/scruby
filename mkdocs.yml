@@ -79,7 +79,7 @@ nav:
   - Scruby: index.md
   - Installation: pages/installation.md
   - Usage:
-      - Models: pages/usage/index.md
+      - Usage: pages/usage/index.md
       - Working with keys: pages/usage/working_with_keys.md
       - Find a single document: pages/usage/find_a_single_document.md
       - Find documents: pages/usage/find_documents.md
