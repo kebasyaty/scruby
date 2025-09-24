@@ -1,5 +1,11 @@
 ### CHANGELOG
 
+#### v0.9.1 2025-09-24
+
+- Added `logging`.
+- Updated documentation.
+- Updated README.md
+
 #### v0.9.0 2025-09-23
 
 - Added a `collection_name` and `collection_full_name` methods.

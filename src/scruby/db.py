@@ -6,6 +6,7 @@ __all__ = ("Scruby",)
 
 import concurrent.futures
 import contextlib
+import logging
 import zlib
 from collections.abc import Callable
 from pathlib import Path as SyncPath
@@ -16,6 +17,8 @@ import orjson
 from anyio import Path, to_thread
 
 from scruby import constants
+
+logger = logging.getLogger(__name__)
 
 T = TypeVar("T")
 
@@ -45,6 +48,8 @@ class Scruby[T]:
             case 6:
                 self.__max_num_keys = 256
             case _ as unreachable:
+                msg: str = f"{unreachable} - Unacceptable value for LENGTH_REDUCTION_HASH."
+                logger.critical(msg)
                 assert_never(Never(unreachable))
 
     async def get_leaf_path(self, key: str) -> Path:
@@ -54,8 +59,10 @@ class Scruby[T]:
             key: Key name.
         """
         if not isinstance(key, str):
+            logger.error("The key is not a type of `str`.")
             raise KeyError("The key is not a type of `str`.")
         if len(key) == 0:
+            logger.error("The key should not be empty.")
             raise KeyError("The key should not be empty.")
         # Key to crc32 sum.
         key_as_hash: str = f"{zlib.crc32(key.encode('utf-8')):08x}"[self.__length_reduction_hash :]
@@ -115,6 +122,8 @@ class Scruby[T]:
             data: dict = orjson.loads(data_json) or {}
             obj: T = self.__class_model.model_validate_json(data[key])
             return obj
+        msg: str = "`get_key` - The unacceptable key value."
+        logger.error(msg)
         raise KeyError()
 
     async def has_key(self, key: str) -> bool:
@@ -151,6 +160,8 @@ class Scruby[T]:
             del data[key]
             await leaf_path.write_bytes(orjson.dumps(data))
             return
+        msg: str = "`delete_key` - The unacceptable key value."
+        logger.error(msg)
         raise KeyError()
 
     @staticmethod
@@ -200,7 +211,7 @@ class Scruby[T]:
         max_workers: int | None = None,
         timeout: float | None = None,
     ) -> T | None:
-        """Find a single document.
+        """Find a single document matching the filter.
 
         The search is based on the effect of a quantum loop.
         The search effectiveness depends on the number of processor threads.
@@ -241,7 +252,7 @@ class Scruby[T]:
         max_workers: int | None = None,
         timeout: float | None = None,
     ) -> list[T] | None:
-        """Find documents.
+        """Find one or more documents matching the filter.
 
         The search is based on the effect of a quantum loop.
         The search effectiveness depends on the number of processor threads.
