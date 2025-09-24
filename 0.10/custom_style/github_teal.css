@@ -1,0 +1,100 @@
+/* Basic body and typography adjustments to resemble GitHub's default */
+body {
+  background: #0d1117;
+  color: #becada; /* Dark text color */
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #becada;
+}
+
+.md-typeset h1 {
+  color: #48565d;
+}
+.md-nav__title {
+  background: none !important;
+  box-shadow: none !important;
+  color: #becada;
+}
+
+.md-nav--lifted > .md-nav__list > .md-nav__item--active > .md-nav__link {
+  background: none !important;
+  box-shadow: none !important;
+  color: #becada;
+}
+
+.md-top {
+  background-color: #005950;
+  color: #becada;
+}
+.md-top:hover {
+  background-color: #00a897;
+  color: #becada;
+}
+
+.md-typeset code {
+  background-color: #151b23;
+}
+
+.md-typeset .admonition,
+.md-typeset details {
+  background-color: #151b23;
+}
+
+.md-typeset .quote > .admonition-title,
+.md-typeset .quote > summary {
+  background-color: #151b23;
+}
+
+.md-typeset .admonition.quote,
+.md-typeset details.quote {
+  border-color: #3d444d;
+}
+
+.md-typeset table:not([class]) {
+  background-color: #151b23;
+  border-color: #3d444d;
+}
+
+.md-header {
+  background-color: #005950;
+  color: #becada;
+}
+
+.md-tabs {
+  background-color: #005950;
+  color: #becada;
+}
+
+.md-search__form {
+  background-color: #00463e;
+  color: #becada;
+}
+.md-search__form:hover {
+  background-color: #00a897;
+}
+
+[data-md-toggle="search"]:checked ~ .md-header .md-search__form {
+  background-color: #00463e;
+  color: #becada;
+}
+
+.md-search-result__meta {
+  background-color: #303f53;
+  color: #becada;
+}
+
+.md-footer__inner {
+  color: #becada;
+}
+
+.md-footer-meta {
+  background-color: #010409;
+  color: #becada;
+}
