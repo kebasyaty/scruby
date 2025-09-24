@@ -245,7 +245,7 @@ class Scruby[T]:
                     return doc
         return None
 
-    def find_many(
+    def find(
         self,
         filter_fn: Callable,
         db_query_docs_limit: int = 1000,

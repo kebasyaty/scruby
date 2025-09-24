@@ -43,7 +43,7 @@ async def main() -> None:
         await db.set_key(f"+44798612345{num}", user)
 
     # Find users by email.
-    users: list[User] | None = user_coll.find_many(
+    users: list[User] | None = user_coll.find(
         filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
     )
     if users is not None:
