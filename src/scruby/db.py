@@ -408,7 +408,20 @@ class Scruby[T]:
         max_workers: int | None = None,
         timeout: float | None = None,
     ) -> int:
-        """Count the number of documents a matching the filter in this collection."""
+        """Count the number of documents a matching the filter in this collection.
+
+        The search is based on the effect of a quantum loop.
+        The search effectiveness depends on the number of processor threads.
+        Ideally, hundreds and even thousands of threads are required.
+
+        Args:
+            filter_fn: A function that execute the conditions of filtering.
+            max_workers: The maximum number of processes that can be used to
+                         execute the given calls. If None or not given then as many
+                         worker processes will be created as the machine has processors.
+            timeout: The number of seconds to wait for the result if the future isn't done.
+                     If None, then there is no limit on the wait time.
+        """
         keys: range = range(1, self.__max_num_keys)
         search_task_fn: Callable = self._task_find
         length_reduction_hash: int = self.__length_reduction_hash
@@ -427,4 +440,4 @@ class Scruby[T]:
                 )
                 if future.result(timeout) is not None:
                     counter += 1
-            return counter
+        return counter
