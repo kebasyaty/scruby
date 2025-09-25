@@ -49,3 +49,53 @@ async def main() -> None:
 if __name__ == "__main__":
     anyio.run(main)
 ```
+
+```py title="main.py" linenums="1"
+"""Count the number of documents a matching the filter in this collection."""
+
+import anyio
+import datetime
+from typing import Annotated
+from pydantic import BaseModel, EmailStr
+from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
+from scruby import Scruby, constants
+
+constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
+constants.LENGTH_REDUCTION_HASH = 0  # 4294967296 branches in collection (by default).
+
+class User(BaseModel):
+    """Model of User."""
+    first_name: str
+    last_name: str
+    birthday: datetime.datetime
+    email: EmailStr
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
+
+async def main() -> None:
+    """Example."""
+    # Get collection of `User`.
+    user_coll = Scruby(User)
+
+    # Create users.
+    for num in range(1, 10):
+        user = User(
+            first_name="John",
+            last_name="Smith",
+            birthday=datetime.datetime(1970, 1, num),
+            email=f"John_Smith_{num}@gmail.com",
+            phone=f"+44798612345{num}",
+        )
+        await db.set_key(f"+44798612345{num}", user)
+
+    result: int = user_coll.count_documents(
+        filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
+    )
+    print(result:)  # => 2
+
+    # Full database deletion.
+    # Hint: The main purpose is tests.
+    await Scruby.napalm()
+
+if __name__ == "__main__":
+    anyio.run(main)
+```
