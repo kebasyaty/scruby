@@ -27,6 +27,9 @@ T = TypeVar("T")
 class _Meta(BaseModel):
     """Metadata of Collection."""
 
+    db_root: str
+    model_name: str
+    length_reduction_hash: int
     counter_documents: int
 
 
@@ -59,7 +62,8 @@ class Scruby[T]:
                 msg: str = f"{unreachable} - Unacceptable value for LENGTH_REDUCTION_HASH."
                 logger.critical(msg)
                 assert_never(Never(unreachable))
-        # Create metadata if absent.
+        # 1.Create metadata if absent.
+        # 2.Check metadata.
         self._create_metadata()
 
     def _create_metadata(self) -> None:
@@ -80,11 +84,31 @@ class Scruby[T]:
         if not branch_path.exists():
             branch_path.mkdir(parents=True)
             meta = _Meta(
+                db_root=self.__db_root,
+                model_name=self.__class_model.__name__,
+                length_reduction_hash=self.__length_reduction_hash,
                 counter_documents=0,
             )
             meta_json = meta.model_dump_json()
             meta_path = SyncPath(*(branch_path, "meta.json"))
             meta_path.write_text(meta_json, "utf-8")
+            return
+        # Check metadata.
+        meta_path = SyncPath(*(branch_path, "meta.json"))
+        meta_json = meta_path.read_text()
+        meta = self.__meta.model_validate_json(meta_json)
+        if meta.db_root != self.__db_root:
+            msg = f"DB_ROOT: `{meta.db_root} != {self.__db_root}`."
+            logger.critical(msg)
+            raise ValueError(msg)
+        if meta.model_name != self.__class_model.__name__:
+            msg = f"Model name: `{meta.model_name} != {self.__class_model.__name__}`."
+            logger.critical(msg)
+            raise ValueError(msg)
+        if meta.length_reduction_hash != self.__length_reduction_hash:
+            msg = f"LENGTH_REDUCTION_HASH: `{meta.length_reduction_hash} != {self.__length_reduction_hash}`."
+            logger.critical(msg)
+            raise ValueError(msg)
 
     async def _get_meta_path(self) -> Path:
         """Asynchronous method for getting path to metadata of collection.
