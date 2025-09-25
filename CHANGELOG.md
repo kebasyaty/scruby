@@ -1,5 +1,11 @@
 ### CHANGELOG
 
+#### v0.10.1 2025-09-25
+
+- Added a `estimated_document_count` method.
+- Updated tests.
+- Updated documentation.
+
 #### v0.10.0 2025-09-24
 
 - Added metadata support for collections.
