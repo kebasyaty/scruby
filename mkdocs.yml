@@ -84,5 +84,6 @@ nav:
       - Find a single document: pages/usage/find_a_single_document.md
       - Find documents: pages/usage/find_documents.md
       - Get collection name: pages/usage/get_collection_name.md
+      - Count documents: pages/usage/count_documents.md
   - Constants: pages/constants.md
   - Details: pages/db.md

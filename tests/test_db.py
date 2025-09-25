@@ -92,11 +92,11 @@ class TestPositive:
         """Test metadata of collection."""
         db = Scruby(User)
         meta = await db._get_meta()
-        assert meta.count_documents == 0
-        meta.count_documents = 1
+        assert meta.counter_documents == 0
+        meta.counter_documents = 1
         await db._set_meta(meta)
         meta_2 = await db._get_meta()
-        assert meta_2.count_documents == 1
+        assert meta_2.counter_documents == 1
         # Delete DB.
         await Scruby.napalm()
 
@@ -110,7 +110,9 @@ class TestPositive:
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
+        assert await db.estimated_document_count() == 0
         assert await db.set_key("+447986123456", user) is None
+        assert await db.estimated_document_count() == 1
         # Delete DB.
         await Scruby.napalm()
 
@@ -157,8 +159,11 @@ class TestPositive:
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
+        assert await db.estimated_document_count() == 0
         await db.set_key("+447986123456", user)
+        assert await db.estimated_document_count() == 1
         assert await db.delete_key("+447986123456") is None
+        assert await db.estimated_document_count() == 0
         assert not await db.has_key("key missing")
         # Delete DB.
         await Scruby.napalm()
@@ -257,8 +262,12 @@ class TestPositive:
         """Test a collection_name method."""
         db = Scruby(User)
         assert db.collection_name() == "User"
+        # Delete DB.
+        await Scruby.napalm()
 
     async def test_collection_full_name(self) -> None:
         """Test a collection_full_name method."""
         db = Scruby(User)
         assert db.collection_full_name() == "ScrubyDB/User"
+        # Delete DB.
+        await Scruby.napalm()
