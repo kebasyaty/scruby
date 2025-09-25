@@ -27,6 +27,9 @@ T = TypeVar("T")
 class _Meta(BaseModel):
     """Metadata of Collection."""
 
+    db_root: str
+    model_name: str
+    length_reduction_hash: int
     counter_documents: int
 
 
@@ -59,7 +62,8 @@ class Scruby[T]:
                 msg: str = f"{unreachable} - Unacceptable value for LENGTH_REDUCTION_HASH."
                 logger.critical(msg)
                 assert_never(Never(unreachable))
-        # Create metadata if absent.
+        # 1.Create metadata if absent.
+        # 2.Check metadata.
         self._create_metadata()
 
     def _create_metadata(self) -> None:
@@ -80,6 +84,9 @@ class Scruby[T]:
         if not branch_path.exists():
             branch_path.mkdir(parents=True)
             meta = _Meta(
+                db_root=self.__db_root,
+                model_name=self.__class_model.__name__,
+                length_reduction_hash=self.__length_reduction_hash,
                 counter_documents=0,
             )
             meta_json = meta.model_dump_json()
@@ -265,7 +272,7 @@ class Scruby[T]:
         return
 
     @staticmethod
-    def _search_task(
+    def _task_find(
         key: int,
         filter_fn: Callable,
         length_reduction_hash: str,
@@ -316,7 +323,7 @@ class Scruby[T]:
                      If None, then there is no limit on the wait time.
         """
         keys: range = range(1, self.__max_num_keys)
-        search_task_fn: Callable = self._search_task
+        search_task_fn: Callable = self._task_find
         length_reduction_hash: int = self.__length_reduction_hash
         db_root: str = self.__db_root
         class_model: T = self.__class_model
@@ -358,7 +365,7 @@ class Scruby[T]:
                      If None, then there is no limit on the wait time.
         """
         keys: range = range(1, self.__max_num_keys)
-        search_task_fn: Callable = self._search_task
+        search_task_fn: Callable = self._task_find
         length_reduction_hash: int = self.__length_reduction_hash
         db_root: str = self.__db_root
         class_model: T = self.__class_model
@@ -401,9 +408,22 @@ class Scruby[T]:
         max_workers: int | None = None,
         timeout: float | None = None,
     ) -> int:
-        """Count the number of documents a matching the filter in this collection."""
+        """Count the number of documents a matching the filter in this collection.
+
+        The search is based on the effect of a quantum loop.
+        The search effectiveness depends on the number of processor threads.
+        Ideally, hundreds and even thousands of threads are required.
+
+        Args:
+            filter_fn: A function that execute the conditions of filtering.
+            max_workers: The maximum number of processes that can be used to
+                         execute the given calls. If None or not given then as many
+                         worker processes will be created as the machine has processors.
+            timeout: The number of seconds to wait for the result if the future isn't done.
+                     If None, then there is no limit on the wait time.
+        """
         keys: range = range(1, self.__max_num_keys)
-        search_task_fn: Callable = self._search_task
+        search_task_fn: Callable = self._task_find
         length_reduction_hash: int = self.__length_reduction_hash
         db_root: str = self.__db_root
         class_model: T = self.__class_model
@@ -420,4 +440,4 @@ class Scruby[T]:
                 )
                 if future.result(timeout) is not None:
                     counter += 1
-            return counter
+        return counter

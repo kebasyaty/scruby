@@ -85,5 +85,7 @@ nav:
       - Find documents: pages/usage/find_documents.md
       - Get collection name: pages/usage/get_collection_name.md
       - Count documents: pages/usage/count_documents.md
+      - Delete documents: pages/usage/delete_documents.md
   - Constants: pages/constants.md
   - Details: pages/db.md
+  - Errors: pages/errors.md

@@ -177,12 +177,15 @@ class TestPositive:
         )
         assert await db._get_leaf_path("key name") == control_path
         #
+        await Scruby.napalm()
         constants.LENGTH_REDUCTION_HASH = 2  # 16777216 branches in collection.
         db = Scruby(User)
         control_path = Path(
             "ScrubyDB/User/a/6/d/2/d/1/leaf.json",
         )
         assert await db._get_leaf_path("key name") == control_path
+        #
+        await Scruby.napalm()
         constants.LENGTH_REDUCTION_HASH = 4  # 65536 branches in collection.
         db = Scruby(User)
         control_path = Path(
@@ -190,6 +193,7 @@ class TestPositive:
         )
         assert await db._get_leaf_path("key name") == control_path
         #
+        await Scruby.napalm()
         constants.LENGTH_REDUCTION_HASH = 6  # 256 branches in collection (main purpose is tests).
         db = Scruby(User)
         control_path = Path(
@@ -260,6 +264,7 @@ class TestPositive:
 
     async def test_collection_name(self) -> None:
         """Test a collection_name method."""
+        constants.LENGTH_REDUCTION_HASH = 0  # 4294967296 branches in collection (by default).
         db = Scruby(User)
         assert db.collection_name() == "User"
         # Delete DB.
@@ -267,6 +272,7 @@ class TestPositive:
 
     async def test_collection_full_name(self) -> None:
         """Test a collection_full_name method."""
+        constants.LENGTH_REDUCTION_HASH = 0  # 4294967296 branches in collection (by default).
         db = Scruby(User)
         assert db.collection_full_name() == "ScrubyDB/User"
         # Delete DB.
