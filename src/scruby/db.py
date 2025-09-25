@@ -265,7 +265,7 @@ class Scruby[T]:
         return
 
     @staticmethod
-    def _task_search(
+    def _task_find(
         key: int,
         filter_fn: Callable,
         length_reduction_hash: str,
@@ -316,7 +316,7 @@ class Scruby[T]:
                      If None, then there is no limit on the wait time.
         """
         keys: range = range(1, self.__max_num_keys)
-        search_task_fn: Callable = self._task_search
+        search_task_fn: Callable = self._task_find
         length_reduction_hash: int = self.__length_reduction_hash
         db_root: str = self.__db_root
         class_model: T = self.__class_model
@@ -358,7 +358,7 @@ class Scruby[T]:
                      If None, then there is no limit on the wait time.
         """
         keys: range = range(1, self.__max_num_keys)
-        search_task_fn: Callable = self._task_search
+        search_task_fn: Callable = self._task_find
         length_reduction_hash: int = self.__length_reduction_hash
         db_root: str = self.__db_root
         class_model: T = self.__class_model
@@ -403,7 +403,7 @@ class Scruby[T]:
     ) -> int:
         """Count the number of documents a matching the filter in this collection."""
         keys: range = range(1, self.__max_num_keys)
-        search_task_fn: Callable = self._task_search
+        search_task_fn: Callable = self._task_find
         length_reduction_hash: int = self.__length_reduction_hash
         db_root: str = self.__db_root
         class_model: T = self.__class_model
