@@ -61,7 +61,8 @@ from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, constants
 
 constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
-constants.LENGTH_REDUCTION_HASH = 0  # 4294967296 branches in collection (by default).
+constants.LENGTH_REDUCTION_HASH = 6  # 256 branches in collection
+                                     # (main purpose is tests).
 
 class User(BaseModel):
     """Model of User."""
