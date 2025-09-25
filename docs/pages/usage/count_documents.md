@@ -1,5 +1,5 @@
 ```py title="main.py" linenums="1"
-"""Count the number of documents in this collection."""
+"""Get an estimate of the number of documents in this collection using collection metadata."""
 
 import anyio
 import datetime
