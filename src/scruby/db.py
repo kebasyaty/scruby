@@ -394,3 +394,30 @@ class Scruby[T]:
         """Get an estimate of the number of documents in this collection using collection metadata."""
         meta = await self._get_meta()
         return meta.counter_documents
+
+    def count_documents(
+        self,
+        filter_fn: Callable,
+        max_workers: int | None = None,
+        timeout: float | None = None,
+    ) -> int:
+        """Count the number of documents a matching the filter in this collection."""
+        keys: range = range(1, self.__max_num_keys)
+        search_task_fn: Callable = self._search_task
+        length_reduction_hash: int = self.__length_reduction_hash
+        db_root: str = self.__db_root
+        class_model: T = self.__class_model
+        counter: int = 0
+        with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
+            for key in keys:
+                future = executor.submit(
+                    search_task_fn,
+                    key,
+                    filter_fn,
+                    length_reduction_hash,
+                    db_root,
+                    class_model,
+                )
+                if future.result(timeout) is not None:
+                    counter += 1
+            return counter
