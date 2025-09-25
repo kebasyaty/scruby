@@ -6,13 +6,12 @@ __all__ = ("Scruby",)
 
 import concurrent.futures
 import contextlib
-import datetime
 import logging
 import zlib
 from collections.abc import Callable
 from pathlib import Path as SyncPath
 from shutil import rmtree
-from typing import Any, Never, TypeVar, assert_never
+from typing import Any, Literal, Never, TypeVar, assert_never
 
 import orjson
 from anyio import Path, to_thread
@@ -26,11 +25,9 @@ T = TypeVar("T")
 
 
 class _Meta(BaseModel):
-    """Metadata of collection."""
+    """Metadata of Collection."""
 
-    count_documents: int
-    created_at: datetime.datetime
-    updated_at: datetime.datetime
+    counter_documents: int
 
 
 class Scruby[T]:
@@ -83,9 +80,7 @@ class Scruby[T]:
         if not branch_path.exists():
             branch_path.mkdir(parents=True)
             meta = _Meta(
-                count_documents=0,
-                created_at=datetime.datetime.now(),  # noqa: DTZ005
-                updated_at=datetime.datetime.now(),  # noqa: DTZ005
+                counter_documents=0,
             )
             meta_json = meta.model_dump_json()
             meta_path = SyncPath(*(branch_path, "meta.json"))
@@ -126,6 +121,17 @@ class Scruby[T]:
         meta_path = await self._get_meta_path()
         meta_json = meta.model_dump_json()
         await meta_path.write_text(meta_json, "utf-8")
+
+    async def _counter_documents(self, step: Literal[1, -1]) -> None:
+        """Management of documents in metadata of collection.
+
+        This method is for internal use.
+        """
+        meta = await self._get_meta()
+        meta.counter_documents += step
+        if meta.counter_documents < 0:
+            meta.counter_documents = 0
+        await self._set_meta(meta)
 
     async def _get_leaf_path(self, key: str) -> Path:
         """Asynchronous method for getting path to collection cell by key.
@@ -179,11 +185,14 @@ class Scruby[T]:
             # Add new key or update existing.
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
+            if data.get(key) is None:
+                await self._counter_documents(1)
             data[key] = value_json
             await leaf_path.write_bytes(orjson.dumps(data))
         else:
             # Add new key to a blank leaf.
             await leaf_path.write_bytes(orjson.dumps({key: value_json}))
+            await self._counter_documents(1)
 
     async def get_key(self, key: str) -> T:
         """Asynchronous method for getting value of key from collection.
@@ -236,6 +245,7 @@ class Scruby[T]:
             data: dict = orjson.loads(data_json) or {}
             del data[key]
             await leaf_path.write_bytes(orjson.dumps(data))
+            await self._counter_documents(-1)
             return
         msg: str = "`delete_key` - The unacceptable key value."
         logger.error(msg)
@@ -379,3 +389,8 @@ class Scruby[T]:
     def collection_full_name(self) -> str:
         """Get full name of collection."""
         return f"{self.__db_root}/{self.__class_model.__name__}"
+
+    async def estimated_document_count(self) -> int:
+        """Get an estimate of the number of documents in this collection using collection metadata."""
+        meta = await self._get_meta()
+        return meta.counter_documents
