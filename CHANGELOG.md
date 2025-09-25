@@ -1,5 +1,11 @@
 ### CHANGELOG
 
+#### v0.10.2 2025-09-25
+
+- Added a `count_documents` method.
+- Updated tests.
+- Updated documentation.
+
 #### v0.10.1 2025-09-25
 
 - Added a `estimated_document_count` method.
