@@ -87,3 +87,4 @@ nav:
       - Count documents: pages/usage/count_documents.md
   - Constants: pages/constants.md
   - Details: pages/db.md
+  - Errors: pages/errors.md

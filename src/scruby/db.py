@@ -92,23 +92,6 @@ class Scruby[T]:
             meta_json = meta.model_dump_json()
             meta_path = SyncPath(*(branch_path, "meta.json"))
             meta_path.write_text(meta_json, "utf-8")
-            return
-        # Check metadata.
-        meta_path = SyncPath(*(branch_path, "meta.json"))
-        meta_json = meta_path.read_text()
-        meta = self.__meta.model_validate_json(meta_json)
-        if meta.db_root != self.__db_root:
-            msg = f"DB_ROOT: `{meta.db_root} != {self.__db_root}`."
-            logger.critical(msg)
-            raise ValueError(msg)
-        if meta.model_name != self.__class_model.__name__:
-            msg = f"Model name: `{meta.model_name} != {self.__class_model.__name__}`."
-            logger.critical(msg)
-            raise ValueError(msg)
-        if meta.length_reduction_hash != self.__length_reduction_hash:
-            msg = f"LENGTH_REDUCTION_HASH: `{meta.length_reduction_hash} != {self.__length_reduction_hash}`."
-            logger.critical(msg)
-            raise ValueError(msg)
 
     async def _get_meta_path(self) -> Path:
         """Asynchronous method for getting path to metadata of collection.
