@@ -1,4 +1,4 @@
-"""Scruby is an asynchronous library for building and managing the database, by scheme of key-value.
+"""Asynchronous library for building and managing the database, by scheme of key-value.
 
 The library uses fractal-tree addressing and
 the search for documents based on the effect of a quantum loop.
