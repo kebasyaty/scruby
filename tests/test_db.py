@@ -235,7 +235,7 @@ class TestPositive:
         # Delete DB.
         await Scruby.napalm()
 
-    async def test_find(self) -> None:
+    async def test_find_many(self) -> None:
         """Find documents."""
         constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
         db = Scruby(User)
@@ -251,7 +251,7 @@ class TestPositive:
             await db.set_key(f"+44798612345{num}", user)
         #
         # by emails
-        results: list[User] | None = db.find(
+        results: list[User] | None = db.find_many(
             filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
         )
         assert results is not None

@@ -302,7 +302,7 @@ class Scruby[T]:
         max_workers: int | None = None,
         timeout: float | None = None,
     ) -> T | None:
-        """Find a single document matching the filter.
+        """Finds a single document matching the filter.
 
         The search is based on the effect of a quantum loop.
         The search effectiveness depends on the number of processor threads.
@@ -336,14 +336,14 @@ class Scruby[T]:
                     return doc
         return None
 
-    def find(
+    def find_many(
         self,
         filter_fn: Callable,
         db_query_docs_limit: int = 1000,
         max_workers: int | None = None,
         timeout: float | None = None,
     ) -> list[T] | None:
-        """Find one or more documents matching the filter.
+        """Finds one or more documents matching the filter.
 
         The search is based on the effect of a quantum loop.
         The search effectiveness depends on the number of processor threads.
@@ -435,3 +435,9 @@ class Scruby[T]:
                 if future.result(timeout) is not None:
                     counter += 1
         return counter
+
+    def find_one_and_delete(self) -> T | None:
+        """Finds a single document matching the filter and deletes it, returning the document."""
+
+    def find_many_and_delete(self) -> int | None:
+        """Finds one or more documents matching the filter and deletes their."""
