@@ -27,9 +27,6 @@ T = TypeVar("T")
 class _Meta(BaseModel):
     """Metadata of Collection."""
 
-    db_root: str
-    model_name: str
-    length_reduction_hash: int
     counter_documents: int
 
 
@@ -84,9 +81,6 @@ class Scruby[T]:
         if not branch_path.exists():
             branch_path.mkdir(parents=True)
             meta = _Meta(
-                db_root=self.__db_root,
-                model_name=self.__class_model.__name__,
-                length_reduction_hash=self.__length_reduction_hash,
                 counter_documents=0,
             )
             meta_json = meta.model_dump_json()
