@@ -16,7 +16,7 @@ from pprint import pprint as pp
 
 constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection
-                                     # (main purpose is tests).
+                                # (main purpose is tests).
 
 class User(BaseModel):
     """Model of User."""
