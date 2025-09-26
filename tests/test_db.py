@@ -321,6 +321,10 @@ class TestPositive:
         )
         assert result == 2
         assert await db.estimated_document_count() == 7
+        result = db.count_documents(
+            filter_fn=lambda _: True,
+        )
+        assert result == 7
         #
         # Delete DB.
         await Scruby.napalm()
