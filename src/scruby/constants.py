@@ -3,7 +3,7 @@
 The module contains the following variables:
 
 - `DB_ROOT` - Path to root directory of database. `By default = "ScrubyDB"` (*in root of project*).
-- `LENGTH_REDUCTION_HASH` - The length of the hash reduction on the left side.
+- `HASH_REDUCE_LEFT` - The length of the hash reduction on the left side.
     - `0` - 4294967296 branches in collection (by default).
     - `2` - 16777216 branches in collectionю
     - `4` - 65536 branches in collectionю
@@ -14,7 +14,7 @@ from __future__ import annotations
 
 __all__ = (
     "DB_ROOT",
-    "LENGTH_REDUCTION_HASH",
+    "HASH_REDUCE_LEFT",
 )
 
 from typing import Literal
@@ -28,4 +28,4 @@ DB_ROOT: str = "ScrubyDB"
 # 2 = 16777216 branches in collectionю
 # 4 = 65536 branches in collectionю
 # 6 = 256 branches in collection (main purpose is tests).
-LENGTH_REDUCTION_HASH: Literal[0, 2, 4, 6] = 0
+HASH_REDUCE_LEFT: Literal[0, 2, 4, 6] = 0

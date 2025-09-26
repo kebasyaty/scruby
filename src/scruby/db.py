@@ -44,9 +44,9 @@ class Scruby[T]:
         self.__meta = _Meta
         self.__class_model = class_model
         self.__db_root = constants.DB_ROOT
-        self.__length_reduction_hash = constants.LENGTH_REDUCTION_HASH
+        self.__hash_reduce_left = constants.HASH_REDUCE_LEFT
         # The maximum number of keys.
-        match self.__length_reduction_hash:
+        match self.__hash_reduce_left:
             case 0:
                 self.__max_num_keys = 4294967296
             case 2:
@@ -56,7 +56,7 @@ class Scruby[T]:
             case 6:
                 self.__max_num_keys = 256
             case _ as unreachable:
-                msg: str = f"{unreachable} - Unacceptable value for LENGTH_REDUCTION_HASH."
+                msg: str = f"{unreachable} - Unacceptable value for HASH_REDUCE_LEFT."
                 logger.critical(msg)
                 assert_never(Never(unreachable))
         # 1.Create metadata if absent.
@@ -69,7 +69,7 @@ class Scruby[T]:
         This method is for internal use.
         """
         key: int = 0
-        key_as_hash: str = f"{key:08x}"[self.__length_reduction_hash :]
+        key_as_hash: str = f"{key:08x}"[self.__hash_reduce_left :]
         separated_hash: str = "/".join(list(key_as_hash))
         branch_path = SyncPath(
             *(
@@ -93,7 +93,7 @@ class Scruby[T]:
         This method is for internal use.
         """
         key: int = 0
-        key_as_hash: str = f"{key:08x}"[self.__length_reduction_hash :]
+        key_as_hash: str = f"{key:08x}"[self.__hash_reduce_left :]
         separated_hash: str = "/".join(list(key_as_hash))
         return Path(
             *(
@@ -149,7 +149,7 @@ class Scruby[T]:
             logger.error("The key should not be empty.")
             raise KeyError("The key should not be empty.")
         # Key to crc32 sum.
-        key_as_hash: str = f"{zlib.crc32(key.encode('utf-8')):08x}"[self.__length_reduction_hash :]
+        key_as_hash: str = f"{zlib.crc32(key.encode('utf-8')):08x}"[self.__hash_reduce_left :]
         # Convert crc32 sum in the segment of path.
         separated_hash: str = "/".join(list(key_as_hash))
         # The path of the branch to the database.
@@ -269,7 +269,7 @@ class Scruby[T]:
     def _task_find(
         key: int,
         filter_fn: Callable,
-        length_reduction_hash: str,
+        HASH_REDUCE_LEFT: str,
         db_root: str,
         class_model: T,
     ) -> dict[str, Any] | None:
@@ -277,7 +277,7 @@ class Scruby[T]:
 
         This method is for internal use.
         """
-        key_as_hash: str = f"{key:08x}"[length_reduction_hash:]
+        key_as_hash: str = f"{key:08x}"[HASH_REDUCE_LEFT:]
         separated_hash: str = "/".join(list(key_as_hash))
         leaf_path: SyncPath = SyncPath(
             *(
@@ -318,7 +318,7 @@ class Scruby[T]:
         """
         keys: range = range(1, self.__max_num_keys)
         search_task_fn: Callable = self._task_find
-        length_reduction_hash: int = self.__length_reduction_hash
+        HASH_REDUCE_LEFT: int = self.__hash_reduce_left
         db_root: str = self.__db_root
         class_model: T = self.__class_model
         with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
@@ -327,7 +327,7 @@ class Scruby[T]:
                     search_task_fn,
                     key,
                     filter_fn,
-                    length_reduction_hash,
+                    HASH_REDUCE_LEFT,
                     db_root,
                     class_model,
                 )
@@ -360,7 +360,7 @@ class Scruby[T]:
         """
         keys: range = range(1, self.__max_num_keys)
         search_task_fn: Callable = self._task_find
-        length_reduction_hash: int = self.__length_reduction_hash
+        HASH_REDUCE_LEFT: int = self.__hash_reduce_left
         db_root: str = self.__db_root
         class_model: T = self.__class_model
         counter: int = 0
@@ -373,7 +373,7 @@ class Scruby[T]:
                     search_task_fn,
                     key,
                     filter_fn,
-                    length_reduction_hash,
+                    HASH_REDUCE_LEFT,
                     db_root,
                     class_model,
                 )
@@ -418,7 +418,7 @@ class Scruby[T]:
         """
         keys: range = range(1, self.__max_num_keys)
         search_task_fn: Callable = self._task_find
-        length_reduction_hash: int = self.__length_reduction_hash
+        HASH_REDUCE_LEFT: int = self.__hash_reduce_left
         db_root: str = self.__db_root
         class_model: T = self.__class_model
         counter: int = 0
@@ -428,7 +428,7 @@ class Scruby[T]:
                     search_task_fn,
                     key,
                     filter_fn,
-                    length_reduction_hash,
+                    HASH_REDUCE_LEFT,
                     db_root,
                     class_model,
                 )

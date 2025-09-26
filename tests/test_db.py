@@ -168,9 +168,9 @@ class TestPositive:
         # Delete DB.
         await Scruby.napalm()
 
-    async def test_length_reduction_hash(self) -> None:
+    async def test_HASH_REDUCE_LEFT(self) -> None:
         """Length of reduction hash."""
-        constants.LENGTH_REDUCTION_HASH = 0  # 4294967296 branches in collection (by default).
+        constants.HASH_REDUCE_LEFT = 0  # 4294967296 branches in collection (by default).
         db = Scruby(User)
         control_path = Path(
             "ScrubyDB/User/a/3/a/6/d/2/d/1/leaf.json",
@@ -178,7 +178,7 @@ class TestPositive:
         assert await db._get_leaf_path("key name") == control_path
         #
         await Scruby.napalm()
-        constants.LENGTH_REDUCTION_HASH = 2  # 16777216 branches in collection.
+        constants.HASH_REDUCE_LEFT = 2  # 16777216 branches in collection.
         db = Scruby(User)
         control_path = Path(
             "ScrubyDB/User/a/6/d/2/d/1/leaf.json",
@@ -186,7 +186,7 @@ class TestPositive:
         assert await db._get_leaf_path("key name") == control_path
         #
         await Scruby.napalm()
-        constants.LENGTH_REDUCTION_HASH = 4  # 65536 branches in collection.
+        constants.HASH_REDUCE_LEFT = 4  # 65536 branches in collection.
         db = Scruby(User)
         control_path = Path(
             "ScrubyDB/User/d/2/d/1/leaf.json",
@@ -194,7 +194,7 @@ class TestPositive:
         assert await db._get_leaf_path("key name") == control_path
         #
         await Scruby.napalm()
-        constants.LENGTH_REDUCTION_HASH = 6  # 256 branches in collection (main purpose is tests).
+        constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
         db = Scruby(User)
         control_path = Path(
             "ScrubyDB/User/d/1/leaf.json",
@@ -206,7 +206,7 @@ class TestPositive:
 
     async def test_find_one(self) -> None:
         """Find a single document."""
-        constants.LENGTH_REDUCTION_HASH = 6  # 256 branches in collection (main purpose is tests).
+        constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
         db = Scruby(User)
 
         for num in range(1, 10):
@@ -237,7 +237,7 @@ class TestPositive:
 
     async def test_find(self) -> None:
         """Find documents."""
-        constants.LENGTH_REDUCTION_HASH = 6  # 256 branches in collection (main purpose is tests).
+        constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
         db = Scruby(User)
 
         for num in range(1, 10):
@@ -264,7 +264,7 @@ class TestPositive:
 
     async def test_collection_name(self) -> None:
         """Test a collection_name method."""
-        constants.LENGTH_REDUCTION_HASH = 0  # 4294967296 branches in collection (by default).
+        constants.HASH_REDUCE_LEFT = 0  # 4294967296 branches in collection (by default).
         db = Scruby(User)
         assert db.collection_name() == "User"
         # Delete DB.
@@ -272,7 +272,7 @@ class TestPositive:
 
     async def test_collection_full_name(self) -> None:
         """Test a collection_full_name method."""
-        constants.LENGTH_REDUCTION_HASH = 0  # 4294967296 branches in collection (by default).
+        constants.HASH_REDUCE_LEFT = 0  # 4294967296 branches in collection (by default).
         db = Scruby(User)
         assert db.collection_full_name() == "ScrubyDB/User"
         # Delete DB.
@@ -280,7 +280,7 @@ class TestPositive:
 
     async def test_count_documents(self) -> None:
         """Test a count_documents method."""
-        constants.LENGTH_REDUCTION_HASH = 6  # 256 branches in collection (main purpose is tests).
+        constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
         db = Scruby(User)
         for num in range(1, 10):
             user = User(
