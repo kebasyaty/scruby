@@ -1,5 +1,10 @@
 ### CHANGELOG
 
+#### v0.11.1 2025-09-26
+
+- Fixed documentation.
+- Fixed README.md
+
 #### v0.11.0 2025-09-26
 
 - Added a `find_many_and_delete` method.
