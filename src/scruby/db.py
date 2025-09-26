@@ -504,7 +504,7 @@ class Scruby[T]:
         filter_fn: Callable,
         max_workers: int | None = None,
         timeout: float | None = None,
-    ) -> int | None:
+    ) -> int:
         """Finds one or more documents matching the filter and deletes their.
 
         The search is based on the effect of a quantum loop.
@@ -520,7 +520,7 @@ class Scruby[T]:
                      If None, then there is no limit on the wait time.
         """
         branch_numbers: range = range(1, self.__max_branch_number)
-        search_task_fn: Callable = self._task_find
+        search_task_fn: Callable = self._task_delete
         hash_reduce_left: int = self.__hash_reduce_left
         db_root: str = self.__db_root
         class_model: T = self.__class_model
