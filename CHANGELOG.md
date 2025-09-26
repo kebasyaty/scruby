@@ -1,5 +1,19 @@
 ### CHANGELOG
 
+#### v0.11.0 2025-09-26
+
+- Added a `find_many_and_delete` method.
+- Updated tests.
+- Updated documentation.
+- Updated README.md
+
+#### v0.10.5 2025-09-26
+
+- Renamed method `find` to `find_many`.
+- Updated tests.
+- Updated documentation.
+- Updated README.md
+
 #### v0.10.2 2025-09-25
 
 - Added a `count_documents` method.

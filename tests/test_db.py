@@ -235,7 +235,7 @@ class TestPositive:
         # Delete DB.
         await Scruby.napalm()
 
-    async def test_find(self) -> None:
+    async def test_find_many(self) -> None:
         """Find documents."""
         constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
         db = Scruby(User)
@@ -251,7 +251,7 @@ class TestPositive:
             await db.set_key(f"+44798612345{num}", user)
         #
         # by emails
-        results: list[User] | None = db.find(
+        results: list[User] | None = db.find_many(
             filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
         )
         assert results is not None
@@ -296,6 +296,35 @@ class TestPositive:
             filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
         )
         assert result == 2
+        #
+        # Delete DB.
+        await Scruby.napalm()
+
+    async def test_find_many_and_delete(self) -> None:
+        """Test a find_many_and_delete method."""
+        constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+        db = Scruby(User)
+
+        for num in range(1, 10):
+            user = User(
+                first_name="John",
+                last_name="Smith",
+                birthday=datetime.datetime(1970, 1, num),  # noqa: DTZ001
+                email=f"John_Smith_{num}@gmail.com",
+                phone=f"+44798612345{num}",
+            )
+            await db.set_key(f"+44798612345{num}", user)
+        #
+        # by emails
+        result: int = db.find_many_and_delete(
+            filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
+        )
+        assert result == 2
+        assert await db.estimated_document_count() == 7
+        result = db.count_documents(
+            filter_fn=lambda _: True,
+        )
+        assert result == 7
         #
         # Delete DB.
         await Scruby.napalm()
