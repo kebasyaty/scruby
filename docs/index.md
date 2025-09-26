@@ -8,7 +8,7 @@
     </a>
   </p>
   <p>
-    <h3>A fast key-value storage library.</h3>
+    <h3>Asynchronous library for building and managing a hybrid database, by scheme of key-value.</h3>
     <p align="center">
       <a href="https://github.com/kebasyaty/scruby/actions/workflows/test.yml" alt="Build Status"><img src="https://github.com/kebasyaty/scruby/actions/workflows/test.yml/badge.svg" alt="Build Status"></a>
       <a href="https://kebasyaty.github.io/scruby/" alt="Docs"><img src="https://img.shields.io/badge/docs-available-brightgreen.svg" alt="Docs"></a>
@@ -37,21 +37,26 @@
 <br>
 
 <p>
-Scruby is a fast key-value storage asynchronous library that provides an
-ordered mapping from string keys to string values.
-The library uses fractal-tree addressing.
-<br>
-<br>
-The database consists of collections.
-The maximum size of the one collection is 16\*\*8=4294967296 branches,
-each branch can store one or more keys.
-<br>
-<br>
-The value of any key in collection can be obtained in 8 steps,
-thereby achieving high performance.
-<br>
-<br>
-In the future, to search by value of key, the use of a quantum loop is supposed.
+  The library uses fractal-tree addressing and
+  <br>
+  the search for documents based on the effect of a quantum loop.
+  <br>
+  <br>
+  The database consists of collections.
+  <br>
+  The maximum size of the one collection is 16\*\*8=4294967296 branches,
+  <br>
+  each branch can store one or more keys.
+  <br>
+  <br>
+  The value of any key in collection can be obtained in 8 steps,
+  <br>
+  thereby achieving high performance.
+  <br>
+  <br>
+  The effectiveness of the search for documents based on a quantum loop,
+  <br>
+  requires a large number of processor threads.
 </p>
 
 <br>
