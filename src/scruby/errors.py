@@ -1,14 +1,17 @@
-"""XLOT Exceptions."""
+"""Scruby Exceptions."""
 
 from __future__ import annotations
 
-__all__ = ("MetadataValueError",)
+__all__ = (
+    "ScrubyException",
+    "MetadataValueError",
+)
 
 
 class ScrubyException(Exception):
     """Root Custom Exception."""
 
-    def __init__(self, *args, **kwargs) -> None:  # type: ignore[no-untyped-def]
+    def __init__(self, *args, **kwargs) -> None:  # type: ignore[no-untyped-def]  # noqa: D107
         super().__init__(*args, **kwargs)
 
 
