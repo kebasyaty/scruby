@@ -1,3 +1,5 @@
+#### Get an estimate of number of documents using collection metadata
+
 ```py title="main.py" linenums="1"
 """Get an estimate of the number of documents in this collection using collection metadata."""
 
@@ -49,6 +51,8 @@ async def main() -> None:
 if __name__ == "__main__":
     anyio.run(main)
 ```
+
+#### Count number of documents in collection
 
 ```py title="main.py" linenums="1"
 """Count the number of documents a matching the filter in this collection."""

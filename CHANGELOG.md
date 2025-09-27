@@ -1,5 +1,12 @@
 ### CHANGELOG
 
+#### v0.12.0 2025-09-27
+
+- Added a `run_custom_task` method.
+- Updated tests.
+- Updated documentation.
+- Updated README.md
+
 #### v0.11.1 2025-09-26
 
 - Fixed documentation.

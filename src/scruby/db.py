@@ -467,7 +467,7 @@ class Scruby[T]:
     def _task_delete(
         branch_number: int,
         filter_fn: Callable,
-        hash_reduce_left: str,
+        hash_reduce_left: int,
         db_root: str,
         class_model: T,
     ) -> int:
@@ -539,3 +539,48 @@ class Scruby[T]:
         if counter < 0:
             self._sync_counter_documents(counter)
         return abs(counter)
+
+    @staticmethod
+    def _task_get_docs(
+        branch_number: int,
+        hash_reduce_left: int,
+        db_root: str,
+        class_model: T,
+    ) -> list[Any]:
+        """Get documents for custom task.
+
+        This method is for internal use.
+        """
+        branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
+        separated_hash: str = "/".join(list(branch_number_as_hash))
+        leaf_path: SyncPath = SyncPath(
+            *(
+                db_root,
+                class_model.__name__,
+                separated_hash,
+                "leaf.json",
+            ),
+        )
+        docs = []
+        if leaf_path.exists():
+            data_json: bytes = leaf_path.read_bytes()
+            data: dict[str, str] = orjson.loads(data_json) or {}
+            for _, val in data.items():
+                docs.append(class_model.model_validate_json(val))
+        return docs
+
+    def run_custom_task(self, custom_task: Callable) -> Any:
+        """Running custom task.
+
+        This method running a task created on the basis of a quantum loop.
+        Effectiveness running task depends on the number of processor threads.
+        Ideally, hundreds and even thousands of threads are required.
+        """
+        kwargs = {
+            "get_docs_fn": self._task_get_docs,
+            "branch_numbers": range(1, self.__max_branch_number),
+            "hash_reduce_left": self.__hash_reduce_left,
+            "db_root": self.__db_root,
+            "class_model": self.__class_model,
+        }
+        return custom_task(**kwargs)

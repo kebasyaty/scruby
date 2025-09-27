@@ -1,20 +1,21 @@
-#### Find one or more documents matching the filter
+#### Custom task
 
 ```py title="main.py" linenums="1"
-"""Find one or more documents matching the filter.
+"""Running custom task.
 
-The search is based on the effect of a quantum loop.
-The search effectiveness depends on the number of processor threads.
+This method running a task created on the basis of a quantum loop.
+Effectiveness running task depends on the number of processor threads.
 Ideally, hundreds and even thousands of threads are required.
 """
 
 import anyio
 import datetime
-from typing import Annotated
+import concurrent.futures
+from typing import Annotated, Any
+from collections.abc import Callable
 from pydantic import BaseModel, EmailStr
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, constants
-from pprint import pprint as pp
 
 constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection
@@ -27,6 +28,36 @@ class User(BaseModel):
     birthday: datetime.datetime
     email: EmailStr
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
+
+def custom_task(
+    get_docs_fn: Callable,
+    branch_numbers: range,
+    hash_reduce_left: int,
+    db_root: str,
+    class_model: Any,
+) -> Any:
+    """Custom task.
+
+    Calculate the number of users named John.
+    """
+    max_workers: int | None = None
+    timeout: float | None = None
+    counter: int = 0
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
+        for branch_number in branch_numbers:
+            future = executor.submit(
+                get_docs_fn,
+                branch_number,
+                hash_reduce_left,
+                db_root,
+                class_model,
+            )
+            docs = future.result(timeout)
+            for doc in docs:
+                if doc.first_name == "John":
+                    counter += 1
+    return counter
 
 async def main() -> None:
     """Example."""
@@ -44,14 +75,8 @@ async def main() -> None:
         )
         await user_coll.set_key(f"+44798612345{num}", user)
 
-    # Find users by email.
-    users: list[User] | None = user_coll.find_many(
-        filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
-    )
-    if users is not None:
-        pp(users)
-    else:
-        print("No users!")
+    result = user_coll.run_custom_task(custom_task)
+    print(result)  # => 9
 
     # Full database deletion.
     # Hint: The main purpose is tests.
