@@ -102,7 +102,7 @@ async def main() -> None:
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await db.set_key(f"+44798612345{num}", user)
+        await user_coll.set_key(f"+44798612345{num}", user)
 
     amount_of_deleted: int = user_coll.find_many_and_delete(
         filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
