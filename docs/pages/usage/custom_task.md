@@ -21,6 +21,7 @@ constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection
                                 # (main purpose is tests).
 
+
 class User(BaseModel):
     """Model of User."""
     first_name: str
@@ -28,6 +29,7 @@ class User(BaseModel):
     birthday: datetime.datetime
     email: EmailStr
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
+
 
 def custom_task(
     get_docs_fn: Callable,
@@ -59,6 +61,7 @@ def custom_task(
                     counter += 1
     return counter
 
+
 async def main() -> None:
     """Example."""
     # Get collection of `User`.
@@ -81,6 +84,7 @@ async def main() -> None:
     # Full database deletion.
     # Hint: The main purpose is tests.
     await Scruby.napalm()
+
 
 if __name__ == "__main__":
     anyio.run(main)
