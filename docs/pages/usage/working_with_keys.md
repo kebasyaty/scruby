@@ -12,6 +12,7 @@ from scruby import Scruby, constants
 
 constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 
+
 class User(BaseModel):
     """Model of User."""
     first_name: str
@@ -19,6 +20,7 @@ class User(BaseModel):
     birthday: datetime.datetime
     email: EmailStr
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
+
 
 async def main() -> None:
     """Example."""
@@ -51,6 +53,7 @@ async def main() -> None:
     # Full database deletion.
     # Hint: The main purpose is tests.
     await Scruby.napalm()
+
 
 if __name__ == "__main__":
     anyio.run(main)
