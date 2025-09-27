@@ -1,5 +1,7 @@
+#### Find a single document and delete
+
 ```py title="main.py" linenums="1"
-"""Find a single document and delete.
+"""Finds one or more documents matching the filter and deletes their.
 
 The search is based on the effect of a quantum loop.
 The search effectiveness depends on the number of processor threads.
@@ -56,6 +58,8 @@ async def main() -> None:
 if __name__ == "__main__":
     anyio.run(main)
 ```
+
+#### Find one or more documents and deletes
 
 ```py title="main.py" linenums="1"
 """Find one or more documents matching the filter and deletes their.

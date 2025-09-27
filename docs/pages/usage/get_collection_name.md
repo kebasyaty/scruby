@@ -1,3 +1,5 @@
+#### Get collection name
+
 ```py title="main.py" linenums="1"
 """Get collection name."""
 

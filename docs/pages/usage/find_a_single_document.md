@@ -1,3 +1,5 @@
+#### Find a single document matching the filter
+
 ```py title="main.py" linenums="1"
 """Find a single document matching the filter.
 
