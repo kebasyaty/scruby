@@ -1,5 +1,9 @@
 ### CHANGELOG
 
+#### v0.12.1 2025-09-28
+
+- Optimized work with metadan.
+
 #### v0.12.0 2025-09-27
 
 - Added a `run_custom_task` method.
