@@ -11,7 +11,7 @@ import zlib
 from collections.abc import Callable
 from pathlib import Path as SyncPath
 from shutil import rmtree
-from typing import Any, Never, TypeVar, assert_never
+from typing import Any, Literal, Never, TypeVar, assert_never
 
 import orjson
 from anyio import Path, to_thread
@@ -123,7 +123,7 @@ class Scruby[T]:
         meta_json = meta.model_dump_json()
         await meta_path.write_text(meta_json, "utf-8")
 
-    async def _counter_documents(self, number: int) -> None:
+    async def _counter_documents(self, step: Literal[1, -1]) -> None:
         """Asynchronous method for management of documents in metadata of collection.
 
         This method is for internal use.
@@ -131,9 +131,7 @@ class Scruby[T]:
         meta_path = await self._get_meta_path()
         meta_json = await meta_path.read_text("utf-8")
         meta: _Meta = self.__meta.model_validate_json(meta_json)
-        meta.counter_documents += number
-        if meta.counter_documents < 0:
-            meta.counter_documents = 0
+        meta.counter_documents += step
         meta_json = meta.model_dump_json()
         await meta_path.write_text(meta_json, "utf-8")
 
@@ -156,8 +154,6 @@ class Scruby[T]:
         meta_json = meta_path.read_text("utf-8")
         meta: _Meta = self.__meta.model_validate_json(meta_json)
         meta.counter_documents += number
-        if meta.counter_documents < 0:
-            meta.counter_documents = 0
         meta_json = meta.model_dump_json()
         meta_path.write_text(meta_json, "utf-8")
 
