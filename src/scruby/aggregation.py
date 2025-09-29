@@ -5,6 +5,8 @@ from __future__ import annotations
 __all__ = (
     "Sum",
     "Max",
+    "Min",
+    "Average",
 )
 
 from typing import Any
@@ -44,7 +46,7 @@ class Max:
 class Min:
     """Aggregation class for calculating the minimum number."""
 
-    def __init__(self) -> None:
+    def __init__(self) -> None:  # noqa: D107
         self.value: Any = 0
 
     def set(self, number: int | float) -> None:
@@ -60,7 +62,7 @@ class Min:
 class Average:
     """Aggregation class for calculating the arithmetic average number."""
 
-    def __init__(self) -> None:
+    def __init__(self) -> None:  # noqa: D107
         self.value = 0.0
         self.counter = 0.0
 
