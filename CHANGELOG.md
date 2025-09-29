@@ -1,5 +1,10 @@
 ### CHANGELOG
 
+#### v0.12.3 2025-09-29
+
+- Optimized work with metadan.
+- Updated documentation.
+
 #### v0.12.2 2025-09-28
 
 - Updated dependencies.
