@@ -102,8 +102,8 @@ class Scruby[T]:
 
         This method is for internal use.
         """
-        meta_path = Path(*self.__meta_path_tuple)
         meta_json = meta.model_dump_json()
+        meta_path = Path(*self.__meta_path_tuple)
         await meta_path.write_text(meta_json, "utf-8")
 
     async def _counter_documents(self, step: Literal[1, -1]) -> None:
