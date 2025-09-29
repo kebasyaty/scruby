@@ -3,28 +3,30 @@
 from __future__ import annotations
 
 __all__ = (
-    "Sum",
+    "Average",
     "Max",
     "Min",
-    "Average",
+    "Sum",
 )
 
 from typing import Any
 
 
-class Sum:
-    """Aggregation class for calculating sum."""
+class Average:
+    """Aggregation class for calculating the arithmetic average number."""
 
     def __init__(self) -> None:  # noqa: D107
-        self.value: Any = 0
+        self.value = 0.0
+        self.counter = 0.0
 
     def set(self, number: int | float) -> None:
         """Add value."""
-        self.value += number
+        self.value += float(number)
+        self.counter += 1.0
 
-    def get(self) -> Any:
-        """Get sum."""
-        return self.value
+    def get(self) -> float:
+        """Get arithmetic average number."""
+        return self.value / self.counter
 
 
 class Max:
@@ -59,18 +61,16 @@ class Min:
         return self.value
 
 
-class Average:
-    """Aggregation class for calculating the arithmetic average number."""
+class Sum:
+    """Aggregation class for calculating sum."""
 
     def __init__(self) -> None:  # noqa: D107
-        self.value = 0.0
-        self.counter = 0.0
+        self.value: Any = 0
 
     def set(self, number: int | float) -> None:
         """Add value."""
-        self.value += float(number)
-        self.counter += 1.0
+        self.value += number
 
-    def get(self) -> float:
-        """Get arithmetic average number."""
-        return self.value / self.counter
+    def get(self) -> Any:
+        """Get sum."""
+        return self.value
