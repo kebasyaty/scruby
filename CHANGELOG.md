@@ -1,5 +1,11 @@
 ### CHANGELOG
 
+#### v0.14.0 2025-09-30
+
+- Added `Counter` aggregation class.
+- Updated tests.
+- Updated documentation.
+
 #### v0.13.0 2025-09-30
 
 - Added aggregation classes - `Average`, `Max`, `Min` and `Sum`.

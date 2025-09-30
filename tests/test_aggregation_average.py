@@ -38,7 +38,7 @@ def task_calculate_average(
     """
     max_workers: int | None = None
     timeout: float | None = None
-    average_age: float = Average()
+    average_age = Average()
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:

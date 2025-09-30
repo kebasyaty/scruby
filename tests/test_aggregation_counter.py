@@ -1,4 +1,4 @@
-"""Test a Sum class in custom task."""
+"""Test a Average class in custom task."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ from pydantic import BaseModel, EmailStr
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
 from scruby import Scruby, constants
-from scruby.aggregation import Sum
+from scruby.aggregation import Counter
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
@@ -25,20 +25,21 @@ class User(BaseModel):
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
 
 
-def task_calculate_sum(
+def task_counter(
     get_docs_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
-) -> Any:
+) -> list[Any]:
     """Custom task.
 
-    Calculate the sum of values.
+    This task implements a counter of documents.
     """
     max_workers: int | None = None
     timeout: float | None = None
-    sum_age = Sum()
+    users = []
+    counter = Counter(max=5)  # `max` by default = 1000
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
@@ -51,12 +52,14 @@ def task_calculate_sum(
             )
             docs = future.result(timeout)
             for doc in docs:
-                sum_age.set(doc.age)
-    return sum_age.get()
+                users.append(doc)
+                if counter.check():
+                    return users
+    return users
 
 
-async def test_task_calculate_sum() -> None:
-    """Test a Sum class in custom task."""
+async def test_task_counter() -> None:
+    """Test a Counter class in custom task."""
     constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
     db = Scruby(User)
 
@@ -69,8 +72,8 @@ async def test_task_calculate_sum() -> None:
         )
         await db.set_key(f"+44798612345{num}", user)
 
-    result = db.run_custom_task(task_calculate_sum)
-    assert result == 450.0
+    result = db.run_custom_task(task_counter)
+    assert len(result) == 5
     #
     # Delete DB.
     await Scruby.napalm()

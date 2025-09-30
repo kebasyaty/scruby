@@ -38,7 +38,7 @@ def task_calculate_min(
     """
     max_workers: int | None = None
     timeout: float | None = None
-    min_age: float = Min()
+    min_age = Min()
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:

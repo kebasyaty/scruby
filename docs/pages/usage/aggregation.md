@@ -40,7 +40,7 @@ def task_calculate_average(
     """
     max_workers: int | None = None
     timeout: float | None = None
-    average_age: float = Average()
+    average_age = Average()
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
@@ -70,10 +70,99 @@ async def main() -> None:
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await db.set_key(f"+44798612345{num}", user)
+        await user_coll.set_key(f"+44798612345{num}", user)
 
-    result = db.run_custom_task(task_calculate_average)
+    result = user_coll.run_custom_task(task_calculate_average)
     print(result)  # => 50.0
+
+    # Full database deletion.
+    # Hint: The main purpose is tests.
+    await Scruby.napalm()
+
+
+if __name__ == "__main__":
+    anyio.run(main)
+```
+
+#### Counter
+
+```py title="main.py" linenums="1"
+"""Aggregation class for calculating sum of values."""
+
+import concurrent.futures
+from collections.abc import Callable
+from typing import Annotated, Any
+
+from pydantic import BaseModel, EmailStr
+from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
+
+from scruby import Scruby, constants
+from scruby.aggregation import Counter
+
+constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
+constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection
+                                # (main purpose is tests).
+
+
+class User(BaseModel):
+    """User model."""
+
+    first_name: str
+    age: int
+    email: EmailStr
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
+
+
+def task_counter(
+    get_docs_fn: Callable,
+    branch_numbers: range,
+    hash_reduce_left: int,
+    db_root: str,
+    class_model: Any,
+) -> list[Any]:
+    """Custom task.
+
+    This task implements a counter of documents.
+    """
+    max_workers: int | None = None
+    timeout: float | None = None
+    users = []
+    counter = Counter(max=5)  # `max` by default = 1000
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
+        for branch_number in branch_numbers:
+            future = executor.submit(
+                get_docs_fn,
+                branch_number,
+                hash_reduce_left,
+                db_root,
+                class_model,
+            )
+            docs = future.result(timeout)
+            for doc in docs:
+                users.append(doc)
+                if counter.check():
+                    return users
+    return users
+
+
+async def main() -> None:
+    """Example."""
+    # Get collection of `User`.
+    user_coll = Scruby(User)
+
+    # Create users.
+    for num in range(1, 10):
+        user = User(
+            first_name="John",
+            age=f"{num * 10}",
+            email=f"John_Smith_{num}@gmail.com",
+            phone=f"+44798612345{num}",
+        )
+        await user_coll.set_key(f"+44798612345{num}", user)
+
+    result = user_coll.run_custom_task(task_counter)
+    print(len(result))  # => 5
 
     # Full database deletion.
     # Hint: The main purpose is tests.
@@ -126,7 +215,7 @@ def task_calculate_max(
     """
     max_workers: int | None = None
     timeout: float | None = None
-    max_age: float = Max()
+    max_age = Max()
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
@@ -156,9 +245,9 @@ async def main() -> None:
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await db.set_key(f"+44798612345{num}", user)
+        await user_coll.set_key(f"+44798612345{num}", user)
 
-    result = db.run_custom_task(task_calculate_max)
+    result = user_coll.run_custom_task(task_calculate_max)
     print(result)  # => 90.0
 
     # Full database deletion.
@@ -212,7 +301,7 @@ def task_calculate_min(
     """
     max_workers: int | None = None
     timeout: float | None = None
-    min_age: float = Min()
+    min_age = Min()
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
@@ -242,9 +331,9 @@ async def main() -> None:
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await db.set_key(f"+44798612345{num}", user)
+        await user_coll.set_key(f"+44798612345{num}", user)
 
-    result = db.run_custom_task(task_calculate_min)
+    result = user_coll.run_custom_task(task_calculate_min)
     print(result)  # => 10.0
 
     # Full database deletion.
@@ -298,7 +387,7 @@ def task_calculate_sum(
     """
     max_workers: int | None = None
     timeout: float | None = None
-    sum_age: float = Sum()
+    sum_age = Sum()
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
@@ -328,9 +417,9 @@ async def main() -> None:
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await db.set_key(f"+44798612345{num}", user)
+        await user_coll.set_key(f"+44798612345{num}", user)
 
-    result = db.run_custom_task(task_calculate_sum)
+    result = user_coll.run_custom_task(task_calculate_sum)
     print(result)  # => 450.0
 
     # Full database deletion.
