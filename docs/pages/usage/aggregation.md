@@ -55,7 +55,7 @@ class User(BaseModel):
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
 
 
-def calculate_average_task(
+def calculate_max_task(
     get_docs_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
@@ -64,11 +64,11 @@ def calculate_average_task(
 ) -> Any:
     """Custom task.
 
-    Calculate the average value.
+    Calculate the max value.
     """
     max_workers: int | None = None
     timeout: float | None = None
-    average_age: float = Average()
+    max_age: float = Max()
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
@@ -81,8 +81,8 @@ def calculate_average_task(
             )
             docs = future.result(timeout)
             for doc in docs:
-                average_age.set(doc.age)
-    return average_age.get()
+                max_age.set(doc.age)
+    return max_age.get()
 
 
 async def main() -> None:
@@ -100,8 +100,8 @@ async def main() -> None:
         )
         await db.set_key(f"+44798612345{num}", user)
 
-    result = db.run_custom_task(calculate_average_task)
-    print(result)  # => 50.0
+    result = db.run_custom_task(calculate_max_task)
+    print(result)  # => 90.0
 
     # Full database deletion.
     # Hint: The main purpose is tests.
