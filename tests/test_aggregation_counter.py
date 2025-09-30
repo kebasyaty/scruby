@@ -34,7 +34,7 @@ def task_counter(
 ) -> list[Any]:
     """Custom task.
 
-    Calculate the average value.
+    This task implements a counter of documents.
     """
     max_workers: int | None = None
     timeout: float | None = None
