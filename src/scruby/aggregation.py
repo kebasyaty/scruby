@@ -25,12 +25,12 @@ class Average:
         self.counter += 1.0
 
     def get(self) -> float:
-        """Get arithmetic average number."""
+        """Get arithmetic average value."""
         return self.value / self.counter
 
 
 class Max:
-    """Aggregation class for calculating the maximum valuer."""
+    """Aggregation class for calculating the maximum value."""
 
     def __init__(self) -> None:  # noqa: D107
         self.value: Any = 0
@@ -41,7 +41,7 @@ class Max:
             self.value = number
 
     def get(self) -> Any:
-        """Get maximum number."""
+        """Get maximum value."""
         return self.value
 
 
@@ -57,7 +57,7 @@ class Min:
             self.value = number
 
     def get(self) -> Any:
-        """Get minimum number."""
+        """Get minimum value."""
         return self.value
 
 
@@ -72,5 +72,5 @@ class Sum:
         self.value += number
 
     def get(self) -> Any:
-        """Get sum."""
+        """Get sum of values."""
         return self.value
