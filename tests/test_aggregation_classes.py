@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from scruby.aggregation import Average, Max, Min, Sum
+from scruby.aggregation import Average, Counter, Max, Min, Sum
 
 
 def test_average_int() -> None:
-    """Test a average class."""
+    """Test a Average class."""
     max_num = Average()
     max_num.set(5)
     max_num.set(10)
@@ -15,12 +15,19 @@ def test_average_int() -> None:
 
 
 def test_average_float() -> None:
-    """Test a average class."""
+    """Test a Average class."""
     max_num = Average()
     max_num.set(5.0)
     max_num.set(10.0)
     max_num.set(15.0)
     assert max_num.get() == 10.0
+
+
+def test_counter() -> None:
+    """Test a Counter class."""
+    counter = Counter(2)
+    assert not counter.check()
+    assert counter.check()
 
 
 def test_max_int() -> None:
