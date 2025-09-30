@@ -102,8 +102,8 @@ class Scruby[T]:
 
         This method is for internal use.
         """
-        meta_path = Path(*self.__meta_path_tuple)
         meta_json = meta.model_dump_json()
+        meta_path = Path(*self.__meta_path_tuple)
         await meta_path.write_text(meta_json, "utf-8")
 
     async def _counter_documents(self, step: Literal[1, -1]) -> None:
@@ -468,13 +468,13 @@ class Scruby[T]:
             leaf_path.write_bytes(orjson.dumps(new_data))
         return counter
 
-    def find_many_and_delete(
+    def delete_many(
         self,
         filter_fn: Callable,
         max_workers: int | None = None,
         timeout: float | None = None,
     ) -> int:
-        """Finds one or more documents matching the filter and deletes their.
+        """Delete one or more documents matching the filter.
 
         The search is based on the effect of a quantum loop.
         The search effectiveness depends on the number of processor threads.
