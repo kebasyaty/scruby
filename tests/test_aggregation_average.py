@@ -25,7 +25,7 @@ class User(BaseModel):
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
 
 
-def calculate_average_task(
+def task_calculate_average(
     get_docs_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
@@ -55,7 +55,7 @@ def calculate_average_task(
     return average_age.get()
 
 
-async def test_run_custom_task() -> None:
+async def test_task_calculate_average() -> None:
     """Test a Average class in custom task."""
     constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
     db = Scruby(User)
@@ -69,7 +69,7 @@ async def test_run_custom_task() -> None:
         )
         await db.set_key(f"+44798612345{num}", user)
 
-    result = db.run_custom_task(calculate_average_task)
+    result = db.run_custom_task(task_calculate_average)
     assert result == 50.0
     #
     # Delete DB.
