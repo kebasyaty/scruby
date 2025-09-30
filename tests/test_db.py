@@ -63,6 +63,7 @@ class TestNegative:
 
     async def test_get_non_existent_key(self) -> None:
         """Get a non-existent key."""
+        constants.HASH_REDUCE_LEFT = 0  # 4294967296 branches in collection (by default).
         db = Scruby(User)
 
         with pytest.raises(KeyError):
@@ -123,6 +124,7 @@ class TestPositive:
 
     async def test_create_db(self) -> None:
         """Create instance of database by default."""
+        constants.HASH_REDUCE_LEFT = 0  # 4294967296 branches in collection (by default).
         db = Scruby(User)
 
         control_path = Path(
