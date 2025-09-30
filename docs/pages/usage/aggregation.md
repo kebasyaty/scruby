@@ -3,6 +3,7 @@
 ```py title="main.py" linenums="1"
 """Aggregation class for calculating the average value."""
 
+import anyio
 import concurrent.futures
 from collections.abc import Callable
 from typing import Annotated, Any
@@ -89,6 +90,7 @@ if __name__ == "__main__":
 ```py title="main.py" linenums="1"
 """Aggregation class for calculating sum of values."""
 
+import anyio
 import concurrent.futures
 from collections.abc import Callable
 from typing import Annotated, Any
@@ -178,6 +180,7 @@ if __name__ == "__main__":
 ```py title="main.py" linenums="1"
 """Aggregation class for calculating the maximum value."""
 
+import anyio
 import concurrent.futures
 from collections.abc import Callable
 from typing import Annotated, Any
@@ -264,6 +267,7 @@ if __name__ == "__main__":
 ```py title="main.py" linenums="1"
 """Aggregation class for calculating the minimum value."""
 
+import anyio
 import concurrent.futures
 from collections.abc import Callable
 from typing import Annotated, Any
@@ -350,6 +354,7 @@ if __name__ == "__main__":
 ```py title="main.py" linenums="1"
 """Aggregation class for calculating sum of values."""
 
+import anyio
 import concurrent.futures
 from collections.abc import Callable
 from typing import Annotated, Any
