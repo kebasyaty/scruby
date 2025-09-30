@@ -1,7 +1,7 @@
 #### Average
 
 ```py title="main.py" linenums="1"
-"""Aggregation class for calculating the arithmetic average value."""
+"""Aggregation class for calculating the average value."""
 
 import concurrent.futures
 from collections.abc import Callable
