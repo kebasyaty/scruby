@@ -40,7 +40,7 @@ def task_calculate_average(
     """
     max_workers: int | None = None
     timeout: float | None = None
-    average_age: float = Average()
+    average_age = Average()
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
@@ -126,7 +126,7 @@ def task_calculate_max(
     """
     max_workers: int | None = None
     timeout: float | None = None
-    max_age: float = Max()
+    max_age = Max()
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
@@ -212,7 +212,7 @@ def task_calculate_min(
     """
     max_workers: int | None = None
     timeout: float | None = None
-    min_age: float = Min()
+    min_age = Min()
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
@@ -298,7 +298,7 @@ def task_calculate_sum(
     """
     max_workers: int | None = None
     timeout: float | None = None
-    sum_age: float = Sum()
+    sum_age = Sum()
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:

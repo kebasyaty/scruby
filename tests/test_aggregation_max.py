@@ -38,7 +38,7 @@ def task_calculate_max(
     """
     max_workers: int | None = None
     timeout: float | None = None
-    max_age: float = Max()
+    max_age = Max()
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
