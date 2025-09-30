@@ -1,7 +1,7 @@
 #### Find a single document and delete
 
 ```py title="main.py" linenums="1"
-"""Finds one or more documents matching the filter and deletes their.
+"""Find a single document, matching the filter and delete it.
 
 The search is based on the effect of a quantum loop.
 The search effectiveness depends on the number of processor threads.
@@ -65,7 +65,7 @@ if __name__ == "__main__":
 #### Find one or more documents and deletes
 
 ```py title="main.py" linenums="1"
-"""Find one or more documents matching the filter and deletes their.
+"""Delete one or more documents matching the filter.
 
 The search is based on the effect of a quantum loop.
 The search effectiveness depends on the number of processor threads.
@@ -109,7 +109,7 @@ async def main() -> None:
         )
         await user_coll.set_key(f"+44798612345{num}", user)
 
-    amount_of_deleted: int = user_coll.find_many_and_delete(
+    amount_of_deleted: int = user_coll.delete_many(
         filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
     )
     print(amount_of_deleted)  # => 2

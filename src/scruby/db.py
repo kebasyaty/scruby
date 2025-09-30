@@ -474,7 +474,7 @@ class Scruby[T]:
         max_workers: int | None = None,
         timeout: float | None = None,
     ) -> int:
-        """Finds one or more documents matching the filter and deletes their.
+        """Delete one or more documents matching the filter.
 
         The search is based on the effect of a quantum loop.
         The search effectiveness depends on the number of processor threads.
