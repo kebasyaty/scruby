@@ -1,4 +1,4 @@
-"""Test a Average class."""
+"""Test a Average class in custom task."""
 
 from __future__ import annotations
 
@@ -56,7 +56,7 @@ def calculate_average_task(
 
 
 async def test_run_custom_task() -> None:
-    """Test a run_custom_task method."""
+    """Test a Average class in custom task."""
     constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
     db = Scruby(User)
 

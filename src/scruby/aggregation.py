@@ -13,7 +13,7 @@ from typing import Any
 
 
 class Average:
-    """Aggregation class for calculating the arithmetic average number."""
+    """Aggregation class for calculating the average value."""
 
     def __init__(self) -> None:  # noqa: D107
         self.value = 0.0
@@ -30,7 +30,7 @@ class Average:
 
 
 class Max:
-    """Aggregation class for calculating the maximum number."""
+    """Aggregation class for calculating the maximum valuer."""
 
     def __init__(self) -> None:  # noqa: D107
         self.value: Any = 0
@@ -46,7 +46,7 @@ class Max:
 
 
 class Min:
-    """Aggregation class for calculating the minimum number."""
+    """Aggregation class for calculating the minimum value."""
 
     def __init__(self) -> None:  # noqa: D107
         self.value: Any = 0
@@ -62,7 +62,7 @@ class Min:
 
 
 class Sum:
-    """Aggregation class for calculating sum."""
+    """Aggregation class for calculating sum of values."""
 
     def __init__(self) -> None:  # noqa: D107
         self.value: Any = 0
