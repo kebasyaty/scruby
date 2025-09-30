@@ -2,6 +2,7 @@
 
 #### v0.13.0 2025-09-30
 
+- Added aggregation classes - `Average`, `Max`, `Min` and `Sum`.
 - Renamed a `find_many_and_delete` method to `delete_many`.
 - Updated tests.
 - Updated documentation.
