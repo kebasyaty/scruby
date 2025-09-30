@@ -468,7 +468,7 @@ class Scruby[T]:
             leaf_path.write_bytes(orjson.dumps(new_data))
         return counter
 
-    def find_many_and_delete(
+    def delete_many(
         self,
         filter_fn: Callable,
         max_workers: int | None = None,

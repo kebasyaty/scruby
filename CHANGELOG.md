@@ -1,5 +1,11 @@
 ### CHANGELOG
 
+#### v0.13.0 2025-09-30
+
+- Renamed a `find_many_and_delete` method to `delete_many`.
+- Updated tests.
+- Updated documentation.
+
 #### v0.12.3 2025-09-29
 
 - Optimized work with metadan.

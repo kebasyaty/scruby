@@ -372,8 +372,8 @@ class TestPositive:
         # Delete DB.
         await Scruby.napalm()
 
-    async def test_find_many_and_delete(self) -> None:
-        """Test a find_many_and_delete method."""
+    async def test_delete_many(self) -> None:
+        """Test a delete_many method."""
         constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
 
         db = Scruby(User)
@@ -389,7 +389,7 @@ class TestPositive:
             await db.set_key(f"+44798612345{num}", user)
 
         # by emails
-        result: int = db.find_many_and_delete(
+        result: int = db.delete_many(
             filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
         )
         assert result == 2
