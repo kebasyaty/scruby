@@ -1,6 +1,6 @@
 [project]
 name = "scruby"
-version = "0.14.0"
+version = "0.14.1"
 description = "A fast key-value storage library."
 readme = "README.md"
 authors = [{ name = "kebasyaty", email = "kebasyaty@gmail.com" }]

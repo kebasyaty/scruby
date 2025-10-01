@@ -1,17 +1,23 @@
 ### CHANGELOG
 
+#### v0.14.1 2025-10-01
+
+- Updated `Counter` aggregation class.
+- Updated documentation.
+- Updated tests.
+
 #### v0.14.0 2025-09-30
 
 - Added `Counter` aggregation class.
-- Updated tests.
 - Updated documentation.
+- Updated tests.
 
 #### v0.13.0 2025-09-30
 
 - Added aggregation classes - `Average`, `Max`, `Min` and `Sum`.
 - Renamed a `find_many_and_delete` method to `delete_many`.
-- Updated tests.
 - Updated documentation.
+- Updated tests.
 
 #### v0.12.3 2025-09-29
 
