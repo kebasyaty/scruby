@@ -1,4 +1,4 @@
-"""Test a Average class in custom task."""
+"""Test a Counter class in custom task."""
 
 from __future__ import annotations
 
@@ -38,7 +38,7 @@ def task_counter(
     """
     max_workers: int | None = None
     timeout: float | None = None
-    users = []
+    users: list[User] = []
     counter = Counter(max=5)  # `max` by default = 1000
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
@@ -52,9 +52,10 @@ def task_counter(
             )
             docs = future.result(timeout)
             for doc in docs:
-                users.append(doc)
                 if counter.check():
                     return users
+                users.append(doc)
+                counter.next()
     return users
 
 

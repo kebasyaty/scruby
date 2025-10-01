@@ -27,6 +27,9 @@ def test_counter() -> None:
     """Test a Counter class."""
     counter = Counter(2)
     assert not counter.check()
+    counter.next()
+    assert not counter.check()
+    counter.next()
     assert counter.check()
 
 
