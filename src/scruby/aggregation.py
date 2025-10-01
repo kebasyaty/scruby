@@ -54,7 +54,7 @@ class Counter:
         Returns:
             Boolean value. If `True`, the maximum value is achieved.
         """
-        return self.counter == self.max
+        return self.counter >= self.max
 
     def next(self) -> None:
         """Increment the counter on one."""
