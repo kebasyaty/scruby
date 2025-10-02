@@ -335,7 +335,7 @@ class Scruby[T]:
     def find_many(
         self,
         filter_fn: Callable,
-        db_query_docs_limit: int = 1000,
+        limit: int = 1000,
         max_workers: int | None = None,
         timeout: float | None = None,
     ) -> list[T] | None:
@@ -347,7 +347,7 @@ class Scruby[T]:
 
         Args:
             filter_fn: A function that execute the conditions of filtering.
-            db_query_docs_limit: Limiting the number of request results. By default = 1000.
+            limit: Limiting the number of request results. By default = 1000.
             max_workers: The maximum number of processes that can be used to
                          execute the given calls. If None or not given then as many
                          worker processes will be created as the machine has processors.
@@ -363,7 +363,7 @@ class Scruby[T]:
         with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
             results = []
             for branch_number in branch_numbers:
-                if counter == db_query_docs_limit:
+                if counter == limit:
                     break
                 future = executor.submit(
                     search_task_fn,
