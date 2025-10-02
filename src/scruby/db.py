@@ -538,12 +538,16 @@ class Scruby[T]:
                 docs.append(class_model.model_validate_json(val))
         return docs
 
-    def run_custom_task(self, custom_task: Callable, limit_docs: int = 1000) -> Any:
+    def run_custom_task(self, custom_task_fn: Callable, limit_docs: int = 1000) -> Any:
         """Running custom task.
 
         This method running a task created on the basis of a quantum loop.
         Effectiveness running task depends on the number of processor threads.
         Ideally, hundreds and even thousands of threads are required.
+
+        Args:
+            custom_task_fn: A function that execute the conditions of filtering.
+            limit_docs: Limiting the number of request results. By default = 1000.
         """
         kwargs = {
             "get_docs_fn": self._task_get_docs,
@@ -553,4 +557,4 @@ class Scruby[T]:
             "class_model": self.__class_model,
             "limit_docs": limit_docs,
         }
-        return custom_task(**kwargs)
+        return custom_task_fn(**kwargs)

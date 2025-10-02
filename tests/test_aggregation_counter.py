@@ -75,7 +75,7 @@ async def test_task_counter() -> None:
         await db.set_key(f"+44798612345{num}", user)
 
     result = db.run_custom_task(
-        custom_task=task_counter,
+        custom_task_fn=task_counter,
         limit_docs=5,
     )
     assert len(result) == 5
