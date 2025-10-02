@@ -34,6 +34,7 @@ def task_calculate_average(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
+    limit_docs: int,
 ) -> Any:
     """Custom task.
 
@@ -121,6 +122,7 @@ def task_counter(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
+    limit_docs: int,
 ) -> list[Any]:
     """Custom task.
 
@@ -129,7 +131,7 @@ def task_counter(
     max_workers: int | None = None
     timeout: float | None = None
     users: list[User] = []
-    counter = Counter(max=5)  # `max` by default = 1000
+    counter = Counter(limit=limit_docs)  # `limit` by default = 1000
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
@@ -164,7 +166,10 @@ async def main() -> None:
         )
         await user_coll.set_key(f"+44798612345{num}", user)
 
-    result = user_coll.run_custom_task(task_counter)
+    result = user_coll.run_custom_task(
+        custom_task_fn=task_counter,
+        limit_docs=5,
+    )
     print(len(result))  # => 5
 
     # Full database deletion.
@@ -212,6 +217,7 @@ def task_calculate_max(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
+    limit_docs: int,
 ) -> Any:
     """Custom task.
 
@@ -299,6 +305,7 @@ def task_calculate_min(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
+    limit_docs: int,
 ) -> Any:
     """Custom task.
 
@@ -386,6 +393,7 @@ def task_calculate_sum(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
+    limit_docs: int,
 ) -> Any:
     """Custom task.
 
