@@ -907,7 +907,8 @@
 <span class="normal"><a href="#__codelineno-0-79">79</a></span>
 <span class="normal"><a href="#__codelineno-0-80">80</a></span>
 <span class="normal"><a href="#__codelineno-0-81">81</a></span>
-<span class="normal"><a href="#__codelineno-0-82">82</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="sd">&quot;&quot;&quot;Aggregation class for calculating the average value.&quot;&quot;&quot;</span>
+<span class="normal"><a href="#__codelineno-0-82">82</a></span>
+<span class="normal"><a href="#__codelineno-0-83">83</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="sd">&quot;&quot;&quot;Aggregation class for calculating the average value.&quot;&quot;&quot;</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2"></a>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">anyio</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">concurrent.futures</span>
@@ -940,55 +941,56 @@
 </span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31"></a>    <span class="n">hash_reduce_left</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 </span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32"></a>    <span class="n">db_root</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 </span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33"></a>    <span class="n">class_model</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom task.</span>
-</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36"></a>
-</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="sd">    Calculate the average value.</span>
-</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39"></a>    <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="n">average_age</span> <span class="o">=</span> <span class="n">Average</span><span class="p">()</span>
-</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42"></a>
-</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43"></a>    <span class="k">with</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
-</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44"></a>        <span class="k">for</span> <span class="n">branch_number</span> <span class="ow">in</span> <span class="n">branch_numbers</span><span class="p">:</span>
-</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45"></a>            <span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
-</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46"></a>                <span class="n">get_docs_fn</span><span class="p">,</span>
-</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47"></a>                <span class="n">branch_number</span><span class="p">,</span>
-</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48"></a>                <span class="n">hash_reduce_left</span><span class="p">,</span>
-</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49"></a>                <span class="n">db_root</span><span class="p">,</span>
-</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50"></a>                <span class="n">class_model</span><span class="p">,</span>
-</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51"></a>            <span class="p">)</span>
-</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52"></a>            <span class="n">docs</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
-</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a>            <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
-</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54"></a>                <span class="n">average_age</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">age</span><span class="p">)</span>
-</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55"></a>    <span class="k">return</span> <span class="n">average_age</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56"></a>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34"></a>    <span class="n">limit_docs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom task.</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37"></a>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">    Calculate the average value.</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40"></a>    <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42"></a>    <span class="n">average_age</span> <span class="o">=</span> <span class="n">Average</span><span class="p">()</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43"></a>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44"></a>    <span class="k">with</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45"></a>        <span class="k">for</span> <span class="n">branch_number</span> <span class="ow">in</span> <span class="n">branch_numbers</span><span class="p">:</span>
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46"></a>            <span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47"></a>                <span class="n">get_docs_fn</span><span class="p">,</span>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48"></a>                <span class="n">branch_number</span><span class="p">,</span>
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49"></a>                <span class="n">hash_reduce_left</span><span class="p">,</span>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50"></a>                <span class="n">db_root</span><span class="p">,</span>
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51"></a>                <span class="n">class_model</span><span class="p">,</span>
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52"></a>            <span class="p">)</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a>            <span class="n">docs</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54"></a>            <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
+</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55"></a>                <span class="n">average_age</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">age</span><span class="p">)</span>
+</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="k">return</span> <span class="n">average_age</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 </span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57"></a>
-</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Example.&quot;&quot;&quot;</span>
-</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60"></a>    <span class="c1"># Get collection of `User`.</span>
-</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61"></a>    <span class="n">user_coll</span> <span class="o">=</span> <span class="n">Scruby</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
-</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62"></a>
-</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63"></a>    <span class="c1"># Create users.</span>
-</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64"></a>    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
-</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a>        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
-</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a>            <span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;John&quot;</span><span class="p">,</span>
-</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a>            <span class="n">age</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">10</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a>            <span class="n">email</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;John_Smith_</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">@gmail.com&quot;</span><span class="p">,</span>
-</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69"></a>            <span class="n">phone</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;+44798612345</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70"></a>        <span class="p">)</span>
-</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71"></a>        <span class="k">await</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;+44798612345</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
-</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72"></a>
-</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">run_custom_task</span><span class="p">(</span><span class="n">task_calculate_average</span><span class="p">)</span>
-</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># =&gt; 50.0</span>
-</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75"></a>
-</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76"></a>    <span class="c1"># Full database deletion.</span>
-</span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77"></a>    <span class="c1"># Hint: The main purpose is tests.</span>
-</span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78"></a>    <span class="k">await</span> <span class="n">Scruby</span><span class="o">.</span><span class="n">napalm</span><span class="p">()</span>
-</span><span id="__span-0-79"><a id="__codelineno-0-79" name="__codelineno-0-79"></a>
+</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58"></a>
+</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Example.&quot;&quot;&quot;</span>
+</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61"></a>    <span class="c1"># Get collection of `User`.</span>
+</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62"></a>    <span class="n">user_coll</span> <span class="o">=</span> <span class="n">Scruby</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
+</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63"></a>
+</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64"></a>    <span class="c1"># Create users.</span>
+</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a>    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a>        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
+</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a>            <span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;John&quot;</span><span class="p">,</span>
+</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a>            <span class="n">age</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">10</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69"></a>            <span class="n">email</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;John_Smith_</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">@gmail.com&quot;</span><span class="p">,</span>
+</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70"></a>            <span class="n">phone</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;+44798612345</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71"></a>        <span class="p">)</span>
+</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72"></a>        <span class="k">await</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;+44798612345</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73"></a>
+</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">run_custom_task</span><span class="p">(</span><span class="n">task_calculate_average</span><span class="p">)</span>
+</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># =&gt; 50.0</span>
+</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76"></a>
+</span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77"></a>    <span class="c1"># Full database deletion.</span>
+</span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78"></a>    <span class="c1"># Hint: The main purpose is tests.</span>
+</span><span id="__span-0-79"><a id="__codelineno-0-79" name="__codelineno-0-79"></a>    <span class="k">await</span> <span class="n">Scruby</span><span class="o">.</span><span class="n">napalm</span><span class="p">()</span>
 </span><span id="__span-0-80"><a id="__codelineno-0-80" name="__codelineno-0-80"></a>
-</span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-</span><span id="__span-0-82"><a id="__codelineno-0-82" name="__codelineno-0-82"></a>    <span class="n">anyio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
+</span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81"></a>
+</span><span id="__span-0-82"><a id="__codelineno-0-82" name="__codelineno-0-82"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-0-83"><a id="__codelineno-0-83" name="__codelineno-0-83"></a>    <span class="n">anyio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
 <h4 id="counter">Counter<a class="headerlink" href="#counter" title="Permanent link">&para;</a></h4>
 <div class="language-py highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">main.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1"> 1</a></span>
@@ -1076,7 +1078,11 @@
 <span class="normal"><a href="#__codelineno-1-83">83</a></span>
 <span class="normal"><a href="#__codelineno-1-84">84</a></span>
 <span class="normal"><a href="#__codelineno-1-85">85</a></span>
-<span class="normal"><a href="#__codelineno-1-86">86</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="sd">&quot;&quot;&quot;Aggregation class for calculating sum of values.&quot;&quot;&quot;</span>
+<span class="normal"><a href="#__codelineno-1-86">86</a></span>
+<span class="normal"><a href="#__codelineno-1-87">87</a></span>
+<span class="normal"><a href="#__codelineno-1-88">88</a></span>
+<span class="normal"><a href="#__codelineno-1-89">89</a></span>
+<span class="normal"><a href="#__codelineno-1-90">90</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="sd">&quot;&quot;&quot;Aggregation class for calculating sum of values.&quot;&quot;&quot;</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2"></a>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">anyio</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">concurrent.futures</span>
@@ -1109,59 +1115,63 @@
 </span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31"></a>    <span class="n">hash_reduce_left</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 </span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32"></a>    <span class="n">db_root</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 </span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33"></a>    <span class="n">class_model</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
-</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom task.</span>
-</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36"></a>
-</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37"></a><span class="sd">    This task implements a counter of documents.</span>
-</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39"></a>    <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41"></a>    <span class="n">users</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">User</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42"></a>    <span class="n">counter</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="nb">max</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># `max` by default = 1000</span>
-</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43"></a>
-</span><span id="__span-1-44"><a id="__codelineno-1-44" name="__codelineno-1-44"></a>    <span class="k">with</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
-</span><span id="__span-1-45"><a id="__codelineno-1-45" name="__codelineno-1-45"></a>        <span class="k">for</span> <span class="n">branch_number</span> <span class="ow">in</span> <span class="n">branch_numbers</span><span class="p">:</span>
-</span><span id="__span-1-46"><a id="__codelineno-1-46" name="__codelineno-1-46"></a>            <span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
-</span><span id="__span-1-47"><a id="__codelineno-1-47" name="__codelineno-1-47"></a>                <span class="n">get_docs_fn</span><span class="p">,</span>
-</span><span id="__span-1-48"><a id="__codelineno-1-48" name="__codelineno-1-48"></a>                <span class="n">branch_number</span><span class="p">,</span>
-</span><span id="__span-1-49"><a id="__codelineno-1-49" name="__codelineno-1-49"></a>                <span class="n">hash_reduce_left</span><span class="p">,</span>
-</span><span id="__span-1-50"><a id="__codelineno-1-50" name="__codelineno-1-50"></a>                <span class="n">db_root</span><span class="p">,</span>
-</span><span id="__span-1-51"><a id="__codelineno-1-51" name="__codelineno-1-51"></a>                <span class="n">class_model</span><span class="p">,</span>
-</span><span id="__span-1-52"><a id="__codelineno-1-52" name="__codelineno-1-52"></a>            <span class="p">)</span>
-</span><span id="__span-1-53"><a id="__codelineno-1-53" name="__codelineno-1-53"></a>            <span class="n">docs</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
-</span><span id="__span-1-54"><a id="__codelineno-1-54" name="__codelineno-1-54"></a>            <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
-</span><span id="__span-1-55"><a id="__codelineno-1-55" name="__codelineno-1-55"></a>                <span class="k">if</span> <span class="n">counter</span><span class="o">.</span><span class="n">check</span><span class="p">():</span>
-</span><span id="__span-1-56"><a id="__codelineno-1-56" name="__codelineno-1-56"></a>                    <span class="k">return</span> <span class="n">users</span>
-</span><span id="__span-1-57"><a id="__codelineno-1-57" name="__codelineno-1-57"></a>                <span class="n">users</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
-</span><span id="__span-1-58"><a id="__codelineno-1-58" name="__codelineno-1-58"></a>                <span class="n">counter</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
-</span><span id="__span-1-59"><a id="__codelineno-1-59" name="__codelineno-1-59"></a>    <span class="k">return</span> <span class="n">users</span>
-</span><span id="__span-1-60"><a id="__codelineno-1-60" name="__codelineno-1-60"></a>
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34"></a>    <span class="n">limit_docs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom task.</span>
+</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37"></a>
+</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38"></a><span class="sd">    This task implements a counter of documents.</span>
+</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40"></a>    <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42"></a>    <span class="n">users</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">User</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43"></a>    <span class="n">counter</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="n">limit_docs</span><span class="p">)</span>  <span class="c1"># `limit` by default = 1000</span>
+</span><span id="__span-1-44"><a id="__codelineno-1-44" name="__codelineno-1-44"></a>
+</span><span id="__span-1-45"><a id="__codelineno-1-45" name="__codelineno-1-45"></a>    <span class="k">with</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+</span><span id="__span-1-46"><a id="__codelineno-1-46" name="__codelineno-1-46"></a>        <span class="k">for</span> <span class="n">branch_number</span> <span class="ow">in</span> <span class="n">branch_numbers</span><span class="p">:</span>
+</span><span id="__span-1-47"><a id="__codelineno-1-47" name="__codelineno-1-47"></a>            <span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
+</span><span id="__span-1-48"><a id="__codelineno-1-48" name="__codelineno-1-48"></a>                <span class="n">get_docs_fn</span><span class="p">,</span>
+</span><span id="__span-1-49"><a id="__codelineno-1-49" name="__codelineno-1-49"></a>                <span class="n">branch_number</span><span class="p">,</span>
+</span><span id="__span-1-50"><a id="__codelineno-1-50" name="__codelineno-1-50"></a>                <span class="n">hash_reduce_left</span><span class="p">,</span>
+</span><span id="__span-1-51"><a id="__codelineno-1-51" name="__codelineno-1-51"></a>                <span class="n">db_root</span><span class="p">,</span>
+</span><span id="__span-1-52"><a id="__codelineno-1-52" name="__codelineno-1-52"></a>                <span class="n">class_model</span><span class="p">,</span>
+</span><span id="__span-1-53"><a id="__codelineno-1-53" name="__codelineno-1-53"></a>            <span class="p">)</span>
+</span><span id="__span-1-54"><a id="__codelineno-1-54" name="__codelineno-1-54"></a>            <span class="n">docs</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+</span><span id="__span-1-55"><a id="__codelineno-1-55" name="__codelineno-1-55"></a>            <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
+</span><span id="__span-1-56"><a id="__codelineno-1-56" name="__codelineno-1-56"></a>                <span class="k">if</span> <span class="n">counter</span><span class="o">.</span><span class="n">check</span><span class="p">():</span>
+</span><span id="__span-1-57"><a id="__codelineno-1-57" name="__codelineno-1-57"></a>                    <span class="k">return</span> <span class="n">users</span>
+</span><span id="__span-1-58"><a id="__codelineno-1-58" name="__codelineno-1-58"></a>                <span class="n">users</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
+</span><span id="__span-1-59"><a id="__codelineno-1-59" name="__codelineno-1-59"></a>                <span class="n">counter</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+</span><span id="__span-1-60"><a id="__codelineno-1-60" name="__codelineno-1-60"></a>    <span class="k">return</span> <span class="n">users</span>
 </span><span id="__span-1-61"><a id="__codelineno-1-61" name="__codelineno-1-61"></a>
-</span><span id="__span-1-62"><a id="__codelineno-1-62" name="__codelineno-1-62"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-1-63"><a id="__codelineno-1-63" name="__codelineno-1-63"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Example.&quot;&quot;&quot;</span>
-</span><span id="__span-1-64"><a id="__codelineno-1-64" name="__codelineno-1-64"></a>    <span class="c1"># Get collection of `User`.</span>
-</span><span id="__span-1-65"><a id="__codelineno-1-65" name="__codelineno-1-65"></a>    <span class="n">user_coll</span> <span class="o">=</span> <span class="n">Scruby</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
-</span><span id="__span-1-66"><a id="__codelineno-1-66" name="__codelineno-1-66"></a>
-</span><span id="__span-1-67"><a id="__codelineno-1-67" name="__codelineno-1-67"></a>    <span class="c1"># Create users.</span>
-</span><span id="__span-1-68"><a id="__codelineno-1-68" name="__codelineno-1-68"></a>    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
-</span><span id="__span-1-69"><a id="__codelineno-1-69" name="__codelineno-1-69"></a>        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
-</span><span id="__span-1-70"><a id="__codelineno-1-70" name="__codelineno-1-70"></a>            <span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;John&quot;</span><span class="p">,</span>
-</span><span id="__span-1-71"><a id="__codelineno-1-71" name="__codelineno-1-71"></a>            <span class="n">age</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">10</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-</span><span id="__span-1-72"><a id="__codelineno-1-72" name="__codelineno-1-72"></a>            <span class="n">email</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;John_Smith_</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">@gmail.com&quot;</span><span class="p">,</span>
-</span><span id="__span-1-73"><a id="__codelineno-1-73" name="__codelineno-1-73"></a>            <span class="n">phone</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;+44798612345</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-</span><span id="__span-1-74"><a id="__codelineno-1-74" name="__codelineno-1-74"></a>        <span class="p">)</span>
-</span><span id="__span-1-75"><a id="__codelineno-1-75" name="__codelineno-1-75"></a>        <span class="k">await</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;+44798612345</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
-</span><span id="__span-1-76"><a id="__codelineno-1-76" name="__codelineno-1-76"></a>
-</span><span id="__span-1-77"><a id="__codelineno-1-77" name="__codelineno-1-77"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">run_custom_task</span><span class="p">(</span><span class="n">task_counter</span><span class="p">)</span>
-</span><span id="__span-1-78"><a id="__codelineno-1-78" name="__codelineno-1-78"></a>    <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>  <span class="c1"># =&gt; 5</span>
-</span><span id="__span-1-79"><a id="__codelineno-1-79" name="__codelineno-1-79"></a>
-</span><span id="__span-1-80"><a id="__codelineno-1-80" name="__codelineno-1-80"></a>    <span class="c1"># Full database deletion.</span>
-</span><span id="__span-1-81"><a id="__codelineno-1-81" name="__codelineno-1-81"></a>    <span class="c1"># Hint: The main purpose is tests.</span>
-</span><span id="__span-1-82"><a id="__codelineno-1-82" name="__codelineno-1-82"></a>    <span class="k">await</span> <span class="n">Scruby</span><span class="o">.</span><span class="n">napalm</span><span class="p">()</span>
+</span><span id="__span-1-62"><a id="__codelineno-1-62" name="__codelineno-1-62"></a>
+</span><span id="__span-1-63"><a id="__codelineno-1-63" name="__codelineno-1-63"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-1-64"><a id="__codelineno-1-64" name="__codelineno-1-64"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Example.&quot;&quot;&quot;</span>
+</span><span id="__span-1-65"><a id="__codelineno-1-65" name="__codelineno-1-65"></a>    <span class="c1"># Get collection of `User`.</span>
+</span><span id="__span-1-66"><a id="__codelineno-1-66" name="__codelineno-1-66"></a>    <span class="n">user_coll</span> <span class="o">=</span> <span class="n">Scruby</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
+</span><span id="__span-1-67"><a id="__codelineno-1-67" name="__codelineno-1-67"></a>
+</span><span id="__span-1-68"><a id="__codelineno-1-68" name="__codelineno-1-68"></a>    <span class="c1"># Create users.</span>
+</span><span id="__span-1-69"><a id="__codelineno-1-69" name="__codelineno-1-69"></a>    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+</span><span id="__span-1-70"><a id="__codelineno-1-70" name="__codelineno-1-70"></a>        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
+</span><span id="__span-1-71"><a id="__codelineno-1-71" name="__codelineno-1-71"></a>            <span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;John&quot;</span><span class="p">,</span>
+</span><span id="__span-1-72"><a id="__codelineno-1-72" name="__codelineno-1-72"></a>            <span class="n">age</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">10</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span id="__span-1-73"><a id="__codelineno-1-73" name="__codelineno-1-73"></a>            <span class="n">email</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;John_Smith_</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">@gmail.com&quot;</span><span class="p">,</span>
+</span><span id="__span-1-74"><a id="__codelineno-1-74" name="__codelineno-1-74"></a>            <span class="n">phone</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;+44798612345</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span id="__span-1-75"><a id="__codelineno-1-75" name="__codelineno-1-75"></a>        <span class="p">)</span>
+</span><span id="__span-1-76"><a id="__codelineno-1-76" name="__codelineno-1-76"></a>        <span class="k">await</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;+44798612345</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+</span><span id="__span-1-77"><a id="__codelineno-1-77" name="__codelineno-1-77"></a>
+</span><span id="__span-1-78"><a id="__codelineno-1-78" name="__codelineno-1-78"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">run_custom_task</span><span class="p">(</span>
+</span><span id="__span-1-79"><a id="__codelineno-1-79" name="__codelineno-1-79"></a>        <span class="n">custom_task_fn</span><span class="o">=</span><span class="n">task_counter</span><span class="p">,</span>
+</span><span id="__span-1-80"><a id="__codelineno-1-80" name="__codelineno-1-80"></a>        <span class="n">limit_docs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+</span><span id="__span-1-81"><a id="__codelineno-1-81" name="__codelineno-1-81"></a>    <span class="p">)</span>
+</span><span id="__span-1-82"><a id="__codelineno-1-82" name="__codelineno-1-82"></a>    <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>  <span class="c1"># =&gt; 5</span>
 </span><span id="__span-1-83"><a id="__codelineno-1-83" name="__codelineno-1-83"></a>
-</span><span id="__span-1-84"><a id="__codelineno-1-84" name="__codelineno-1-84"></a>
-</span><span id="__span-1-85"><a id="__codelineno-1-85" name="__codelineno-1-85"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-</span><span id="__span-1-86"><a id="__codelineno-1-86" name="__codelineno-1-86"></a>    <span class="n">anyio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
+</span><span id="__span-1-84"><a id="__codelineno-1-84" name="__codelineno-1-84"></a>    <span class="c1"># Full database deletion.</span>
+</span><span id="__span-1-85"><a id="__codelineno-1-85" name="__codelineno-1-85"></a>    <span class="c1"># Hint: The main purpose is tests.</span>
+</span><span id="__span-1-86"><a id="__codelineno-1-86" name="__codelineno-1-86"></a>    <span class="k">await</span> <span class="n">Scruby</span><span class="o">.</span><span class="n">napalm</span><span class="p">()</span>
+</span><span id="__span-1-87"><a id="__codelineno-1-87" name="__codelineno-1-87"></a>
+</span><span id="__span-1-88"><a id="__codelineno-1-88" name="__codelineno-1-88"></a>
+</span><span id="__span-1-89"><a id="__codelineno-1-89" name="__codelineno-1-89"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-1-90"><a id="__codelineno-1-90" name="__codelineno-1-90"></a>    <span class="n">anyio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
 <h4 id="max">Max<a class="headerlink" href="#max" title="Permanent link">&para;</a></h4>
 <div class="language-py highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">main.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
@@ -1245,7 +1255,8 @@
 <span class="normal"><a href="#__codelineno-2-79">79</a></span>
 <span class="normal"><a href="#__codelineno-2-80">80</a></span>
 <span class="normal"><a href="#__codelineno-2-81">81</a></span>
-<span class="normal"><a href="#__codelineno-2-82">82</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="sd">&quot;&quot;&quot;Aggregation class for calculating the maximum value.&quot;&quot;&quot;</span>
+<span class="normal"><a href="#__codelineno-2-82">82</a></span>
+<span class="normal"><a href="#__codelineno-2-83">83</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="sd">&quot;&quot;&quot;Aggregation class for calculating the maximum value.&quot;&quot;&quot;</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2"></a>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">anyio</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">concurrent.futures</span>
@@ -1278,55 +1289,56 @@
 </span><span id="__span-2-31"><a id="__codelineno-2-31" name="__codelineno-2-31"></a>    <span class="n">hash_reduce_left</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 </span><span id="__span-2-32"><a id="__codelineno-2-32" name="__codelineno-2-32"></a>    <span class="n">db_root</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 </span><span id="__span-2-33"><a id="__codelineno-2-33" name="__codelineno-2-33"></a>    <span class="n">class_model</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-</span><span id="__span-2-34"><a id="__codelineno-2-34" name="__codelineno-2-34"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-</span><span id="__span-2-35"><a id="__codelineno-2-35" name="__codelineno-2-35"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom task.</span>
-</span><span id="__span-2-36"><a id="__codelineno-2-36" name="__codelineno-2-36"></a>
-</span><span id="__span-2-37"><a id="__codelineno-2-37" name="__codelineno-2-37"></a><span class="sd">    Calculate the max value.</span>
-</span><span id="__span-2-38"><a id="__codelineno-2-38" name="__codelineno-2-38"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-2-39"><a id="__codelineno-2-39" name="__codelineno-2-39"></a>    <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-2-40"><a id="__codelineno-2-40" name="__codelineno-2-40"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-2-41"><a id="__codelineno-2-41" name="__codelineno-2-41"></a>    <span class="n">max_age</span> <span class="o">=</span> <span class="n">Max</span><span class="p">()</span>
-</span><span id="__span-2-42"><a id="__codelineno-2-42" name="__codelineno-2-42"></a>
-</span><span id="__span-2-43"><a id="__codelineno-2-43" name="__codelineno-2-43"></a>    <span class="k">with</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
-</span><span id="__span-2-44"><a id="__codelineno-2-44" name="__codelineno-2-44"></a>        <span class="k">for</span> <span class="n">branch_number</span> <span class="ow">in</span> <span class="n">branch_numbers</span><span class="p">:</span>
-</span><span id="__span-2-45"><a id="__codelineno-2-45" name="__codelineno-2-45"></a>            <span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
-</span><span id="__span-2-46"><a id="__codelineno-2-46" name="__codelineno-2-46"></a>                <span class="n">get_docs_fn</span><span class="p">,</span>
-</span><span id="__span-2-47"><a id="__codelineno-2-47" name="__codelineno-2-47"></a>                <span class="n">branch_number</span><span class="p">,</span>
-</span><span id="__span-2-48"><a id="__codelineno-2-48" name="__codelineno-2-48"></a>                <span class="n">hash_reduce_left</span><span class="p">,</span>
-</span><span id="__span-2-49"><a id="__codelineno-2-49" name="__codelineno-2-49"></a>                <span class="n">db_root</span><span class="p">,</span>
-</span><span id="__span-2-50"><a id="__codelineno-2-50" name="__codelineno-2-50"></a>                <span class="n">class_model</span><span class="p">,</span>
-</span><span id="__span-2-51"><a id="__codelineno-2-51" name="__codelineno-2-51"></a>            <span class="p">)</span>
-</span><span id="__span-2-52"><a id="__codelineno-2-52" name="__codelineno-2-52"></a>            <span class="n">docs</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
-</span><span id="__span-2-53"><a id="__codelineno-2-53" name="__codelineno-2-53"></a>            <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
-</span><span id="__span-2-54"><a id="__codelineno-2-54" name="__codelineno-2-54"></a>                <span class="n">max_age</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">age</span><span class="p">)</span>
-</span><span id="__span-2-55"><a id="__codelineno-2-55" name="__codelineno-2-55"></a>    <span class="k">return</span> <span class="n">max_age</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</span><span id="__span-2-56"><a id="__codelineno-2-56" name="__codelineno-2-56"></a>
+</span><span id="__span-2-34"><a id="__codelineno-2-34" name="__codelineno-2-34"></a>    <span class="n">limit_docs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="__span-2-35"><a id="__codelineno-2-35" name="__codelineno-2-35"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span><span id="__span-2-36"><a id="__codelineno-2-36" name="__codelineno-2-36"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom task.</span>
+</span><span id="__span-2-37"><a id="__codelineno-2-37" name="__codelineno-2-37"></a>
+</span><span id="__span-2-38"><a id="__codelineno-2-38" name="__codelineno-2-38"></a><span class="sd">    Calculate the max value.</span>
+</span><span id="__span-2-39"><a id="__codelineno-2-39" name="__codelineno-2-39"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-2-40"><a id="__codelineno-2-40" name="__codelineno-2-40"></a>    <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-2-41"><a id="__codelineno-2-41" name="__codelineno-2-41"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-2-42"><a id="__codelineno-2-42" name="__codelineno-2-42"></a>    <span class="n">max_age</span> <span class="o">=</span> <span class="n">Max</span><span class="p">()</span>
+</span><span id="__span-2-43"><a id="__codelineno-2-43" name="__codelineno-2-43"></a>
+</span><span id="__span-2-44"><a id="__codelineno-2-44" name="__codelineno-2-44"></a>    <span class="k">with</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+</span><span id="__span-2-45"><a id="__codelineno-2-45" name="__codelineno-2-45"></a>        <span class="k">for</span> <span class="n">branch_number</span> <span class="ow">in</span> <span class="n">branch_numbers</span><span class="p">:</span>
+</span><span id="__span-2-46"><a id="__codelineno-2-46" name="__codelineno-2-46"></a>            <span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
+</span><span id="__span-2-47"><a id="__codelineno-2-47" name="__codelineno-2-47"></a>                <span class="n">get_docs_fn</span><span class="p">,</span>
+</span><span id="__span-2-48"><a id="__codelineno-2-48" name="__codelineno-2-48"></a>                <span class="n">branch_number</span><span class="p">,</span>
+</span><span id="__span-2-49"><a id="__codelineno-2-49" name="__codelineno-2-49"></a>                <span class="n">hash_reduce_left</span><span class="p">,</span>
+</span><span id="__span-2-50"><a id="__codelineno-2-50" name="__codelineno-2-50"></a>                <span class="n">db_root</span><span class="p">,</span>
+</span><span id="__span-2-51"><a id="__codelineno-2-51" name="__codelineno-2-51"></a>                <span class="n">class_model</span><span class="p">,</span>
+</span><span id="__span-2-52"><a id="__codelineno-2-52" name="__codelineno-2-52"></a>            <span class="p">)</span>
+</span><span id="__span-2-53"><a id="__codelineno-2-53" name="__codelineno-2-53"></a>            <span class="n">docs</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+</span><span id="__span-2-54"><a id="__codelineno-2-54" name="__codelineno-2-54"></a>            <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
+</span><span id="__span-2-55"><a id="__codelineno-2-55" name="__codelineno-2-55"></a>                <span class="n">max_age</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">age</span><span class="p">)</span>
+</span><span id="__span-2-56"><a id="__codelineno-2-56" name="__codelineno-2-56"></a>    <span class="k">return</span> <span class="n">max_age</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 </span><span id="__span-2-57"><a id="__codelineno-2-57" name="__codelineno-2-57"></a>
-</span><span id="__span-2-58"><a id="__codelineno-2-58" name="__codelineno-2-58"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-2-59"><a id="__codelineno-2-59" name="__codelineno-2-59"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Example.&quot;&quot;&quot;</span>
-</span><span id="__span-2-60"><a id="__codelineno-2-60" name="__codelineno-2-60"></a>    <span class="c1"># Get collection of `User`.</span>
-</span><span id="__span-2-61"><a id="__codelineno-2-61" name="__codelineno-2-61"></a>    <span class="n">user_coll</span> <span class="o">=</span> <span class="n">Scruby</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
-</span><span id="__span-2-62"><a id="__codelineno-2-62" name="__codelineno-2-62"></a>
-</span><span id="__span-2-63"><a id="__codelineno-2-63" name="__codelineno-2-63"></a>    <span class="c1"># Create users.</span>
-</span><span id="__span-2-64"><a id="__codelineno-2-64" name="__codelineno-2-64"></a>    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
-</span><span id="__span-2-65"><a id="__codelineno-2-65" name="__codelineno-2-65"></a>        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
-</span><span id="__span-2-66"><a id="__codelineno-2-66" name="__codelineno-2-66"></a>            <span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;John&quot;</span><span class="p">,</span>
-</span><span id="__span-2-67"><a id="__codelineno-2-67" name="__codelineno-2-67"></a>            <span class="n">age</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">10</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-</span><span id="__span-2-68"><a id="__codelineno-2-68" name="__codelineno-2-68"></a>            <span class="n">email</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;John_Smith_</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">@gmail.com&quot;</span><span class="p">,</span>
-</span><span id="__span-2-69"><a id="__codelineno-2-69" name="__codelineno-2-69"></a>            <span class="n">phone</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;+44798612345</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-</span><span id="__span-2-70"><a id="__codelineno-2-70" name="__codelineno-2-70"></a>        <span class="p">)</span>
-</span><span id="__span-2-71"><a id="__codelineno-2-71" name="__codelineno-2-71"></a>        <span class="k">await</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;+44798612345</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
-</span><span id="__span-2-72"><a id="__codelineno-2-72" name="__codelineno-2-72"></a>
-</span><span id="__span-2-73"><a id="__codelineno-2-73" name="__codelineno-2-73"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">run_custom_task</span><span class="p">(</span><span class="n">task_calculate_max</span><span class="p">)</span>
-</span><span id="__span-2-74"><a id="__codelineno-2-74" name="__codelineno-2-74"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># =&gt; 90.0</span>
-</span><span id="__span-2-75"><a id="__codelineno-2-75" name="__codelineno-2-75"></a>
-</span><span id="__span-2-76"><a id="__codelineno-2-76" name="__codelineno-2-76"></a>    <span class="c1"># Full database deletion.</span>
-</span><span id="__span-2-77"><a id="__codelineno-2-77" name="__codelineno-2-77"></a>    <span class="c1"># Hint: The main purpose is tests.</span>
-</span><span id="__span-2-78"><a id="__codelineno-2-78" name="__codelineno-2-78"></a>    <span class="k">await</span> <span class="n">Scruby</span><span class="o">.</span><span class="n">napalm</span><span class="p">()</span>
-</span><span id="__span-2-79"><a id="__codelineno-2-79" name="__codelineno-2-79"></a>
+</span><span id="__span-2-58"><a id="__codelineno-2-58" name="__codelineno-2-58"></a>
+</span><span id="__span-2-59"><a id="__codelineno-2-59" name="__codelineno-2-59"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-2-60"><a id="__codelineno-2-60" name="__codelineno-2-60"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Example.&quot;&quot;&quot;</span>
+</span><span id="__span-2-61"><a id="__codelineno-2-61" name="__codelineno-2-61"></a>    <span class="c1"># Get collection of `User`.</span>
+</span><span id="__span-2-62"><a id="__codelineno-2-62" name="__codelineno-2-62"></a>    <span class="n">user_coll</span> <span class="o">=</span> <span class="n">Scruby</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
+</span><span id="__span-2-63"><a id="__codelineno-2-63" name="__codelineno-2-63"></a>
+</span><span id="__span-2-64"><a id="__codelineno-2-64" name="__codelineno-2-64"></a>    <span class="c1"># Create users.</span>
+</span><span id="__span-2-65"><a id="__codelineno-2-65" name="__codelineno-2-65"></a>    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+</span><span id="__span-2-66"><a id="__codelineno-2-66" name="__codelineno-2-66"></a>        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
+</span><span id="__span-2-67"><a id="__codelineno-2-67" name="__codelineno-2-67"></a>            <span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;John&quot;</span><span class="p">,</span>
+</span><span id="__span-2-68"><a id="__codelineno-2-68" name="__codelineno-2-68"></a>            <span class="n">age</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">10</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span id="__span-2-69"><a id="__codelineno-2-69" name="__codelineno-2-69"></a>            <span class="n">email</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;John_Smith_</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">@gmail.com&quot;</span><span class="p">,</span>
+</span><span id="__span-2-70"><a id="__codelineno-2-70" name="__codelineno-2-70"></a>            <span class="n">phone</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;+44798612345</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span id="__span-2-71"><a id="__codelineno-2-71" name="__codelineno-2-71"></a>        <span class="p">)</span>
+</span><span id="__span-2-72"><a id="__codelineno-2-72" name="__codelineno-2-72"></a>        <span class="k">await</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;+44798612345</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+</span><span id="__span-2-73"><a id="__codelineno-2-73" name="__codelineno-2-73"></a>
+</span><span id="__span-2-74"><a id="__codelineno-2-74" name="__codelineno-2-74"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">run_custom_task</span><span class="p">(</span><span class="n">task_calculate_max</span><span class="p">)</span>
+</span><span id="__span-2-75"><a id="__codelineno-2-75" name="__codelineno-2-75"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># =&gt; 90.0</span>
+</span><span id="__span-2-76"><a id="__codelineno-2-76" name="__codelineno-2-76"></a>
+</span><span id="__span-2-77"><a id="__codelineno-2-77" name="__codelineno-2-77"></a>    <span class="c1"># Full database deletion.</span>
+</span><span id="__span-2-78"><a id="__codelineno-2-78" name="__codelineno-2-78"></a>    <span class="c1"># Hint: The main purpose is tests.</span>
+</span><span id="__span-2-79"><a id="__codelineno-2-79" name="__codelineno-2-79"></a>    <span class="k">await</span> <span class="n">Scruby</span><span class="o">.</span><span class="n">napalm</span><span class="p">()</span>
 </span><span id="__span-2-80"><a id="__codelineno-2-80" name="__codelineno-2-80"></a>
-</span><span id="__span-2-81"><a id="__codelineno-2-81" name="__codelineno-2-81"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-</span><span id="__span-2-82"><a id="__codelineno-2-82" name="__codelineno-2-82"></a>    <span class="n">anyio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
+</span><span id="__span-2-81"><a id="__codelineno-2-81" name="__codelineno-2-81"></a>
+</span><span id="__span-2-82"><a id="__codelineno-2-82" name="__codelineno-2-82"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-2-83"><a id="__codelineno-2-83" name="__codelineno-2-83"></a>    <span class="n">anyio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
 <h4 id="min">Min<a class="headerlink" href="#min" title="Permanent link">&para;</a></h4>
 <div class="language-py highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">main.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1"> 1</a></span>
@@ -1410,7 +1422,8 @@
 <span class="normal"><a href="#__codelineno-3-79">79</a></span>
 <span class="normal"><a href="#__codelineno-3-80">80</a></span>
 <span class="normal"><a href="#__codelineno-3-81">81</a></span>
-<span class="normal"><a href="#__codelineno-3-82">82</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="sd">&quot;&quot;&quot;Aggregation class for calculating the minimum value.&quot;&quot;&quot;</span>
+<span class="normal"><a href="#__codelineno-3-82">82</a></span>
+<span class="normal"><a href="#__codelineno-3-83">83</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="sd">&quot;&quot;&quot;Aggregation class for calculating the minimum value.&quot;&quot;&quot;</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2"></a>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">anyio</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">concurrent.futures</span>
@@ -1443,55 +1456,56 @@
 </span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31"></a>    <span class="n">hash_reduce_left</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 </span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32"></a>    <span class="n">db_root</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 </span><span id="__span-3-33"><a id="__codelineno-3-33" name="__codelineno-3-33"></a>    <span class="n">class_model</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-</span><span id="__span-3-34"><a id="__codelineno-3-34" name="__codelineno-3-34"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-</span><span id="__span-3-35"><a id="__codelineno-3-35" name="__codelineno-3-35"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom task.</span>
-</span><span id="__span-3-36"><a id="__codelineno-3-36" name="__codelineno-3-36"></a>
-</span><span id="__span-3-37"><a id="__codelineno-3-37" name="__codelineno-3-37"></a><span class="sd">    Calculate the min value.</span>
-</span><span id="__span-3-38"><a id="__codelineno-3-38" name="__codelineno-3-38"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-3-39"><a id="__codelineno-3-39" name="__codelineno-3-39"></a>    <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-3-40"><a id="__codelineno-3-40" name="__codelineno-3-40"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-3-41"><a id="__codelineno-3-41" name="__codelineno-3-41"></a>    <span class="n">min_age</span> <span class="o">=</span> <span class="n">Min</span><span class="p">()</span>
-</span><span id="__span-3-42"><a id="__codelineno-3-42" name="__codelineno-3-42"></a>
-</span><span id="__span-3-43"><a id="__codelineno-3-43" name="__codelineno-3-43"></a>    <span class="k">with</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
-</span><span id="__span-3-44"><a id="__codelineno-3-44" name="__codelineno-3-44"></a>        <span class="k">for</span> <span class="n">branch_number</span> <span class="ow">in</span> <span class="n">branch_numbers</span><span class="p">:</span>
-</span><span id="__span-3-45"><a id="__codelineno-3-45" name="__codelineno-3-45"></a>            <span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
-</span><span id="__span-3-46"><a id="__codelineno-3-46" name="__codelineno-3-46"></a>                <span class="n">get_docs_fn</span><span class="p">,</span>
-</span><span id="__span-3-47"><a id="__codelineno-3-47" name="__codelineno-3-47"></a>                <span class="n">branch_number</span><span class="p">,</span>
-</span><span id="__span-3-48"><a id="__codelineno-3-48" name="__codelineno-3-48"></a>                <span class="n">hash_reduce_left</span><span class="p">,</span>
-</span><span id="__span-3-49"><a id="__codelineno-3-49" name="__codelineno-3-49"></a>                <span class="n">db_root</span><span class="p">,</span>
-</span><span id="__span-3-50"><a id="__codelineno-3-50" name="__codelineno-3-50"></a>                <span class="n">class_model</span><span class="p">,</span>
-</span><span id="__span-3-51"><a id="__codelineno-3-51" name="__codelineno-3-51"></a>            <span class="p">)</span>
-</span><span id="__span-3-52"><a id="__codelineno-3-52" name="__codelineno-3-52"></a>            <span class="n">docs</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
-</span><span id="__span-3-53"><a id="__codelineno-3-53" name="__codelineno-3-53"></a>            <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
-</span><span id="__span-3-54"><a id="__codelineno-3-54" name="__codelineno-3-54"></a>                <span class="n">min_age</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">age</span><span class="p">)</span>
-</span><span id="__span-3-55"><a id="__codelineno-3-55" name="__codelineno-3-55"></a>    <span class="k">return</span> <span class="n">min_age</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</span><span id="__span-3-56"><a id="__codelineno-3-56" name="__codelineno-3-56"></a>
+</span><span id="__span-3-34"><a id="__codelineno-3-34" name="__codelineno-3-34"></a>    <span class="n">limit_docs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="__span-3-35"><a id="__codelineno-3-35" name="__codelineno-3-35"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span><span id="__span-3-36"><a id="__codelineno-3-36" name="__codelineno-3-36"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom task.</span>
+</span><span id="__span-3-37"><a id="__codelineno-3-37" name="__codelineno-3-37"></a>
+</span><span id="__span-3-38"><a id="__codelineno-3-38" name="__codelineno-3-38"></a><span class="sd">    Calculate the min value.</span>
+</span><span id="__span-3-39"><a id="__codelineno-3-39" name="__codelineno-3-39"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-3-40"><a id="__codelineno-3-40" name="__codelineno-3-40"></a>    <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-3-41"><a id="__codelineno-3-41" name="__codelineno-3-41"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-3-42"><a id="__codelineno-3-42" name="__codelineno-3-42"></a>    <span class="n">min_age</span> <span class="o">=</span> <span class="n">Min</span><span class="p">()</span>
+</span><span id="__span-3-43"><a id="__codelineno-3-43" name="__codelineno-3-43"></a>
+</span><span id="__span-3-44"><a id="__codelineno-3-44" name="__codelineno-3-44"></a>    <span class="k">with</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+</span><span id="__span-3-45"><a id="__codelineno-3-45" name="__codelineno-3-45"></a>        <span class="k">for</span> <span class="n">branch_number</span> <span class="ow">in</span> <span class="n">branch_numbers</span><span class="p">:</span>
+</span><span id="__span-3-46"><a id="__codelineno-3-46" name="__codelineno-3-46"></a>            <span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
+</span><span id="__span-3-47"><a id="__codelineno-3-47" name="__codelineno-3-47"></a>                <span class="n">get_docs_fn</span><span class="p">,</span>
+</span><span id="__span-3-48"><a id="__codelineno-3-48" name="__codelineno-3-48"></a>                <span class="n">branch_number</span><span class="p">,</span>
+</span><span id="__span-3-49"><a id="__codelineno-3-49" name="__codelineno-3-49"></a>                <span class="n">hash_reduce_left</span><span class="p">,</span>
+</span><span id="__span-3-50"><a id="__codelineno-3-50" name="__codelineno-3-50"></a>                <span class="n">db_root</span><span class="p">,</span>
+</span><span id="__span-3-51"><a id="__codelineno-3-51" name="__codelineno-3-51"></a>                <span class="n">class_model</span><span class="p">,</span>
+</span><span id="__span-3-52"><a id="__codelineno-3-52" name="__codelineno-3-52"></a>            <span class="p">)</span>
+</span><span id="__span-3-53"><a id="__codelineno-3-53" name="__codelineno-3-53"></a>            <span class="n">docs</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+</span><span id="__span-3-54"><a id="__codelineno-3-54" name="__codelineno-3-54"></a>            <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
+</span><span id="__span-3-55"><a id="__codelineno-3-55" name="__codelineno-3-55"></a>                <span class="n">min_age</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">age</span><span class="p">)</span>
+</span><span id="__span-3-56"><a id="__codelineno-3-56" name="__codelineno-3-56"></a>    <span class="k">return</span> <span class="n">min_age</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 </span><span id="__span-3-57"><a id="__codelineno-3-57" name="__codelineno-3-57"></a>
-</span><span id="__span-3-58"><a id="__codelineno-3-58" name="__codelineno-3-58"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-3-59"><a id="__codelineno-3-59" name="__codelineno-3-59"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Example.&quot;&quot;&quot;</span>
-</span><span id="__span-3-60"><a id="__codelineno-3-60" name="__codelineno-3-60"></a>    <span class="c1"># Get collection of `User`.</span>
-</span><span id="__span-3-61"><a id="__codelineno-3-61" name="__codelineno-3-61"></a>    <span class="n">user_coll</span> <span class="o">=</span> <span class="n">Scruby</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
-</span><span id="__span-3-62"><a id="__codelineno-3-62" name="__codelineno-3-62"></a>
-</span><span id="__span-3-63"><a id="__codelineno-3-63" name="__codelineno-3-63"></a>    <span class="c1"># Create users.</span>
-</span><span id="__span-3-64"><a id="__codelineno-3-64" name="__codelineno-3-64"></a>    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
-</span><span id="__span-3-65"><a id="__codelineno-3-65" name="__codelineno-3-65"></a>        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
-</span><span id="__span-3-66"><a id="__codelineno-3-66" name="__codelineno-3-66"></a>            <span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;John&quot;</span><span class="p">,</span>
-</span><span id="__span-3-67"><a id="__codelineno-3-67" name="__codelineno-3-67"></a>            <span class="n">age</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">10</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-</span><span id="__span-3-68"><a id="__codelineno-3-68" name="__codelineno-3-68"></a>            <span class="n">email</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;John_Smith_</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">@gmail.com&quot;</span><span class="p">,</span>
-</span><span id="__span-3-69"><a id="__codelineno-3-69" name="__codelineno-3-69"></a>            <span class="n">phone</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;+44798612345</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-</span><span id="__span-3-70"><a id="__codelineno-3-70" name="__codelineno-3-70"></a>        <span class="p">)</span>
-</span><span id="__span-3-71"><a id="__codelineno-3-71" name="__codelineno-3-71"></a>        <span class="k">await</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;+44798612345</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
-</span><span id="__span-3-72"><a id="__codelineno-3-72" name="__codelineno-3-72"></a>
-</span><span id="__span-3-73"><a id="__codelineno-3-73" name="__codelineno-3-73"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">run_custom_task</span><span class="p">(</span><span class="n">task_calculate_min</span><span class="p">)</span>
-</span><span id="__span-3-74"><a id="__codelineno-3-74" name="__codelineno-3-74"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># =&gt; 10.0</span>
-</span><span id="__span-3-75"><a id="__codelineno-3-75" name="__codelineno-3-75"></a>
-</span><span id="__span-3-76"><a id="__codelineno-3-76" name="__codelineno-3-76"></a>    <span class="c1"># Full database deletion.</span>
-</span><span id="__span-3-77"><a id="__codelineno-3-77" name="__codelineno-3-77"></a>    <span class="c1"># Hint: The main purpose is tests.</span>
-</span><span id="__span-3-78"><a id="__codelineno-3-78" name="__codelineno-3-78"></a>    <span class="k">await</span> <span class="n">Scruby</span><span class="o">.</span><span class="n">napalm</span><span class="p">()</span>
-</span><span id="__span-3-79"><a id="__codelineno-3-79" name="__codelineno-3-79"></a>
+</span><span id="__span-3-58"><a id="__codelineno-3-58" name="__codelineno-3-58"></a>
+</span><span id="__span-3-59"><a id="__codelineno-3-59" name="__codelineno-3-59"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-3-60"><a id="__codelineno-3-60" name="__codelineno-3-60"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Example.&quot;&quot;&quot;</span>
+</span><span id="__span-3-61"><a id="__codelineno-3-61" name="__codelineno-3-61"></a>    <span class="c1"># Get collection of `User`.</span>
+</span><span id="__span-3-62"><a id="__codelineno-3-62" name="__codelineno-3-62"></a>    <span class="n">user_coll</span> <span class="o">=</span> <span class="n">Scruby</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
+</span><span id="__span-3-63"><a id="__codelineno-3-63" name="__codelineno-3-63"></a>
+</span><span id="__span-3-64"><a id="__codelineno-3-64" name="__codelineno-3-64"></a>    <span class="c1"># Create users.</span>
+</span><span id="__span-3-65"><a id="__codelineno-3-65" name="__codelineno-3-65"></a>    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+</span><span id="__span-3-66"><a id="__codelineno-3-66" name="__codelineno-3-66"></a>        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
+</span><span id="__span-3-67"><a id="__codelineno-3-67" name="__codelineno-3-67"></a>            <span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;John&quot;</span><span class="p">,</span>
+</span><span id="__span-3-68"><a id="__codelineno-3-68" name="__codelineno-3-68"></a>            <span class="n">age</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">10</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span id="__span-3-69"><a id="__codelineno-3-69" name="__codelineno-3-69"></a>            <span class="n">email</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;John_Smith_</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">@gmail.com&quot;</span><span class="p">,</span>
+</span><span id="__span-3-70"><a id="__codelineno-3-70" name="__codelineno-3-70"></a>            <span class="n">phone</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;+44798612345</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span id="__span-3-71"><a id="__codelineno-3-71" name="__codelineno-3-71"></a>        <span class="p">)</span>
+</span><span id="__span-3-72"><a id="__codelineno-3-72" name="__codelineno-3-72"></a>        <span class="k">await</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;+44798612345</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+</span><span id="__span-3-73"><a id="__codelineno-3-73" name="__codelineno-3-73"></a>
+</span><span id="__span-3-74"><a id="__codelineno-3-74" name="__codelineno-3-74"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">run_custom_task</span><span class="p">(</span><span class="n">task_calculate_min</span><span class="p">)</span>
+</span><span id="__span-3-75"><a id="__codelineno-3-75" name="__codelineno-3-75"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># =&gt; 10.0</span>
+</span><span id="__span-3-76"><a id="__codelineno-3-76" name="__codelineno-3-76"></a>
+</span><span id="__span-3-77"><a id="__codelineno-3-77" name="__codelineno-3-77"></a>    <span class="c1"># Full database deletion.</span>
+</span><span id="__span-3-78"><a id="__codelineno-3-78" name="__codelineno-3-78"></a>    <span class="c1"># Hint: The main purpose is tests.</span>
+</span><span id="__span-3-79"><a id="__codelineno-3-79" name="__codelineno-3-79"></a>    <span class="k">await</span> <span class="n">Scruby</span><span class="o">.</span><span class="n">napalm</span><span class="p">()</span>
 </span><span id="__span-3-80"><a id="__codelineno-3-80" name="__codelineno-3-80"></a>
-</span><span id="__span-3-81"><a id="__codelineno-3-81" name="__codelineno-3-81"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-</span><span id="__span-3-82"><a id="__codelineno-3-82" name="__codelineno-3-82"></a>    <span class="n">anyio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
+</span><span id="__span-3-81"><a id="__codelineno-3-81" name="__codelineno-3-81"></a>
+</span><span id="__span-3-82"><a id="__codelineno-3-82" name="__codelineno-3-82"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-3-83"><a id="__codelineno-3-83" name="__codelineno-3-83"></a>    <span class="n">anyio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
 <h4 id="sum">Sum<a class="headerlink" href="#sum" title="Permanent link">&para;</a></h4>
 <div class="language-py highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">main.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1"> 1</a></span>
@@ -1575,7 +1589,8 @@
 <span class="normal"><a href="#__codelineno-4-79">79</a></span>
 <span class="normal"><a href="#__codelineno-4-80">80</a></span>
 <span class="normal"><a href="#__codelineno-4-81">81</a></span>
-<span class="normal"><a href="#__codelineno-4-82">82</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="sd">&quot;&quot;&quot;Aggregation class for calculating sum of values.&quot;&quot;&quot;</span>
+<span class="normal"><a href="#__codelineno-4-82">82</a></span>
+<span class="normal"><a href="#__codelineno-4-83">83</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="sd">&quot;&quot;&quot;Aggregation class for calculating sum of values.&quot;&quot;&quot;</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2"></a>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">anyio</span>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">concurrent.futures</span>
@@ -1608,55 +1623,56 @@
 </span><span id="__span-4-31"><a id="__codelineno-4-31" name="__codelineno-4-31"></a>    <span class="n">hash_reduce_left</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 </span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32"></a>    <span class="n">db_root</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 </span><span id="__span-4-33"><a id="__codelineno-4-33" name="__codelineno-4-33"></a>    <span class="n">class_model</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-</span><span id="__span-4-34"><a id="__codelineno-4-34" name="__codelineno-4-34"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-</span><span id="__span-4-35"><a id="__codelineno-4-35" name="__codelineno-4-35"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom task.</span>
-</span><span id="__span-4-36"><a id="__codelineno-4-36" name="__codelineno-4-36"></a>
-</span><span id="__span-4-37"><a id="__codelineno-4-37" name="__codelineno-4-37"></a><span class="sd">    Calculate the sum of values.</span>
-</span><span id="__span-4-38"><a id="__codelineno-4-38" name="__codelineno-4-38"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-4-39"><a id="__codelineno-4-39" name="__codelineno-4-39"></a>    <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-4-40"><a id="__codelineno-4-40" name="__codelineno-4-40"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-4-41"><a id="__codelineno-4-41" name="__codelineno-4-41"></a>    <span class="n">sum_age</span> <span class="o">=</span> <span class="n">Sum</span><span class="p">()</span>
-</span><span id="__span-4-42"><a id="__codelineno-4-42" name="__codelineno-4-42"></a>
-</span><span id="__span-4-43"><a id="__codelineno-4-43" name="__codelineno-4-43"></a>    <span class="k">with</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
-</span><span id="__span-4-44"><a id="__codelineno-4-44" name="__codelineno-4-44"></a>        <span class="k">for</span> <span class="n">branch_number</span> <span class="ow">in</span> <span class="n">branch_numbers</span><span class="p">:</span>
-</span><span id="__span-4-45"><a id="__codelineno-4-45" name="__codelineno-4-45"></a>            <span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
-</span><span id="__span-4-46"><a id="__codelineno-4-46" name="__codelineno-4-46"></a>                <span class="n">get_docs_fn</span><span class="p">,</span>
-</span><span id="__span-4-47"><a id="__codelineno-4-47" name="__codelineno-4-47"></a>                <span class="n">branch_number</span><span class="p">,</span>
-</span><span id="__span-4-48"><a id="__codelineno-4-48" name="__codelineno-4-48"></a>                <span class="n">hash_reduce_left</span><span class="p">,</span>
-</span><span id="__span-4-49"><a id="__codelineno-4-49" name="__codelineno-4-49"></a>                <span class="n">db_root</span><span class="p">,</span>
-</span><span id="__span-4-50"><a id="__codelineno-4-50" name="__codelineno-4-50"></a>                <span class="n">class_model</span><span class="p">,</span>
-</span><span id="__span-4-51"><a id="__codelineno-4-51" name="__codelineno-4-51"></a>            <span class="p">)</span>
-</span><span id="__span-4-52"><a id="__codelineno-4-52" name="__codelineno-4-52"></a>            <span class="n">docs</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
-</span><span id="__span-4-53"><a id="__codelineno-4-53" name="__codelineno-4-53"></a>            <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
-</span><span id="__span-4-54"><a id="__codelineno-4-54" name="__codelineno-4-54"></a>                <span class="n">sum_age</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">age</span><span class="p">)</span>
-</span><span id="__span-4-55"><a id="__codelineno-4-55" name="__codelineno-4-55"></a>    <span class="k">return</span> <span class="n">sum_age</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</span><span id="__span-4-56"><a id="__codelineno-4-56" name="__codelineno-4-56"></a>
+</span><span id="__span-4-34"><a id="__codelineno-4-34" name="__codelineno-4-34"></a>    <span class="n">limit_docs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="__span-4-35"><a id="__codelineno-4-35" name="__codelineno-4-35"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span><span id="__span-4-36"><a id="__codelineno-4-36" name="__codelineno-4-36"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom task.</span>
+</span><span id="__span-4-37"><a id="__codelineno-4-37" name="__codelineno-4-37"></a>
+</span><span id="__span-4-38"><a id="__codelineno-4-38" name="__codelineno-4-38"></a><span class="sd">    Calculate the sum of values.</span>
+</span><span id="__span-4-39"><a id="__codelineno-4-39" name="__codelineno-4-39"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-4-40"><a id="__codelineno-4-40" name="__codelineno-4-40"></a>    <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-4-41"><a id="__codelineno-4-41" name="__codelineno-4-41"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-4-42"><a id="__codelineno-4-42" name="__codelineno-4-42"></a>    <span class="n">sum_age</span> <span class="o">=</span> <span class="n">Sum</span><span class="p">()</span>
+</span><span id="__span-4-43"><a id="__codelineno-4-43" name="__codelineno-4-43"></a>
+</span><span id="__span-4-44"><a id="__codelineno-4-44" name="__codelineno-4-44"></a>    <span class="k">with</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+</span><span id="__span-4-45"><a id="__codelineno-4-45" name="__codelineno-4-45"></a>        <span class="k">for</span> <span class="n">branch_number</span> <span class="ow">in</span> <span class="n">branch_numbers</span><span class="p">:</span>
+</span><span id="__span-4-46"><a id="__codelineno-4-46" name="__codelineno-4-46"></a>            <span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
+</span><span id="__span-4-47"><a id="__codelineno-4-47" name="__codelineno-4-47"></a>                <span class="n">get_docs_fn</span><span class="p">,</span>
+</span><span id="__span-4-48"><a id="__codelineno-4-48" name="__codelineno-4-48"></a>                <span class="n">branch_number</span><span class="p">,</span>
+</span><span id="__span-4-49"><a id="__codelineno-4-49" name="__codelineno-4-49"></a>                <span class="n">hash_reduce_left</span><span class="p">,</span>
+</span><span id="__span-4-50"><a id="__codelineno-4-50" name="__codelineno-4-50"></a>                <span class="n">db_root</span><span class="p">,</span>
+</span><span id="__span-4-51"><a id="__codelineno-4-51" name="__codelineno-4-51"></a>                <span class="n">class_model</span><span class="p">,</span>
+</span><span id="__span-4-52"><a id="__codelineno-4-52" name="__codelineno-4-52"></a>            <span class="p">)</span>
+</span><span id="__span-4-53"><a id="__codelineno-4-53" name="__codelineno-4-53"></a>            <span class="n">docs</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+</span><span id="__span-4-54"><a id="__codelineno-4-54" name="__codelineno-4-54"></a>            <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
+</span><span id="__span-4-55"><a id="__codelineno-4-55" name="__codelineno-4-55"></a>                <span class="n">sum_age</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">age</span><span class="p">)</span>
+</span><span id="__span-4-56"><a id="__codelineno-4-56" name="__codelineno-4-56"></a>    <span class="k">return</span> <span class="n">sum_age</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 </span><span id="__span-4-57"><a id="__codelineno-4-57" name="__codelineno-4-57"></a>
-</span><span id="__span-4-58"><a id="__codelineno-4-58" name="__codelineno-4-58"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-4-59"><a id="__codelineno-4-59" name="__codelineno-4-59"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Example.&quot;&quot;&quot;</span>
-</span><span id="__span-4-60"><a id="__codelineno-4-60" name="__codelineno-4-60"></a>    <span class="c1"># Get collection of `User`.</span>
-</span><span id="__span-4-61"><a id="__codelineno-4-61" name="__codelineno-4-61"></a>    <span class="n">user_coll</span> <span class="o">=</span> <span class="n">Scruby</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
-</span><span id="__span-4-62"><a id="__codelineno-4-62" name="__codelineno-4-62"></a>
-</span><span id="__span-4-63"><a id="__codelineno-4-63" name="__codelineno-4-63"></a>    <span class="c1"># Create users.</span>
-</span><span id="__span-4-64"><a id="__codelineno-4-64" name="__codelineno-4-64"></a>    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
-</span><span id="__span-4-65"><a id="__codelineno-4-65" name="__codelineno-4-65"></a>        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
-</span><span id="__span-4-66"><a id="__codelineno-4-66" name="__codelineno-4-66"></a>            <span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;John&quot;</span><span class="p">,</span>
-</span><span id="__span-4-67"><a id="__codelineno-4-67" name="__codelineno-4-67"></a>            <span class="n">age</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">10</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-</span><span id="__span-4-68"><a id="__codelineno-4-68" name="__codelineno-4-68"></a>            <span class="n">email</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;John_Smith_</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">@gmail.com&quot;</span><span class="p">,</span>
-</span><span id="__span-4-69"><a id="__codelineno-4-69" name="__codelineno-4-69"></a>            <span class="n">phone</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;+44798612345</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-</span><span id="__span-4-70"><a id="__codelineno-4-70" name="__codelineno-4-70"></a>        <span class="p">)</span>
-</span><span id="__span-4-71"><a id="__codelineno-4-71" name="__codelineno-4-71"></a>        <span class="k">await</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;+44798612345</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
-</span><span id="__span-4-72"><a id="__codelineno-4-72" name="__codelineno-4-72"></a>
-</span><span id="__span-4-73"><a id="__codelineno-4-73" name="__codelineno-4-73"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">run_custom_task</span><span class="p">(</span><span class="n">task_calculate_sum</span><span class="p">)</span>
-</span><span id="__span-4-74"><a id="__codelineno-4-74" name="__codelineno-4-74"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># =&gt; 450.0</span>
-</span><span id="__span-4-75"><a id="__codelineno-4-75" name="__codelineno-4-75"></a>
-</span><span id="__span-4-76"><a id="__codelineno-4-76" name="__codelineno-4-76"></a>    <span class="c1"># Full database deletion.</span>
-</span><span id="__span-4-77"><a id="__codelineno-4-77" name="__codelineno-4-77"></a>    <span class="c1"># Hint: The main purpose is tests.</span>
-</span><span id="__span-4-78"><a id="__codelineno-4-78" name="__codelineno-4-78"></a>    <span class="k">await</span> <span class="n">Scruby</span><span class="o">.</span><span class="n">napalm</span><span class="p">()</span>
-</span><span id="__span-4-79"><a id="__codelineno-4-79" name="__codelineno-4-79"></a>
+</span><span id="__span-4-58"><a id="__codelineno-4-58" name="__codelineno-4-58"></a>
+</span><span id="__span-4-59"><a id="__codelineno-4-59" name="__codelineno-4-59"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-4-60"><a id="__codelineno-4-60" name="__codelineno-4-60"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Example.&quot;&quot;&quot;</span>
+</span><span id="__span-4-61"><a id="__codelineno-4-61" name="__codelineno-4-61"></a>    <span class="c1"># Get collection of `User`.</span>
+</span><span id="__span-4-62"><a id="__codelineno-4-62" name="__codelineno-4-62"></a>    <span class="n">user_coll</span> <span class="o">=</span> <span class="n">Scruby</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
+</span><span id="__span-4-63"><a id="__codelineno-4-63" name="__codelineno-4-63"></a>
+</span><span id="__span-4-64"><a id="__codelineno-4-64" name="__codelineno-4-64"></a>    <span class="c1"># Create users.</span>
+</span><span id="__span-4-65"><a id="__codelineno-4-65" name="__codelineno-4-65"></a>    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+</span><span id="__span-4-66"><a id="__codelineno-4-66" name="__codelineno-4-66"></a>        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
+</span><span id="__span-4-67"><a id="__codelineno-4-67" name="__codelineno-4-67"></a>            <span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;John&quot;</span><span class="p">,</span>
+</span><span id="__span-4-68"><a id="__codelineno-4-68" name="__codelineno-4-68"></a>            <span class="n">age</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">10</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span id="__span-4-69"><a id="__codelineno-4-69" name="__codelineno-4-69"></a>            <span class="n">email</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;John_Smith_</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">@gmail.com&quot;</span><span class="p">,</span>
+</span><span id="__span-4-70"><a id="__codelineno-4-70" name="__codelineno-4-70"></a>            <span class="n">phone</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;+44798612345</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span id="__span-4-71"><a id="__codelineno-4-71" name="__codelineno-4-71"></a>        <span class="p">)</span>
+</span><span id="__span-4-72"><a id="__codelineno-4-72" name="__codelineno-4-72"></a>        <span class="k">await</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;+44798612345</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+</span><span id="__span-4-73"><a id="__codelineno-4-73" name="__codelineno-4-73"></a>
+</span><span id="__span-4-74"><a id="__codelineno-4-74" name="__codelineno-4-74"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">user_coll</span><span class="o">.</span><span class="n">run_custom_task</span><span class="p">(</span><span class="n">task_calculate_sum</span><span class="p">)</span>
+</span><span id="__span-4-75"><a id="__codelineno-4-75" name="__codelineno-4-75"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># =&gt; 450.0</span>
+</span><span id="__span-4-76"><a id="__codelineno-4-76" name="__codelineno-4-76"></a>
+</span><span id="__span-4-77"><a id="__codelineno-4-77" name="__codelineno-4-77"></a>    <span class="c1"># Full database deletion.</span>
+</span><span id="__span-4-78"><a id="__codelineno-4-78" name="__codelineno-4-78"></a>    <span class="c1"># Hint: The main purpose is tests.</span>
+</span><span id="__span-4-79"><a id="__codelineno-4-79" name="__codelineno-4-79"></a>    <span class="k">await</span> <span class="n">Scruby</span><span class="o">.</span><span class="n">napalm</span><span class="p">()</span>
 </span><span id="__span-4-80"><a id="__codelineno-4-80" name="__codelineno-4-80"></a>
-</span><span id="__span-4-81"><a id="__codelineno-4-81" name="__codelineno-4-81"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-</span><span id="__span-4-82"><a id="__codelineno-4-82" name="__codelineno-4-82"></a>    <span class="n">anyio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
+</span><span id="__span-4-81"><a id="__codelineno-4-81" name="__codelineno-4-81"></a>
+</span><span id="__span-4-82"><a id="__codelineno-4-82" name="__codelineno-4-82"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-4-83"><a id="__codelineno-4-83" name="__codelineno-4-83"></a>    <span class="n">anyio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
 
 
