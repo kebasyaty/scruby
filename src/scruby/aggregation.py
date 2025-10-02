@@ -41,11 +41,11 @@ class Counter:
     """Aggregation class for calculating the number of documents.
 
     Args:
-        max: The maximum counter value.
+        limit: The maximum counter value.
     """
 
-    def __init__(self, max: int = 1000) -> None:
-        self.max = max
+    def __init__(self, limit: int = 1000) -> None:
+        self.limit = limit
         self.counter = 0
 
     def check(self) -> bool:
@@ -54,7 +54,7 @@ class Counter:
         Returns:
             Boolean value. If `True`, the maximum value is achieved.
         """
-        return self.counter >= self.max
+        return self.counter >= self.limit
 
     def next(self) -> None:
         """Increment the counter on one."""

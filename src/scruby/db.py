@@ -335,7 +335,7 @@ class Scruby[T]:
     def find_many(
         self,
         filter_fn: Callable,
-        db_query_docs_limit: int = 1000,
+        limit_docs: int = 1000,
         max_workers: int | None = None,
         timeout: float | None = None,
     ) -> list[T] | None:
@@ -347,7 +347,7 @@ class Scruby[T]:
 
         Args:
             filter_fn: A function that execute the conditions of filtering.
-            db_query_docs_limit: Limiting the number of request results. By default = 1000.
+            limit_docs: Limiting the number of documents. By default = 1000.
             max_workers: The maximum number of processes that can be used to
                          execute the given calls. If None or not given then as many
                          worker processes will be created as the machine has processors.
@@ -363,7 +363,7 @@ class Scruby[T]:
         with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
             results = []
             for branch_number in branch_numbers:
-                if counter == db_query_docs_limit:
+                if counter == limit_docs:
                     break
                 future = executor.submit(
                     search_task_fn,
@@ -538,12 +538,16 @@ class Scruby[T]:
                 docs.append(class_model.model_validate_json(val))
         return docs
 
-    def run_custom_task(self, custom_task: Callable) -> Any:
+    def run_custom_task(self, custom_task_fn: Callable, limit_docs: int = 1000) -> Any:
         """Running custom task.
 
         This method running a task created on the basis of a quantum loop.
         Effectiveness running task depends on the number of processor threads.
         Ideally, hundreds and even thousands of threads are required.
+
+        Args:
+            custom_task_fn: A function that execute the custom task.
+            limit_docs: Limiting the number of documents. By default = 1000.
         """
         kwargs = {
             "get_docs_fn": self._task_get_docs,
@@ -551,5 +555,6 @@ class Scruby[T]:
             "hash_reduce_left": self.__hash_reduce_left,
             "db_root": self.__db_root,
             "class_model": self.__class_model,
+            "limit_docs": limit_docs,
         }
-        return custom_task(**kwargs)
+        return custom_task_fn(**kwargs)

@@ -33,6 +33,7 @@ def custom_task(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
+    limit_docs: int,  # noqa: ARG001
 ) -> Any:
     """Custom task.
 
