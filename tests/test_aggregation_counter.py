@@ -31,6 +31,7 @@ def task_counter(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
+    limit_docs: int,
 ) -> list[Any]:
     """Custom task.
 
@@ -39,7 +40,7 @@ def task_counter(
     max_workers: int | None = None
     timeout: float | None = None
     users: list[User] = []
-    counter = Counter(max=5)  # `max` by default = 1000
+    counter = Counter(limit=limit_docs)  # `limit` by default = 1000
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
@@ -73,7 +74,10 @@ async def test_task_counter() -> None:
         )
         await db.set_key(f"+44798612345{num}", user)
 
-    result = db.run_custom_task(task_counter)
+    result = db.run_custom_task(
+        custom_task=task_counter,
+        limit_docs=5,
+    )
     assert len(result) == 5
     #
     # Delete DB.

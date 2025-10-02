@@ -538,7 +538,7 @@ class Scruby[T]:
                 docs.append(class_model.model_validate_json(val))
         return docs
 
-    def run_custom_task(self, custom_task: Callable) -> Any:
+    def run_custom_task(self, custom_task: Callable, limit_docs: int = 1000) -> Any:
         """Running custom task.
 
         This method running a task created on the basis of a quantum loop.
@@ -551,5 +551,6 @@ class Scruby[T]:
             "hash_reduce_left": self.__hash_reduce_left,
             "db_root": self.__db_root,
             "class_model": self.__class_model,
+            "limit_docs": limit_docs,
         }
         return custom_task(**kwargs)
