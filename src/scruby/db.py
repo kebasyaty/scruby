@@ -458,14 +458,14 @@ class Scruby[T]:
         if leaf_path.exists():
             data_json: bytes = leaf_path.read_bytes()
             data: dict[str, str] = orjson.loads(data_json) or {}
-            new_data: dict[str, str] = {}
+            new_state: dict[str, str] = {}
             for key, val in data.items():
                 doc = class_model.model_validate_json(val)
                 if filter_fn(doc):
                     counter -= 1
                 else:
-                    new_data[key] = val
-            leaf_path.write_bytes(orjson.dumps(new_data))
+                    new_state[key] = val
+            leaf_path.write_bytes(orjson.dumps(new_state))
         return counter
 
     def delete_many(
@@ -558,3 +558,41 @@ class Scruby[T]:
             "limit_docs": limit_docs,
         }
         return custom_task_fn(**kwargs)
+
+    @staticmethod
+    def _task_update(
+        branch_number: int,
+        filter_fn: Callable,
+        hash_reduce_left: str,
+        db_root: str,
+        class_model: T,
+        new_data: dict[str, Any],
+    ) -> int:
+        """Task for find documents.
+
+        This method is for internal use.
+        """
+        branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
+        separated_hash: str = "/".join(list(branch_number_as_hash))
+        leaf_path: SyncPath = SyncPath(
+            *(
+                db_root,
+                class_model.__name__,
+                separated_hash,
+                "leaf.json",
+            ),
+        )
+        counter: int = 0
+        if leaf_path.exists():
+            data_json: bytes = leaf_path.read_bytes()
+            data: dict[str, str] = orjson.loads(data_json) or {}
+            new_state: dict[str, str] = {}
+            for _, val in data.items():
+                doc = class_model.model_validate_json(val)
+                if filter_fn(doc):
+                    for key, value in new_data.items():
+                        doc.__dict__[key] = value
+                        new_state[key] = doc.model_dump_json()
+                    counter += 1
+            leaf_path.write_bytes(orjson.dumps(new_state))
+        return counter
