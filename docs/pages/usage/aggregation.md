@@ -145,7 +145,8 @@ def task_counter(
             docs = future.result(timeout)
             for doc in docs:
                 if counter.check():
-                    return users
+                    # [:limit_docs] - Control overflow in a multithreaded environment.
+                    return users[:limit_docs]
                 users.append(doc)
                 counter.next()
     return users
