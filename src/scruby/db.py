@@ -91,6 +91,9 @@ class Scruby[T]:
         """Asynchronous method for getting metadata of collection.
 
         This method is for internal use.
+
+        Returns:
+            Metadata object.
         """
         meta_path = Path(*self.__meta_path_tuple)
         meta_json = await meta_path.read_text()
@@ -101,6 +104,9 @@ class Scruby[T]:
         """Asynchronous method for updating metadata of collection.
 
         This method is for internal use.
+
+        Returns:
+            None.
         """
         meta_json = meta.model_dump_json()
         meta_path = Path(*self.__meta_path_tuple)
@@ -110,6 +116,9 @@ class Scruby[T]:
         """Asynchronous method for management of documents in metadata of collection.
 
         This method is for internal use.
+
+        Returns:
+            None.
         """
         meta_path = Path(*self.__meta_path_tuple)
         meta_json = await meta_path.read_text("utf-8")
@@ -137,6 +146,9 @@ class Scruby[T]:
 
         Args:
             key: Key name.
+
+        Returns:
+            Path to cell of collection.
         """
         if not isinstance(key, str):
             logger.error("The key is not a type of `str`.")
@@ -173,6 +185,9 @@ class Scruby[T]:
         Args:
             key: Key name.
             value: Value of key.
+
+        Returns:
+            None.
         """
         # The path to the database cell.
         leaf_path: Path = await self._get_leaf_path(key)
@@ -196,6 +211,9 @@ class Scruby[T]:
 
         Args:
             key: Key name.
+
+        Returns:
+            Value of key or KeyError.
         """
         # The path to the database cell.
         leaf_path: Path = await self._get_leaf_path(key)
@@ -214,6 +232,9 @@ class Scruby[T]:
 
         Args:
             key: Key name.
+
+        Returns:
+            True, if the key is present.
         """
         # The path to the database cell.
         leaf_path: Path = await self._get_leaf_path(key)
@@ -233,6 +254,9 @@ class Scruby[T]:
 
         Args:
             key: Key name.
+
+        Returns:
+            None.
         """
         # The path to the database cell.
         leaf_path: Path = await self._get_leaf_path(key)
@@ -256,6 +280,9 @@ class Scruby[T]:
 
         Warning:
             - `Be careful, this will remove all keys.`
+
+        Returns:
+            None.
         """
         with contextlib.suppress(FileNotFoundError):
             await to_thread.run_sync(rmtree, constants.DB_ROOT)
