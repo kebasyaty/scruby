@@ -426,3 +426,37 @@ class TestPositive:
         #
         # Delete DB.
         await Scruby.napalm()
+
+    async def test_update_many(self) -> None:
+        """Test a update_many method."""
+        constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+
+        db = Scruby(User)
+
+        for num in range(1, 10):
+            user = User(
+                first_name="John",
+                last_name="Smith",
+                birthday=datetime.datetime(1970, 1, num),  # noqa: DTZ001
+                email=f"John_Smith_{num}@gmail.com",
+                phone=f"+44798612345{num}",
+            )
+            await db.set_key(f"+44798612345{num}", user)
+
+        new_data = {"first_name": "Georg"}
+        number_updated_users = db.update_many(
+            filter_fn=lambda _: True,
+            new_data=new_data,
+        )
+        assert number_updated_users == 9
+        #
+        # by email
+        users: list[User] | None = db.find_many(
+            filter_fn=lambda _: True,
+        )
+        assert users is not None
+        for user in users:
+            assert user.first_name == "Georg"
+        #
+        # Delete DB.
+        await Scruby.napalm()
