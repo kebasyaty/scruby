@@ -360,11 +360,11 @@ class Scruby[T]:
         db_root: str = self.__db_root
         class_model: T = self.__class_model
         counter: int = 0
+        docs: list[T] = []
         with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
-            results = []
             for branch_number in branch_numbers:
-                if counter == limit_docs:
-                    break
+                if counter >= limit_docs:
+                    return docs or None
                 future = executor.submit(
                     search_task_fn,
                     branch_number,
@@ -375,9 +375,9 @@ class Scruby[T]:
                 )
                 doc = future.result(timeout)
                 if doc is not None:
-                    results.append(doc)
+                    docs.append(doc)
                     counter += 1
-        return results or None
+        return docs or None
 
     def collection_name(self) -> str:
         """Get collection name."""
