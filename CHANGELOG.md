@@ -1,6 +1,6 @@
 ### CHANGELOG
 
-#### v0.14.2 2025-10-05
+#### v0.14.3 2025-10-05
 
 - Updated a `find_many` method.
 
