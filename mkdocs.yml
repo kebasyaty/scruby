@@ -85,6 +85,7 @@ nav:
       - Find documents: pages/usage/find_documents.md
       - Get collection name: pages/usage/get_collection_name.md
       - Count documents: pages/usage/count_documents.md
+      - Update documents: pages/usage/update_documents.md
       - Delete documents: pages/usage/delete_documents.md
       - Custom task: pages/usage/custom_task.md
       - Aggregation classes: pages/usage/aggregation.md

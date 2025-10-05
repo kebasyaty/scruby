@@ -443,16 +443,15 @@ class TestPositive:
             )
             await db.set_key(f"+44798612345{num}", user)
 
-        new_data = {"first_name": "Georg"}
         number_updated_users = db.update_many(
-            filter_fn=lambda _: True,
-            new_data=new_data,
+            filter_fn=lambda _: True,  # Update all documents
+            new_data={"first_name": "Georg"},
         )
         assert number_updated_users == 9
         #
         # by email
         users: list[User] | None = db.find_many(
-            filter_fn=lambda _: True,
+            filter_fn=lambda _: True,  # Find all documents
         )
         assert users is not None
         for user in users:
