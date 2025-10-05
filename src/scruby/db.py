@@ -268,10 +268,13 @@ class Scruby[T]:
         hash_reduce_left: str,
         db_root: str,
         class_model: T,
-    ) -> dict[str, Any] | None:
+    ) -> list[T] | None:
         """Task for find documents.
 
         This method is for internal use.
+
+        Returns:
+            List of documents or None.
         """
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
         separated_hash: str = "/".join(list(branch_number_as_hash))
@@ -283,14 +286,15 @@ class Scruby[T]:
                 "leaf.json",
             ),
         )
+        docs: list[T] = []
         if leaf_path.exists():
             data_json: bytes = leaf_path.read_bytes()
             data: dict[str, str] = orjson.loads(data_json) or {}
             for _, val in data.items():
                 doc = class_model.model_validate_json(val)
                 if filter_fn(doc):
-                    return doc
-        return None
+                    docs.append(doc)
+        return docs or None
 
     def find_one(
         self,
@@ -311,6 +315,9 @@ class Scruby[T]:
                          worker processes will be created as the machine has processors.
             timeout: The number of seconds to wait for the result if the future isn't done.
                      If None, then there is no limit on the wait time.
+
+        Returns:
+            Document or None.
         """
         branch_numbers: range = range(1, self.__max_branch_number)
         search_task_fn: Callable = self._task_find
@@ -327,9 +334,9 @@ class Scruby[T]:
                     db_root,
                     class_model,
                 )
-                doc = future.result(timeout)
-                if doc is not None:
-                    return doc
+                docs = future.result(timeout)
+                if docs is not None:
+                    return docs[0]
         return None
 
     def find_many(
@@ -353,6 +360,9 @@ class Scruby[T]:
                          worker processes will be created as the machine has processors.
             timeout: The number of seconds to wait for the result if the future isn't done.
                      If None, then there is no limit on the wait time.
+
+        Returns:
+            List of documents or None.
         """
         branch_numbers: range = range(1, self.__max_branch_number)
         search_task_fn: Callable = self._task_find
@@ -360,11 +370,11 @@ class Scruby[T]:
         db_root: str = self.__db_root
         class_model: T = self.__class_model
         counter: int = 0
-        docs: list[T] = []
+        result: list[T] = []
         with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
             for branch_number in branch_numbers:
                 if counter >= limit_docs:
-                    return docs or None
+                    return result[:limit_docs]
                 future = executor.submit(
                     search_task_fn,
                     branch_number,
@@ -373,22 +383,37 @@ class Scruby[T]:
                     db_root,
                     class_model,
                 )
-                doc = future.result(timeout)
-                if doc is not None:
-                    docs.append(doc)
-                    counter += 1
-        return docs or None
+                docs = future.result(timeout)
+                if docs is not None:
+                    for doc in docs:
+                        if counter >= limit_docs:
+                            return result[:limit_docs]
+                        result.append(doc)
+                        counter += 1
+        return result or None
 
     def collection_name(self) -> str:
-        """Get collection name."""
+        """Get collection name.
+
+        Returns:
+            Collection name.
+        """
         return self.__class_model.__name__
 
     def collection_full_name(self) -> str:
-        """Get full name of collection."""
+        """Get full name of collection.
+
+        Returns:
+            Full name of collection.
+        """
         return f"{self.__db_root}/{self.__class_model.__name__}"
 
     async def estimated_document_count(self) -> int:
-        """Get an estimate of the number of documents in this collection using collection metadata."""
+        """Get an estimate of the number of documents in this collection using collection metadata.
+
+        Returns:
+            The number of documents.
+        """
         meta = await self._get_meta()
         return meta.counter_documents
 
@@ -411,6 +436,9 @@ class Scruby[T]:
                          worker processes will be created as the machine has processors.
             timeout: The number of seconds to wait for the result if the future isn't done.
                      If None, then there is no limit on the wait time.
+
+        Returns:
+            The number of documents.
         """
         branch_numbers: range = range(1, self.__max_branch_number)
         search_task_fn: Callable = self._task_find
@@ -443,6 +471,9 @@ class Scruby[T]:
         """Task for find and delete documents.
 
         This method is for internal use.
+
+        Returns:
+            The number of deleted documents.
         """
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
         separated_hash: str = "/".join(list(branch_number_as_hash))
@@ -487,6 +518,9 @@ class Scruby[T]:
                          worker processes will be created as the machine has processors.
             timeout: The number of seconds to wait for the result if the future isn't done.
                      If None, then there is no limit on the wait time.
+
+        Returns:
+            The number of deleted documents.
         """
         branch_numbers: range = range(1, self.__max_branch_number)
         search_task_fn: Callable = self._task_delete
@@ -519,6 +553,9 @@ class Scruby[T]:
         """Get documents for custom task.
 
         This method is for internal use.
+
+        Returns:
+            List of documents.
         """
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
         separated_hash: str = "/".join(list(branch_number_as_hash))
@@ -530,7 +567,7 @@ class Scruby[T]:
                 "leaf.json",
             ),
         )
-        docs = []
+        docs: list[str, T] = []
         if leaf_path.exists():
             data_json: bytes = leaf_path.read_bytes()
             data: dict[str, str] = orjson.loads(data_json) or {}
@@ -548,6 +585,9 @@ class Scruby[T]:
         Args:
             custom_task_fn: A function that execute the custom task.
             limit_docs: Limiting the number of documents. By default = 1000.
+
+        Returns:
+            The result of a custom task.
         """
         kwargs = {
             "get_docs_fn": self._task_get_docs,
@@ -571,6 +611,9 @@ class Scruby[T]:
         """Task for find documents.
 
         This method is for internal use.
+
+        Returns:
+            The number of updated documents.
         """
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
         separated_hash: str = "/".join(list(branch_number_as_hash))
