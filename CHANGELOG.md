@@ -1,5 +1,12 @@
 ### CHANGELOG
 
+#### v0.15.0 2025-10-05
+
+- Added a `update_many` method.
+- Made many corrections for methods of Scruby.
+- Updated documentation.
+- Updated tests.
+
 #### v0.14.3 2025-10-05
 
 - Updated a `find_many` method.
