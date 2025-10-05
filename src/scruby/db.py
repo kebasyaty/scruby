@@ -596,3 +596,48 @@ class Scruby[T]:
                     counter += 1
             leaf_path.write_bytes(orjson.dumps(new_state))
         return counter
+
+    def update_many(
+        self,
+        filter_fn: Callable,
+        new_data: dict[str, Any],
+        max_workers: int | None = None,
+        timeout: float | None = None,
+    ) -> int:
+        """Updates one or more documents matching the filter.
+
+        The search is based on the effect of a quantum loop.
+        The search effectiveness depends on the number of processor threads.
+        Ideally, hundreds and even thousands of threads are required.
+
+        Args:
+            filter_fn: A function that execute the conditions of filtering.
+            new_data: New data for the fields that need to be updated.
+            max_workers: The maximum number of processes that can be used to
+                         execute the given calls. If None or not given then as many
+                         worker processes will be created as the machine has processors.
+            timeout: The number of seconds to wait for the result if the future isn't done.
+                     If None, then there is no limit on the wait time.
+
+        Returns:
+            The number of updated documents.
+        """
+        branch_numbers: range = range(1, self.__max_branch_number)
+        update_task_fn: Callable = self._task_update
+        hash_reduce_left: int = self.__hash_reduce_left
+        db_root: str = self.__db_root
+        class_model: T = self.__class_model
+        counter: int = 0
+        with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
+            for branch_number in branch_numbers:
+                future = executor.submit(
+                    update_task_fn,
+                    branch_number,
+                    filter_fn,
+                    hash_reduce_left,
+                    db_root,
+                    class_model,
+                    new_data,
+                )
+                counter += future.result(timeout)
+        return counter
