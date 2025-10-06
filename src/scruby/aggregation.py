@@ -14,7 +14,12 @@ from typing import Any
 
 
 class Average:
-    """Aggregation class for calculating the average value."""
+    """Aggregation class for calculating the average value.
+
+    Args:
+        precision: The accuracy of rounding. `By default = .00`
+        rounding: Rounding mode. `By default = ROUND_HALF_EVEN`
+    """
 
     def __init__(  # noqa: D107
         self,

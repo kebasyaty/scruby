@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import concurrent.futures
 from collections.abc import Callable
+from decimal import ROUND_HALF_EVEN
 from typing import Annotated, Any
 
 import pytest
@@ -32,14 +33,17 @@ def task_calculate_average(
     db_root: str,
     class_model: Any,
     limit_docs: int,  # noqa: ARG001
-) -> Any:
+) -> float:
     """Custom task.
 
     Calculate the average value.
     """
     max_workers: int | None = None
     timeout: float | None = None
-    average_age = Average()
+    average_age = Average(
+        precision=".00",  # by default = .00
+        rounding=ROUND_HALF_EVEN,  # by default = ROUND_HALF_EVEN
+    )
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
@@ -53,7 +57,7 @@ def task_calculate_average(
             docs = future.result(timeout)
             for doc in docs:
                 average_age.set(doc.age)
-    return average_age.get()
+    return float(average_age.get())
 
 
 async def test_task_calculate_average() -> None:
