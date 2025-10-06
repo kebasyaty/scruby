@@ -128,7 +128,7 @@ class Sum:
     """Aggregation class for calculating sum of values."""
 
     def __init__(self) -> None:  # noqa: D107
-        self.value: Any = 0
+        self.value = Decimal()
 
     def set(self, number: int | float) -> None:
         """Add value.
@@ -136,9 +136,9 @@ class Sum:
         Args:
             number: Current value.
         """
-        self.value += number
+        self.value += Decimal(str(number))
 
-    def get(self) -> Any:
+    def get(self) -> Decimal:
         """Get sum of values.
 
         Returns:
