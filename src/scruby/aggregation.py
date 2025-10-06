@@ -9,32 +9,42 @@ __all__ = (
     "Sum",
 )
 
+from decimal import ROUND_HALF_EVEN, Decimal
 from typing import Any
 
 
 class Average:
     """Aggregation class for calculating the average value."""
 
-    def __init__(self) -> None:  # noqa: D107
-        self.value = 0.0
-        self.counter = 0.0
+    def __init__(  # noqa: D107
+        self,
+        precision: str = ".00",
+        rounding: str = ROUND_HALF_EVEN,
+    ) -> None:
+        self.value = Decimal()
+        self.counter = 0
+        self.precision = precision
+        self.rounding = rounding
 
     def set(self, number: int | float) -> None:
         """Add value.
 
         Args:
-            number: Current value.
+            number: Current value (int | float).
         """
-        self.value += float(number)
-        self.counter += 1.0
+        self.value += Decimal(str(number))
+        self.counter += 1
 
-    def get(self) -> float:
+    def get(self) -> Decimal:
         """Get arithmetic average value.
 
         Returns:
-            Number (int|float) - Average value.
+            Number (Decimal) - Average value.
         """
-        return self.value / self.counter
+        return (self.value / Decimal(str(self.counter))).quantize(
+            exp=Decimal(self.precision),
+            rounding=self.rounding,
+        )
 
 
 class Counter:
