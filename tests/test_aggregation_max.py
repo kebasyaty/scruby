@@ -32,7 +32,7 @@ def task_calculate_max(
     db_root: str,
     class_model: Any,
     limit_docs: int,  # noqa: ARG001
-) -> Any:
+) -> int:
     """Custom task.
 
     Calculate the max value.

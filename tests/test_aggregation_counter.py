@@ -32,7 +32,7 @@ def task_counter(
     db_root: str,
     class_model: Any,
     limit_docs: int,
-) -> list[Any]:
+) -> list[User]:
     """Custom task.
 
     This task implements a counter of documents.
