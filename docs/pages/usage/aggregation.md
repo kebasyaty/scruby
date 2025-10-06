@@ -6,6 +6,7 @@
 import anyio
 import concurrent.futures
 from collections.abc import Callable
+from decimal import ROUND_HALF_EVEN
 from typing import Annotated, Any
 
 from pydantic import BaseModel, EmailStr
@@ -35,14 +36,17 @@ def task_calculate_average(
     db_root: str,
     class_model: Any,
     limit_docs: int,
-) -> Any:
+) -> float:
     """Custom task.
 
     Calculate the average value.
     """
     max_workers: int | None = None
     timeout: float | None = None
-    average_age = Average()
+    average_age = Average(
+        precision=".00",           # by default = .00
+        rounding=ROUND_HALF_EVEN,  # by default = ROUND_HALF_EVEN
+    )
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
@@ -56,7 +60,7 @@ def task_calculate_average(
             docs = future.result(timeout)
             for doc in docs:
                 average_age.set(doc.age)
-    return average_age.get()
+    return float(average_age.get())
 
 
 async def main() -> None:
@@ -123,7 +127,7 @@ def task_counter(
     db_root: str,
     class_model: Any,
     limit_docs: int,
-) -> list[Any]:
+) -> list[User]:
     """Custom task.
 
     This task implements a counter of documents.
@@ -219,7 +223,7 @@ def task_calculate_max(
     db_root: str,
     class_model: Any,
     limit_docs: int,
-) -> Any:
+) -> int:
     """Custom task.
 
     Calculate the max value.
@@ -307,7 +311,7 @@ def task_calculate_min(
     db_root: str,
     class_model: Any,
     limit_docs: int,
-) -> Any:
+) -> int:
     """Custom task.
 
     Calculate the min value.
@@ -395,7 +399,7 @@ def task_calculate_sum(
     db_root: str,
     class_model: Any,
     limit_docs: int,
-) -> Any:
+) -> int:
     """Custom task.
 
     Calculate the sum of values.
@@ -416,7 +420,7 @@ def task_calculate_sum(
             docs = future.result(timeout)
             for doc in docs:
                 sum_age.set(doc.age)
-    return sum_age.get()
+    return int(sum_age.get())
 
 
 async def main() -> None:
