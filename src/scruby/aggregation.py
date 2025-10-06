@@ -4,6 +4,7 @@ from __future__ import annotations
 
 __all__ = (
     "Average",
+    "Counter",
     "Max",
     "Min",
     "Sum",
@@ -59,7 +60,7 @@ class Counter:
         limit: The maximum counter value.
     """
 
-    def __init__(self, limit: int = 1000) -> None:
+    def __init__(self, limit: int = 1000) -> None:  # noqa: D107
         self.limit = limit
         self.counter = 0
 
