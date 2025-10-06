@@ -32,7 +32,7 @@ def task_calculate_sum(
     db_root: str,
     class_model: Any,
     limit_docs: int,  # noqa: ARG001
-) -> Any:
+) -> int:
     """Custom task.
 
     Calculate the sum of values.
