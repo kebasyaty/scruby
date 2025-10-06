@@ -395,7 +395,7 @@ def task_calculate_sum(
     db_root: str,
     class_model: Any,
     limit_docs: int,
-) -> Any:
+) -> int:
     """Custom task.
 
     Calculate the sum of values.
@@ -416,7 +416,7 @@ def task_calculate_sum(
             docs = future.result(timeout)
             for doc in docs:
                 sum_age.set(doc.age)
-    return sum_age.get()
+    return int(sum_age.get())
 
 
 async def main() -> None:
