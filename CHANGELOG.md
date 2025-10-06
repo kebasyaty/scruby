@@ -1,5 +1,11 @@
 ### CHANGELOG
 
+#### v0.15.1 2025-10-06
+
+- Updated a `Average` and `Sum` aggregation classes.
+- Updated documentation.
+- Updated tests.
+
 #### v0.15.0 2025-10-05
 
 - Added a `update_many` method.
