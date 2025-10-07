@@ -13,7 +13,10 @@ from pydantic import BaseModel, EmailStr
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
 from scruby import Scruby, constants
-from scruby.errors import KeyAlreadyExistsError
+from scruby.errors import (
+    KeyAlreadyExistsError,
+    KeyNotExistsError,
+)
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
@@ -140,6 +143,30 @@ class TestNegative:
         # Delete DB.
         await Scruby.napalm()
 
+    async def test_key_not_exists(self) -> None:
+        """If the key not exists."""
+        db = Scruby(User)
+
+        user = User(
+            first_name="John",
+            last_name="Smith",
+            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            email="John_Smith@gmail.com",
+            phone="+447986123456",
+        )
+
+        with pytest.raises(KeyError):
+            await db.update_key(user.phone, user)
+
+        await db.add_key(user.phone, user)
+        await db.delete_key(user.phone)
+
+        with pytest.raises(KeyNotExistsError):
+            await db.update_key(user.phone, user)
+        #
+        # Delete DB.
+        await Scruby.napalm()
+
 
 class TestPositive:
     """Positive tests."""
@@ -186,6 +213,27 @@ class TestPositive:
 
         assert await db.estimated_document_count() == 0
         assert await db.add_key(user.phone, user) is None
+        assert await db.estimated_document_count() == 1
+        #
+        # Delete DB.
+        await Scruby.napalm()
+
+    async def test_update_key(self) -> None:
+        """Testing a update_key method."""
+        db = Scruby(User)
+
+        user = User(
+            first_name="John",
+            last_name="Smith",
+            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            email="John_Smith@gmail.com",
+            phone="+447986123456",
+        )
+
+        assert await db.estimated_document_count() == 0
+        await db.add_key(user.phone, user)
+        assert await db.estimated_document_count() == 1
+        await db.update_key(user.phone, user)
         assert await db.estimated_document_count() == 1
         #
         # Delete DB.
