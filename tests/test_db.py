@@ -281,7 +281,7 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.set_key(f"+44798612345{num}", user)
+            await db.set_key(user.phone, user)
 
         # by email
         result: User | None = db.find_one(
@@ -314,7 +314,7 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.set_key(f"+44798612345{num}", user)
+            await db.set_key(user.phone, user)
 
         # by emails
         results: list[User] | None = db.find_many(
@@ -364,7 +364,7 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.set_key(f"+44798612345{num}", user)
+            await db.set_key(user.phone, user)
 
         assert await db.estimated_document_count() == 9
         result: int = db.count_documents(
@@ -389,7 +389,7 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.set_key(f"+44798612345{num}", user)
+            await db.set_key(user.phone, user)
 
         # by emails
         result: int = db.delete_many(
@@ -419,7 +419,7 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.set_key(f"+44798612345{num}", user)
+            await db.set_key(user.phone, user)
 
         result = db.run_custom_task(custom_task)
         assert result == 9
@@ -441,7 +441,7 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.set_key(f"+44798612345{num}", user)
+            await db.set_key(user.phone, user)
 
         number_updated_users = db.update_many(
             filter_fn=lambda _: True,  # Update all documents
