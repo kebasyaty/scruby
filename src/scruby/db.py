@@ -175,12 +175,12 @@ class Scruby[T]:
         leaf_path: Path = Path(*(branch_path, "leaf.json"))
         return leaf_path
 
-    async def set_key(
+    async def add_key(
         self,
         key: str,
         value: T,
     ) -> None:
-        """Asynchronous method for adding and updating keys to collection.
+        """Asynchronous method for adding keys to collection.
 
         Args:
             key: Key name.

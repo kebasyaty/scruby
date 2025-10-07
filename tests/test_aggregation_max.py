@@ -68,7 +68,7 @@ async def test_task_calculate_max() -> None:
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await db.set_key(f"+44798612345{num}", user)
+        await db.add_key(user.phone, user)
 
     result = db.run_custom_task(task_calculate_max)
     assert result == 90.0
