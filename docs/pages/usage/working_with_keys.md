@@ -37,7 +37,7 @@ async def main() -> None:
     )
 
     # Add user to collection.
-    await user_coll.set_key(user.phone, user)
+    await user_coll.add_key(user.phone, user)
 
     # Get user from collection.
     await user_coll.get_key("+447986123456")  # => user
