@@ -111,6 +111,8 @@ async def main() -> None:
 
     await user_coll.add_key(user.phone, user)
 
+    await user_coll.update_key(user.phone, user)
+
     await user_coll.get_key("+447986123456")  # => user
     await user_coll.get_key("key missing")  # => KeyError
 
