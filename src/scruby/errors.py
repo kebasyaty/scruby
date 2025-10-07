@@ -21,3 +21,11 @@ class MetadataValueError(ScrubyException):
     def __init__(self, message: str) -> None:  # noqa: D107
         self.message = message
         super().__init__(self.message)
+
+
+class KeyAlreadyExistsError(ScrubyException):
+    """Exception is raised if the key already exists."""
+
+    def __init__(self) -> None:
+        self.message = "The key already exists."
+        super().__init__(self.message)

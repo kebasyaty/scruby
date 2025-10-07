@@ -13,6 +13,7 @@ from pydantic import BaseModel, EmailStr
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
 from scruby import Scruby, constants
+from scruby.errors import KeyAlreadyExistsError
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
@@ -115,6 +116,26 @@ class TestNegative:
 
         with pytest.raises(KeyError):
             await db.add_key("", user)
+        #
+        # Delete DB.
+        await Scruby.napalm()
+
+    async def test_key_already_exists(self) -> None:
+        """If the key already exists."""
+        db = Scruby(User)
+
+        user = User(
+            first_name="John",
+            last_name="Smith",
+            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            email="John_Smith@gmail.com",
+            phone="+447986123456",
+        )
+
+        await db.add_key(user.phone, user)
+
+        with pytest.raises(KeyAlreadyExistsError):
+            await db.add_key(user.phone, user)
         #
         # Delete DB.
         await Scruby.napalm()
