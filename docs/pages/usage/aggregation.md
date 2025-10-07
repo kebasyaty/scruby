@@ -76,7 +76,7 @@ async def main() -> None:
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await user_coll.set_key(f"+44798612345{num}", user)
+        await user_coll.set_key(user.phone, user)
 
     result = user_coll.run_custom_task(task_calculate_average)
     print(result)  # => 50.0
@@ -169,7 +169,7 @@ async def main() -> None:
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await user_coll.set_key(f"+44798612345{num}", user)
+        await user_coll.set_key(user.phone, user)
 
     result = user_coll.run_custom_task(
         custom_task_fn=task_counter,
@@ -260,7 +260,7 @@ async def main() -> None:
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await user_coll.set_key(f"+44798612345{num}", user)
+        await user_coll.set_key(user.phone, user)
 
     result = user_coll.run_custom_task(task_calculate_max)
     print(result)  # => 90.0
@@ -348,7 +348,7 @@ async def main() -> None:
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await user_coll.set_key(f"+44798612345{num}", user)
+        await user_coll.set_key(user.phone, user)
 
     result = user_coll.run_custom_task(task_calculate_min)
     print(result)  # => 10.0
@@ -436,7 +436,7 @@ async def main() -> None:
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await user_coll.set_key(f"+44798612345{num}", user)
+        await user_coll.set_key(user.phone, user)
 
     result = user_coll.run_custom_task(task_calculate_sum)
     print(result)  # => 450.0
