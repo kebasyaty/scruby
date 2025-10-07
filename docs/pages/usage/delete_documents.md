@@ -44,7 +44,7 @@ async def main() -> None:
     )
 
     # Add user to collection.
-    await user_coll.set_key("+447986123456", user)
+    await user_coll.add_key(user.phone, user)
 
     # Find user by email.
     user_details: User | None = user_coll.find_one(
@@ -107,7 +107,7 @@ async def main() -> None:
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await user_coll.set_key(f"+44798612345{num}", user)
+        await user_coll.add_key(f"+44798612345{num}", user)
 
     amount_of_deleted: int = user_coll.delete_many(
         filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",

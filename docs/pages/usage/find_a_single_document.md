@@ -45,7 +45,7 @@ async def main() -> None:
     )
 
     # Add user to collection.
-    await user_coll.set_key("+447986123456", user)
+    await user_coll.add_key(user.phone, user)
 
     # Find user by email.
     user_details: User | None = user_coll.find_one(

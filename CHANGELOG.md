@@ -1,5 +1,12 @@
 ### CHANGELOG
 
+#### v0.16.0 2025-10-07
+
+- Replaced a `set_key` method to `add_key`.
+- Added a `update_key` method.
+- Updated documentation.
+- Updated tests.
+
 #### v0.15.1 2025-10-06
 
 - Updated a `Average` and `Sum` aggregation classes.

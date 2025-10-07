@@ -18,6 +18,10 @@ from anyio import Path, to_thread
 from pydantic import BaseModel
 
 from scruby import constants
+from scruby.errors import (
+    KeyAlreadyExistsError,
+    KeyNotExistsError,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -175,36 +179,75 @@ class Scruby[T]:
         leaf_path: Path = Path(*(branch_path, "leaf.json"))
         return leaf_path
 
-    async def set_key(
+    async def add_key(
         self,
         key: str,
         value: T,
     ) -> None:
-        """Asynchronous method for adding and updating keys to collection.
+        """Asynchronous method for adding key to collection.
 
         Args:
-            key: Key name.
-            value: Value of key.
+            key: Key name. Type `str`.
+            value: Value of key. Type `BaseModel`.
 
         Returns:
             None.
         """
-        # The path to the database cell.
+        # The path to cell of collection.
         leaf_path: Path = await self._get_leaf_path(key)
         value_json: str = value.model_dump_json()
-        # Write key-value to the database.
+        # Write key-value to collection.
         if await leaf_path.exists():
-            # Add new key or update existing.
+            # Add new key.
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            if data.get(key) is None:
-                await self._counter_documents(1)
-            data[key] = value_json
-            await leaf_path.write_bytes(orjson.dumps(data))
+            try:
+                data[key]
+            except KeyError:
+                data[key] = value_json
+                await leaf_path.write_bytes(orjson.dumps(data))
+            else:
+                err = KeyAlreadyExistsError()
+                logger.error(err.message)
+                raise err
         else:
             # Add new key to a blank leaf.
             await leaf_path.write_bytes(orjson.dumps({key: value_json}))
-            await self._counter_documents(1)
+        await self._counter_documents(1)
+
+    async def update_key(
+        self,
+        key: str,
+        value: T,
+    ) -> None:
+        """Asynchronous method for updating key to collection.
+
+        Args:
+            key: Key name. Type `str`.
+            value: Value of key. Type `BaseModel`.
+
+        Returns:
+            None.
+        """
+        # The path to cell of collection.
+        leaf_path: Path = await self._get_leaf_path(key)
+        value_json: str = value.model_dump_json()
+        # Update the existing key.
+        if await leaf_path.exists():
+            # Update the existing key.
+            data_json: bytes = await leaf_path.read_bytes()
+            data: dict = orjson.loads(data_json) or {}
+            try:
+                data[key]
+                data[key] = value_json
+                await leaf_path.write_bytes(orjson.dumps(data))
+            except KeyError:
+                err = KeyNotExistsError()
+                logger.error(err.message)
+                raise err from None
+        else:
+            logger.error("The key not exists.")
+            raise KeyError()
 
     async def get_key(self, key: str) -> T:
         """Asynchronous method for getting value of key from collection.
@@ -236,7 +279,7 @@ class Scruby[T]:
         Returns:
             True, if the key is present.
         """
-        # The path to the database cell.
+        # Get path to cell of collection.
         leaf_path: Path = await self._get_leaf_path(key)
         # Checking whether there is a key.
         if await leaf_path.exists():

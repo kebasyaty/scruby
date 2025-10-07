@@ -13,6 +13,10 @@ from pydantic import BaseModel, EmailStr
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
 from scruby import Scruby, constants
+from scruby.errors import (
+    KeyAlreadyExistsError,
+    KeyNotExistsError,
+)
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
@@ -96,7 +100,7 @@ class TestNegative:
         )
 
         with pytest.raises(KeyError):
-            await db.set_key(123, user)
+            await db.add_key(123, user)
         #
         # Delete DB.
         await Scruby.napalm()
@@ -114,7 +118,51 @@ class TestNegative:
         )
 
         with pytest.raises(KeyError):
-            await db.set_key("", user)
+            await db.add_key("", user)
+        #
+        # Delete DB.
+        await Scruby.napalm()
+
+    async def test_key_already_exists(self) -> None:
+        """If the key already exists."""
+        db = Scruby(User)
+
+        user = User(
+            first_name="John",
+            last_name="Smith",
+            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            email="John_Smith@gmail.com",
+            phone="+447986123456",
+        )
+
+        await db.add_key(user.phone, user)
+
+        with pytest.raises(KeyAlreadyExistsError):
+            await db.add_key(user.phone, user)
+        #
+        # Delete DB.
+        await Scruby.napalm()
+
+    async def test_key_not_exists(self) -> None:
+        """If the key not exists."""
+        db = Scruby(User)
+
+        user = User(
+            first_name="John",
+            last_name="Smith",
+            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            email="John_Smith@gmail.com",
+            phone="+447986123456",
+        )
+
+        with pytest.raises(KeyError):
+            await db.update_key(user.phone, user)
+
+        await db.add_key(user.phone, user)
+        await db.delete_key(user.phone)
+
+        with pytest.raises(KeyNotExistsError):
+            await db.update_key(user.phone, user)
         #
         # Delete DB.
         await Scruby.napalm()
@@ -151,8 +199,8 @@ class TestPositive:
         # Delete DB.
         await Scruby.napalm()
 
-    async def test_set_key(self) -> None:
-        """Testing a set_key method."""
+    async def test_add_key(self) -> None:
+        """Testing a add_key method."""
         db = Scruby(User)
 
         user = User(
@@ -164,7 +212,28 @@ class TestPositive:
         )
 
         assert await db.estimated_document_count() == 0
-        assert await db.set_key("+447986123456", user) is None
+        assert await db.add_key(user.phone, user) is None
+        assert await db.estimated_document_count() == 1
+        #
+        # Delete DB.
+        await Scruby.napalm()
+
+    async def test_update_key(self) -> None:
+        """Testing a update_key method."""
+        db = Scruby(User)
+
+        user = User(
+            first_name="John",
+            last_name="Smith",
+            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            email="John_Smith@gmail.com",
+            phone="+447986123456",
+        )
+
+        assert await db.estimated_document_count() == 0
+        await db.add_key(user.phone, user)
+        assert await db.estimated_document_count() == 1
+        await db.update_key(user.phone, user)
         assert await db.estimated_document_count() == 1
         #
         # Delete DB.
@@ -182,7 +251,7 @@ class TestPositive:
             phone="+447986123456",
         )
 
-        await db.set_key("+447986123456", user)
+        await db.add_key(user.phone, user)
         data: User = await db.get_key("+447986123456")
         assert data.model_dump() == user.model_dump()
         assert data.phone == "+447986123456"
@@ -202,7 +271,7 @@ class TestPositive:
             phone="+447986123456",
         )
 
-        await db.set_key("+447986123456", user)
+        await db.add_key(user.phone, user)
         assert await db.has_key("+447986123456")
         assert not await db.has_key("key missing")
         #
@@ -222,7 +291,7 @@ class TestPositive:
         )
 
         assert await db.estimated_document_count() == 0
-        await db.set_key("+447986123456", user)
+        await db.add_key(user.phone, user)
         assert await db.estimated_document_count() == 1
         assert await db.delete_key("+447986123456") is None
         assert await db.estimated_document_count() == 0
@@ -281,7 +350,7 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.set_key(f"+44798612345{num}", user)
+            await db.add_key(user.phone, user)
 
         # by email
         result: User | None = db.find_one(
@@ -314,7 +383,7 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.set_key(f"+44798612345{num}", user)
+            await db.add_key(user.phone, user)
 
         # by emails
         results: list[User] | None = db.find_many(
@@ -364,7 +433,7 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.set_key(f"+44798612345{num}", user)
+            await db.add_key(user.phone, user)
 
         assert await db.estimated_document_count() == 9
         result: int = db.count_documents(
@@ -389,7 +458,7 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.set_key(f"+44798612345{num}", user)
+            await db.add_key(user.phone, user)
 
         # by emails
         result: int = db.delete_many(
@@ -419,7 +488,7 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.set_key(f"+44798612345{num}", user)
+            await db.add_key(user.phone, user)
 
         result = db.run_custom_task(custom_task)
         assert result == 9
@@ -441,7 +510,7 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.set_key(f"+44798612345{num}", user)
+            await db.add_key(user.phone, user)
 
         number_updated_users = db.update_many(
             filter_fn=lambda _: True,  # Update all documents
