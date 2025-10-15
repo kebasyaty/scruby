@@ -1,5 +1,9 @@
 ### CHANGELOG
 
+#### v0.16.1 2025-10-15
+
+- Added support `python 3.14`.
+
 #### v0.16.0 2025-10-07
 
 - Replaced a `set_key` method to `add_key`.
