@@ -24,8 +24,10 @@ from typing import Literal
 DB_ROOT: str = "ScrubyDB"
 
 # The length of the hash reduction on the left side.
-# 0 = 4294967296 branches in collection (by default).
-# 2 = 16777216 branches in collectionю
-# 4 = 65536 branches in collectionю
-# 6 = 256 branches in collection (main purpose is tests).
-HASH_REDUCE_LEFT: Literal[0, 2, 4, 6] = 0
+# 0 = 4294967296 branches in collection.
+# 2 = 16777216 branches in collection.
+# 4 = 65536 branches in collection.
+# 6 = 256 branches in collection (by default).
+# Number of branches is number of requests to the hard disk during quantum operations.
+# Quantum operations: find_one, find_many, count_documents, delete_many, run_custom_task.
+HASH_REDUCE_LEFT: Literal[0, 2, 4, 6] = 6
