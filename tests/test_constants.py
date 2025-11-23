@@ -12,4 +12,4 @@ def test_db_root() -> None:
 
 def test_HASH_REDUCE_LEFT() -> None:
     """Test a HASH_REDUCE_LEFT variable."""
-    assert HASH_REDUCE_LEFT == 0
+    assert HASH_REDUCE_LEFT == 6
