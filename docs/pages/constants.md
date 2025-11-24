@@ -1,5 +1,7 @@
 ::: scruby.constants
 
+<hr>
+
 #### Hint
 
 Number of branches is number of requests to the hard disk during quantum operations.
