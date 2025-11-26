@@ -14,7 +14,7 @@ from shutil import rmtree
 from typing import Any, Literal, Never, TypeVar, assert_never
 
 import orjson
-from anyio import Path, to_thread
+from anyio import Path
 from pydantic import BaseModel
 
 from scruby import constants
@@ -322,8 +322,8 @@ class Scruby[T]:
         raise KeyError()
 
     @staticmethod
-    async def napalm() -> None:
-        """Asynchronous method for full database deletion.
+    def napalm() -> None:
+        """Method for full database deletion.
 
         The main purpose is tests.
 
@@ -334,7 +334,7 @@ class Scruby[T]:
             None.
         """
         with contextlib.suppress(FileNotFoundError):
-            await to_thread.run_sync(rmtree, constants.DB_ROOT)
+            rmtree(constants.DB_ROOT)
         return
 
     @staticmethod
@@ -483,6 +483,16 @@ class Scruby[T]:
             Full name of collection.
         """
         return f"{self.__db_root}/{self.__class_model.__name__}"
+
+    @staticmethod
+    async def collection_list() -> list[str]:
+        """Get collection list."""
+        target_directory = Path(constants.DB_ROOT)
+        # Get all entries in the directory
+        all_entries = Path.iterdir(target_directory)
+        # Filter for only directories
+        directory_names: list[str] = [entry.name async for entry in all_entries]
+        return directory_names
 
     async def estimated_document_count(self) -> int:
         """Get an estimate of the number of documents in this collection using collection metadata.

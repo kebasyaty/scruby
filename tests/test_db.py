@@ -75,7 +75,7 @@ class TestNegative:
             await db.get_key("key missing")
         #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()
 
     async def test_del_non_existent_key(self) -> None:
         """Delete a non-existent key."""
@@ -85,7 +85,7 @@ class TestNegative:
             await db.delete_key("key missing")
         #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()
 
     async def test_key_not_str(self) -> None:
         """The key is not a type of `str`."""
@@ -103,7 +103,7 @@ class TestNegative:
             await db.add_key(123, user)
         #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()
 
     async def test_key_is_empty(self) -> None:
         """The key should not be empty."""
@@ -121,7 +121,7 @@ class TestNegative:
             await db.add_key("", user)
         #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()
 
     async def test_key_already_exists(self) -> None:
         """If the key already exists."""
@@ -141,7 +141,7 @@ class TestNegative:
             await db.add_key(user.phone, user)
         #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()
 
     async def test_key_not_exists(self) -> None:
         """If the key not exists."""
@@ -165,7 +165,7 @@ class TestNegative:
             await db.update_key(user.phone, user)
         #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()
 
 
 class TestPositive:
@@ -182,8 +182,11 @@ class TestPositive:
 
         assert await db._get_leaf_path("key name") == control_path
         #
+        collection_list = await Scruby.collection_list()
+        assert collection_list == ["User"]
+        #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()
 
     async def test_metadata(self) -> None:
         """Test metadata of collection."""
@@ -197,7 +200,7 @@ class TestPositive:
         assert meta_2.counter_documents == 1
         #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()
 
     async def test_add_key(self) -> None:
         """Testing a add_key method."""
@@ -216,7 +219,7 @@ class TestPositive:
         assert await db.estimated_document_count() == 1
         #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()
 
     async def test_update_key(self) -> None:
         """Testing a update_key method."""
@@ -237,7 +240,7 @@ class TestPositive:
         assert await db.estimated_document_count() == 1
         #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()
 
     async def test_get_key(self) -> None:
         """Testing a get_key method."""
@@ -257,7 +260,7 @@ class TestPositive:
         assert data.phone == "+447986123456"
         #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()
 
     async def test_has_key(self) -> None:
         """Testing a has_key method."""
@@ -276,7 +279,7 @@ class TestPositive:
         assert not await db.has_key("key missing")
         #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()
 
     async def test_delete_key(self) -> None:
         """Testing a delete_key method."""
@@ -298,7 +301,7 @@ class TestPositive:
         assert not await db.has_key("key missing")
         #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()
 
     async def test_HASH_REDUCE_LEFT(self) -> None:
         """Length of reduction hash."""
@@ -309,7 +312,7 @@ class TestPositive:
         )
         assert await db._get_leaf_path("key name") == control_path
 
-        await Scruby.napalm()
+        Scruby.napalm()
         constants.HASH_REDUCE_LEFT = 2  # 16777216 branches in collection.
         db = Scruby(User)
         control_path = Path(
@@ -317,7 +320,7 @@ class TestPositive:
         )
         assert await db._get_leaf_path("key name") == control_path
 
-        await Scruby.napalm()
+        Scruby.napalm()
         constants.HASH_REDUCE_LEFT = 4  # 65536 branches in collection.
         db = Scruby(User)
         control_path = Path(
@@ -325,7 +328,7 @@ class TestPositive:
         )
         assert await db._get_leaf_path("key name") == control_path
 
-        await Scruby.napalm()
+        Scruby.napalm()
         constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
         db = Scruby(User)
         control_path = Path(
@@ -334,7 +337,7 @@ class TestPositive:
         assert await db._get_leaf_path("key name") == control_path
         #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()
 
     async def test_find_one(self) -> None:
         """Find a single document."""
@@ -367,7 +370,7 @@ class TestPositive:
         assert result_2.birthday == datetime.datetime(1970, 1, 8)  # noqa: DTZ001
         #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()
 
     async def test_find_many(self) -> None:
         """Find documents."""
@@ -395,7 +398,7 @@ class TestPositive:
         assert results[1].email in ["John_Smith_5@gmail.com", "John_Smith_8@gmail.com"]
         #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()
 
     async def test_collection_name(self) -> None:
         """Test a collection_name method."""
@@ -406,7 +409,7 @@ class TestPositive:
         assert db.collection_name() == "User"
         #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()
 
     async def test_collection_full_name(self) -> None:
         """Test a collection_full_name method."""
@@ -417,7 +420,7 @@ class TestPositive:
         assert db.collection_full_name() == "ScrubyDB/User"
         #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()
 
     async def test_count_documents(self) -> None:
         """Test a count_documents method."""
@@ -442,7 +445,7 @@ class TestPositive:
         assert result == 2
         #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()
 
     async def test_delete_many(self) -> None:
         """Test a delete_many method."""
@@ -472,7 +475,7 @@ class TestPositive:
         assert result == 7
         #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()
 
     async def test_run_custom_task(self) -> None:
         """Test a run_custom_task method."""
@@ -494,7 +497,7 @@ class TestPositive:
         assert result == 9
         #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()
 
     async def test_update_many(self) -> None:
         """Test a update_many method."""
@@ -527,4 +530,4 @@ class TestPositive:
             assert user.first_name == "Georg"
         #
         # Delete DB.
-        await Scruby.napalm()
+        Scruby.napalm()

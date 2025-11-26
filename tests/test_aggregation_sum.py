@@ -74,4 +74,4 @@ async def test_task_calculate_sum() -> None:
     assert result == 450.0
     #
     # Delete DB.
-    await Scruby.napalm()
+    Scruby.napalm()

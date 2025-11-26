@@ -55,7 +55,7 @@ async def main() -> None:
 
     # Full database deletion.
     # Hint: The main purpose is tests.
-    await Scruby.napalm()
+    Scruby.napalm()
 
 
 if __name__ == "__main__":

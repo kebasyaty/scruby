@@ -74,4 +74,4 @@ async def test_task_calculate_max() -> None:
     assert result == 90.0
     #
     # Delete DB.
-    await Scruby.napalm()
+    Scruby.napalm()

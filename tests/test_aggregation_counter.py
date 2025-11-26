@@ -82,4 +82,4 @@ async def test_task_counter() -> None:
     assert len(result) == 5
     #
     # Delete DB.
-    await Scruby.napalm()
+    Scruby.napalm()

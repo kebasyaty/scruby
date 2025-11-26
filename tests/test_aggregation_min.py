@@ -74,4 +74,4 @@ async def test_task_calculate_min() -> None:
     assert result == 10.0
     #
     # Delete DB.
-    await Scruby.napalm()
+    Scruby.napalm()
