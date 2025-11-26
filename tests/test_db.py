@@ -31,6 +31,16 @@ class User(BaseModel):
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
 
 
+class User2(BaseModel):
+    """User model."""
+
+    first_name: str
+    last_name: str
+    birthday: datetime.datetime
+    email: EmailStr
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
+
+
 def custom_task(
     get_docs_fn: Callable,
     branch_numbers: range,
@@ -189,6 +199,11 @@ class TestPositive:
 
         collection_list = await Scruby.collection_list()
         assert collection_list == ["User"]
+
+        Scruby(User2)
+
+        collection_list = await Scruby.collection_list()
+        assert collection_list == ["User", "User2"]
         #
         # Delete DB.
         Scruby.napalm()
