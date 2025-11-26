@@ -252,6 +252,10 @@ async def main() -> None:
     else:
         print("No users!")
 
+    # Get collection list.
+    collection_list = await Scruby.collection_list()
+    print(ucollection_list)  # ["User"]
+
     # Full database deletion.
     # Hint: The main purpose is tests.
     Scruby.napalm()
