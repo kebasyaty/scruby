@@ -14,7 +14,7 @@ from shutil import rmtree
 from typing import Any, Literal, Never, TypeVar, assert_never
 
 import orjson
-from anyio import Path, to_thread
+from anyio import Path
 from pydantic import BaseModel
 
 from scruby import constants
@@ -31,6 +31,9 @@ T = TypeVar("T")
 class _Meta(BaseModel):
     """Metadata of Collection."""
 
+    db_root: str
+    hash_reduce_left: int
+    max_branch_number: int
     counter_documents: int
 
 
@@ -85,6 +88,9 @@ class Scruby[T]:
         if not branch_path.exists():
             branch_path.mkdir(parents=True)
             meta = _Meta(
+                db_root=self.__db_root,
+                hash_reduce_left=self.__hash_reduce_left,
+                max_branch_number=self.__max_branch_number,
                 counter_documents=0,
             )
             meta_json = meta.model_dump_json()
@@ -316,8 +322,8 @@ class Scruby[T]:
         raise KeyError()
 
     @staticmethod
-    async def napalm() -> None:
-        """Asynchronous method for full database deletion.
+    def napalm() -> None:
+        """Method for full database deletion.
 
         The main purpose is tests.
 
@@ -328,7 +334,7 @@ class Scruby[T]:
             None.
         """
         with contextlib.suppress(FileNotFoundError):
-            await to_thread.run_sync(rmtree, constants.DB_ROOT)
+            rmtree(constants.DB_ROOT)
         return
 
     @staticmethod
@@ -477,6 +483,15 @@ class Scruby[T]:
             Full name of collection.
         """
         return f"{self.__db_root}/{self.__class_model.__name__}"
+
+    @staticmethod
+    async def collection_list() -> list[str]:
+        """Get collection list."""
+        target_directory = Path(constants.DB_ROOT)
+        # Get all entries in the directory
+        all_entries = Path.iterdir(target_directory)
+        directory_names: list[str] = [entry.name async for entry in all_entries]
+        return directory_names
 
     async def estimated_document_count(self) -> int:
         """Get an estimate of the number of documents in this collection using collection metadata.

@@ -78,4 +78,4 @@ async def test_task_calculate_average() -> None:
     assert result == 50.0
     #
     # Delete DB.
-    await Scruby.napalm()
+    Scruby.napalm()

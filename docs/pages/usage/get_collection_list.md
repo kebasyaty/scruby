@@ -1,7 +1,7 @@
-#### Get collection name
+#### Get collection list
 
 ```py title="main.py" linenums="1"
-"""Get collection name."""
+"""Get collection list."""
 
 import anyio
 import datetime
@@ -27,8 +27,8 @@ async def main() -> None:
     # Get collection of `User`.
     user_coll = Scruby(User)
 
-    print(user_coll.collection_name())  # "User"
-    print(user_coll.collection_full_name())  # "ScrubyDB/User"
+    collection_list = await Scruby.collection_list()
+    print(ucollection_list)  # ["User"]
 
     # Full database deletion.
     # Hint: The main purpose is tests.

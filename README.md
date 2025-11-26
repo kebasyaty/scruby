@@ -118,7 +118,7 @@ async def main() -> None:
 
     # Full database deletion.
     # Hint: The main purpose is tests.
-    await Scruby.napalm()
+    Scruby.napalm()
 
 
 if __name__ == "__main__":
@@ -191,7 +191,7 @@ async def main() -> None:
 
     # Full database deletion.
     # Hint: The main purpose is tests.
-    await Scruby.napalm()
+    Scruby.napalm()
 
 
 if __name__ == "__main__":
@@ -252,9 +252,13 @@ async def main() -> None:
     else:
         print("No users!")
 
+    # Get collection list.
+    collection_list = await Scruby.collection_list()
+    print(ucollection_list)  # ["User"]
+
     # Full database deletion.
     # Hint: The main purpose is tests.
-    await Scruby.napalm()
+    Scruby.napalm()
 
 
 if __name__ == "__main__":
