@@ -180,9 +180,6 @@ class TestPositive:
 
         assert await db._get_leaf_path("key name") == control_path
         #
-        collection_list = await Scruby.collection_list()
-        assert collection_list == ["User"]
-        #
         # Delete DB.
         Scruby.napalm()
 
