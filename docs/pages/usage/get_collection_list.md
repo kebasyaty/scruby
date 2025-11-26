@@ -28,7 +28,7 @@ async def main() -> None:
     user_coll = Scruby(User)
 
     collection_list = await Scruby.collection_list()
-    print(ucollection_list)  #  ["User"]
+    print(ucollection_list)  # ["User"]
 
     # Full database deletion.
     # Hint: The main purpose is tests.
