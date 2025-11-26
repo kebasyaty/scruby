@@ -490,7 +490,6 @@ class Scruby[T]:
         target_directory = Path(constants.DB_ROOT)
         # Get all entries in the directory
         all_entries = Path.iterdir(target_directory)
-        # Filter for only directories
         directory_names: list[str] = [entry.name async for entry in all_entries]
         return directory_names
 
