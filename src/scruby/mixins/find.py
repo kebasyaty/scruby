@@ -20,14 +20,14 @@ class Find[T]:
 
     def __init__(  # noqa: D107
         self,
-        max_branch_number: int,
-        hash_reduce_left: int,
         db_root: str,
+        hash_reduce_left: int,
+        max_branch_number: int,
         class_model: T,
     ) -> None:
-        self.__max_branch_number = max_branch_number
-        self.__hash_reduce_left = hash_reduce_left
         self.__db_root = db_root
+        self.__hash_reduce_left = hash_reduce_left
+        self.__max_branch_number = max_branch_number
         self.__class_model = class_model
 
     @staticmethod
