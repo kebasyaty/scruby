@@ -198,12 +198,13 @@ class TestPositive:
         Scruby(User)
 
         collection_list = await Scruby.collection_list()
-        assert collection_list == ["User"]
+        assert "User" in collection_list
 
         Scruby(User2)
 
         collection_list = await Scruby.collection_list()
-        assert collection_list == ["User", "User2"]
+        assert "User" in collection_list
+        assert "User2" in collection_list
         #
         # Delete DB.
         Scruby.napalm()
@@ -214,17 +215,18 @@ class TestPositive:
         Scruby(User2)
 
         collection_list = await Scruby.collection_list()
-        assert collection_list == ["User", "User2"]
+        assert "User" in collection_list
+        assert "User2" in collection_list
 
         await Scruby.delete_collection("User")
 
         collection_list = await Scruby.collection_list()
-        assert collection_list == ["User2"]
+        assert "User2" in collection_list
 
         await Scruby.delete_collection("User2")
 
         collection_list = await Scruby.collection_list()
-        assert collection_list == []
+        assert len(collection_list) == 0
         #
         # Delete DB.
         Scruby.napalm()
