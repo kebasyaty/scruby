@@ -4,24 +4,17 @@ from __future__ import annotations
 
 __all__ = ("Scruby",)
 
-import concurrent.futures
 import contextlib
 import logging
 import zlib
-from collections.abc import Callable
 from pathlib import Path as SyncPath
 from shutil import rmtree
-from typing import Any, Literal, Never, TypeVar, assert_never
+from typing import Literal, Never, TypeVar, assert_never
 
-import orjson
-from anyio import Path, to_thread
+from anyio import Path
 from pydantic import BaseModel
 
-from scruby import constants
-from scruby.errors import (
-    KeyAlreadyExistsError,
-    KeyNotExistsError,
-)
+from scruby import constants, mixins
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +30,15 @@ class _Meta(BaseModel):
     counter_documents: int
 
 
-class Scruby[T]:
+class Scruby[T](
+    mixins.Keys,
+    mixins.Find,
+    mixins.CustomTask,
+    mixins.Collection,
+    mixins.Count,
+    mixins.Delete,
+    mixins.Update,
+):
     """Creation and management of database.
 
     Args:
@@ -96,6 +97,48 @@ class Scruby[T]:
             meta_json = meta.model_dump_json()
             meta_path = SyncPath(*(branch_path, "meta.json"))
             meta_path.write_text(meta_json, "utf-8")
+        #
+        mixins.Keys.__init__(self, class_model)
+        mixins.Find.__init__(
+            self,
+            self.__db_root,
+            self.__hash_reduce_left,
+            self.__max_branch_number,
+            class_model,
+        )
+        mixins.CustomTask.__init__(
+            self,
+            self.__db_root,
+            self.__hash_reduce_left,
+            self.__max_branch_number,
+            class_model,
+        )
+        mixins.Collection.__init__(
+            self,
+            self.__db_root,
+            class_model,
+        )
+        mixins.Count.__init__(
+            self,
+            self.__db_root,
+            self.__hash_reduce_left,
+            self.__max_branch_number,
+            class_model,
+        )
+        mixins.Delete.__init__(
+            self,
+            self.__db_root,
+            self.__hash_reduce_left,
+            self.__max_branch_number,
+            class_model,
+        )
+        mixins.Update.__init__(
+            self,
+            self.__db_root,
+            self.__hash_reduce_left,
+            self.__max_branch_number,
+            class_model,
+        )
 
     async def _get_meta(self) -> _Meta:
         """Asynchronous method for getting metadata of collection.
@@ -185,142 +228,6 @@ class Scruby[T]:
         leaf_path: Path = Path(*(branch_path, "leaf.json"))
         return leaf_path
 
-    async def add_key(
-        self,
-        key: str,
-        value: T,
-    ) -> None:
-        """Asynchronous method for adding key to collection.
-
-        Args:
-            key: Key name. Type `str`.
-            value: Value of key. Type `BaseModel`.
-
-        Returns:
-            None.
-        """
-        # The path to cell of collection.
-        leaf_path: Path = await self._get_leaf_path(key)
-        value_json: str = value.model_dump_json()
-        # Write key-value to collection.
-        if await leaf_path.exists():
-            # Add new key.
-            data_json: bytes = await leaf_path.read_bytes()
-            data: dict = orjson.loads(data_json) or {}
-            try:
-                data[key]
-            except KeyError:
-                data[key] = value_json
-                await leaf_path.write_bytes(orjson.dumps(data))
-            else:
-                err = KeyAlreadyExistsError()
-                logger.error(err.message)
-                raise err
-        else:
-            # Add new key to a blank leaf.
-            await leaf_path.write_bytes(orjson.dumps({key: value_json}))
-        await self._counter_documents(1)
-
-    async def update_key(
-        self,
-        key: str,
-        value: T,
-    ) -> None:
-        """Asynchronous method for updating key to collection.
-
-        Args:
-            key: Key name. Type `str`.
-            value: Value of key. Type `BaseModel`.
-
-        Returns:
-            None.
-        """
-        # The path to cell of collection.
-        leaf_path: Path = await self._get_leaf_path(key)
-        value_json: str = value.model_dump_json()
-        # Update the existing key.
-        if await leaf_path.exists():
-            # Update the existing key.
-            data_json: bytes = await leaf_path.read_bytes()
-            data: dict = orjson.loads(data_json) or {}
-            try:
-                data[key]
-                data[key] = value_json
-                await leaf_path.write_bytes(orjson.dumps(data))
-            except KeyError:
-                err = KeyNotExistsError()
-                logger.error(err.message)
-                raise err from None
-        else:
-            logger.error("The key not exists.")
-            raise KeyError()
-
-    async def get_key(self, key: str) -> T:
-        """Asynchronous method for getting value of key from collection.
-
-        Args:
-            key: Key name.
-
-        Returns:
-            Value of key or KeyError.
-        """
-        # The path to the database cell.
-        leaf_path: Path = await self._get_leaf_path(key)
-        # Get value of key.
-        if await leaf_path.exists():
-            data_json: bytes = await leaf_path.read_bytes()
-            data: dict = orjson.loads(data_json) or {}
-            obj: T = self.__class_model.model_validate_json(data[key])
-            return obj
-        msg: str = "`get_key` - The unacceptable key value."
-        logger.error(msg)
-        raise KeyError()
-
-    async def has_key(self, key: str) -> bool:
-        """Asynchronous method for checking presence of key in collection.
-
-        Args:
-            key: Key name.
-
-        Returns:
-            True, if the key is present.
-        """
-        # Get path to cell of collection.
-        leaf_path: Path = await self._get_leaf_path(key)
-        # Checking whether there is a key.
-        if await leaf_path.exists():
-            data_json: bytes = await leaf_path.read_bytes()
-            data: dict = orjson.loads(data_json) or {}
-            try:
-                data[key]
-                return True
-            except KeyError:
-                return False
-        return False
-
-    async def delete_key(self, key: str) -> None:
-        """Asynchronous method for deleting key from collection.
-
-        Args:
-            key: Key name.
-
-        Returns:
-            None.
-        """
-        # The path to the database cell.
-        leaf_path: Path = await self._get_leaf_path(key)
-        # Deleting key.
-        if await leaf_path.exists():
-            data_json: bytes = await leaf_path.read_bytes()
-            data: dict = orjson.loads(data_json) or {}
-            del data[key]
-            await leaf_path.write_bytes(orjson.dumps(data))
-            await self._counter_documents(-1)
-            return
-        msg: str = "`delete_key` - The unacceptable key value."
-        logger.error(msg)
-        raise KeyError()
-
     @staticmethod
     def napalm() -> None:
         """Method for full database deletion.
@@ -336,450 +243,3 @@ class Scruby[T]:
         with contextlib.suppress(FileNotFoundError):
             rmtree(constants.DB_ROOT)
         return
-
-    @staticmethod
-    def _task_find(
-        branch_number: int,
-        filter_fn: Callable,
-        hash_reduce_left: str,
-        db_root: str,
-        class_model: T,
-    ) -> list[T] | None:
-        """Task for find documents.
-
-        This method is for internal use.
-
-        Returns:
-            List of documents or None.
-        """
-        branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
-        separated_hash: str = "/".join(list(branch_number_as_hash))
-        leaf_path: SyncPath = SyncPath(
-            *(
-                db_root,
-                class_model.__name__,
-                separated_hash,
-                "leaf.json",
-            ),
-        )
-        docs: list[T] = []
-        if leaf_path.exists():
-            data_json: bytes = leaf_path.read_bytes()
-            data: dict[str, str] = orjson.loads(data_json) or {}
-            for _, val in data.items():
-                doc = class_model.model_validate_json(val)
-                if filter_fn(doc):
-                    docs.append(doc)
-        return docs or None
-
-    def find_one(
-        self,
-        filter_fn: Callable,
-        max_workers: int | None = None,
-        timeout: float | None = None,
-    ) -> T | None:
-        """Finds a single document matching the filter.
-
-        The search is based on the effect of a quantum loop.
-        The search effectiveness depends on the number of processor threads.
-        Ideally, hundreds and even thousands of threads are required.
-
-        Args:
-            filter_fn: A function that execute the conditions of filtering.
-            max_workers: The maximum number of processes that can be used to
-                         execute the given calls. If None or not given then as many
-                         worker processes will be created as the machine has processors.
-            timeout: The number of seconds to wait for the result if the future isn't done.
-                     If None, then there is no limit on the wait time.
-
-        Returns:
-            Document or None.
-        """
-        branch_numbers: range = range(1, self.__max_branch_number)
-        search_task_fn: Callable = self._task_find
-        hash_reduce_left: int = self.__hash_reduce_left
-        db_root: str = self.__db_root
-        class_model: T = self.__class_model
-        with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
-            for branch_number in branch_numbers:
-                future = executor.submit(
-                    search_task_fn,
-                    branch_number,
-                    filter_fn,
-                    hash_reduce_left,
-                    db_root,
-                    class_model,
-                )
-                docs = future.result(timeout)
-                if docs is not None:
-                    return docs[0]
-        return None
-
-    def find_many(
-        self,
-        filter_fn: Callable,
-        limit_docs: int = 1000,
-        max_workers: int | None = None,
-        timeout: float | None = None,
-    ) -> list[T] | None:
-        """Finds one or more documents matching the filter.
-
-        The search is based on the effect of a quantum loop.
-        The search effectiveness depends on the number of processor threads.
-        Ideally, hundreds and even thousands of threads are required.
-
-        Args:
-            filter_fn: A function that execute the conditions of filtering.
-            limit_docs: Limiting the number of documents. By default = 1000.
-            max_workers: The maximum number of processes that can be used to
-                         execute the given calls. If None or not given then as many
-                         worker processes will be created as the machine has processors.
-            timeout: The number of seconds to wait for the result if the future isn't done.
-                     If None, then there is no limit on the wait time.
-
-        Returns:
-            List of documents or None.
-        """
-        branch_numbers: range = range(1, self.__max_branch_number)
-        search_task_fn: Callable = self._task_find
-        hash_reduce_left: int = self.__hash_reduce_left
-        db_root: str = self.__db_root
-        class_model: T = self.__class_model
-        counter: int = 0
-        result: list[T] = []
-        with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
-            for branch_number in branch_numbers:
-                if counter >= limit_docs:
-                    return result[:limit_docs]
-                future = executor.submit(
-                    search_task_fn,
-                    branch_number,
-                    filter_fn,
-                    hash_reduce_left,
-                    db_root,
-                    class_model,
-                )
-                docs = future.result(timeout)
-                if docs is not None:
-                    for doc in docs:
-                        if counter >= limit_docs:
-                            return result[:limit_docs]
-                        result.append(doc)
-                        counter += 1
-        return result or None
-
-    def collection_name(self) -> str:
-        """Get collection name.
-
-        Returns:
-            Collection name.
-        """
-        return self.__class_model.__name__
-
-    def collection_full_name(self) -> str:
-        """Get full name of collection.
-
-        Returns:
-            Full name of collection.
-        """
-        return f"{self.__db_root}/{self.__class_model.__name__}"
-
-    @staticmethod
-    async def collection_list() -> list[str]:
-        """Get collection list."""
-        target_directory = Path(constants.DB_ROOT)
-        # Get all entries in the directory
-        all_entries = Path.iterdir(target_directory)
-        directory_names: list[str] = [entry.name async for entry in all_entries]
-        return directory_names
-
-    @staticmethod
-    async def delete_collection(name: str) -> None:
-        """Asynchronous method for deleting a collection by its name.
-
-        Args:
-            name (str): Collection name.
-
-        Returns:
-            None.
-        """
-        target_directory = f"{constants.DB_ROOT}/{name}"
-        await to_thread.run_sync(rmtree, target_directory)
-        return
-
-    async def estimated_document_count(self) -> int:
-        """Get an estimate of the number of documents in this collection using collection metadata.
-
-        Returns:
-            The number of documents.
-        """
-        meta = await self._get_meta()
-        return meta.counter_documents
-
-    def count_documents(
-        self,
-        filter_fn: Callable,
-        max_workers: int | None = None,
-        timeout: float | None = None,
-    ) -> int:
-        """Count the number of documents a matching the filter in this collection.
-
-        The search is based on the effect of a quantum loop.
-        The search effectiveness depends on the number of processor threads.
-        Ideally, hundreds and even thousands of threads are required.
-
-        Args:
-            filter_fn: A function that execute the conditions of filtering.
-            max_workers: The maximum number of processes that can be used to
-                         execute the given calls. If None or not given then as many
-                         worker processes will be created as the machine has processors.
-            timeout: The number of seconds to wait for the result if the future isn't done.
-                     If None, then there is no limit on the wait time.
-
-        Returns:
-            The number of documents.
-        """
-        branch_numbers: range = range(1, self.__max_branch_number)
-        search_task_fn: Callable = self._task_find
-        hash_reduce_left: int = self.__hash_reduce_left
-        db_root: str = self.__db_root
-        class_model: T = self.__class_model
-        counter: int = 0
-        with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
-            for branch_number in branch_numbers:
-                future = executor.submit(
-                    search_task_fn,
-                    branch_number,
-                    filter_fn,
-                    hash_reduce_left,
-                    db_root,
-                    class_model,
-                )
-                if future.result(timeout) is not None:
-                    counter += 1
-        return counter
-
-    @staticmethod
-    def _task_delete(
-        branch_number: int,
-        filter_fn: Callable,
-        hash_reduce_left: int,
-        db_root: str,
-        class_model: T,
-    ) -> int:
-        """Task for find and delete documents.
-
-        This method is for internal use.
-
-        Returns:
-            The number of deleted documents.
-        """
-        branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
-        separated_hash: str = "/".join(list(branch_number_as_hash))
-        leaf_path: SyncPath = SyncPath(
-            *(
-                db_root,
-                class_model.__name__,
-                separated_hash,
-                "leaf.json",
-            ),
-        )
-        counter: int = 0
-        if leaf_path.exists():
-            data_json: bytes = leaf_path.read_bytes()
-            data: dict[str, str] = orjson.loads(data_json) or {}
-            new_state: dict[str, str] = {}
-            for key, val in data.items():
-                doc = class_model.model_validate_json(val)
-                if filter_fn(doc):
-                    counter -= 1
-                else:
-                    new_state[key] = val
-            leaf_path.write_bytes(orjson.dumps(new_state))
-        return counter
-
-    def delete_many(
-        self,
-        filter_fn: Callable,
-        max_workers: int | None = None,
-        timeout: float | None = None,
-    ) -> int:
-        """Delete one or more documents matching the filter.
-
-        The search is based on the effect of a quantum loop.
-        The search effectiveness depends on the number of processor threads.
-        Ideally, hundreds and even thousands of threads are required.
-
-        Args:
-            filter_fn: A function that execute the conditions of filtering.
-            max_workers: The maximum number of processes that can be used to
-                         execute the given calls. If None or not given then as many
-                         worker processes will be created as the machine has processors.
-            timeout: The number of seconds to wait for the result if the future isn't done.
-                     If None, then there is no limit on the wait time.
-
-        Returns:
-            The number of deleted documents.
-        """
-        branch_numbers: range = range(1, self.__max_branch_number)
-        search_task_fn: Callable = self._task_delete
-        hash_reduce_left: int = self.__hash_reduce_left
-        db_root: str = self.__db_root
-        class_model: T = self.__class_model
-        counter: int = 0
-        with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
-            for branch_number in branch_numbers:
-                future = executor.submit(
-                    search_task_fn,
-                    branch_number,
-                    filter_fn,
-                    hash_reduce_left,
-                    db_root,
-                    class_model,
-                )
-                counter += future.result(timeout)
-        if counter < 0:
-            self._sync_counter_documents(counter)
-        return abs(counter)
-
-    @staticmethod
-    def _task_get_docs(
-        branch_number: int,
-        hash_reduce_left: int,
-        db_root: str,
-        class_model: T,
-    ) -> list[Any]:
-        """Get documents for custom task.
-
-        This method is for internal use.
-
-        Returns:
-            List of documents.
-        """
-        branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
-        separated_hash: str = "/".join(list(branch_number_as_hash))
-        leaf_path: SyncPath = SyncPath(
-            *(
-                db_root,
-                class_model.__name__,
-                separated_hash,
-                "leaf.json",
-            ),
-        )
-        docs: list[str, T] = []
-        if leaf_path.exists():
-            data_json: bytes = leaf_path.read_bytes()
-            data: dict[str, str] = orjson.loads(data_json) or {}
-            for _, val in data.items():
-                docs.append(class_model.model_validate_json(val))
-        return docs
-
-    def run_custom_task(self, custom_task_fn: Callable, limit_docs: int = 1000) -> Any:
-        """Running custom task.
-
-        This method running a task created on the basis of a quantum loop.
-        Effectiveness running task depends on the number of processor threads.
-        Ideally, hundreds and even thousands of threads are required.
-
-        Args:
-            custom_task_fn: A function that execute the custom task.
-            limit_docs: Limiting the number of documents. By default = 1000.
-
-        Returns:
-            The result of a custom task.
-        """
-        kwargs = {
-            "get_docs_fn": self._task_get_docs,
-            "branch_numbers": range(1, self.__max_branch_number),
-            "hash_reduce_left": self.__hash_reduce_left,
-            "db_root": self.__db_root,
-            "class_model": self.__class_model,
-            "limit_docs": limit_docs,
-        }
-        return custom_task_fn(**kwargs)
-
-    @staticmethod
-    def _task_update(
-        branch_number: int,
-        filter_fn: Callable,
-        hash_reduce_left: str,
-        db_root: str,
-        class_model: T,
-        new_data: dict[str, Any],
-    ) -> int:
-        """Task for find documents.
-
-        This method is for internal use.
-
-        Returns:
-            The number of updated documents.
-        """
-        branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
-        separated_hash: str = "/".join(list(branch_number_as_hash))
-        leaf_path: SyncPath = SyncPath(
-            *(
-                db_root,
-                class_model.__name__,
-                separated_hash,
-                "leaf.json",
-            ),
-        )
-        counter: int = 0
-        if leaf_path.exists():
-            data_json: bytes = leaf_path.read_bytes()
-            data: dict[str, str] = orjson.loads(data_json) or {}
-            new_state: dict[str, str] = {}
-            for _, val in data.items():
-                doc = class_model.model_validate_json(val)
-                if filter_fn(doc):
-                    for key, value in new_data.items():
-                        doc.__dict__[key] = value
-                        new_state[key] = doc.model_dump_json()
-                    counter += 1
-            leaf_path.write_bytes(orjson.dumps(new_state))
-        return counter
-
-    def update_many(
-        self,
-        filter_fn: Callable,
-        new_data: dict[str, Any],
-        max_workers: int | None = None,
-        timeout: float | None = None,
-    ) -> int:
-        """Updates one or more documents matching the filter.
-
-        The search is based on the effect of a quantum loop.
-        The search effectiveness depends on the number of processor threads.
-        Ideally, hundreds and even thousands of threads are required.
-
-        Args:
-            filter_fn: A function that execute the conditions of filtering.
-            new_data: New data for the fields that need to be updated.
-            max_workers: The maximum number of processes that can be used to
-                         execute the given calls. If None or not given then as many
-                         worker processes will be created as the machine has processors.
-            timeout: The number of seconds to wait for the result if the future isn't done.
-                     If None, then there is no limit on the wait time.
-
-        Returns:
-            The number of updated documents.
-        """
-        branch_numbers: range = range(1, self.__max_branch_number)
-        update_task_fn: Callable = self._task_update
-        hash_reduce_left: int = self.__hash_reduce_left
-        db_root: str = self.__db_root
-        class_model: T = self.__class_model
-        counter: int = 0
-        with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
-            for branch_number in branch_numbers:
-                future = executor.submit(
-                    update_task_fn,
-                    branch_number,
-                    filter_fn,
-                    hash_reduce_left,
-                    db_root,
-                    class_model,
-                    new_data,
-                )
-                counter += future.result(timeout)
-        return counter

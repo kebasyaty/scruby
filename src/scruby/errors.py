@@ -5,6 +5,8 @@ from __future__ import annotations
 __all__ = (
     "ScrubyException",
     "MetadataValueError",
+    "KeyAlreadyExistsError",
+    "KeyNotExistsError",
 )
 
 
@@ -26,7 +28,7 @@ class MetadataValueError(ScrubyException):
 class KeyAlreadyExistsError(ScrubyException):
     """Exception is raised if the key already exists."""
 
-    def __init__(self) -> None:
+    def __init__(self) -> None:  # noqa: D107
         self.message = "The key already exists."
         super().__init__(self.message)
 
@@ -34,6 +36,6 @@ class KeyAlreadyExistsError(ScrubyException):
 class KeyNotExistsError(ScrubyException):
     """Exception is raised If the key is not exists."""
 
-    def __init__(self) -> None:
+    def __init__(self) -> None:  # noqa: D107
         self.message = "The key not exists."
         super().__init__(self.message)
