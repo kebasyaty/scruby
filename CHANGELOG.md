@@ -5,6 +5,7 @@
 - Added a `collection_list` method.
 - Added a `delete_collection` method.
 - The `napalm` method is now synchronous.
+- Updated the `_Meta` class to store collection metadata.
 - Updated tests.
 - Updated documentation.
 - Updated README.md
