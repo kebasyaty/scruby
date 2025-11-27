@@ -208,6 +208,22 @@ class TestPositive:
         # Delete DB.
         Scruby.napalm()
 
+    async def test_delete_collection(self) -> None:
+        """Testing a `delete_collection` methopd."""
+        Scruby(User)
+        Scruby(User2)
+
+        collection_list = await Scruby.collection_list()
+        assert collection_list == ["User", "User2"]
+
+        await Scruby.delete_collection("User")
+
+        collection_list = await Scruby.collection_list()
+        assert collection_list == ["User2"]
+        #
+        # Delete DB.
+        Scruby.napalm()
+
     async def test_metadata(self) -> None:
         """Test metadata of collection."""
         db = Scruby(User)
