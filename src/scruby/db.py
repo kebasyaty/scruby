@@ -14,7 +14,7 @@ from shutil import rmtree
 from typing import Any, Literal, Never, TypeVar, assert_never
 
 import orjson
-from anyio import Path
+from anyio import Path, to_thread
 from pydantic import BaseModel
 
 from scruby import constants
@@ -492,6 +492,20 @@ class Scruby[T]:
         all_entries = Path.iterdir(target_directory)
         directory_names: list[str] = [entry.name async for entry in all_entries]
         return directory_names
+
+    @staticmethod
+    async def delete_collection(name: str) -> None:
+        """Asynchronous method for deleting a collection by its name.
+
+        Args:
+            name (str): Collection name.
+
+        Returns:
+            None.
+        """
+        target_directory = f"{constants.DB_ROOT}/{name}"
+        await to_thread.run_sync(rmtree, target_directory)
+        return
 
     async def estimated_document_count(self) -> int:
         """Get an estimate of the number of documents in this collection using collection metadata.

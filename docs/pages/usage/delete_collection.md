@@ -1,7 +1,7 @@
-#### Get collection name
+#### Delete Collection
 
 ```py title="main.py" linenums="1"
-"""Get collection name."""
+"""Delete collection."""
 
 import anyio
 import datetime
@@ -28,8 +28,13 @@ async def main() -> None:
     # Get collection of `User`.
     user_coll = Scruby(User)
 
-    print(user_coll.collection_name())  # "User"
-    print(user_coll.collection_full_name())  # "ScrubyDB/User"
+    collection_list = await Scruby.collection_list()
+    print(ucollection_list)  # ["User"]
+
+    await Scruby.delete_collection("User")
+
+    collection_list = await Scruby.collection_list()
+    print(ucollection_list)  # []
 
     # Full database deletion.
     # Hint: The main purpose is tests.

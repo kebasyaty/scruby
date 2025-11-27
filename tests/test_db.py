@@ -31,6 +31,16 @@ class User(BaseModel):
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
 
 
+class User2(BaseModel):
+    """User model."""
+
+    first_name: str
+    last_name: str
+    birthday: datetime.datetime
+    email: EmailStr
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
+
+
 def custom_task(
     get_docs_fn: Callable,
     branch_numbers: range,
@@ -188,7 +198,35 @@ class TestPositive:
         Scruby(User)
 
         collection_list = await Scruby.collection_list()
-        assert collection_list == ["User"]
+        assert "User" in collection_list
+
+        Scruby(User2)
+
+        collection_list = await Scruby.collection_list()
+        assert "User" in collection_list
+        assert "User2" in collection_list
+        #
+        # Delete DB.
+        Scruby.napalm()
+
+    async def test_delete_collection(self) -> None:
+        """Testing a `delete_collection` methopd."""
+        Scruby(User)
+        Scruby(User2)
+
+        collection_list = await Scruby.collection_list()
+        assert "User" in collection_list
+        assert "User2" in collection_list
+
+        await Scruby.delete_collection("User")
+
+        collection_list = await Scruby.collection_list()
+        assert "User2" in collection_list
+
+        await Scruby.delete_collection("User2")
+
+        collection_list = await Scruby.collection_list()
+        assert len(collection_list) == 0
         #
         # Delete DB.
         Scruby.napalm()
