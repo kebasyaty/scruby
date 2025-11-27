@@ -220,6 +220,11 @@ class TestPositive:
 
         collection_list = await Scruby.collection_list()
         assert collection_list == ["User2"]
+
+        await Scruby.delete_collection("User2")
+
+        collection_list = await Scruby.collection_list()
+        assert collection_list == []
         #
         # Delete DB.
         Scruby.napalm()
