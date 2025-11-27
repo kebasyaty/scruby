@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__all__ = ("Collection",)
+
 from shutil import rmtree
 from typing import TypeVar
 

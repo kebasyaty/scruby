@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__all__ = ("CustomTask",)
+
 import logging
 from collections.abc import Callable
 from pathlib import Path as SyncPath

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__all__ = ("Count",)
+
 import concurrent.futures
 from collections.abc import Callable
 from typing import TypeVar

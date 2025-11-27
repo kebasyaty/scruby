@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__all__ = ("Find",)
+
 import concurrent.futures
 import logging
 from collections.abc import Callable

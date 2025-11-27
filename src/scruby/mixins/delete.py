@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__all__ = ("Delete",)
+
 import concurrent.futures
 import logging
 from collections.abc import Callable
