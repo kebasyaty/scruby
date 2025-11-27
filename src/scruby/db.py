@@ -14,7 +14,7 @@ from shutil import rmtree
 from typing import Any, Literal, Never, TypeVar, assert_never
 
 import orjson
-from anyio import Path, to_thread
+from anyio import Path
 from pydantic import BaseModel
 
 from scruby import constants, mixins
@@ -33,7 +33,7 @@ class _Meta(BaseModel):
     counter_documents: int
 
 
-class Scruby[T](mixins.Keys, mixins.Find, mixins.CustomTask):
+class Scruby[T](mixins.Keys, mixins.Find, mixins.CustomTask, mixins.Collection):
     """Creation and management of database.
 
     Args:
@@ -106,6 +106,11 @@ class Scruby[T](mixins.Keys, mixins.Find, mixins.CustomTask):
             self.__db_root,
             self.__hash_reduce_left,
             self.__max_branch_number,
+            class_model,
+        )
+        mixins.Collection.__init__(
+            self,
+            self.__db_root,
             class_model,
         )
 
@@ -211,45 +216,6 @@ class Scruby[T](mixins.Keys, mixins.Find, mixins.CustomTask):
         """
         with contextlib.suppress(FileNotFoundError):
             rmtree(constants.DB_ROOT)
-        return
-
-    def collection_name(self) -> str:
-        """Get collection name.
-
-        Returns:
-            Collection name.
-        """
-        return self.__class_model.__name__
-
-    def collection_full_name(self) -> str:
-        """Get full name of collection.
-
-        Returns:
-            Full name of collection.
-        """
-        return f"{self.__db_root}/{self.__class_model.__name__}"
-
-    @staticmethod
-    async def collection_list() -> list[str]:
-        """Get collection list."""
-        target_directory = Path(constants.DB_ROOT)
-        # Get all entries in the directory
-        all_entries = Path.iterdir(target_directory)
-        directory_names: list[str] = [entry.name async for entry in all_entries]
-        return directory_names
-
-    @staticmethod
-    async def delete_collection(name: str) -> None:
-        """Asynchronous method for deleting a collection by its name.
-
-        Args:
-            name (str): Collection name.
-
-        Returns:
-            None.
-        """
-        target_directory = f"{constants.DB_ROOT}/{name}"
-        await to_thread.run_sync(rmtree, target_directory)
         return
 
     async def estimated_document_count(self) -> int:
