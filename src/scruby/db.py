@@ -33,7 +33,13 @@ class _Meta(BaseModel):
     counter_documents: int
 
 
-class Scruby[T](mixins.Keys, mixins.Find, mixins.CustomTask, mixins.Collection):
+class Scruby[T](
+    mixins.Keys,
+    mixins.Find,
+    mixins.CustomTask,
+    mixins.Collection,
+    mixins.Count,
+):
     """Creation and management of database.
 
     Args:
@@ -111,6 +117,13 @@ class Scruby[T](mixins.Keys, mixins.Find, mixins.CustomTask, mixins.Collection):
         mixins.Collection.__init__(
             self,
             self.__db_root,
+            class_model,
+        )
+        mixins.Count.__init__(
+            self,
+            self.__db_root,
+            self.__hash_reduce_left,
+            self.__max_branch_number,
             class_model,
         )
 
@@ -217,58 +230,6 @@ class Scruby[T](mixins.Keys, mixins.Find, mixins.CustomTask, mixins.Collection):
         with contextlib.suppress(FileNotFoundError):
             rmtree(constants.DB_ROOT)
         return
-
-    async def estimated_document_count(self) -> int:
-        """Get an estimate of the number of documents in this collection using collection metadata.
-
-        Returns:
-            The number of documents.
-        """
-        meta = await self._get_meta()
-        return meta.counter_documents
-
-    def count_documents(
-        self,
-        filter_fn: Callable,
-        max_workers: int | None = None,
-        timeout: float | None = None,
-    ) -> int:
-        """Count the number of documents a matching the filter in this collection.
-
-        The search is based on the effect of a quantum loop.
-        The search effectiveness depends on the number of processor threads.
-        Ideally, hundreds and even thousands of threads are required.
-
-        Args:
-            filter_fn: A function that execute the conditions of filtering.
-            max_workers: The maximum number of processes that can be used to
-                         execute the given calls. If None or not given then as many
-                         worker processes will be created as the machine has processors.
-            timeout: The number of seconds to wait for the result if the future isn't done.
-                     If None, then there is no limit on the wait time.
-
-        Returns:
-            The number of documents.
-        """
-        branch_numbers: range = range(1, self.__max_branch_number)
-        search_task_fn: Callable = self._task_find
-        hash_reduce_left: int = self.__hash_reduce_left
-        db_root: str = self.__db_root
-        class_model: T = self.__class_model
-        counter: int = 0
-        with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
-            for branch_number in branch_numbers:
-                future = executor.submit(
-                    search_task_fn,
-                    branch_number,
-                    filter_fn,
-                    hash_reduce_left,
-                    db_root,
-                    class_model,
-                )
-                if future.result(timeout) is not None:
-                    counter += 1
-        return counter
 
     @staticmethod
     def _task_delete(
