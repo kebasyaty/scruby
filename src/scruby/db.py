@@ -49,20 +49,21 @@ class Scruby[T](
         self,
         class_model: T,
     ) -> None:
-        self.__meta = _Meta
-        self.__class_model = class_model
-        self.__db_root = constants.DB_ROOT
-        self.__hash_reduce_left = constants.HASH_REDUCE_LEFT
+        super().__init__()
+        self._meta = _Meta
+        self._class_model = class_model
+        self._db_root = constants.DB_ROOT
+        self._hash_reduce_left = constants.HASH_REDUCE_LEFT
         # The maximum number of branches.
-        match self.__hash_reduce_left:
+        match self._hash_reduce_left:
             case 0:
-                self.__max_branch_number = 4294967296
+                self._max_branch_number = 4294967296
             case 2:
-                self.__max_branch_number = 16777216
+                self._max_branch_number = 16777216
             case 4:
-                self.__max_branch_number = 65536
+                self._max_branch_number = 65536
             case 6:
-                self.__max_branch_number = 256
+                self._max_branch_number = 256
             case _ as unreachable:
                 msg: str = f"{unreachable} - Unacceptable value for HASH_REDUCE_LEFT."
                 logger.critical(msg)
@@ -72,7 +73,7 @@ class Scruby[T](
         branch_number: int = 0
         branch_number_as_hash: str = f"{branch_number:08x}"[constants.HASH_REDUCE_LEFT :]
         separated_hash: str = "/".join(list(branch_number_as_hash))
-        self.__meta_path_tuple = (
+        self._meta_path_tuple = (
             constants.DB_ROOT,
             class_model.__name__,
             separated_hash,
@@ -81,64 +82,22 @@ class Scruby[T](
         # Create metadata for collection, if required.
         branch_path = SyncPath(
             *(
-                self.__db_root,
-                self.__class_model.__name__,
+                self._db_root,
+                self._class_model.__name__,
                 separated_hash,
             ),
         )
         if not branch_path.exists():
             branch_path.mkdir(parents=True)
             meta = _Meta(
-                db_root=self.__db_root,
-                hash_reduce_left=self.__hash_reduce_left,
-                max_branch_number=self.__max_branch_number,
+                db_root=self._db_root,
+                hash_reduce_left=self._hash_reduce_left,
+                max_branch_number=self._max_branch_number,
                 counter_documents=0,
             )
             meta_json = meta.model_dump_json()
             meta_path = SyncPath(*(branch_path, "meta.json"))
             meta_path.write_text(meta_json, "utf-8")
-        #
-        mixins.Keys.__init__(self, class_model)
-        mixins.Find.__init__(
-            self,
-            self.__db_root,
-            self.__hash_reduce_left,
-            self.__max_branch_number,
-            class_model,
-        )
-        mixins.CustomTask.__init__(
-            self,
-            self.__db_root,
-            self.__hash_reduce_left,
-            self.__max_branch_number,
-            class_model,
-        )
-        mixins.Collection.__init__(
-            self,
-            self.__db_root,
-            class_model,
-        )
-        mixins.Count.__init__(
-            self,
-            self.__db_root,
-            self.__hash_reduce_left,
-            self.__max_branch_number,
-            class_model,
-        )
-        mixins.Delete.__init__(
-            self,
-            self.__db_root,
-            self.__hash_reduce_left,
-            self.__max_branch_number,
-            class_model,
-        )
-        mixins.Update.__init__(
-            self,
-            self.__db_root,
-            self.__hash_reduce_left,
-            self.__max_branch_number,
-            class_model,
-        )
 
     async def _get_meta(self) -> _Meta:
         """Asynchronous method for getting metadata of collection.
@@ -148,9 +107,9 @@ class Scruby[T](
         Returns:
             Metadata object.
         """
-        meta_path = Path(*self.__meta_path_tuple)
+        meta_path = Path(*self._meta_path_tuple)
         meta_json = await meta_path.read_text()
-        meta: _Meta = self.__meta.model_validate_json(meta_json)
+        meta: _Meta = self._meta.model_validate_json(meta_json)
         return meta
 
     async def _set_meta(self, meta: _Meta) -> None:
@@ -162,7 +121,7 @@ class Scruby[T](
             None.
         """
         meta_json = meta.model_dump_json()
-        meta_path = Path(*self.__meta_path_tuple)
+        meta_path = Path(*self._meta_path_tuple)
         await meta_path.write_text(meta_json, "utf-8")
 
     async def _counter_documents(self, step: Literal[1, -1]) -> None:
@@ -173,9 +132,9 @@ class Scruby[T](
         Returns:
             None.
         """
-        meta_path = Path(*self.__meta_path_tuple)
+        meta_path = Path(*self._meta_path_tuple)
         meta_json = await meta_path.read_text("utf-8")
-        meta: _Meta = self.__meta.model_validate_json(meta_json)
+        meta: _Meta = self._meta.model_validate_json(meta_json)
         meta.counter_documents += step
         meta_json = meta.model_dump_json()
         await meta_path.write_text(meta_json, "utf-8")
@@ -185,9 +144,9 @@ class Scruby[T](
 
         This method is for internal use.
         """
-        meta_path = SyncPath(*self.__meta_path_tuple)
+        meta_path = SyncPath(*self._meta_path_tuple)
         meta_json = meta_path.read_text("utf-8")
-        meta: _Meta = self.__meta.model_validate_json(meta_json)
+        meta: _Meta = self._meta.model_validate_json(meta_json)
         meta.counter_documents += number
         meta_json = meta.model_dump_json()
         meta_path.write_text(meta_json, "utf-8")
@@ -210,14 +169,14 @@ class Scruby[T](
             logger.error("The key should not be empty.")
             raise KeyError("The key should not be empty.")
         # Key to crc32 sum.
-        key_as_hash: str = f"{zlib.crc32(key.encode('utf-8')):08x}"[self.__hash_reduce_left :]
+        key_as_hash: str = f"{zlib.crc32(key.encode('utf-8')):08x}"[self._hash_reduce_left :]
         # Convert crc32 sum in the segment of path.
         separated_hash: str = "/".join(list(key_as_hash))
         # The path of the branch to the database.
         branch_path: Path = Path(
             *(
-                self.__db_root,
-                self.__class_model.__name__,
+                self._db_root,
+                self._class_model.__name__,
                 separated_hash,
             ),
         )
