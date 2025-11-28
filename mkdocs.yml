@@ -97,7 +97,7 @@ nav:
       - Aggregation classes: pages/usage/aggregation.md
   - Aggregation classes: pages/aggregation.md
   - Constants: pages/constants.md
-  - DataBase: pages/db.md
+  - Database: pages/db.md
   - Mixins:
       - Mixins: pages/mixins/index.md
       - Keys: pages/mixins/keys.md
