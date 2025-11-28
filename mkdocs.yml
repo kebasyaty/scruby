@@ -94,4 +94,13 @@ nav:
   - Aggregation classes: pages/aggregation.md
   - Constants: pages/constants.md
   - DataBase: pages/db.md
+  - Mixins:
+      - Mixins: pages/mixins/index.md
+      - Keys: pages/mixins/keys.md
+      - Find: pages/mixins/find.md
+      - Custom Task: pages/mixins/custom_task.md
+      - Collection: pages/mixins/collection.md
+      - Count: pages/mixins/count.md
+      - Delete: pages/mixins/delete.md
+      - Update: pages/mixins/update.md
   - Errors: pages/errors.md
