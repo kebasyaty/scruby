@@ -19,18 +19,6 @@ T = TypeVar("T")
 class CustomTask[T]:
     """Quantum methods for running custom tasks."""
 
-    def __init__(  # noqa: D107
-        self,
-        db_root: str,
-        hash_reduce_left: int,
-        max_branch_number: int,
-        class_model: T,
-    ) -> None:
-        self.__db_root = db_root
-        self.__hash_reduce_left = hash_reduce_left
-        self.__max_branch_number = max_branch_number
-        self.__class_model = class_model
-
     @staticmethod
     def _task_get_docs(
         branch_number: int,
@@ -79,10 +67,10 @@ class CustomTask[T]:
         """
         kwargs = {
             "get_docs_fn": self._task_get_docs,
-            "branch_numbers": range(1, self.__max_branch_number),
-            "hash_reduce_left": self.__hash_reduce_left,
-            "db_root": self.__db_root,
-            "class_model": self.__class_model,
+            "branch_numbers": range(1, self._max_branch_number),
+            "hash_reduce_left": self._hash_reduce_left,
+            "db_root": self._db_root,
+            "class_model": self._class_model,
             "limit_docs": limit_docs,
         }
         return custom_task_fn(**kwargs)

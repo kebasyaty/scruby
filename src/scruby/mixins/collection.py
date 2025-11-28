@@ -17,21 +17,13 @@ T = TypeVar("T")
 class Collection[T]:
     """Methods for working with collections."""
 
-    def __init__(  # noqa: D107
-        self,
-        db_root: str,
-        class_model: T,
-    ) -> None:
-        self.__db_root = db_root
-        self.__class_model = class_model
-
     def collection_name(self) -> str:
         """Get collection name.
 
         Returns:
             Collection name.
         """
-        return self.__class_model.__name__
+        return self._class_model.__name__
 
     def collection_full_name(self) -> str:
         """Get full name of collection.
@@ -39,7 +31,7 @@ class Collection[T]:
         Returns:
             Full name of collection.
         """
-        return f"{self.__db_root}/{self.__class_model.__name__}"
+        return f"{self._db_root}/{self._class_model.__name__}"
 
     @staticmethod
     async def collection_list() -> list[str]:

@@ -20,18 +20,6 @@ T = TypeVar("T")
 class Find[T]:
     """Quantum methods for searching documents."""
 
-    def __init__(  # noqa: D107
-        self,
-        db_root: str,
-        hash_reduce_left: int,
-        max_branch_number: int,
-        class_model: T,
-    ) -> None:
-        self.__db_root = db_root
-        self.__hash_reduce_left = hash_reduce_left
-        self.__max_branch_number = max_branch_number
-        self.__class_model = class_model
-
     @staticmethod
     def _task_find(
         branch_number: int,
@@ -90,11 +78,11 @@ class Find[T]:
         Returns:
             Document or None.
         """
-        branch_numbers: range = range(1, self.__max_branch_number)
+        branch_numbers: range = range(1, self._max_branch_number)
         search_task_fn: Callable = self._task_find
-        hash_reduce_left: int = self.__hash_reduce_left
-        db_root: str = self.__db_root
-        class_model: T = self.__class_model
+        hash_reduce_left: int = self._hash_reduce_left
+        db_root: str = self._db_root
+        class_model: T = self._class_model
         with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
             for branch_number in branch_numbers:
                 future = executor.submit(
@@ -135,11 +123,11 @@ class Find[T]:
         Returns:
             List of documents or None.
         """
-        branch_numbers: range = range(1, self.__max_branch_number)
+        branch_numbers: range = range(1, self._max_branch_number)
         search_task_fn: Callable = self._task_find
-        hash_reduce_left: int = self.__hash_reduce_left
-        db_root: str = self.__db_root
-        class_model: T = self.__class_model
+        hash_reduce_left: int = self._hash_reduce_left
+        db_root: str = self._db_root
+        class_model: T = self._class_model
         counter: int = 0
         result: list[T] = []
         with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:

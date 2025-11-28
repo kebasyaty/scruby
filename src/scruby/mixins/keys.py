@@ -23,12 +23,6 @@ T = TypeVar("T")
 class Keys[T]:
     """Methods for working with keys."""
 
-    def __init__(  # noqa: D107
-        self,
-        class_model: T,
-    ) -> None:
-        self.__class_model = class_model
-
     async def add_key(
         self,
         key: str,
@@ -114,7 +108,7 @@ class Keys[T]:
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            obj: T = self.__class_model.model_validate_json(data[key])
+            obj: T = self._class_model.model_validate_json(data[key])
             return obj
         msg: str = "`get_key` - The unacceptable key value."
         logger.error(msg)

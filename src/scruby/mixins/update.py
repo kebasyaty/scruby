@@ -20,18 +20,6 @@ T = TypeVar("T")
 class Update[T]:
     """Methods for updating documents."""
 
-    def __init__(  # noqa: D107
-        self,
-        db_root: str,
-        hash_reduce_left: int,
-        max_branch_number: int,
-        class_model: T,
-    ) -> None:
-        self.__db_root = db_root
-        self.__hash_reduce_left = hash_reduce_left
-        self.__max_branch_number = max_branch_number
-        self.__class_model = class_model
-
     @staticmethod
     def _task_update(
         branch_number: int,
@@ -98,11 +86,11 @@ class Update[T]:
         Returns:
             The number of updated documents.
         """
-        branch_numbers: range = range(1, self.__max_branch_number)
+        branch_numbers: range = range(1, self._max_branch_number)
         update_task_fn: Callable = self._task_update
-        hash_reduce_left: int = self.__hash_reduce_left
-        db_root: str = self.__db_root
-        class_model: T = self.__class_model
+        hash_reduce_left: int = self._hash_reduce_left
+        db_root: str = self._db_root
+        class_model: T = self._class_model
         counter: int = 0
         with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
             for branch_number in branch_numbers:
