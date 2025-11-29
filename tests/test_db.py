@@ -235,11 +235,11 @@ class TestPositive:
         """Test metadata of collection."""
         db = await Scruby.create(User)
 
-        meta = await db._get_meta()
+        meta = await db.get_meta()
         assert meta.counter_documents == 0
         meta.counter_documents = 1
         await db._set_meta(meta)
-        meta_2 = await db._get_meta()
+        meta_2 = await db.get_meta()
         assert meta_2.counter_documents == 1
         #
         # Delete DB.

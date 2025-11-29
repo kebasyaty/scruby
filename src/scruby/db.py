@@ -101,7 +101,7 @@ class Scruby[T](
             await meta_path.write_text(meta_json, "utf-8")
         return instance
 
-    async def _get_meta(self) -> _Meta:
+    async def get_meta(self) -> _Meta:
         """Asynchronous method for getting metadata of collection.
 
         This method is for internal use.
