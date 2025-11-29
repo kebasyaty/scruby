@@ -1,5 +1,12 @@
 ### CHANGELOG
 
+#### v0.22.0 2025-11-29
+
+- Added a `create` method access a collection.
+- Updated tests.
+- Updated documentation.
+- Updated README.md
+
 #### v0.20.1 2025-11-27
 
 - Added a `collection_list` method.

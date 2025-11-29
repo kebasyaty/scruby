@@ -9,7 +9,7 @@ import logging
 import zlib
 from pathlib import Path as SyncPath
 from shutil import rmtree
-from typing import Literal, Never, TypeVar, assert_never
+from typing import Any, Literal, Never, TypeVar, assert_never
 
 from anyio import Path
 from pydantic import BaseModel
@@ -39,19 +39,13 @@ class Scruby[T](
     mixins.Delete,
     mixins.Update,
 ):
-    """Creation and management of database.
-
-    Args:
-        class_model: Class of Model (Pydantic).
-    """
+    """Creation and management of database."""
 
     def __init__(  # noqa: D107
         self,
-        class_model: T,
     ) -> None:
         super().__init__()
         self._meta = _Meta
-        self._class_model = class_model
         self._db_root = constants.DB_ROOT
         self._hash_reduce_left = constants.HASH_REDUCE_LEFT
         # The maximum number of branches.
@@ -68,38 +62,46 @@ class Scruby[T](
                 msg: str = f"{unreachable} - Unacceptable value for HASH_REDUCE_LEFT."
                 logger.critical(msg)
                 assert_never(Never(unreachable))
+
+    @classmethod
+    async def create(cls, class_model: T) -> Any:
+        """Get an object to access a collection.
+
+        Args:
+            class_model: Class of Model (Pydantic).
+
+        Returns:
+            Instance of Scruby for access a collection.
+        """
+        instance = cls()
+        instance.__dict__["_class_model"] = class_model
         # Caching a pati for metadata in the form of a tuple.
         # The zero branch is reserved for metadata.
         branch_number: int = 0
         branch_number_as_hash: str = f"{branch_number:08x}"[constants.HASH_REDUCE_LEFT :]
         separated_hash: str = "/".join(list(branch_number_as_hash))
-        self._meta_path_tuple = (
+        instance.__dict__["_meta_path_tuple"] = (
             constants.DB_ROOT,
             class_model.__name__,
             separated_hash,
             "meta.json",
         )
-        # Create metadata for collection, if required.
-        branch_path = SyncPath(
-            *(
-                self._db_root,
-                self._class_model.__name__,
-                separated_hash,
-            ),
-        )
-        if not branch_path.exists():
-            branch_path.mkdir(parents=True)
+        # Create metadata for collection, if missing.
+        branch_path = Path(*instance.__dict__["_meta_path_tuple"][:3])
+        if not await branch_path.exists():
+            await branch_path.mkdir(parents=True)
             meta = _Meta(
-                db_root=self._db_root,
-                hash_reduce_left=self._hash_reduce_left,
-                max_branch_number=self._max_branch_number,
+                db_root=constants.DB_ROOT,
+                hash_reduce_left=constants.HASH_REDUCE_LEFT,
+                max_branch_number=instance.__dict__["_max_branch_number"],
                 counter_documents=0,
             )
             meta_json = meta.model_dump_json()
-            meta_path = SyncPath(*(branch_path, "meta.json"))
-            meta_path.write_text(meta_json, "utf-8")
+            meta_path = Path(*(branch_path, "meta.json"))
+            await meta_path.write_text(meta_json, "utf-8")
+        return instance
 
-    async def _get_meta(self) -> _Meta:
+    async def get_meta(self) -> _Meta:
         """Asynchronous method for getting metadata of collection.
 
         This method is for internal use.

@@ -20,7 +20,7 @@ class Count[T]:
         Returns:
             The number of documents.
         """
-        meta = await self._get_meta()
+        meta = await self.get_meta()
         return meta.counter_documents
 
     def count_documents(
