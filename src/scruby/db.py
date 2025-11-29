@@ -25,6 +25,7 @@ class _Meta(BaseModel):
     """Metadata of Collection."""
 
     db_root: str
+    collection_name: str
     hash_reduce_left: int
     max_branch_number: int
     counter_documents: int
@@ -92,6 +93,7 @@ class Scruby[T](
             await branch_path.mkdir(parents=True)
             meta = _Meta(
                 db_root=constants.DB_ROOT,
+                collection_name=class_model.__name__,
                 hash_reduce_left=constants.HASH_REDUCE_LEFT,
                 max_branch_number=instance.__dict__["_max_branch_number"],
                 counter_documents=0,
