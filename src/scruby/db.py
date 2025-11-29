@@ -9,7 +9,7 @@ import logging
 import zlib
 from pathlib import Path as SyncPath
 from shutil import rmtree
-from typing import Literal, Never, TypeVar, assert_never
+from typing import Any, Literal, Never, TypeVar, assert_never
 
 from anyio import Path
 from pydantic import BaseModel
@@ -79,25 +79,32 @@ class Scruby[T](
             separated_hash,
             "meta.json",
         )
-        # Create metadata for collection, if required.
-        branch_path = SyncPath(
-            *(
-                self._db_root,
-                self._class_model.__name__,
-                separated_hash,
-            ),
-        )
-        if not branch_path.exists():
-            branch_path.mkdir(parents=True)
+
+    @classmethod
+    async def create(cls, class_model: T) -> Any:
+        """Get an object to access a collection.
+
+        Args:
+            class_model: Class of Model (Pydantic).
+
+        Returns:
+            Instance of Scruby for access a collection.
+        """
+        instance = cls(class_model)
+        # Create metadata for collection, if missing.
+        branch_path = Path(*instance.__dict__["_meta_path_tuple"][:3])
+        if not await branch_path.exists():
+            await branch_path.mkdir(parents=True)
             meta = _Meta(
-                db_root=self._db_root,
-                hash_reduce_left=self._hash_reduce_left,
-                max_branch_number=self._max_branch_number,
+                db_root=constants.DB_ROOT,
+                hash_reduce_left=constants.HASH_REDUCE_LEFT,
+                max_branch_number=instance.__dict__["_max_branch_number"],
                 counter_documents=0,
             )
             meta_json = meta.model_dump_json()
-            meta_path = SyncPath(*(branch_path, "meta.json"))
-            meta_path.write_text(meta_json, "utf-8")
+            meta_path = Path(*(branch_path, "meta.json"))
+            await meta_path.write_text(meta_json, "utf-8")
+        return instance
 
     async def _get_meta(self) -> _Meta:
         """Asynchronous method for getting metadata of collection.

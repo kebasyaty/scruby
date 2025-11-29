@@ -64,7 +64,7 @@ def task_counter(
 async def test_task_counter() -> None:
     """Test a Counter class in custom task."""
     constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
-    db = Scruby(User)
+    db = await Scruby.create(User)
 
     for num in range(1, 10):
         user = User(
