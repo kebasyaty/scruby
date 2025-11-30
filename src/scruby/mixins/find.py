@@ -7,10 +7,10 @@ __all__ = ("Find",)
 import concurrent.futures
 import logging
 from collections.abc import Callable
-from pathlib import Path as SyncPath
 from typing import TypeVar
 
 import orjson
+from anyio import Path
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +21,7 @@ class Find[T]:
     """Quantum methods for searching documents."""
 
     @staticmethod
-    def _task_find(
+    async def _task_find(
         branch_number: int,
         filter_fn: Callable,
         hash_reduce_left: str,
@@ -37,7 +37,7 @@ class Find[T]:
         """
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
         separated_hash: str = "/".join(list(branch_number_as_hash))
-        leaf_path: SyncPath = SyncPath(
+        leaf_path: Path = Path(
             *(
                 db_root,
                 class_model.__name__,
@@ -46,8 +46,8 @@ class Find[T]:
             ),
         )
         docs: list[T] = []
-        if leaf_path.exists():
-            data_json: bytes = leaf_path.read_bytes()
+        if await leaf_path.exists():
+            data_json: bytes = await leaf_path.read_bytes()
             data: dict[str, str] = orjson.loads(data_json) or {}
             for _, val in data.items():
                 doc = class_model.model_validate_json(val)
@@ -55,11 +55,10 @@ class Find[T]:
                     docs.append(doc)
         return docs or None
 
-    def find_one(
+    async def find_one(
         self,
         filter_fn: Callable,
         max_workers: int | None = None,
-        timeout: float | None = None,
     ) -> T | None:
         """Finds a single document matching the filter.
 
@@ -93,17 +92,16 @@ class Find[T]:
                     db_root,
                     class_model,
                 )
-                docs = future.result(timeout)
+                docs = await future.result()
                 if docs is not None:
                     return docs[0]
         return None
 
-    def find_many(
+    async def find_many(
         self,
         filter_fn: Callable,
         limit_docs: int = 1000,
         max_workers: int | None = None,
-        timeout: float | None = None,
     ) -> list[T] | None:
         """Finds one or more documents matching the filter.
 
@@ -142,7 +140,7 @@ class Find[T]:
                     db_root,
                     class_model,
                 )
-                docs = future.result(timeout)
+                docs = await future.result()
                 if docs is not None:
                     for doc in docs:
                         if counter >= limit_docs:

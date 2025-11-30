@@ -23,7 +23,7 @@ class Count[T]:
         meta = await self.get_meta()
         return meta.counter_documents
 
-    def count_documents(
+    async def count_documents(
         self,
         filter_fn: Callable,
         max_workers: int | None = None,
@@ -59,6 +59,6 @@ class Count[T]:
                     db_root,
                     class_model,
                 )
-                if future.result() is not None:
+                if await future.result() is not None:
                     counter += 1
         return counter
