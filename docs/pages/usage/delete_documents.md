@@ -107,7 +107,7 @@ async def main() -> None:
         )
         await user_coll.add_key(f"+44798612345{num}", user)
 
-    amount_of_deleted: int = user_coll.delete_many(
+    amount_of_deleted: int = await user_coll.delete_many(
         filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
     )
     print(amount_of_deleted)  # => 2

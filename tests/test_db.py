@@ -41,7 +41,7 @@ class User2(BaseModel):
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
 
 
-def custom_task(
+async def custom_task(
     get_docs_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
@@ -54,7 +54,6 @@ def custom_task(
     Calculate the number of users named John.
     """
     max_workers: int | None = None
-    timeout: float | None = None
     counter: int = 0
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
@@ -66,7 +65,7 @@ def custom_task(
                 db_root,
                 class_model,
             )
-            docs = future.result(timeout)
+            docs = await future.result()
             for doc in docs:
                 if doc.first_name == "John":
                     counter += 1
@@ -398,14 +397,14 @@ class TestPositive:
             await db.add_key(user.phone, user)
 
         # by email
-        result: User | None = db.find_one(
+        result: User | None = await db.find_one(
             filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com",
         )
         assert result is not None
         assert result.email == "John_Smith_5@gmail.com"
 
         # by birthday
-        result_2: User | None = db.find_one(
+        result_2: User | None = await db.find_one(
             filter_fn=lambda doc: doc.birthday == datetime.datetime(1970, 1, 8),  # noqa: DTZ001
         )
         assert result_2 is not None
@@ -431,7 +430,7 @@ class TestPositive:
             await db.add_key(user.phone, user)
 
         # by emails
-        results: list[User] | None = db.find_many(
+        results: list[User] | None = await db.find_many(
             filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
         )
         assert results is not None
@@ -477,7 +476,7 @@ class TestPositive:
             await db.add_key(user.phone, user)
 
         assert await db.estimated_document_count() == 9
-        result: int = db.count_documents(
+        result: int = await db.count_documents(
             filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
         )
         assert result == 2
@@ -502,12 +501,12 @@ class TestPositive:
             await db.add_key(user.phone, user)
 
         # by emails
-        result: int = db.delete_many(
+        result: int = await db.delete_many(
             filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
         )
         assert result == 2
         assert await db.estimated_document_count() == 7
-        result = db.count_documents(
+        result = await db.count_documents(
             filter_fn=lambda _: True,
         )
         assert result == 7
@@ -531,7 +530,7 @@ class TestPositive:
             )
             await db.add_key(user.phone, user)
 
-        result = db.run_custom_task(custom_task)
+        result = await db.run_custom_task(custom_task)
         assert result == 9
         #
         # Delete DB.
@@ -553,14 +552,14 @@ class TestPositive:
             )
             await db.add_key(user.phone, user)
 
-        number_updated_users = db.update_many(
+        number_updated_users = await db.update_many(
             filter_fn=lambda _: True,  # Update all documents
             new_data={"first_name": "Georg"},
         )
         assert number_updated_users == 9
         #
         # by email
-        users: list[User] | None = db.find_many(
+        users: list[User] | None = await db.find_many(
             filter_fn=lambda _: True,  # Find all documents
         )
         assert users is not None

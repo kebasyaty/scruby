@@ -96,7 +96,7 @@ async def main() -> None:
         )
         await db.set_key(f"+44798612345{num}", user)
 
-    result: int = user_coll.count_documents(
+    result: int = await user_coll.count_documents(
         filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
     )
     print(result:)  # => 2

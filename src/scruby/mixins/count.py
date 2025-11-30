@@ -23,11 +23,10 @@ class Count[T]:
         meta = await self.get_meta()
         return meta.counter_documents
 
-    def count_documents(
+    async def count_documents(
         self,
         filter_fn: Callable,
         max_workers: int | None = None,
-        timeout: float | None = None,
     ) -> int:
         """Count the number of documents a matching the filter in this collection.
 
@@ -40,8 +39,6 @@ class Count[T]:
             max_workers: The maximum number of processes that can be used to
                          execute the given calls. If None or not given then as many
                          worker processes will be created as the machine has processors.
-            timeout: The number of seconds to wait for the result if the future isn't done.
-                     If None, then there is no limit on the wait time.
 
         Returns:
             The number of documents.
@@ -62,6 +59,6 @@ class Count[T]:
                     db_root,
                     class_model,
                 )
-                if future.result(timeout) is not None:
+                if await future.result() is not None:
                     counter += 1
         return counter
