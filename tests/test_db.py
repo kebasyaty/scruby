@@ -1,4 +1,4 @@
-"""Test Stub."""
+"""Test Database."""
 
 from __future__ import annotations
 
