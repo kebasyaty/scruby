@@ -1,5 +1,12 @@
 ### CHANGELOG
 
+#### v0.23.0 2025-11-30
+
+- All synchronous operations have been replaced with asynchronous ones.
+- Updated tests.
+- Updated documentation.
+- Updated README.md
+
 #### v0.22.0 2025-11-29
 
 - Added a `create` method access a collection.
