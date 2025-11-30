@@ -79,8 +79,6 @@ class Update[T]:
             max_workers: The maximum number of processes that can be used to
                          execute the given calls. If None or not given then as many
                          worker processes will be created as the machine has processors.
-            timeout: The number of seconds to wait for the result if the future isn't done.
-                     If None, then there is no limit on the wait time.
 
         Returns:
             The number of updated documents.
