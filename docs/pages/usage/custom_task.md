@@ -30,7 +30,7 @@ class User(BaseModel):
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
 
 
-def custom_task(
+async def custom_task(
     get_docs_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
@@ -42,7 +42,6 @@ def custom_task(
     Calculate the number of users named John.
     """
     max_workers: int | None = None
-    timeout: float | None = None
     counter: int = 0
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
@@ -54,7 +53,7 @@ def custom_task(
                 db_root,
                 class_model,
             )
-            docs = future.result(timeout)
+            docs = await future.result()
             for doc in docs:
                 if doc.first_name == "John":
                     counter += 1
@@ -77,7 +76,7 @@ async def main() -> None:
         )
         await user_coll.add_key(user.phone, user)
 
-    result = user_coll.run_custom_task(custom_task)
+    result = await user_coll.run_custom_task(custom_task)
     print(result)  # => 9
 
     # Full database deletion.

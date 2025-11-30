@@ -43,13 +43,13 @@ async def main() -> None:
         )
         await user_coll.add_key(user.phone, user)
 
-    number_updated_users = user_coll.update_many(
+    number_updated_users = await user_coll.update_many(
         filter_fn=lambda _: True,  # Update all documents.
         new_data={"first_name": "Georg"},
     )
     print(number_updated_users)  # => 9
 
-    users: list[User] | None = user_coll.find_many(
+    users: list[User] | None = await user_coll.find_many(
         filter_fn=lambda _: True,  # Find all documents
     )
     for user in users:

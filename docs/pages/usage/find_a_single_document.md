@@ -47,7 +47,7 @@ async def main() -> None:
     await user_coll.add_key(user.phone, user)
 
     # Find user by email.
-    user_details: User | None = user_coll.find_one(
+    user_details: User | None = await user_coll.find_one(
         filter_fn=lambda doc: doc.email == "John_Smith@gmail.com",
     )
     if user_details is not None:
@@ -56,7 +56,7 @@ async def main() -> None:
         print("No User!")
 
     # Find user by birthday.
-    user_details: User | None = user_coll.find_one(
+    user_details: User | None = await user_coll.find_one(
         filter_fn=lambda doc: doc.birthday == datetime.datetime(1970, 1, 1),
     )
     if user_details is not None:

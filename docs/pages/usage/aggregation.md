@@ -28,7 +28,7 @@ class User(BaseModel):
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
 
 
-def task_calculate_average(
+async def task_calculate_average(
     get_docs_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
@@ -41,7 +41,6 @@ def task_calculate_average(
     Calculate the average value.
     """
     max_workers: int | None = None
-    timeout: float | None = None
     average_age = Average(
         precision=".00",           # by default = .00
         rounding=ROUND_HALF_EVEN,  # by default = ROUND_HALF_EVEN
@@ -56,7 +55,7 @@ def task_calculate_average(
                 db_root,
                 class_model,
             )
-            docs = future.result(timeout)
+            docs = await future.result()
             for doc in docs:
                 average_age.set(doc.age)
     return float(average_age.get())
@@ -77,7 +76,7 @@ async def main() -> None:
         )
         await user_coll.add_key(user.phone, user)
 
-    result = user_coll.run_custom_task(task_calculate_average)
+    result = await user_coll.run_custom_task(task_calculate_average)
     print(result)  # => 50.0
 
     # Full database deletion.
@@ -118,7 +117,7 @@ class User(BaseModel):
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
 
 
-def task_counter(
+async def task_counter(
     get_docs_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
@@ -131,7 +130,6 @@ def task_counter(
     This task implements a counter of documents.
     """
     max_workers: int | None = None
-    timeout: float | None = None
     users: list[User] = []
     counter = Counter(limit=limit_docs)  # `limit` by default = 1000
 
@@ -144,7 +142,7 @@ def task_counter(
                 db_root,
                 class_model,
             )
-            docs = future.result(timeout)
+            docs = await future.result()
             for doc in docs:
                 if counter.check():
                     # [:limit_docs] - Control overflow in a multithreaded environment.
@@ -169,7 +167,7 @@ async def main() -> None:
         )
         await user_coll.add_key(user.phone, user)
 
-    result = user_coll.run_custom_task(
+    result = await user_coll.run_custom_task(
         custom_task_fn=task_counter,
         limit_docs=5,
     )
@@ -213,7 +211,7 @@ class User(BaseModel):
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
 
 
-def task_calculate_max(
+async def task_calculate_max(
     get_docs_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
@@ -226,7 +224,6 @@ def task_calculate_max(
     Calculate the max value.
     """
     max_workers: int | None = None
-    timeout: float | None = None
     max_age = Max()
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
@@ -238,7 +235,7 @@ def task_calculate_max(
                 db_root,
                 class_model,
             )
-            docs = future.result(timeout)
+            docs = await future.result()
             for doc in docs:
                 max_age.set(doc.age)
     return max_age.get()
@@ -259,7 +256,7 @@ async def main() -> None:
         )
         await user_coll.add_key(user.phone, user)
 
-    result = user_coll.run_custom_task(task_calculate_max)
+    result = await user_coll.run_custom_task(task_calculate_max)
     print(result)  # => 90.0
 
     # Full database deletion.
@@ -300,7 +297,7 @@ class User(BaseModel):
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
 
 
-def task_calculate_min(
+async def task_calculate_min(
     get_docs_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
@@ -313,7 +310,6 @@ def task_calculate_min(
     Calculate the min value.
     """
     max_workers: int | None = None
-    timeout: float | None = None
     min_age = Min()
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
@@ -325,7 +321,7 @@ def task_calculate_min(
                 db_root,
                 class_model,
             )
-            docs = future.result(timeout)
+            docs = await future.result()
             for doc in docs:
                 min_age.set(doc.age)
     return min_age.get()
@@ -346,7 +342,7 @@ async def main() -> None:
         )
         await user_coll.add_key(user.phone, user)
 
-    result = user_coll.run_custom_task(task_calculate_min)
+    result = await user_coll.run_custom_task(task_calculate_min)
     print(result)  # => 10.0
 
     # Full database deletion.
@@ -387,7 +383,7 @@ class User(BaseModel):
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
 
 
-def task_calculate_sum(
+async def task_calculate_sum(
     get_docs_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
@@ -400,7 +396,6 @@ def task_calculate_sum(
     Calculate the sum of values.
     """
     max_workers: int | None = None
-    timeout: float | None = None
     sum_age = Sum()
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
@@ -412,7 +407,7 @@ def task_calculate_sum(
                 db_root,
                 class_model,
             )
-            docs = future.result(timeout)
+            docs = await future.result()
             for doc in docs:
                 sum_age.set(doc.age)
     return int(sum_age.get())
@@ -433,7 +428,7 @@ async def main() -> None:
         )
         await user_coll.add_key(user.phone, user)
 
-    result = user_coll.run_custom_task(task_calculate_sum)
+    result = await user_coll.run_custom_task(task_calculate_sum)
     print(result)  # => 450.0
 
     # Full database deletion.
