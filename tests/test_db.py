@@ -41,7 +41,7 @@ class User2(BaseModel):
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
 
 
-def custom_task(
+async def custom_task(
     get_docs_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
@@ -54,7 +54,6 @@ def custom_task(
     Calculate the number of users named John.
     """
     max_workers: int | None = None
-    timeout: float | None = None
     counter: int = 0
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
@@ -66,7 +65,7 @@ def custom_task(
                 db_root,
                 class_model,
             )
-            docs = future.result(timeout)
+            docs = await future.result()
             for doc in docs:
                 if doc.first_name == "John":
                     counter += 1
@@ -502,7 +501,7 @@ class TestPositive:
             await db.add_key(user.phone, user)
 
         # by emails
-        result: int = db.delete_many(
+        result: int = await db.delete_many(
             filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
         )
         assert result == 2
@@ -531,7 +530,7 @@ class TestPositive:
             )
             await db.add_key(user.phone, user)
 
-        result = db.run_custom_task(custom_task)
+        result = await db.run_custom_task(custom_task)
         assert result == 9
         #
         # Delete DB.

@@ -7,7 +7,6 @@ __all__ = ("Scruby",)
 import contextlib
 import logging
 import zlib
-from pathlib import Path as SyncPath
 from shutil import rmtree
 from typing import Any, Literal, Never, TypeVar, assert_never
 
@@ -81,14 +80,18 @@ class Scruby[T](
         branch_number: int = 0
         branch_number_as_hash: str = f"{branch_number:08x}"[constants.HASH_REDUCE_LEFT :]
         separated_hash: str = "/".join(list(branch_number_as_hash))
-        instance.__dict__["_meta_path_tuple"] = (
+        instance.__dict__["_meta_path"] = Path(
             constants.DB_ROOT,
             class_model.__name__,
             separated_hash,
             "meta.json",
         )
         # Create metadata for collection, if missing.
-        branch_path = Path(*instance.__dict__["_meta_path_tuple"][:3])
+        branch_path = Path(
+            constants.DB_ROOT,
+            class_model.__name__,
+            separated_hash,
+        )
         if not await branch_path.exists():
             await branch_path.mkdir(parents=True)
             meta = _Meta(
@@ -111,8 +114,7 @@ class Scruby[T](
         Returns:
             Metadata object.
         """
-        meta_path = Path(*self._meta_path_tuple)
-        meta_json = await meta_path.read_text()
+        meta_json = await self._meta_path.read_text()
         meta: _Meta = self._meta.model_validate_json(meta_json)
         return meta
 
@@ -125,8 +127,7 @@ class Scruby[T](
             None.
         """
         meta_json = meta.model_dump_json()
-        meta_path = Path(*self._meta_path_tuple)
-        await meta_path.write_text(meta_json, "utf-8")
+        await self._meta_path.write_text(meta_json, "utf-8")
 
     async def _counter_documents(self, step: Literal[1, -1]) -> None:
         """Asynchronous method for management of documents in metadata of collection.
@@ -136,24 +137,12 @@ class Scruby[T](
         Returns:
             None.
         """
-        meta_path = Path(*self._meta_path_tuple)
+        meta_path = self._meta_path
         meta_json = await meta_path.read_text("utf-8")
         meta: _Meta = self._meta.model_validate_json(meta_json)
         meta.counter_documents += step
         meta_json = meta.model_dump_json()
         await meta_path.write_text(meta_json, "utf-8")
-
-    def _sync_counter_documents(self, number: int) -> None:
-        """Management of documents in metadata of collection.
-
-        This method is for internal use.
-        """
-        meta_path = SyncPath(*self._meta_path_tuple)
-        meta_json = meta_path.read_text("utf-8")
-        meta: _Meta = self._meta.model_validate_json(meta_json)
-        meta.counter_documents += number
-        meta_json = meta.model_dump_json()
-        meta_path.write_text(meta_json, "utf-8")
 
     async def _get_leaf_path(self, key: str) -> Path:
         """Asynchronous method for getting path to collection cell by key.

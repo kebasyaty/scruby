@@ -26,7 +26,7 @@ class User(BaseModel):
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
 
 
-def task_calculate_average(
+async def task_calculate_average(
     get_docs_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
@@ -39,7 +39,6 @@ def task_calculate_average(
     Calculate the average value.
     """
     max_workers: int | None = None
-    timeout: float | None = None
     average_age = Average(
         precision=".00",  # by default = .00
         rounding=ROUND_HALF_EVEN,  # by default = ROUND_HALF_EVEN
@@ -54,7 +53,7 @@ def task_calculate_average(
                 db_root,
                 class_model,
             )
-            docs = future.result(timeout)
+            docs = await future.result()
             for doc in docs:
                 average_age.set(doc.age)
     return float(average_age.get())
@@ -74,7 +73,7 @@ async def test_task_calculate_average() -> None:
         )
         await db.add_key(user.phone, user)
 
-    result = db.run_custom_task(task_calculate_average)
+    result = await db.run_custom_task(task_calculate_average)
     assert result == 50.0
     #
     # Delete DB.

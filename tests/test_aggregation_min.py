@@ -25,7 +25,7 @@ class User(BaseModel):
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
 
 
-def task_calculate_min(
+async def task_calculate_min(
     get_docs_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
@@ -38,7 +38,6 @@ def task_calculate_min(
     Calculate the min value.
     """
     max_workers: int | None = None
-    timeout: float | None = None
     min_age = Min()
 
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
@@ -50,7 +49,7 @@ def task_calculate_min(
                 db_root,
                 class_model,
             )
-            docs = future.result(timeout)
+            docs = await future.result()
             for doc in docs:
                 min_age.set(doc.age)
     return min_age.get()
@@ -70,7 +69,7 @@ async def test_task_calculate_min() -> None:
         )
         await db.add_key(user.phone, user)
 
-    result = db.run_custom_task(task_calculate_min)
+    result = await db.run_custom_task(task_calculate_min)
     assert result == 10.0
     #
     # Delete DB.

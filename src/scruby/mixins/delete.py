@@ -59,11 +59,10 @@ class Delete[T]:
             leaf_path.write_bytes(orjson.dumps(new_state))
         return counter
 
-    def delete_many(
+    async def delete_many(
         self,
         filter_fn: Callable,
         max_workers: int | None = None,
-        timeout: float | None = None,
     ) -> int:
         """Delete one or more documents matching the filter.
 
@@ -98,7 +97,7 @@ class Delete[T]:
                     db_root,
                     class_model,
                 )
-                counter += future.result(timeout)
+                counter += future.result()
         if counter < 0:
-            self._sync_counter_documents(counter)
+            await self._counter_documents(counter)
         return abs(counter)

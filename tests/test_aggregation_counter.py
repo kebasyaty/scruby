@@ -25,7 +25,7 @@ class User(BaseModel):
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
 
 
-def task_counter(
+async def task_counter(
     get_docs_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
@@ -38,7 +38,6 @@ def task_counter(
     This task implements a counter of documents.
     """
     max_workers: int | None = None
-    timeout: float | None = None
     users: list[User] = []
     counter = Counter(limit=limit_docs)  # `limit` by default = 1000
 
@@ -51,7 +50,7 @@ def task_counter(
                 db_root,
                 class_model,
             )
-            docs = future.result(timeout)
+            docs = await future.result()
             for doc in docs:
                 if counter.check():
                     # [:limit_docs] - Control overflow in a multithreaded environment.
@@ -75,7 +74,7 @@ async def test_task_counter() -> None:
         )
         await db.add_key(user.phone, user)
 
-    result = db.run_custom_task(
+    result = await db.run_custom_task(
         custom_task_fn=task_counter,
         limit_docs=5,
     )
