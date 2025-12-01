@@ -75,7 +75,7 @@ class Scruby[T](
         """
         instance = cls()
         instance.__dict__["_class_model"] = class_model
-        # Caching a pati for metadata in the form of a tuple.
+        # Caching a pati for metadata.
         # The zero branch is reserved for metadata.
         branch_number: int = 0
         branch_number_as_hash: str = f"{branch_number:08x}"[constants.HASH_REDUCE_LEFT :]
