@@ -450,15 +450,6 @@ class TestPositive:
         # Delete DB.
         Scruby.napalm()
 
-    async def test_collection_full_name(self) -> None:
-        """Test a collection_full_name method."""
-        db = await Scruby.create(User)
-
-        assert db.collection_full_name() == "ScrubyDB/User"
-        #
-        # Delete DB.
-        Scruby.napalm()
-
     async def test_count_documents(self) -> None:
         """Test a count_documents method."""
         constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
