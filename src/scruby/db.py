@@ -73,25 +73,26 @@ class Scruby[T](
         Returns:
             Instance of Scruby for access a collection.
         """
+        if BaseModel not in class_model.__bases__:
+            raise TypeError("`class_model` does not contain the base class `pydantic.BaseModel`!")
         instance = cls()
         instance.__dict__["_class_model"] = class_model
-        # Caching a pati for metadata in the form of a tuple.
+        # Caching a pati for metadata.
         # The zero branch is reserved for metadata.
         branch_number: int = 0
         branch_number_as_hash: str = f"{branch_number:08x}"[constants.HASH_REDUCE_LEFT :]
         separated_hash: str = "/".join(list(branch_number_as_hash))
-        instance.__dict__["_meta_path"] = Path(
+        meta_dir_path_tuple = (
             constants.DB_ROOT,
             class_model.__name__,
             separated_hash,
+        )
+        instance.__dict__["_meta_path"] = Path(
+            *meta_dir_path_tuple,
             "meta.json",
         )
         # Create metadata for collection, if missing.
-        branch_path = Path(
-            constants.DB_ROOT,
-            class_model.__name__,
-            separated_hash,
-        )
+        branch_path = Path(*meta_dir_path_tuple)
         if not await branch_path.exists():
             await branch_path.mkdir(parents=True)
             meta = _Meta(

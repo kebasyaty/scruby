@@ -25,14 +25,6 @@ class Collection[T]:
         """
         return self._class_model.__name__
 
-    def collection_full_name(self) -> str:
-        """Get full name of collection.
-
-        Returns:
-            Full name of collection.
-        """
-        return f"{self._db_root}/{self._class_model.__name__}"
-
     @staticmethod
     async def collection_list() -> list[str]:
         """Get collection list."""

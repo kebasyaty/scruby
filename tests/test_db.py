@@ -75,6 +75,17 @@ async def custom_task(
 class TestNegative:
     """Negative tests."""
 
+    async def test_typeerror_class_model(self) -> None:
+        """`class_model` does not contain the base class `pydantic.BaseMode."""
+        with pytest.raises(
+            TypeError,
+            match=r"`class_model` does not contain the base class `pydantic.BaseModel`!",
+        ):
+            await Scruby.create(dict)
+        #
+        # Delete DB.
+        Scruby.napalm()
+
     async def test_get_non_existent_key(self) -> None:
         """Get a non-existent key."""
         db = await Scruby.create(User)
@@ -446,15 +457,6 @@ class TestPositive:
         db = await Scruby.create(User)
 
         assert db.collection_name() == "User"
-        #
-        # Delete DB.
-        Scruby.napalm()
-
-    async def test_collection_full_name(self) -> None:
-        """Test a collection_full_name method."""
-        db = await Scruby.create(User)
-
-        assert db.collection_full_name() == "ScrubyDB/User"
         #
         # Delete DB.
         Scruby.napalm()
