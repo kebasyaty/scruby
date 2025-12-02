@@ -29,7 +29,6 @@ async def main() -> None:
     user_coll = await Scruby.create(User)
 
     print(user_coll.collection_name())  # "User"
-    print(user_coll.collection_full_name())  # "ScrubyDB/User"
 
     # Full database deletion.
     # Hint: The main purpose is tests.

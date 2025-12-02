@@ -73,8 +73,7 @@ class Scruby[T](
         Returns:
             Instance of Scruby for access a collection.
         """
-        if BaseModel not in class_model.__bases__:
-            raise TypeError("`class_model` does not contain the base class `pydantic.BaseModel`!")
+        assert BaseModel in class_model.__bases__, "`class_model` does not contain the base class `pydantic.BaseModel`!"
         instance = cls()
         instance.__dict__["_class_model"] = class_model
         # Caching a pati for metadata.
