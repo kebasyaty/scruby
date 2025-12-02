@@ -75,10 +75,10 @@ async def custom_task(
 class TestNegative:
     """Negative tests."""
 
-    async def test_typeerror_class_model(self) -> None:
+    async def test_assert_class_model(self) -> None:
         """`class_model` does not contain the base class `pydantic.BaseMode."""
         with pytest.raises(
-            TypeError,
+            AssertionError,
             match=r"`class_model` does not contain the base class `pydantic.BaseModel`!",
         ):
             await Scruby.create(dict)
