@@ -89,6 +89,7 @@ async def test_phone() -> None:
         matrix_type="Super AMOLED",
     )
 
+    # Add phone to collection.
     key = f"{phone.brand}-{phone.model}"
     await phone_coll.add_key(key, phone)
 
@@ -106,6 +107,7 @@ async def test_car() -> None:
         power_reserve=600,
     )
 
+    # Add car to collection.
     key = f"{car.brand}-{car.model}"
     await car_coll.add_key(key, car)
     #
