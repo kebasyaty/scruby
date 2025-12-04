@@ -6,7 +6,6 @@ __all__ = ("Scruby",)
 
 import contextlib
 import logging
-import re
 import zlib
 from shutil import rmtree
 from typing import Any, Literal, Never, TypeVar, assert_never
@@ -156,15 +155,11 @@ class Scruby[T](
         Returns:
             Path to cell of collection.
         """
-        if not isinstance(key, str):
-            logger.error("The key is not a type of `str`.")
-            raise KeyError("The key is not a type of `str`.")
         if len(key) == 0:
             logger.error("The key should not be empty.")
             raise KeyError("The key should not be empty.")
         # Key to crc32 sum.
-        prepare_key = re.sub(r"\s+", " ", key.strip())
-        key_as_hash: str = f"{zlib.crc32(prepare_key.encode('utf-8')):08x}"[self._hash_reduce_left :]
+        key_as_hash: str = f"{zlib.crc32(key.encode('utf-8')):08x}"[self._hash_reduce_left :]
         # Convert crc32 sum in the segment of path.
         separated_hash: str = "/".join(list(key_as_hash))
         # The path of the branch to the database.

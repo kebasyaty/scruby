@@ -5,6 +5,7 @@ from __future__ import annotations
 __all__ = ("Keys",)
 
 import logging
+import re
 from typing import TypeVar
 
 import orjson
@@ -37,6 +38,7 @@ class Keys[T]:
         Returns:
             None.
         """
+        key = re.sub(r"\s+", " ", key.strip())
         # The path to cell of collection.
         leaf_path: Path = await self._get_leaf_path(key)
         value_json: str = value.model_dump_json()
@@ -73,6 +75,7 @@ class Keys[T]:
         Returns:
             None.
         """
+        key = re.sub(r"\s+", " ", key.strip())
         # The path to cell of collection.
         leaf_path: Path = await self._get_leaf_path(key)
         value_json: str = value.model_dump_json()
@@ -102,6 +105,7 @@ class Keys[T]:
         Returns:
             Value of key or KeyError.
         """
+        key = re.sub(r"\s+", " ", key.strip())
         # The path to the database cell.
         leaf_path: Path = await self._get_leaf_path(key)
         # Get value of key.
@@ -123,6 +127,7 @@ class Keys[T]:
         Returns:
             True, if the key is present.
         """
+        key = re.sub(r"\s+", " ", key.strip())
         # Get path to cell of collection.
         leaf_path: Path = await self._get_leaf_path(key)
         # Checking whether there is a key.
@@ -145,6 +150,7 @@ class Keys[T]:
         Returns:
             None.
         """
+        key = re.sub(r"\s+", " ", key.strip())
         # The path to the database cell.
         leaf_path: Path = await self._get_leaf_path(key)
         # Deleting key.
