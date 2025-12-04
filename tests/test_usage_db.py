@@ -90,7 +90,7 @@ async def test_phone() -> None:
     )
 
     # Add phone to collection.
-    key = f"{phone.brand}-{phone.model}"
+    key = f"{phone.brand} {phone.model}"
     await phone_coll.add_key(key, phone)
 
 
@@ -108,7 +108,7 @@ async def test_car() -> None:
     )
 
     # Add car to collection.
-    key = f"{car.brand}-{car.model}"
+    key = f"{car.brand} {car.model}"
     await car_coll.add_key(key, car)
     #
     # Delete DB.

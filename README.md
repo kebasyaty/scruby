@@ -166,7 +166,7 @@ async def main() -> None:
     )
 
     # Add phone to collection.
-    key = f"{phone.brand}-{phone.model}"
+    key = f"{phone.brand} {phone.model}"
     await phone_coll.add_key(key, phone)
 
     # Find phone by brand.
@@ -236,7 +236,7 @@ async def main() -> None:
             year=2025,
             power_reserve=600,
         )
-        key = f"{car.brand}-{car.model}"
+        key = f"{car.brand} {car.model}"
         await car_coll.add_key(key, car)
 
     # Find cars by brand and year.
