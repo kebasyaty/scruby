@@ -6,6 +6,7 @@ __all__ = ("Scruby",)
 
 import contextlib
 import logging
+import re
 import zlib
 from shutil import rmtree
 from typing import Any, Literal, Never, TypeVar, assert_never
@@ -144,13 +145,28 @@ class Scruby[T](
         meta_json = meta.model_dump_json()
         await meta_path.write_text(meta_json, "utf-8")
 
+    @staticmethod
+    def _prepare_key(key: str) -> str:
+        """Prepare Key.
+
+        Removes spaces at the beginning and end of a string.
+        Replaces all whitespace characters with a single space.
+
+        Args:
+            key (str): Key name.
+
+        Returns:
+            String.
+        """
+        return re.sub(r"\s+", " ", key.strip())
+
     async def _get_leaf_path(self, key: str) -> Path:
         """Asynchronous method for getting path to collection cell by key.
 
         This method is for internal use.
 
         Args:
-            key: Key name.
+            key (str): Key name.
 
         Returns:
             Path to cell of collection.
