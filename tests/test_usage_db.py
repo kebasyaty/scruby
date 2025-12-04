@@ -24,14 +24,22 @@ class User(BaseModel):
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
 
 
-class UserProfile(BaseModel):
-    """UserProfile model."""
+class Phone(BaseModel):
+    """Phone model."""
 
-    first_name: str
-    last_name: str
-    birthday: datetime.datetime
-    email: EmailStr
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
+    brand: str
+    model: str
+    screen_diagonal: float
+    matrix_type: str
+
+
+class Car(BaseModel):
+    """Car model."""
+
+    brand: str
+    model: str
+    year: int
+    power_reserve: int
 
 
 async def test_user() -> None:
@@ -68,38 +76,38 @@ async def test_user_2() -> None:
     await user_coll.add_key(user.phone, user)
 
 
-async def test_user_profile() -> None:
-    """Test UserProfile 1."""
-    # Get collection of `UserProfile`.
-    user_profile_coll = await Scruby.create(UserProfile)
+async def test_phone() -> None:
+    """Test Phone."""
+    # Get collection of `Phone`.
+    phone_coll = await Scruby.create(Phone)
 
-    # Create user profile.
-    user = UserProfile(
-        first_name="John",
-        last_name="Smith",
-        birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
-        email="John_Smith@gmail.com",
-        phone="+447986123456",
+    # Create phone.
+    phone = Phone(
+        brand="Samsung",
+        model="Galaxy A26",
+        screen_diagonal=6.7,
+        matrix_type="Super AMOLED",
     )
 
-    await user_profile_coll.add_key(user.phone, user)
+    key = f"{phone.brand}-{phone.model}"
+    await phone_coll.add_key(key, phone)
 
 
-async def test_user_profile_2() -> None:
-    """Test UserProfile 1."""
-    # Get collection of `UserProfile`.
-    user_profile_coll = await Scruby.create(UserProfile)
+async def test_car() -> None:
+    """Test Car."""
+    # Get collection of `Car`.
+    car_coll = await Scruby.create(Car)
 
-    # Create user profile.
-    user = UserProfile(
-        first_name="John_2",
-        last_name="Smith_2",
-        birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
-        email="John_Smith_2@gmail.com",
-        phone="+447986123457",
+    # Create car.
+    car = Car(
+        brand="Mazda",
+        model="EZ-6",
+        year=2025,
+        power_reserve=600,
     )
 
-    await user_profile_coll.add_key(user.phone, user)
+    key = f"{car.brand}-{car.model}"
+    await car_coll.add_key(key, car)
     #
     # Delete DB.
     Scruby.napalm()
