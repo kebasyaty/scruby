@@ -1,5 +1,10 @@
 ### CHANGELOG
 
+#### v0.24.5 2025-12-4
+
+- Added a `_prepare_key` method.
+- Updated documentation.
+
 #### v0.23.0 2025-11-30
 
 - All synchronous operations have been replaced with asynchronous ones.
