@@ -118,7 +118,10 @@ class TestNegative:
             phone="+447986123456",
         )
 
-        with pytest.raises(KeyError):
+        with pytest.raises(
+            AttributeError,
+            match=r"'int' object has no attribute 'strip'",
+        ):
             await db.add_key(123, user)
         #
         # Delete DB.

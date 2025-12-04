@@ -5,6 +5,7 @@ from __future__ import annotations
 __all__ = ("Keys",)
 
 import logging
+import re
 from typing import TypeVar
 
 import orjson
@@ -38,6 +39,7 @@ class Keys[T]:
             None.
         """
         # The path to cell of collection.
+        key = re.sub(r"\s+", " ", key.strip())
         leaf_path: Path = await self._get_leaf_path(key)
         value_json: str = value.model_dump_json()
         # Write key-value to collection.
@@ -74,6 +76,7 @@ class Keys[T]:
             None.
         """
         # The path to cell of collection.
+        key = re.sub(r"\s+", " ", key.strip())
         leaf_path: Path = await self._get_leaf_path(key)
         value_json: str = value.model_dump_json()
         # Update the existing key.
@@ -103,6 +106,7 @@ class Keys[T]:
             Value of key or KeyError.
         """
         # The path to the database cell.
+        key = re.sub(r"\s+", " ", key.strip())
         leaf_path: Path = await self._get_leaf_path(key)
         # Get value of key.
         if await leaf_path.exists():
@@ -124,6 +128,7 @@ class Keys[T]:
             True, if the key is present.
         """
         # Get path to cell of collection.
+        key = re.sub(r"\s+", " ", key.strip())
         leaf_path: Path = await self._get_leaf_path(key)
         # Checking whether there is a key.
         if await leaf_path.exists():
@@ -146,6 +151,7 @@ class Keys[T]:
             None.
         """
         # The path to the database cell.
+        key = re.sub(r"\s+", " ", key.strip())
         leaf_path: Path = await self._get_leaf_path(key)
         # Deleting key.
         if await leaf_path.exists():
