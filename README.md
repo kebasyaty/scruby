@@ -136,8 +136,7 @@ Ideally, hundreds and even thousands of threads are required.
 import anyio
 import datetime
 from typing import Annotated
-from pydantic import BaseModel, EmailStr
-from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
+from pydantic import BaseModel
 from scruby import Scruby, constants
 from pprint import pprint as pp
 
@@ -145,49 +144,48 @@ constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 constants.HASH_REDUCE_LEFT = 6  # By default = 6
 
 
-class User(BaseModel):
-    """Model of User."""
-    first_name: str
-    last_name: str
-    birthday: datetime.datetime
-    email: EmailStr
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
+class Phone(BaseModel):
+    """Phone model."""
+    brand: str
+    model: str
+    screen_diagonal: float
+    matrix_type: str
 
 
 async def main() -> None:
     """Example."""
-    # Get collection of `User`.
-    user_coll = await Scruby.create(User)
+    # Get collection of `Phone`.
+    phone_coll = await Scruby.create(Phone)
 
-    # Create user.
-    user = User(
-        first_name="John",
-        last_name="Smith",
-        birthday=datetime.datetime(1970, 1, 1),
-        email="John_Smith@gmail.com",
-        phone="+447986123456",
+    # Create phone.
+    phone = Phone(
+        brand="Samsung",
+        model="Galaxy A26",
+        screen_diagonal=6.7,
+        matrix_type="Super AMOLED",
     )
 
-    # Add user to collection.
-    await user_coll.add_key(user.phone, user)
+    # Add phone to collection.
+    key = f"{phone.brand}-{phone.model}"
+    await phone_coll.add_key(key, phone)
 
-    # Find user by email.
-    user_details: User | None = await user_coll.find_one(
-        filter_fn=lambda doc: doc.email == "John_Smith@gmail.com",
+    # Find phone by brand.
+    phone_details: Phone | None = await phone_coll.find_one(
+        filter_fn=lambda doc: doc.brand == "Samsung",
     )
-    if user_details is not None:
-        pp(user_details)
+    if phone_details is not None:
+        pp(phone_details)
     else:
-        print("No User!")
+        print("No Phone!")
 
-    # Find user by birthday.
-    user_details: User | None = await user_coll.find_one(
-        filter_fn=lambda doc: doc.birthday == datetime.datetime(1970, 1, 1),
+    # Find phone by model.
+    phone_details: Phone | None = await phone_coll.find_one(
+        filter_fn=lambda doc: doc.model == "Galaxy A26",
     )
-    if user_details is not None:
-        pp(user_details)
+    if phone_details is not None:
+        pp(phone_details)
     else:
-        print("No User!")
+        print("No Phone!")
 
     # Full database deletion.
     # Hint: The main purpose is tests.
@@ -209,8 +207,7 @@ Ideally, hundreds and even thousands of threads are required.
 import anyio
 import datetime
 from typing import Annotated
-from pydantic import BaseModel, EmailStr
-from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
+from pydantic import BaseModel
 from scruby import Scruby, constants
 from pprint import pprint as pp
 
@@ -218,43 +215,42 @@ constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 constants.HASH_REDUCE_LEFT = 6  # By default = 6
 
 
-class User(BaseModel):
-    """Model of User."""
-    first_name: str
-    last_name: str
-    birthday: datetime.datetime
-    email: EmailStr
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
+class Car(BaseModel):
+    """Car model."""
+    brand: str
+    model: str
+    year: int
+    power_reserve: int
 
 
 async def main() -> None:
     """Example."""
-    # Get collection of `User`.
-    user_coll = await Scruby.create(User)
+    # Get collection of `Car`.
+    car_coll = await Scruby.create(Car)
 
-    # Create users.
-    for num in range(1, 10):
-        user = User(
-            first_name="John",
-            last_name="Smith",
-            birthday=datetime.datetime(1970, 1, num),
-            email=f"John_Smith_{num}@gmail.com",
-            phone=f"+44798612345{num}",
+    # Create cars.
+    for name in range(1, 10):
+        car = Car(
+            brand="Mazda",
+            model=f"EZ-6 {num}",
+            year=2025,
+            power_reserve=600,
         )
-        await user_coll.add_key(user.phone, user)
+        key = f"{car.brand}-{car.model}"
+        await car_coll.add_key(key, car)
 
-    # Find users by email.
-    users: list[User] | None = await user_coll.find_many(
-        filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
+    # Find cars by brand and year.
+    car_list: list[Car] | None = await car_coll.find_many(
+        filter_fn=lambda doc: doc.brand == "Mazda" or doc.year == 2025,
     )
-    if users is not None:
-        pp(users)
+    if car_list is not None:
+        pp(car_list)
     else:
-        print("No users!")
+        print("No cars!")
 
     # Get collection list.
     collection_list = await Scruby.collection_list()
-    print(ucollection_list)  # ["User"]
+    print(ucollection_list)  # ["Car"]
 
     # Full database deletion.
     # Hint: The main purpose is tests.
