@@ -8,7 +8,6 @@ import logging
 from typing import TypeVar
 
 import orjson
-from anyio import Path
 
 from scruby.errors import (
     KeyAlreadyExistsError,
@@ -37,9 +36,8 @@ class Keys[T]:
         Returns:
             None.
         """
-        key = self._prepare_key(key)
         # The path to cell of collection.
-        leaf_path: Path = await self._get_leaf_path(key)
+        leaf_path, prepared_key = await self._get_leaf_path(key)
         value_json: str = value.model_dump_json()
         # Write key-value to collection.
         if await leaf_path.exists():
@@ -47,9 +45,9 @@ class Keys[T]:
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
             try:
-                data[key]
+                data[prepared_key]
             except KeyError:
-                data[key] = value_json
+                data[prepared_key] = value_json
                 await leaf_path.write_bytes(orjson.dumps(data))
             else:
                 err = KeyAlreadyExistsError()
@@ -57,7 +55,7 @@ class Keys[T]:
                 raise err
         else:
             # Add new key to a blank leaf.
-            await leaf_path.write_bytes(orjson.dumps({key: value_json}))
+            await leaf_path.write_bytes(orjson.dumps({prepared_key: value_json}))
         await self._counter_documents(1)
 
     async def update_key(
@@ -74,9 +72,8 @@ class Keys[T]:
         Returns:
             None.
         """
-        key = self._prepare_key(key)
         # The path to cell of collection.
-        leaf_path: Path = await self._get_leaf_path(key)
+        leaf_path, prepared_key = await self._get_leaf_path(key)
         value_json: str = value.model_dump_json()
         # Update the existing key.
         if await leaf_path.exists():
@@ -84,8 +81,8 @@ class Keys[T]:
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
             try:
-                data[key]
-                data[key] = value_json
+                data[prepared_key]
+                data[prepared_key] = value_json
                 await leaf_path.write_bytes(orjson.dumps(data))
             except KeyError:
                 err = KeyNotExistsError()
@@ -104,14 +101,13 @@ class Keys[T]:
         Returns:
             Value of key or KeyError.
         """
-        key = self._prepare_key(key)
         # The path to the database cell.
-        leaf_path: Path = await self._get_leaf_path(key)
+        leaf_path, prepared_key = await self._get_leaf_path(key)
         # Get value of key.
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            obj: T = self._class_model.model_validate_json(data[key])
+            obj: T = self._class_model.model_validate_json(data[prepared_key])
             return obj
         msg: str = "`get_key` - The unacceptable key value."
         logger.error(msg)
@@ -126,15 +122,14 @@ class Keys[T]:
         Returns:
             True, if the key is present.
         """
-        key = self._prepare_key(key)
         # Get path to cell of collection.
-        leaf_path: Path = await self._get_leaf_path(key)
+        leaf_path, prepared_key = await self._get_leaf_path(key)
         # Checking whether there is a key.
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
             try:
-                data[key]
+                data[prepared_key]
                 return True
             except KeyError:
                 return False
@@ -149,14 +144,13 @@ class Keys[T]:
         Returns:
             None.
         """
-        key = self._prepare_key(key)
         # The path to the database cell.
-        leaf_path: Path = await self._get_leaf_path(key)
+        leaf_path, prepared_key = await self._get_leaf_path(key)
         # Deleting key.
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            del data[key]
+            del data[prepared_key]
             await leaf_path.write_bytes(orjson.dumps(data))
             await self._counter_documents(-1)
             return
