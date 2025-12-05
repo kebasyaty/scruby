@@ -250,7 +250,7 @@ async def main() -> None:
 
     # Get collection list.
     collection_list = await Scruby.collection_list()
-    print(ucollection_list)  # ["Car"]
+    print(collection_list)  # ["Car"]
 
     # Full database deletion.
     # Hint: The main purpose is tests.
