@@ -119,8 +119,8 @@ class TestNegative:
         )
 
         with pytest.raises(
-            AttributeError,
-            match=r"'int' object has no attribute 'strip'",
+            KeyError,
+            match=r"The key is not a string.",
         ):
             await db.add_key(123, user)
         #
