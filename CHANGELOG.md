@@ -1,5 +1,11 @@
 ### CHANGELOG
 
+#### v0.24.6 2025-12-5
+
+- Optimized the algorithm for pre-key preparation.
+- Updated tests.
+- Updated documentation.
+
 #### v0.24.5 2025-12-4
 
 - Added a `_prepare_key` method.
