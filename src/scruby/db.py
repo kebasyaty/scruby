@@ -145,22 +145,7 @@ class Scruby[T](
         meta_json = meta.model_dump_json()
         await meta_path.write_text(meta_json, "utf-8")
 
-    @staticmethod
-    def _prepare_key(key: str) -> str:
-        """Prepare Key.
-
-        Removes spaces at the beginning and end of a string.
-        Replaces all whitespace characters with a single space.
-
-        Args:
-            key (str): Key name.
-
-        Returns:
-            String.
-        """
-        return re.sub(r"\s+", " ", key.strip())
-
-    async def _get_leaf_path(self, key: str) -> Path:
+    async def _get_leaf_path(self, key: str) -> tuple[Path, str]:
         """Asynchronous method for getting path to collection cell by key.
 
         This method is for internal use.
@@ -171,11 +156,16 @@ class Scruby[T](
         Returns:
             Path to cell of collection.
         """
+        # Prepare key.
+        # Removes spaces at the beginning and end of a string.
+        # Replaces all whitespace characters with a single space.
+        prepared_key = re.sub(r"\s+", " ", key.strip())
+        # Check the key for an empty string.
         if len(key) == 0:
             logger.error("The key should not be empty.")
             raise KeyError("The key should not be empty.")
         # Key to crc32 sum.
-        key_as_hash: str = f"{zlib.crc32(key.encode('utf-8')):08x}"[self._hash_reduce_left :]
+        key_as_hash: str = f"{zlib.crc32(prepared_key.encode('utf-8')):08x}"[self._hash_reduce_left :]
         # Convert crc32 sum in the segment of path.
         separated_hash: str = "/".join(list(key_as_hash))
         # The path of the branch to the database.
@@ -191,7 +181,7 @@ class Scruby[T](
             await branch_path.mkdir(parents=True)
         # The path to the database cell.
         leaf_path: Path = Path(*(branch_path, "leaf.json"))
-        return leaf_path
+        return (leaf_path, prepared_key)
 
     @staticmethod
     def napalm() -> None:

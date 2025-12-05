@@ -201,7 +201,12 @@ class TestPositive:
             "ScrubyDB/User/d/1/leaf.json",
         )
 
-        assert await db._get_leaf_path("key name") == control_path
+        key_name = "key name"
+
+        leaf_path, prepared_key = await db._get_leaf_path(key_name)
+
+        assert leaf_path == control_path
+        assert prepared_key == key_name
         #
         # Delete DB.
         Scruby.napalm()
@@ -365,7 +370,8 @@ class TestPositive:
         control_path = Path(
             "ScrubyDB/User/d/1/leaf.json",
         )
-        assert await db._get_leaf_path("key name") == control_path
+        leaf_path, _ = await db._get_leaf_path("key name")
+        assert leaf_path == control_path
 
         Scruby.napalm()
         constants.HASH_REDUCE_LEFT = 2  # 16777216 branches in collection.
@@ -373,7 +379,8 @@ class TestPositive:
         control_path = Path(
             "ScrubyDB/User/a/6/d/2/d/1/leaf.json",
         )
-        assert await db._get_leaf_path("key name") == control_path
+        leaf_path, _ = await db._get_leaf_path("key name")
+        assert leaf_path == control_path
 
         Scruby.napalm()
         constants.HASH_REDUCE_LEFT = 4  # 65536 branches in collection.
@@ -381,7 +388,8 @@ class TestPositive:
         control_path = Path(
             "ScrubyDB/User/d/2/d/1/leaf.json",
         )
-        assert await db._get_leaf_path("key name") == control_path
+        leaf_path, _ = await db._get_leaf_path("key name")
+        assert leaf_path == control_path
 
         Scruby.napalm()
         constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
@@ -389,7 +397,8 @@ class TestPositive:
         control_path = Path(
             "ScrubyDB/User/d/1/leaf.json",
         )
-        assert await db._get_leaf_path("key name") == control_path
+        leaf_path, _ = await db._get_leaf_path("key name")
+        assert leaf_path == control_path
         #
         # Delete DB.
         Scruby.napalm()
