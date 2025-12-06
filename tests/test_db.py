@@ -139,8 +139,14 @@ class TestNegative:
             phone="+447986123456",
         )
 
-        with pytest.raises(KeyError):
+        with pytest.raises(KeyError, match=r"The key should not be empty."):
             await db.add_key("", user)
+        with pytest.raises(KeyError, match=r"The key should not be empty."):
+            await db.add_key(" ", user)
+        with pytest.raises(KeyError, match=r"The key should not be empty."):
+            await db.add_key("  ", user)
+        with pytest.raises(KeyError, match=r"The key should not be empty."):
+            await db.add_key("\t\n\r\f\v", user)
         #
         # Delete DB.
         Scruby.napalm()

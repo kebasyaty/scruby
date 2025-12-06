@@ -1,5 +1,11 @@
 ### CHANGELOG
 
+#### v0.24.10 2025-12-06
+
+- Updated the algorithm for pre-key preparation.
+- Updated tests.
+- Updated documentation.
+
 #### v0.24.8 2025-12-05
 
 - Fixed the algorithm for pre-key preparation.
