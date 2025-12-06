@@ -160,15 +160,15 @@ class Scruby[T](
             msg = "The key is not a string."
             logger.error(msg)
             raise KeyError(msg)
-        # Check the key for an empty string.
-        if len(key) == 0:
-            msg = "The key should not be empty."
-            logger.error(msg)
-            raise KeyError(msg)
         # Prepare key.
         # Removes spaces at the beginning and end of a string.
         # Replaces all whitespace characters with a single space.
         prepared_key = re.sub(r"\s+", " ", key).strip().lower()
+        # Check the key for an empty string.
+        if len(prepared_key) == 0:
+            msg = "The key should not be empty."
+            logger.error(msg)
+            raise KeyError(msg)
         # Key to crc32 sum.
         key_as_hash: str = f"{zlib.crc32(prepared_key.encode('utf-8')):08x}"[self._hash_reduce_left :]
         # Convert crc32 sum in the segment of path.
