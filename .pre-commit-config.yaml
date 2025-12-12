@@ -61,7 +61,7 @@ repos:
       - id: add-trailing-comma
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.20.0
+    rev: v3.21.2
     hooks:
       - id: pyupgrade
 
@@ -88,8 +88,7 @@ repos:
         exclude: examples
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.33.2
+    rev: 0.35.0
     hooks:
       - id: check-github-workflows
-        args: [--verbose]
-      - id: check-dependabot
+        args: ["--verbose"]
