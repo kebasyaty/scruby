@@ -1,3 +1,12 @@
+#
+# .|'''|                        '||
+# ||                             ||
+# `|'''|, .|'', '||''| '||  ||`  ||''|, '||  ||`
+#  .   || ||     ||     ||  ||   ||  ||  `|..||
+#  |...|' `|..' .||.    `|..'|. .||..|'      ||
+#                                         ,  |'
+#                                          ''
+#
 """Asynchronous library for building and managing a hybrid database, by scheme of key-value.
 
 The library uses fractal-tree addressing and
