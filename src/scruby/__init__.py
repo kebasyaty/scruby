@@ -7,6 +7,7 @@
 #                                         ,  |'
 #                                          ''
 #
+#
 # Copyright (c) 2025 Gennady Kostyunin
 # Scruby is free software under terms of the MIT License.
 # Repository https://github.com/kebasyaty/scruby
