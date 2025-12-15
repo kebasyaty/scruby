@@ -1,11 +1,8 @@
-minimum_pre_commit_version: "4.3.0"
-
-# For `uv run pre-commit run --all-files`
 exclude: "^(dist|site|.git|.venv|.pytest_cache|.ruff_cache|.mypy_cache)$"
 
 repos:
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.8.11
+    rev: 0.9.17
     hooks:
       - id: uv-lock
 
@@ -35,7 +32,7 @@ repos:
       - id: fix-byte-order-marker
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.45.0
+    rev: v0.47.0
     hooks:
       - id: markdownlint
         args:
@@ -56,7 +53,7 @@ repos:
       - id: python-use-type-annotations
 
   - repo: https://github.com/asottile/add-trailing-comma
-    rev: v3.2.0
+    rev: v4.0.0
     hooks:
       - id: add-trailing-comma
 
@@ -66,7 +63,7 @@ repos:
       - id: pyupgrade
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.8
+    rev: v0.14.9
     hooks:
       - id: ruff-check
         types_or: [python, pyi]
@@ -75,7 +72,7 @@ repos:
         types_or: [python, pyi]
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.17.1
+    rev: v1.19.1
     hooks:
       - id: mypy
         args:

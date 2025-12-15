@@ -77,7 +77,6 @@ types = []
 fix = true
 line-length = 120
 indent-width = 4
-required-version = ">=0.12.8"
 src = ["src", "tests"]
 include = ["src/**/*.py", "tests/**/*.py"]
 exclude = [
@@ -198,6 +197,7 @@ disable_error_code = [
     "index",
     "operator",
     "misc",
+    "untyped-decorator",
 ]
 
 [[tool.mypy.overrides]]
