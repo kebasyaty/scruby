@@ -193,11 +193,11 @@ files = ["src/**/*.py", "tests/**/*.py"]
 disable_error_code = [
     "type-arg",
     "no-any-return",
+    "untyped-decorator",
     "attr-defined",
     "index",
     "operator",
     "misc",
-    "untyped-decorator",
 ]
 
 [[tool.mypy.overrides]]
