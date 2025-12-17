@@ -4,7 +4,7 @@
       <img
         height="100"
         alt="Logo"
-        src="https://raw.githubusercontent.com/kebasyaty/scruby/main/assets/logo.svg">
+        src="https://raw.githubusercontent.com/kebasyaty/scruby/main/assets/logo_docs.svg">
     </a>
   </p>
   <p>
