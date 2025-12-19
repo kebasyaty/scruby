@@ -2,106 +2,106 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/aggregation/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/constants/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/db/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/errors/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/installation/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/mixins/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/mixins/collection/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/mixins/count/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/mixins/custom_task/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/mixins/delete/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/mixins/find/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/mixins/keys/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/mixins/update/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/usage/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/usage/aggregation/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/usage/count_documents/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/usage/custom_task/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/usage/delete_collection/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/usage/delete_documents/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/usage/find_a_single_document/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/usage/find_documents/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/usage/get_collection_list/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/usage/get_collection_name/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/usage/update_documents/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://kebasyaty.github.io/scruby/0.24/pages/usage/working_with_keys/</loc>
-         <lastmod>2025-12-17</lastmod>
+         <lastmod>2025-12-19</lastmod>
     </url>
 </urlset>
