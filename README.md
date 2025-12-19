@@ -241,7 +241,7 @@ async def main() -> None:
 
     # Find cars by brand and year.
     car_list: list[Car] | None = await car_coll.find_many(
-        filter_fn=lambda doc: doc.brand == "Mazda" or doc.year == 2025,
+        filter_fn=lambda doc: doc.brand == "Mazda" and doc.year == 2025,
     )
     if car_list is not None:
         pp(car_list)
