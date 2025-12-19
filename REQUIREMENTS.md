@@ -15,7 +15,7 @@
 #### Dev-Dependencies
 
 - [ruff](https://pypi.org/project/ruff/ "ruff")
-- [mypy](https://pypi.org/project/mypy/ "mypy")
+- [pyrefly](https://pypi.org/project/pyrefly/ "")
 - [pre-commit](https://pypi.org/project/pre-commit/ "pre-commit")
 - [pytest](https://pypi.org/project/pytest/ "pytest")
 - [pytest-asyncio](https://pypi.org/project/pytest-asyncio/ "pytest-asyncio")
