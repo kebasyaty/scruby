@@ -28,11 +28,9 @@
       "problemMatcher": []
     },
     {
-      "label": "MyPy: Run Check",
+      "label": "Pyrefly: Run Type Checker",
       "type": "shell",
-      "command": [
-        "uv run mypy --ignore-missing-imports --config-file pyproject.toml"
-      ],
+      "command": ["uv run pyrefly check ."],
       "problemMatcher": []
     },
     {

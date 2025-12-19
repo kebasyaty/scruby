@@ -45,5 +45,5 @@ class Collection[T]:
             None.
         """
         target_directory = f"{constants.DB_ROOT}/{name}"
-        await to_thread.run_sync(rmtree, target_directory)
+        await to_thread.run_sync(rmtree, target_directory)  # pyrefly: ignore[bad-argument-type]
         return

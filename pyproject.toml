@@ -1,6 +1,6 @@
 [project]
 name = "scruby"
-version = "0.24.12"
+version = "0.24.13"
 description = "Asynchronous library for building and managing a hybrid database, by scheme of key-value."
 readme = "README.md"
 authors = [{ name = "kebasyaty", email = "kebasyaty@gmail.com" }]
@@ -56,7 +56,7 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = []
-lint = ["mypy>=1.17.1", "pre-commit>=4.3.0", "ruff>=0.12.8"]
+lint = ["pre-commit>=4.3.0", "pyrefly>=0.46.0", "ruff>=0.12.8"]
 test = [
     "pytest>=8.4.1",
     "pytest-asyncio>=1.1.0",
@@ -185,32 +185,20 @@ docstring-code-line-length = 120
 skip-magic-trailing-comma = false
 line-ending = "auto"
 
-[tool.mypy]
-strict = true
-show_error_codes = true
-pretty = true
-files = ["src/**/*.py", "tests/**/*.py"]
-disable_error_code = [
-    "type-arg",
-    "no-any-return",
-    "untyped-decorator",
-    "attr-defined",
-    "index",
-    "operator",
-    "misc",
-]
+[tool.pyrefly]
+project-includes = ["src", "tests"]
+search-path = ["src", "tests"]
+ignore-errors-in-generated-code = true
+untyped_def_behavior = "check-and-infer-return-any"
 
-[[tool.mypy.overrides]]
-module = ["tests.*"]
-disable_error_code = [
-    "arg-type",
-    "no-untyped-def",
-    "no-untyped-call",
-    "func-returns-value",
-    "union-attr",
-    "import-not-found",
-    "assignment",
-]
+[tool.pyrefly.errors]
+missing-attribute = false
+
+[[tool.pyrefly.sub-config]]
+matches = "tests/**"
+
+[tool.pyrefly.sub-config.errors]
+
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
