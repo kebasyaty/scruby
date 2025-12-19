@@ -62,7 +62,7 @@ class Scruby[T](
             case _ as unreachable:
                 msg: str = f"{unreachable} - Unacceptable value for HASH_REDUCE_LEFT."
                 logger.critical(msg)
-                assert_never(Never(unreachable))
+                assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
     @classmethod
     async def create(cls, class_model: T) -> Any:

@@ -2,7 +2,7 @@ exclude: "^(dist|site|.git|.venv|.pytest_cache|.ruff_cache|.mypy_cache)$"
 
 repos:
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.9.17
+    rev: 0.9.18
     hooks:
       - id: uv-lock
 
@@ -63,7 +63,7 @@ repos:
       - id: pyupgrade
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.9
+    rev: v0.14.10
     hooks:
       - id: ruff-check
         types_or: [python, pyi]
@@ -80,7 +80,7 @@ repos:
         language: system
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.35.0
+    rev: 0.36.0
     hooks:
       - id: check-github-workflows
         args: ["--verbose"]
