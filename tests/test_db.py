@@ -100,7 +100,7 @@ class TestNegative:
 
         with pytest.raises(
             TypeError,
-            match=r"Parameter `value` => `User2` does not match collection `User`!",
+            match=r"\(add_key\) Parameter `value` => Model `User2` does not match collection `User`!",
         ):
             await user_coll.add_key(user2.phone, user2)
         #
@@ -130,7 +130,7 @@ class TestNegative:
 
         with pytest.raises(
             TypeError,
-            match=r"Parameter `value` => `User2` does not match collection `User`!",
+            match=r"\(update_key\) Parameter `value` => Model `User2` does not match collection `User`!",
         ):
             await user_coll.update_key(user.phone, user2)
         #
