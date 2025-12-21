@@ -9,7 +9,7 @@ import logging
 import re
 import zlib
 from shutil import rmtree
-from typing import Any, Literal, Never, TypeVar, assert_never
+from typing import Any, Literal, Never, assert_never
 
 from anyio import Path
 from pydantic import BaseModel
@@ -17,8 +17,6 @@ from pydantic import BaseModel
 from scruby import constants, mixins
 
 logger = logging.getLogger(__name__)
-
-T = TypeVar("T")
 
 
 class _Meta(BaseModel):
@@ -31,7 +29,7 @@ class _Meta(BaseModel):
     counter_documents: int
 
 
-class Scruby[T](
+class Scruby(
     mixins.Keys,
     mixins.Find,
     mixins.CustomTask,
@@ -65,11 +63,11 @@ class Scruby[T](
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
     @classmethod
-    async def create(cls, class_model: T) -> Any:
+    async def create(cls, class_model: Any) -> Any:
         """Get an object to access a collection.
 
         Args:
-            class_model: Class of Model (Pydantic).
+            class_model: Class of Model (pydantic.BaseModel).
 
         Returns:
             Instance of Scruby for access a collection.

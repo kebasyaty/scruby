@@ -5,7 +5,7 @@ from __future__ import annotations
 __all__ = ("Keys",)
 
 import logging
-from typing import TypeVar
+from typing import Any
 
 import orjson
 
@@ -16,26 +16,31 @@ from scruby.errors import (
 
 logger = logging.getLogger(__name__)
 
-T = TypeVar("T")
 
-
-class Keys[T]:
+class Keys:
     """Methods for working with keys."""
 
     async def add_key(
         self,
         key: str,
-        value: T,
+        value: Any,
     ) -> None:
         """Asynchronous method for adding key to collection.
 
         Args:
             key: Key name. Type `str`.
-            value: Value of key. Type `BaseModel`.
+            value: Value of key. Type, derived from `BaseModel`.
 
         Returns:
             None.
         """
+        # Check if the Model matches the collection
+        if not isinstance(value, self._class_model):
+            value_class_name = value.__class__.__name__
+            collection_name = self._class_model.__name__
+            msg = f"Parameter `value` => `{value_class_name}` does not match collection `{collection_name}`!"
+            logger.error(msg)
+            raise TypeError(msg)
         # The path to cell of collection.
         leaf_path, prepared_key = await self._get_leaf_path(key)
         value_json: str = value.model_dump_json()
@@ -61,7 +66,7 @@ class Keys[T]:
     async def update_key(
         self,
         key: str,
-        value: T,
+        value: Any,
     ) -> None:
         """Asynchronous method for updating key to collection.
 
@@ -72,6 +77,13 @@ class Keys[T]:
         Returns:
             None.
         """
+        # Check if the Model matches the collection
+        if not isinstance(value, self._class_model):
+            value_class_name = value.__class__.__name__
+            collection_name = self._class_model.__name__
+            msg = f"Parameter `value` => `{value_class_name}` does not match collection `{collection_name}`!"
+            logger.error(msg)
+            raise TypeError(msg)
         # The path to cell of collection.
         leaf_path, prepared_key = await self._get_leaf_path(key)
         value_json: str = value.model_dump_json()
@@ -92,7 +104,7 @@ class Keys[T]:
             logger.error("The key not exists.")
             raise KeyError()
 
-    async def get_key(self, key: str) -> T:
+    async def get_key(self, key: str) -> Any:
         """Asynchronous method for getting value of key from collection.
 
         Args:
@@ -107,7 +119,7 @@ class Keys[T]:
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            obj: T = self._class_model.model_validate_json(data[prepared_key])
+            obj: Any = self._class_model.model_validate_json(data[prepared_key])
             return obj
         msg: str = "`get_key` - The unacceptable key value."
         logger.error(msg)
