@@ -38,7 +38,10 @@ class Keys:
         if not isinstance(value, self._class_model):
             value_class_name = value.__class__.__name__
             collection_name = self._class_model.__name__
-            msg = f"Parameter `value` => `{value_class_name}` does not match collection `{collection_name}`!"
+            msg = (
+                f"(add_key) Parameter `value` => Model `{value_class_name}` "
+                f"does not match collection `{collection_name}`!"
+            )
             logger.error(msg)
             raise TypeError(msg)
         # The path to cell of collection.
@@ -81,7 +84,10 @@ class Keys:
         if not isinstance(value, self._class_model):
             value_class_name = value.__class__.__name__
             collection_name = self._class_model.__name__
-            msg = f"Parameter `value` => `{value_class_name}` does not match collection `{collection_name}`!"
+            msg = (
+                f"(update_key) Parameter `value` => Model `{value_class_name}` "
+                f"does not match collection `{collection_name}`!"
+            )
             logger.error(msg)
             raise TypeError(msg)
         # The path to cell of collection.
