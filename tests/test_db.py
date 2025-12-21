@@ -86,8 +86,8 @@ class TestNegative:
         # Delete DB.
         Scruby.napalm()
 
-    async def test_value_does_not_match_collection(self) -> None:
-        """Parameter `value` does not match current collection."""
+    async def test_add_key_value_does_not_match_collection(self) -> None:
+        """add_key() - Parameter `value` does not match current collection."""
         user2 = User2(
             first_name="John",
             last_name="Smith",
@@ -103,6 +103,36 @@ class TestNegative:
             match=r"Parameter `value` => `User2` does not match `User`!",
         ):
             await user_coll.add_key(user2.phone, user2)
+        #
+        # Delete DB.
+        Scruby.napalm()
+
+    async def test_update_key_value_does_not_match_collection(self) -> None:
+        """update_key() - Parameter `value` does not match current collection."""
+        user = User(
+            first_name="John",
+            last_name="Smith",
+            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            email="John_Smith@gmail.com",
+            phone="+447986123456",
+        )
+
+        user2 = User2(
+            first_name="John",
+            last_name="Smith",
+            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            email="John_Smith@gmail.com",
+            phone="+447986123456",
+        )
+
+        user_coll = await Scruby.create(User)
+        await user_coll.add_key(user.phone, user)
+
+        with pytest.raises(
+            TypeError,
+            match=r"Parameter `value` => `User2` does not match `User`!",
+        ):
+            await user_coll.update_key(user.phone, user2)
         #
         # Delete DB.
         Scruby.napalm()

@@ -77,6 +77,13 @@ class Keys:
         Returns:
             None.
         """
+        # Check if the Model matches the collection
+        if not isinstance(value, self._class_model):
+            value_class_name = value.__class__.__name__
+            collection_model_name = self._class_model.__name__
+            msg = f"Parameter `value` => `{value_class_name}` does not match `{collection_model_name}`!"
+            logger.error(msg)
+            raise TypeError(msg)
         # The path to cell of collection.
         leaf_path, prepared_key = await self._get_leaf_path(key)
         value_json: str = value.model_dump_json()
