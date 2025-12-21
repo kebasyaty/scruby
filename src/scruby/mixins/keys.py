@@ -34,6 +34,7 @@ class Keys:
         Returns:
             None.
         """
+        # Check if the Model matches the collection
         if not isinstance(value, self._class_model):
             value_class_name = value.__class__.__name__
             collection_model_name = self._class_model.__name__
