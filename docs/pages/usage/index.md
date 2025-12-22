@@ -4,5 +4,5 @@ Example collection of how to use a database.
 # Run Development:
 uv run python main.py
 # Run Production:
-uv run python -O main.py
+uv run python -OOP main.py
 ```
