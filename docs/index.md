@@ -38,12 +38,12 @@
   <br>
   The database consists of collections.
   <br>
-  The maximum size of the one collection is `16**8=4294967296` branches,
+  The maximum size of the one collection is <b>16**8=4294967296</b> branches,
   <br>
   each branch can store one or more keys.
   <br>
   <br>
-  The value of any key in collection can be obtained in 8 steps,
+  The value of any key in collection can be obtained maximum in <b>8</b> steps,
   <br>
   thereby achieving high performance.
   <br>
