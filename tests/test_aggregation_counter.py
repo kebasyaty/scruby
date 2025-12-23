@@ -78,7 +78,7 @@ async def test_task_counter() -> None:
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await db.add_key(user.phone, user)
+        await db.add_doc(user)
 
     result = await db.run_custom_task(
         custom_task_fn=task_counter,

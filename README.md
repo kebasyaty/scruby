@@ -108,9 +108,9 @@ async def main() -> None:
         phone="+447986123456",
     )
 
-    await user_coll.add_key(user.key, user)
+    await user_coll.add_doc(user)
 
-    await user_coll.update_key(user.key, user)
+    await user_coll.update_doc(user)
 
     await user_coll.get_key("+447986123456")  # => user
     await user_coll.get_key("key missing")  # => KeyError
@@ -178,7 +178,7 @@ async def main() -> None:
     )
 
     # Add phone to collection.
-    await phone_coll.add_key(phone.key, phone)
+    await phone_coll.add_doc(phone)
 
     # Find phone by brand.
     phone_details: Phone | None = await phone_coll.find_one(
@@ -253,7 +253,7 @@ async def main() -> None:
             year=2025,
             power_reserve=600,
         )
-        await car_coll.add_key(car.key, car)
+        await car_coll.add_doc(car)
 
     # Find cars by brand and year.
     car_list: list[Car] | None = await car_coll.find_many(

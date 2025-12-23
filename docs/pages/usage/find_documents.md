@@ -50,7 +50,7 @@ async def main() -> None:
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await user_coll.add_key(user.key, user)
+        await user_coll.add_doc(user)
 
     # Find users by email.
     users: list[User] | None = await user_coll.find_many(

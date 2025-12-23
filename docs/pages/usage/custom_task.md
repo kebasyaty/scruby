@@ -81,7 +81,7 @@ async def main() -> None:
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await user_coll.add_key(user.key, user)
+        await user_coll.add_doc(user)
 
     result = await user_coll.run_custom_task(custom_task)
     print(result)  # => 9
