@@ -73,7 +73,7 @@ See more examples here [https://kebasyaty.github.io/scruby/latest/pages/usage/](
 import anyio
 import datetime
 from typing import Annotated
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, constants
 
@@ -81,12 +81,18 @@ constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 constants.HASH_REDUCE_LEFT = 6  # By default = 6
 
 class User(BaseModel):
-    """Model of User."""
-    first_name: str
-    last_name: str
-    birthday: datetime.datetime
-    email: EmailStr
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
+    """User model."""
+    first_name: str = Field(strict=True)
+    last_name: str = Field(strict=True)
+    birthday: datetime.datetime = Field(strict=True)
+    email: EmailStr = Field(strict=True)
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
+    # The key is always at the bottom
+    key: str = Field(
+        strict=True,
+        frozen=True,
+        default_factory=lambda data: data["phone"],
+    )
 
 
 async def main() -> None:
@@ -102,9 +108,9 @@ async def main() -> None:
         phone="+447986123456",
     )
 
-    await user_coll.add_key(user.phone, user)
+    await user_coll.add_key(user.key, user)
 
-    await user_coll.update_key(user.phone, user)
+    await user_coll.update_key(user.key, user)
 
     await user_coll.get_key("+447986123456")  # => user
     await user_coll.get_key("key missing")  # => KeyError
@@ -136,7 +142,7 @@ Ideally, hundreds and even thousands of threads are required.
 import anyio
 import datetime
 from typing import Annotated
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from scruby import Scruby, constants
 from pprint import pprint as pp
 
@@ -146,10 +152,16 @@ constants.HASH_REDUCE_LEFT = 6  # By default = 6
 
 class Phone(BaseModel):
     """Phone model."""
-    brand: str
-    model: str
-    screen_diagonal: float
-    matrix_type: str
+    brand: str = Field(strict=True, frozen=True)
+    model: str = Field(strict=True, frozen=True)
+    screen_diagonal: float = Field(strict=True)
+    matrix_type: str = Field(strict=True)
+    # The key is always at the bottom
+    key: str = Field(
+        strict=True,
+        frozen=True,
+        default_factory=lambda data: f"{data['brand']}:{data['model']}",
+    )
 
 
 async def main() -> None:
@@ -166,8 +178,7 @@ async def main() -> None:
     )
 
     # Add phone to collection.
-    key = f"{phone.brand} {phone.model}"
-    await phone_coll.add_key(key, phone)
+    await phone_coll.add_key(phone.key, phone)
 
     # Find phone by brand.
     phone_details: Phone | None = await phone_coll.find_one(
@@ -207,7 +218,7 @@ Ideally, hundreds and even thousands of threads are required.
 import anyio
 import datetime
 from typing import Annotated
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from scruby import Scruby, constants
 from pprint import pprint as pp
 
@@ -217,10 +228,16 @@ constants.HASH_REDUCE_LEFT = 6  # By default = 6
 
 class Car(BaseModel):
     """Car model."""
-    brand: str
-    model: str
-    year: int
-    power_reserve: int
+    brand: str = Field(strict=True, frozen=True)
+    model: str = Field(strict=True, frozen=True)
+    year: int = Field(strict=True)
+    power_reserve: int = Field(strict=True)
+    # The key is always at the bottom
+    key: str = Field(
+        strict=True,
+        frozen=True,
+        default_factory=lambda data: f"{data['brand']}:{data['model']}",
+    )
 
 
 async def main() -> None:
@@ -236,8 +253,7 @@ async def main() -> None:
             year=2025,
             power_reserve=600,
         )
-        key = f"{car.brand} {car.model}"
-        await car_coll.add_key(key, car)
+        await car_coll.add_key(car.key, car)
 
     # Find cars by brand and year.
     car_list: list[Car] | None = await car_coll.find_many(

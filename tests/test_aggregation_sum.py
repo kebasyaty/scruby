@@ -7,7 +7,7 @@ from collections.abc import Callable
 from typing import Annotated, Any
 
 import pytest
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
 from scruby import Scruby, constants
@@ -19,10 +19,16 @@ pytestmark = pytest.mark.asyncio(loop_scope="module")
 class User(BaseModel):
     """User model."""
 
-    first_name: str
-    age: int
-    email: EmailStr
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
+    first_name: str = Field(strict=True)
+    age: int = Field(strict=True)
+    email: EmailStr = Field(strict=True)
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
+    # The key is always at the bottom
+    key: str = Field(
+        strict=True,
+        frozen=True,
+        default_factory=lambda data: data["phone"],
+    )
 
 
 async def task_calculate_sum(
@@ -63,11 +69,11 @@ async def test_task_calculate_sum() -> None:
     for num in range(1, 10):
         user = User(
             first_name="John",
-            age=f"{num * 10}",
+            age=int(f"{num * 10}"),
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await db.add_key(user.phone, user)
+        await db.add_key(user.key, user)
 
     result = await db.run_custom_task(task_calculate_sum)
     assert result == 450.0

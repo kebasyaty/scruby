@@ -6,7 +6,7 @@ import datetime
 from typing import Annotated
 
 import pytest
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
 from scruby import Scruby
@@ -17,29 +17,47 @@ pytestmark = pytest.mark.asyncio(loop_scope="module")
 class User(BaseModel):
     """User model."""
 
-    first_name: str
-    last_name: str
-    birthday: datetime.datetime
-    email: EmailStr
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
+    first_name: str = Field(strict=True)
+    last_name: str = Field(strict=True)
+    birthday: datetime.datetime = Field(strict=True)
+    email: EmailStr = Field(strict=True)
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
+    # The key is always at the bottom
+    key: str = Field(
+        strict=True,
+        frozen=True,
+        default_factory=lambda data: data["phone"],
+    )
 
 
 class Phone(BaseModel):
     """Phone model."""
 
-    brand: str
-    model: str
-    screen_diagonal: float
-    matrix_type: str
+    brand: str = Field(strict=True, frozen=True)
+    model: str = Field(strict=True, frozen=True)
+    screen_diagonal: float = Field(strict=True)
+    matrix_type: str = Field(strict=True)
+    # The key is always at the bottom
+    key: str = Field(
+        strict=True,
+        frozen=True,
+        default_factory=lambda data: f"{data['brand']}:{data['model']}",
+    )
 
 
 class Car(BaseModel):
     """Car model."""
 
-    brand: str
-    model: str
-    year: int
-    power_reserve: int
+    brand: str = Field(strict=True, frozen=True)
+    model: str = Field(strict=True, frozen=True)
+    year: int = Field(strict=True)
+    power_reserve: int = Field(strict=True)
+    # The key is always at the bottom
+    key: str = Field(
+        strict=True,
+        frozen=True,
+        default_factory=lambda data: f"{data['brand']}:{data['model']}",
+    )
 
 
 async def test_user() -> None:
@@ -56,7 +74,7 @@ async def test_user() -> None:
         phone="+447986123456",
     )
 
-    await user_coll.add_key(user.phone, user)
+    await user_coll.add_key(user.key, user)
 
 
 async def test_user_2() -> None:
@@ -73,7 +91,7 @@ async def test_user_2() -> None:
         phone="+447986123457",
     )
 
-    await user_coll.add_key(user.phone, user)
+    await user_coll.add_key(user.key, user)
 
 
 async def test_phone() -> None:
@@ -90,8 +108,7 @@ async def test_phone() -> None:
     )
 
     # Add phone to collection.
-    key = f"{phone.brand} {phone.model}"
-    await phone_coll.add_key(key, phone)
+    await phone_coll.add_key(phone.key, phone)
 
 
 async def test_car() -> None:
@@ -108,8 +125,7 @@ async def test_car() -> None:
     )
 
     # Add car to collection.
-    key = f"{car.brand} {car.model}"
-    await car_coll.add_key(key, car)
+    await car_coll.add_key(car.key, car)
     #
     # Delete DB.
     Scruby.napalm()

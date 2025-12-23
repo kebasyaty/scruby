@@ -9,7 +9,7 @@ from collections.abc import Callable
 from decimal import ROUND_HALF_EVEN
 from typing import Annotated, Any
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
 from scruby import Scruby, constants
@@ -22,10 +22,16 @@ constants.HASH_REDUCE_LEFT = 6  # By default = 6
 class User(BaseModel):
     """User model."""
 
-    first_name: str
-    age: int
-    email: EmailStr
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
+    first_name: str = Field(strict=True)
+    age: int = Field(strict=True)
+    email: EmailStr = Field(strict=True)
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
+    # The key is always at the bottom
+    key: str = Field(
+        strict=True,
+        frozen=True,
+        default_factory=lambda data: data["phone"],
+    )
 
 
 async def task_calculate_average(
@@ -70,11 +76,11 @@ async def main() -> None:
     for num in range(1, 10):
         user = User(
             first_name="John",
-            age=f"{num * 10}",
+            age=int(f"{num * 10}"),
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await user_coll.add_key(user.phone, user)
+        await user_coll.add_key(user.key, user)
 
     result = await user_coll.run_custom_task(task_calculate_average)
     print(result)  # => 50.0
@@ -98,7 +104,7 @@ import concurrent.futures
 from collections.abc import Callable
 from typing import Annotated, Any
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
 from scruby import Scruby, constants
@@ -111,10 +117,16 @@ constants.HASH_REDUCE_LEFT = 6  # By default = 6
 class User(BaseModel):
     """User model."""
 
-    first_name: str
-    age: int
-    email: EmailStr
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
+    first_name: str = Field(strict=True)
+    age: int = Field(strict=True)
+    email: EmailStr = Field(strict=True)
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
+    # The key is always at the bottom
+    key: str = Field(
+        strict=True,
+        frozen=True,
+        default_factory=lambda data: data["phone"],
+    )
 
 
 async def task_counter(
@@ -161,11 +173,11 @@ async def main() -> None:
     for num in range(1, 10):
         user = User(
             first_name="John",
-            age=f"{num * 10}",
+            age=int(f"{num * 10}"),
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await user_coll.add_key(user.phone, user)
+        await user_coll.add_key(user.key, user)
 
     result = await user_coll.run_custom_task(
         custom_task_fn=task_counter,
@@ -192,7 +204,7 @@ import concurrent.futures
 from collections.abc import Callable
 from typing import Annotated, Any
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
 from scruby import Scruby, constants
@@ -205,10 +217,16 @@ constants.HASH_REDUCE_LEFT = 6  # By default = 6
 class User(BaseModel):
     """User model."""
 
-    first_name: str
-    age: int
-    email: EmailStr
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
+    first_name: str = Field(strict=True)
+    age: int = Field(strict=True)
+    email: EmailStr = Field(strict=True)
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
+    # The key is always at the bottom
+    key: str = Field(
+        strict=True,
+        frozen=True,
+        default_factory=lambda data: data["phone"],
+    )
 
 
 async def task_calculate_max(
@@ -250,11 +268,11 @@ async def main() -> None:
     for num in range(1, 10):
         user = User(
             first_name="John",
-            age=f"{num * 10}",
+            age=int(f"{num * 10}"),
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await user_coll.add_key(user.phone, user)
+        await user_coll.add_key(user.key, user)
 
     result = await user_coll.run_custom_task(task_calculate_max)
     print(result)  # => 90.0
@@ -278,7 +296,7 @@ import concurrent.futures
 from collections.abc import Callable
 from typing import Annotated, Any
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
 from scruby import Scruby, constants
@@ -291,10 +309,16 @@ constants.HASH_REDUCE_LEFT = 6  # By default = 6
 class User(BaseModel):
     """User model."""
 
-    first_name: str
-    age: int
-    email: EmailStr
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
+    first_name: str = Field(strict=True)
+    age: int = Field(strict=True)
+    email: EmailStr = Field(strict=True)
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
+    # The key is always at the bottom
+    key: str = Field(
+        strict=True,
+        frozen=True,
+        default_factory=lambda data: data["phone"],
+    )
 
 
 async def task_calculate_min(
@@ -336,11 +360,11 @@ async def main() -> None:
     for num in range(1, 10):
         user = User(
             first_name="John",
-            age=f"{num * 10}",
+            age=int(f"{num * 10}"),
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await user_coll.add_key(user.phone, user)
+        await user_coll.add_key(user.key, user)
 
     result = await user_coll.run_custom_task(task_calculate_min)
     print(result)  # => 10.0
@@ -364,7 +388,7 @@ import concurrent.futures
 from collections.abc import Callable
 from typing import Annotated, Any
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
 from scruby import Scruby, constants
@@ -377,10 +401,16 @@ constants.HASH_REDUCE_LEFT = 6  # By default = 6
 class User(BaseModel):
     """User model."""
 
-    first_name: str
-    age: int
-    email: EmailStr
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")]
+    first_name: str = Field(strict=True)
+    age: int = Field(strict=True)
+    email: EmailStr = Field(strict=True)
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
+    # The key is always at the bottom
+    key: str = Field(
+        strict=True,
+        frozen=True,
+        default_factory=lambda data: data["phone"],
+    )
 
 
 async def task_calculate_sum(
@@ -422,11 +452,11 @@ async def main() -> None:
     for num in range(1, 10):
         user = User(
             first_name="John",
-            age=f"{num * 10}",
+            age=int(f"{num * 10}"),
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await user_coll.add_key(user.phone, user)
+        await user_coll.add_key(user.key, user)
 
     result = await user_coll.run_custom_task(task_calculate_sum)
     print(result)  # => 450.0
