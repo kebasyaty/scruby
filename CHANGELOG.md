@@ -1,5 +1,13 @@
 ### CHANGELOG
 
+#### v0.25.0 2025-12-23
+
+- Renamed method from `add_key` to `add_doc`.
+- Renamed method from `update_key` to `update_doc`.
+- Updated tests.
+- Updated documentation.
+- Updated README.md
+
 #### v0.24.20 2025-12-23
 
 - Upgraded dependencies.
