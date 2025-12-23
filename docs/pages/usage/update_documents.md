@@ -48,7 +48,7 @@ async def main() -> None:
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await user_coll.add_key(user.key, user)
+        await user_coll.add_doc(user)
 
     number_updated_users = await user_coll.update_many(
         filter_fn=lambda _: True,  # Update all documents.

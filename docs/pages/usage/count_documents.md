@@ -39,7 +39,7 @@ async def main() -> None:
     print(await user_coll.estimated_document_count())  # => 0
 
     # Add user to collection.
-    await user_coll.add_key(user.phone, user)
+    await user_coll.add_doc(user)
     print(await user_coll.estimated_document_count())  # => 1
 
     # Delete user from collection.

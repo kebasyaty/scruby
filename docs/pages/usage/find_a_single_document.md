@@ -51,7 +51,7 @@ async def main() -> None:
     )
 
     # Add user to collection.
-    await user_coll.add_key(user.key, user)
+    await user_coll.add_doc(user)
 
     # Find user by email.
     user_details: User | None = await user_coll.find_one(
