@@ -43,7 +43,7 @@
   each branch can store one or more keys.
   <br>
   <br>
-  The value of any key in collection can be obtained maximum in 8 steps,
+  The value of any key in collection can be obtained maximum in <b>8</b> steps,
   <br>
   thereby achieving high performance.
   <br>
