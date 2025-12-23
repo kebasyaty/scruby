@@ -1,5 +1,9 @@
 ### CHANGELOG
 
+#### v0.24.20 2025-12-23
+
+- Upgrade dependencies.
+
 #### v0.24.19 2025-12-23
 
 - Updated tests.
