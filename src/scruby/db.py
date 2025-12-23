@@ -30,7 +30,7 @@ class _Meta(BaseModel):
 
 
 class Scruby(
-    mixins.Keys,
+    mixins.Docs,
     mixins.Find,
     mixins.CustomTask,
     mixins.Collection,
@@ -73,6 +73,7 @@ class Scruby(
             Instance of Scruby for access a collection.
         """
         assert BaseModel in class_model.__bases__, "`class_model` does not contain the base class `pydantic.BaseModel`!"
+
         instance = cls()
         instance.__dict__["_class_model"] = class_model
         # Caching a pati for metadata.

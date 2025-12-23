@@ -8,7 +8,7 @@ __all__ = (
     "CustomTask",
     "Delete",
     "Find",
-    "Keys",
+    "Docs",
     "Update",
 )
 
@@ -16,6 +16,6 @@ from scruby.mixins.collection import Collection
 from scruby.mixins.count import Count
 from scruby.mixins.custom_task import CustomTask
 from scruby.mixins.delete import Delete
+from scruby.mixins.docs import Docs
 from scruby.mixins.find import Find
-from scruby.mixins.keys import Keys
 from scruby.mixins.update import Update

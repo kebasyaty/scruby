@@ -53,6 +53,18 @@ class User2(BaseModel):
     )
 
 
+class User3(BaseModel):
+    """User model."""
+
+    username: str = Field(strict=True)
+    # The key is always at the bottom
+    key: str = Field(
+        strict=True,
+        frozen=True,
+        default_factory=lambda data: data["username"],
+    )
+
+
 async def custom_task(
     get_docs_fn: Callable,
     branch_numbers: range,
@@ -98,8 +110,8 @@ class TestNegative:
         # Delete DB.
         Scruby.napalm()
 
-    async def test_add_key_value_does_not_match_collection(self) -> None:
-        """add_key() - Parameter `value` does not match current collection."""
+    async def test_add_doc_value_does_not_match_collection(self) -> None:
+        """add_doc() - Parameter `value` does not match current collection."""
         user2 = User2(
             first_name="John",
             last_name="Smith",
@@ -112,15 +124,15 @@ class TestNegative:
 
         with pytest.raises(
             TypeError,
-            match=r"\(add_key\) Parameter `value` => Model `User2` does not match collection `User`!",
+            match=r"\(add_doc\) Parameter `doc` => Model `User2` does not match collection `User`!",
         ):
-            await user_coll.add_key(user2.phone, user2)
+            await user_coll.add_doc(user2)
         #
         # Delete DB.
         Scruby.napalm()
 
-    async def test_update_key_value_does_not_match_collection(self) -> None:
-        """update_key() - Parameter `value` does not match current collection."""
+    async def test_update_doc_value_does_not_match_collection(self) -> None:
+        """update_doc() - Parameter `value` does not match current collection."""
         user = User(
             first_name="John",
             last_name="Smith",
@@ -138,13 +150,13 @@ class TestNegative:
         )
 
         user_coll = await Scruby.create(User)
-        await user_coll.add_key(user.key, user)
+        await user_coll.add_doc(user)
 
         with pytest.raises(
             TypeError,
-            match=r"\(update_key\) Parameter `value` => Model `User2` does not match collection `User`!",
+            match=r"\(update_doc\) Parameter `doc` => Model `User2` does not match collection `User`!",
         ):
-            await user_coll.update_key(user.key, user2)
+            await user_coll.update_doc(user2)
         #
         # Delete DB.
         Scruby.napalm()
@@ -169,47 +181,25 @@ class TestNegative:
         # Delete DB.
         Scruby.napalm()
 
-    async def test_key_not_str(self) -> None:
-        """The key is not a type of `str`."""
-        db = await Scruby.create(User)
-
-        user = User(
-            first_name="John",
-            last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
-            email="John_Smith@gmail.com",
-            phone="+447986123456",
-        )
-
-        with pytest.raises(
-            KeyError,
-            match=r"The key is not a string.",
-        ):
-            await db.add_key(123, user)
-        #
-        # Delete DB.
-        Scruby.napalm()
-
     async def test_key_is_empty(self) -> None:
         """The key should not be empty."""
-        db = await Scruby.create(User)
+        db = await Scruby.create(User3)
 
-        user = User(
-            first_name="John",
-            last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
-            email="John_Smith@gmail.com",
-            phone="+447986123456",
-        )
+        user = User3(username="")
+        with pytest.raises(KeyError, match=r"The key should not be empty."):
+            await db.add_doc(user)
 
+        user = User3(username=" ")
         with pytest.raises(KeyError, match=r"The key should not be empty."):
-            await db.add_key("", user)
+            await db.add_doc(user)
+
+        user = User3(username="  ")
         with pytest.raises(KeyError, match=r"The key should not be empty."):
-            await db.add_key(" ", user)
+            await db.add_doc(user)
+
+        user = User3(username="\t\n\r\f\v")
         with pytest.raises(KeyError, match=r"The key should not be empty."):
-            await db.add_key("  ", user)
-        with pytest.raises(KeyError, match=r"The key should not be empty."):
-            await db.add_key("\t\n\r\f\v", user)
+            await db.add_doc(user)
         #
         # Delete DB.
         Scruby.napalm()
@@ -226,10 +216,10 @@ class TestNegative:
             phone="+447986123456",
         )
 
-        await db.add_key(user.key, user)
+        await db.add_doc(user)
 
         with pytest.raises(KeyAlreadyExistsError):
-            await db.add_key(user.key, user)
+            await db.add_doc(user)
         #
         # Delete DB.
         Scruby.napalm()
@@ -247,13 +237,13 @@ class TestNegative:
         )
 
         with pytest.raises(KeyError):
-            await db.update_key(user.key, user)
+            await db.update_doc(user)
 
-        await db.add_key(user.key, user)
+        await db.add_doc(user)
         await db.delete_key(user.key)
 
         with pytest.raises(KeyNotExistsError):
-            await db.update_key(user.key, user)
+            await db.update_doc(user)
         #
         # Delete DB.
         Scruby.napalm()
@@ -332,8 +322,8 @@ class TestPositive:
         # Delete DB.
         Scruby.napalm()
 
-    async def test_add_key(self) -> None:
-        """Testing a add_key method."""
+    async def test_add_doc(self) -> None:
+        """Testing a add_doc method."""
         db = await Scruby.create(User)
 
         user = User(
@@ -345,14 +335,14 @@ class TestPositive:
         )
 
         assert await db.estimated_document_count() == 0
-        assert await db.add_key(user.key, user) is None
+        assert await db.add_doc(user) is None
         assert await db.estimated_document_count() == 1
         #
         # Delete DB.
         Scruby.napalm()
 
-    async def test_update_key(self) -> None:
-        """Testing a update_key method."""
+    async def test_update_doc(self) -> None:
+        """Testing a update_doc method."""
         db = await Scruby.create(User)
 
         user = User(
@@ -364,9 +354,9 @@ class TestPositive:
         )
 
         assert await db.estimated_document_count() == 0
-        await db.add_key(user.key, user)
+        await db.add_doc(user)
         assert await db.estimated_document_count() == 1
-        await db.update_key(user.key, user)
+        await db.update_doc(user)
         assert await db.estimated_document_count() == 1
         #
         # Delete DB.
@@ -384,7 +374,7 @@ class TestPositive:
             phone="+447986123456",
         )
 
-        await db.add_key(user.key, user)
+        await db.add_doc(user)
         data: User = await db.get_key("+447986123456")
         assert data.model_dump() == user.model_dump()
         assert data.phone == "+447986123456"
@@ -404,7 +394,7 @@ class TestPositive:
             phone="+447986123456",
         )
 
-        await db.add_key(user.key, user)
+        await db.add_doc(user)
         assert await db.has_key("+447986123456")
         assert not await db.has_key("key missing")
         #
@@ -424,7 +414,7 @@ class TestPositive:
         )
 
         assert await db.estimated_document_count() == 0
-        await db.add_key(user.key, user)
+        await db.add_doc(user)
         assert await db.estimated_document_count() == 1
         assert await db.delete_key("+447986123456") is None
         assert await db.estimated_document_count() == 0
@@ -486,7 +476,7 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.add_key(user.key, user)
+            await db.add_doc(user)
 
         # by email
         result: User | None = await db.find_one(
@@ -519,7 +509,7 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.add_key(user.key, user)
+            await db.add_doc(user)
 
         # by emails
         results: list[User] | None = await db.find_many(
@@ -556,7 +546,7 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.add_key(user.key, user)
+            await db.add_doc(user)
 
         assert await db.estimated_document_count() == 9
         result: int = await db.count_documents(
@@ -581,7 +571,7 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.add_key(user.key, user)
+            await db.add_doc(user)
 
         # by emails
         result: int = await db.delete_many(
@@ -611,7 +601,7 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.add_key(user.key, user)
+            await db.add_doc(user)
 
         result = await db.run_custom_task(custom_task)
         assert result == 9
@@ -633,7 +623,7 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.add_key(user.key, user)
+            await db.add_doc(user)
 
         number_updated_users = await db.update_many(
             filter_fn=lambda _: True,  # Update all documents

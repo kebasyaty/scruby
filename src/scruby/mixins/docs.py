@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-__all__ = ("Keys",)
+__all__ = ("Docs",)
 
 import logging
 from typing import Any
@@ -17,36 +17,30 @@ from scruby.errors import (
 logger = logging.getLogger(__name__)
 
 
-class Keys:
-    """Methods for working with keys."""
+class Docs:
+    """Methods for working with document."""
 
-    async def add_key(
-        self,
-        key: str,
-        value: Any,
-    ) -> None:
-        """Asynchronous method for adding key to collection.
+    async def add_doc(self, doc: Any) -> None:
+        """Asynchronous method for adding document to collection.
 
         Args:
-            key: Key name. Type `str`.
-            value: Value of key. Type, derived from `BaseModel`.
+            doc: Value of key. Type, derived from `BaseModel`.
 
         Returns:
             None.
         """
         # Check if the Model matches the collection
-        if not isinstance(value, self._class_model):
-            value_class_name = value.__class__.__name__
+        if not isinstance(doc, self._class_model):
+            doc_class_name = doc.__class__.__name__
             collection_name = self._class_model.__name__
             msg = (
-                f"(add_key) Parameter `value` => Model `{value_class_name}` "
-                f"does not match collection `{collection_name}`!"
+                f"(add_doc) Parameter `doc` => Model `{doc_class_name}` does not match collection `{collection_name}`!"
             )
             logger.error(msg)
             raise TypeError(msg)
         # The path to cell of collection.
-        leaf_path, prepared_key = await self._get_leaf_path(key)
-        value_json: str = value.model_dump_json()
+        leaf_path, prepared_key = await self._get_leaf_path(doc.key)
+        doc_json: str = doc.model_dump_json()
         # Write key-value to collection.
         if await leaf_path.exists():
             # Add new key.
@@ -55,44 +49,39 @@ class Keys:
             try:
                 data[prepared_key]
             except KeyError:
-                data[prepared_key] = value_json
+                data[prepared_key] = doc_json
                 await leaf_path.write_bytes(orjson.dumps(data))
             else:
                 err = KeyAlreadyExistsError()
                 logger.error(err.message)
                 raise err
         else:
-            # Add new key to a blank leaf.
-            await leaf_path.write_bytes(orjson.dumps({prepared_key: value_json}))
+            # Add new document to a blank leaf.
+            await leaf_path.write_bytes(orjson.dumps({prepared_key: doc_json}))
         await self._counter_documents(1)
 
-    async def update_key(
-        self,
-        key: str,
-        value: Any,
-    ) -> None:
+    async def update_doc(self, doc: Any) -> None:
         """Asynchronous method for updating key to collection.
 
         Args:
-            key: Key name. Type `str`.
-            value: Value of key. Type `BaseModel`.
+            doc: Value of key. Type `BaseModel`.
 
         Returns:
             None.
         """
         # Check if the Model matches the collection
-        if not isinstance(value, self._class_model):
-            value_class_name = value.__class__.__name__
+        if not isinstance(doc, self._class_model):
+            doc_class_name = doc.__class__.__name__
             collection_name = self._class_model.__name__
             msg = (
-                f"(update_key) Parameter `value` => Model `{value_class_name}` "
+                f"(update_doc) Parameter `doc` => Model `{doc_class_name}` "
                 f"does not match collection `{collection_name}`!"
             )
             logger.error(msg)
             raise TypeError(msg)
         # The path to cell of collection.
-        leaf_path, prepared_key = await self._get_leaf_path(key)
-        value_json: str = value.model_dump_json()
+        leaf_path, prepared_key = await self._get_leaf_path(doc.key)
+        doc_json: str = doc.model_dump_json()
         # Update the existing key.
         if await leaf_path.exists():
             # Update the existing key.
@@ -100,7 +89,7 @@ class Keys:
             data: dict = orjson.loads(data_json) or {}
             try:
                 data[prepared_key]
-                data[prepared_key] = value_json
+                data[prepared_key] = doc_json
                 await leaf_path.write_bytes(orjson.dumps(data))
             except KeyError:
                 err = KeyNotExistsError()

@@ -74,7 +74,7 @@ async def test_user() -> None:
         phone="+447986123456",
     )
 
-    await user_coll.add_key(user.key, user)
+    await user_coll.add_doc(user)
 
 
 async def test_user_2() -> None:
@@ -91,7 +91,7 @@ async def test_user_2() -> None:
         phone="+447986123457",
     )
 
-    await user_coll.add_key(user.key, user)
+    await user_coll.add_doc(user)
 
 
 async def test_phone() -> None:
@@ -108,7 +108,7 @@ async def test_phone() -> None:
     )
 
     # Add phone to collection.
-    await phone_coll.add_key(phone.key, phone)
+    await phone_coll.add_doc(phone)
 
 
 async def test_car() -> None:
@@ -125,7 +125,7 @@ async def test_car() -> None:
     )
 
     # Add car to collection.
-    await car_coll.add_key(car.key, car)
+    await car_coll.add_doc(car)
     #
     # Delete DB.
     Scruby.napalm()
