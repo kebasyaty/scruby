@@ -100,7 +100,7 @@ nav:
   - Database: pages/db.md
   - Mixins:
       - Mixins: pages/mixins/index.md
-      - Keys: pages/mixins/keys.md
+      - Docs: pages/mixins/docs.md
       - Find: pages/mixins/find.md
       - Custom Task: pages/mixins/custom_task.md
       - Collection: pages/mixins/collection.md
