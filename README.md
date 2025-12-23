@@ -30,7 +30,7 @@
         <br>
         The database consists of collections.
         <br>
-        The maximum size of the one collection is `16**8=4294967296` branches,
+        The maximum size of the one collection is <b>16**8=4294967296</b> branches,
         <br>
         each branch can store one or more keys.
         <br>
