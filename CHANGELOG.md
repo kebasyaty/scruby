@@ -1,9 +1,16 @@
 ### CHANGELOG
 
+#### v0.26.0 2025-12-24
+
+- Renamed method from `Scruby.create()` to `Scruby.collection()`.
+- Updated tests.
+- Updated documentation.
+- Updated README.md
+
 #### v0.25.0 2025-12-23
 
-- Renamed method from `add_key` to `add_doc`.
-- Renamed method from `update_key` to `update_doc`.
+- Renamed method from `Scruby.add_key()` to `Scruby.add_doc()`.
+- Renamed method from `Scruby.update_key()` to `Scruby.update_doc()`.
 - Updated tests.
 - Updated documentation.
 - Updated README.md

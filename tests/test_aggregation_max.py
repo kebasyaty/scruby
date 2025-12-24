@@ -64,7 +64,7 @@ async def task_calculate_max(
 async def test_task_calculate_max() -> None:
     """Test a Max class in custom task."""
     constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
-    db = await Scruby.create(User)
+    db = await Scruby.collection(User)
 
     for num in range(1, 10):
         user = User(

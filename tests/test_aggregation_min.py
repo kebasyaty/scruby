@@ -64,7 +64,7 @@ async def task_calculate_min(
 async def test_task_calculate_min() -> None:
     """Test a Min class in custom task."""
     constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
-    db = await Scruby.create(User)
+    db = await Scruby.collection(User)
 
     for num in range(1, 10):
         user = User(
