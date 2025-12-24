@@ -69,7 +69,7 @@ async def task_calculate_average(
 
 async def main() -> None:
     """Example."""
-    # Get collection of `User`.
+    # Get collection `User`.
     user_coll = await Scruby.collection(User)
 
     # Create users.
@@ -166,7 +166,7 @@ async def task_counter(
 
 async def main() -> None:
     """Example."""
-    # Get collection of `User`.
+    # Get collection `User`.
     user_coll = await Scruby.collection(User)
 
     # Create users.
@@ -261,7 +261,7 @@ async def task_calculate_max(
 
 async def main() -> None:
     """Example."""
-    # Get collection of `User`.
+    # Get collection `User`.
     user_coll = await Scruby.collection(User)
 
     # Create users.
@@ -353,7 +353,7 @@ async def task_calculate_min(
 
 async def main() -> None:
     """Example."""
-    # Get collection of `User`.
+    # Get collection `User`.
     user_coll = await Scruby.collection(User)
 
     # Create users.
@@ -445,7 +445,7 @@ async def task_calculate_sum(
 
 async def main() -> None:
     """Example."""
-    # Get collection of `User`.
+    # Get collection `User`.
     user_coll = await Scruby.collection(User)
 
     # Create users.

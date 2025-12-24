@@ -32,7 +32,7 @@ class User(BaseModel):
 
 async def main() -> None:
     """Example."""
-    # Get collection of `User`.
+    # Get collection `User`.
     user_coll = await Scruby.collection(User)
 
     collection_list = await Scruby.collection_list()
