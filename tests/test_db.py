@@ -105,7 +105,7 @@ class TestNegative:
             AssertionError,
             match=r"`class_model` does not contain the base class `pydantic.BaseModel`!",
         ):
-            await Scruby.create(dict)
+            await Scruby.collection(dict)
         #
         # Delete DB.
         Scruby.napalm()
@@ -120,7 +120,7 @@ class TestNegative:
             phone="+447986123456",
         )
 
-        user_coll = await Scruby.create(User)
+        user_coll = await Scruby.collection(User)
 
         with pytest.raises(
             TypeError,
@@ -149,7 +149,7 @@ class TestNegative:
             phone="+447986123456",
         )
 
-        user_coll = await Scruby.create(User)
+        user_coll = await Scruby.collection(User)
         await user_coll.add_doc(user)
 
         with pytest.raises(
@@ -163,7 +163,7 @@ class TestNegative:
 
     async def test_get_non_existent_key(self) -> None:
         """Get a non-existent key."""
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
 
         with pytest.raises(KeyError):
             await db.get_key("key missing")
@@ -173,7 +173,7 @@ class TestNegative:
 
     async def test_del_non_existent_key(self) -> None:
         """Delete a non-existent key."""
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
 
         with pytest.raises(KeyError):
             await db.delete_key("key missing")
@@ -183,7 +183,7 @@ class TestNegative:
 
     async def test_key_is_empty(self) -> None:
         """The key should not be empty."""
-        db = await Scruby.create(User3)
+        db = await Scruby.collection(User3)
 
         user = User3(username="")
         with pytest.raises(KeyError, match=r"The key should not be empty."):
@@ -206,7 +206,7 @@ class TestNegative:
 
     async def test_key_already_exists(self) -> None:
         """If the key already exists."""
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
 
         user = User(
             first_name="John",
@@ -226,7 +226,7 @@ class TestNegative:
 
     async def test_key_not_exists(self) -> None:
         """If the key not exists."""
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
 
         user = User(
             first_name="John",
@@ -254,7 +254,7 @@ class TestPositive:
 
     async def test_create_db(self) -> None:
         """Create instance of database by default."""
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
 
         control_path = Path(
             "ScrubyDB/User/d/1/leaf.json",
@@ -272,12 +272,12 @@ class TestPositive:
 
     async def test_collection_list(self) -> None:
         """Testing a `collection_list` methopd."""
-        await Scruby.create(User)
+        await Scruby.collection(User)
 
         collection_list = await Scruby.collection_list()
         assert "User" in collection_list
 
-        await Scruby.create(User2)
+        await Scruby.collection(User2)
 
         collection_list = await Scruby.collection_list()
         assert "User" in collection_list
@@ -288,8 +288,8 @@ class TestPositive:
 
     async def test_delete_collection(self) -> None:
         """Testing a `delete_collection` methopd."""
-        await Scruby.create(User)
-        await Scruby.create(User2)
+        await Scruby.collection(User)
+        await Scruby.collection(User2)
 
         collection_list = await Scruby.collection_list()
         assert "User" in collection_list
@@ -310,7 +310,7 @@ class TestPositive:
 
     async def test_metadata(self) -> None:
         """Test metadata of collection."""
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
 
         meta = await db.get_meta()
         assert meta.counter_documents == 0
@@ -324,7 +324,7 @@ class TestPositive:
 
     async def test_add_doc(self) -> None:
         """Testing a add_doc method."""
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
 
         user = User(
             first_name="John",
@@ -343,7 +343,7 @@ class TestPositive:
 
     async def test_update_doc(self) -> None:
         """Testing a update_doc method."""
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
 
         user = User(
             first_name="John",
@@ -364,7 +364,7 @@ class TestPositive:
 
     async def test_get_key(self) -> None:
         """Testing a get_key method."""
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
 
         user = User(
             first_name="John",
@@ -384,7 +384,7 @@ class TestPositive:
 
     async def test_has_key(self) -> None:
         """Testing a has_key method."""
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
 
         user = User(
             first_name="John",
@@ -403,7 +403,7 @@ class TestPositive:
 
     async def test_delete_key(self) -> None:
         """Testing a delete_key method."""
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
 
         user = User(
             first_name="John",
@@ -425,7 +425,7 @@ class TestPositive:
 
     async def test_HASH_REDUCE_LEFT(self) -> None:
         """Length of reduction hash."""
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
         control_path = Path(
             "ScrubyDB/User/d/1/leaf.json",
         )
@@ -434,7 +434,7 @@ class TestPositive:
 
         Scruby.napalm()
         constants.HASH_REDUCE_LEFT = 2  # 16777216 branches in collection.
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
         control_path = Path(
             "ScrubyDB/User/a/6/d/2/d/1/leaf.json",
         )
@@ -443,7 +443,7 @@ class TestPositive:
 
         Scruby.napalm()
         constants.HASH_REDUCE_LEFT = 4  # 65536 branches in collection.
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
         control_path = Path(
             "ScrubyDB/User/d/2/d/1/leaf.json",
         )
@@ -452,7 +452,7 @@ class TestPositive:
 
         Scruby.napalm()
         constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
         control_path = Path(
             "ScrubyDB/User/d/1/leaf.json",
         )
@@ -466,7 +466,7 @@ class TestPositive:
         """Find a single document."""
         constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
 
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
 
         for num in range(1, 10):
             user = User(
@@ -499,7 +499,7 @@ class TestPositive:
         """Find documents."""
         constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
 
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
 
         for num in range(1, 10):
             user = User(
@@ -525,7 +525,7 @@ class TestPositive:
 
     async def test_collection_name(self) -> None:
         """Test a collection_name method."""
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
 
         assert db.collection_name() == "User"
         #
@@ -536,7 +536,7 @@ class TestPositive:
         """Test a count_documents method."""
         constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
 
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
 
         for num in range(1, 10):
             user = User(
@@ -561,7 +561,7 @@ class TestPositive:
         """Test a delete_many method."""
         constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
 
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
 
         for num in range(1, 10):
             user = User(
@@ -591,7 +591,7 @@ class TestPositive:
         """Test a run_custom_task method."""
         constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
 
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
 
         for num in range(1, 10):
             user = User(
@@ -613,7 +613,7 @@ class TestPositive:
         """Test a update_many method."""
         constants.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
 
-        db = await Scruby.create(User)
+        db = await Scruby.collection(User)
 
         for num in range(1, 10):
             user = User(

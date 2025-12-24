@@ -63,7 +63,7 @@ class Scruby(
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
     @classmethod
-    async def create(cls, class_model: Any) -> Any:
+    async def collection(cls, class_model: Any) -> Any:
         """Get an object to access a collection.
 
         Args:

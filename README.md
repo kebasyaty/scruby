@@ -98,7 +98,7 @@ class User(BaseModel):
 async def main() -> None:
     """Example."""
     # Get collection of `User`.
-    user_coll = await Scruby.create(User)
+    user_coll = await Scruby.collection(User)
 
     user = User(
         first_name="John",
@@ -167,7 +167,7 @@ class Phone(BaseModel):
 async def main() -> None:
     """Example."""
     # Get collection of `Phone`.
-    phone_coll = await Scruby.create(Phone)
+    phone_coll = await Scruby.collection(Phone)
 
     # Create phone.
     phone = Phone(
@@ -243,7 +243,7 @@ class Car(BaseModel):
 async def main() -> None:
     """Example."""
     # Get collection of `Car`.
-    car_coll = await Scruby.create(Car)
+    car_coll = await Scruby.collection(Car)
 
     # Create cars.
     for name in range(1, 10):
