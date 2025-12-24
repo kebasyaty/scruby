@@ -62,7 +62,7 @@ class Car(BaseModel):
 
 async def test_user() -> None:
     """Test User 1."""
-    # Get collection of `User`.
+    # Get collection `User`.
     user_coll = await Scruby.collection(User)
 
     # Create user.
@@ -79,7 +79,7 @@ async def test_user() -> None:
 
 async def test_user_2() -> None:
     """Test User 2."""
-    # Get collection of `User`.
+    # Get collection `User`.
     user_coll = await Scruby.collection(User)
 
     # Create user.
@@ -96,7 +96,7 @@ async def test_user_2() -> None:
 
 async def test_phone() -> None:
     """Test Phone."""
-    # Get collection of `Phone`.
+    # Get collection `Phone`.
     phone_coll = await Scruby.collection(Phone)
 
     # Create phone.
@@ -113,7 +113,7 @@ async def test_phone() -> None:
 
 async def test_car() -> None:
     """Test Car."""
-    # Get collection of `Car`.
+    # Get collection `Car`.
     car_coll = await Scruby.collection(Car)
 
     # Create car.
