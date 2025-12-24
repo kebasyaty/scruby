@@ -35,7 +35,7 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/kebasyaty/scruby"
+Homepage = "https://kebasyaty.github.io/scruby/"
 Repository = "https://github.com/kebasyaty/scruby"
 Source = "https://github.com/kebasyaty/scruby"
 "Bug Tracker" = "https://github.com/kebasyaty/scruby/issues"
