@@ -1,5 +1,11 @@
 ### CHANGELOG
 
+#### v0.26.4 2026-01-04
+
+- Added a `Copyright` commets.
+- Updated all dependencies.
+- Updated documentation.
+
 #### v0.26.0 2025-12-24
 
 - Renamed method from `Scruby.create()` to `Scruby.collection()`.
