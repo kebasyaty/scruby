@@ -110,7 +110,8 @@ class Find:
         Args:
             filter_fn (Callable): A function that execute the conditions of filtering.
             limit_docs (int): Limiting the number of documents. By default = 1000.
-            page_number (int): ???
+            page_number (int): For pagination output. By default = 1.
+                               Number of documents per page = limit_docs.
             max_workers (int): The maximum number of processes that can be used to
                                execute the given calls. If None or not given then as many
                                worker processes will be created as the machine has processors.
