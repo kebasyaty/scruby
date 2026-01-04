@@ -35,3 +35,8 @@ DB_ROOT: str = "ScrubyDB"
 # Number of branches is number of requests to the hard disk during quantum operations.
 # Quantum operations: find_one, find_many, count_documents, delete_many, run_custom_task.
 HASH_REDUCE_LEFT: Literal[0, 2, 4, 6] = 6
+
+# The maximum number of processes that can be used to execute the given calls.
+# If None, then as many worker processes will be
+# created as the machine has processors.
+MAX_WORKERS: int | None = None
