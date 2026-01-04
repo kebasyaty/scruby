@@ -511,14 +511,36 @@ class TestPositive:
             )
             await db.add_doc(user)
 
-        # by emails
+        # limit docs = 1000, page number = 1
         results: list[User] | None = await db.find_many(
-            filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
+            filter_fn=lambda doc: doc.email == "John_Smith_1@gmail.com" or doc.email == "John_Smith_9@gmail.com",
         )
         assert results is not None
         assert len(results) == 2
-        assert results[0].email in ["John_Smith_5@gmail.com", "John_Smith_8@gmail.com"]
-        assert results[1].email in ["John_Smith_5@gmail.com", "John_Smith_8@gmail.com"]
+        assert results[0].email in ["John_Smith_1@gmail.com", "John_Smith_9@gmail.com"]
+        assert results[1].email in ["John_Smith_1@gmail.com", "John_Smith_9@gmail.com"]
+
+        # limit docs = 5, page number = 1
+        results: list[User] | None = await db.find_many(
+            filter_fn=lambda doc: doc.email == "John_Smith_1@gmail.com" or doc.email == "John_Smith_5@gmail.com",
+            limit_docs=5,
+            page_number=1,
+        )
+        assert results is not None
+        assert len(results) == 2
+        assert results[0].email in ["John_Smith_1@gmail.com", "John_Smith_5@gmail.com"]
+        assert results[1].email in ["John_Smith_1@gmail.com", "John_Smith_5@gmail.com"]
+
+        # limit docs = 5, page number = 2
+        results: list[User] | None = await db.find_many(
+            filter_fn=lambda doc: doc.email == "John_Smith_6@gmail.com" or doc.email == "John_Smith_9@gmail.com",
+            limit_docs=5,
+            page_number=2,
+        )
+        assert results is not None
+        assert len(results) == 2
+        assert results[0].email in ["John_Smith_6@gmail.com", "John_Smith_9@gmail.com"]
+        assert results[1].email in ["John_Smith_6@gmail.com", "John_Smith_9@gmail.com"]
         #
         # Delete DB.
         Scruby.napalm()

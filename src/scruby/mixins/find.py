@@ -26,6 +26,7 @@ class Find:
         hash_reduce_left: str,
         db_root: str,
         class_model: Any,
+        filter_is_checking: bool = True,
     ) -> list[Any] | None:
         """Task for find documents.
 
@@ -50,7 +51,7 @@ class Find:
             data: dict[str, str] = orjson.loads(data_json) or {}
             for _, val in data.items():
                 doc = class_model.model_validate_json(val)
-                if filter_fn(doc):
+                if not filter_is_checking or filter_fn(doc):
                     docs.append(doc)
         return docs or None
 
@@ -126,11 +127,11 @@ class Find:
         class_model: Any = self._class_model
         counter: int = 0
         number_docs_skippe: int = limit_docs * (page_number - 1) if page_number > 1 else 0
-        limit_docs = limit_docs + number_docs_skippe
         result: list[Any] = []
+        filter_is_checking: bool = False
         with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
             for branch_number in branch_numbers:
-                if counter >= limit_docs:
+                if number_docs_skippe == 0 and counter >= limit_docs:
                     return result[:limit_docs]
                 future = executor.submit(
                     search_task_fn,
@@ -139,13 +140,17 @@ class Find:
                     hash_reduce_left,
                     db_root,
                     class_model,
+                    filter_is_checking,
                 )
                 docs = await future.result()
                 if docs is not None:
                     for doc in docs:
-                        counter += 1
-                        if counter > number_docs_skippe:
+                        if number_docs_skippe == 0:
                             if counter >= limit_docs:
                                 return result[:limit_docs]
-                            result.append(doc)
+                            if filter_fn(doc):
+                                result.append(doc)
+                                counter += 1
+                        else:
+                            number_docs_skippe -= 1
         return result or None
