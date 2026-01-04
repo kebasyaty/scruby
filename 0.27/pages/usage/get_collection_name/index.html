@@ -301,13 +301,13 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../constants/" class="md-tabs__link">
+      <a href="../../settings/" class="md-tabs__link">
         
   
   
     
   
-  Constants
+  Settings
 
       </a>
     </li>
@@ -976,14 +976,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../constants/" class="md-nav__link">
+      <a href="../../settings/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Constants
+    Settings
   
 
     
@@ -1444,10 +1444,10 @@
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">EmailStr</span><span class="p">,</span> <span class="n">Field</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic_extra_types.phone_numbers</span><span class="w"> </span><span class="kn">import</span> <span class="n">PhoneNumber</span><span class="p">,</span> <span class="n">PhoneNumberValidator</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="kn">from</span><span class="w"> </span><span class="nn">scruby</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scruby</span><span class="p">,</span> <span class="n">constants</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="kn">from</span><span class="w"> </span><span class="nn">scruby</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scruby</span><span class="p">,</span> <span class="n">settings</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9"></a>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="n">constants</span><span class="o">.</span><span class="n">DB_ROOT</span> <span class="o">=</span> <span class="s2">&quot;ScrubyDB&quot;</span>  <span class="c1"># By default = &quot;ScrubyDB&quot;</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11"></a><span class="n">constants</span><span class="o">.</span><span class="n">HASH_REDUCE_LEFT</span> <span class="o">=</span> <span class="mi">6</span>  <span class="c1"># By default = 6</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="n">settings</span><span class="o">.</span><span class="n">DB_ROOT</span> <span class="o">=</span> <span class="s2">&quot;ScrubyDB&quot;</span>  <span class="c1"># By default = &quot;ScrubyDB&quot;</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11"></a><span class="n">settings</span><span class="o">.</span><span class="n">HASH_REDUCE_LEFT</span> <span class="o">=</span> <span class="mi">6</span>  <span class="c1"># By default = 6</span>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12"></a>
 </span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13"></a>
 </span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
