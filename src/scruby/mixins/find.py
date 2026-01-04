@@ -66,10 +66,10 @@ class Find:
         Ideally, hundreds and even thousands of threads are required.
 
         Args:
-            filter_fn: A function that execute the conditions of filtering.
-            max_workers: The maximum number of processes that can be used to
-                         execute the given calls. If None or not given then as many
-                         worker processes will be created as the machine has processors.
+            filter_fn (Callable): A function that execute the conditions of filtering.
+            max_workers (int): The maximum number of processes that can be used to
+                               execute the given calls. If None or not given then as many
+                               worker processes will be created as the machine has processors.
 
         Returns:
             Document or None.
@@ -98,6 +98,7 @@ class Find:
         self,
         filter_fn: Callable,
         limit_docs: int = 1000,
+        page_number: int = 1,  # noqa: ARG002
         max_workers: int | None = None,
     ) -> list[Any] | None:
         """Finds one or more documents matching the filter.
@@ -107,11 +108,12 @@ class Find:
         Ideally, hundreds and even thousands of threads are required.
 
         Args:
-            filter_fn: A function that execute the conditions of filtering.
-            limit_docs: Limiting the number of documents. By default = 1000.
-            max_workers: The maximum number of processes that can be used to
-                         execute the given calls. If None or not given then as many
-                         worker processes will be created as the machine has processors.
+            filter_fn (Callable): A function that execute the conditions of filtering.
+            limit_docs (int): Limiting the number of documents. By default = 1000.
+            page_number (int): ???
+            max_workers (int): The maximum number of processes that can be used to
+                               execute the given calls. If None or not given then as many
+                               worker processes will be created as the machine has processors.
 
         Returns:
             List of documents or None.
