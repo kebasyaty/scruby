@@ -4,7 +4,7 @@
 #
 """Database settings.
 
-The module contains the following variables:
+The module contains the following parameters:
 
 - `DB_ROOT` - Path to root directory of database. `By default = "ScrubyDB" (in root of project)`.
 - `HASH_REDUCE_LEFT` - The length of the hash reduction on the left side.
@@ -20,6 +20,7 @@ from __future__ import annotations
 __all__ = (
     "DB_ROOT",
     "HASH_REDUCE_LEFT",
+    "MAX_WORKERS",
 )
 
 from typing import Literal
