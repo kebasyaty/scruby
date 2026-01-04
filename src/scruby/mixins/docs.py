@@ -6,7 +6,7 @@
 
 from __future__ import annotations
 
-__all__ = ("Docs",)
+__all__ = ("Keys",)
 
 import logging
 from typing import Any
@@ -19,8 +19,8 @@ from scruby.errors import (
 )
 
 
-class Docs:
-    """Methods for working with document."""
+class Keys:
+    """Methods for working with keys."""
 
     async def add_doc(self, doc: Any) -> None:
         """Asynchronous method for adding document to collection.

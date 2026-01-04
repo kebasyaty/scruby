@@ -58,7 +58,6 @@ class Find:
     async def find_one(
         self,
         filter_fn: Callable,
-        max_workers: int | None = None,
     ) -> Any | None:
         """Finds a single document matching the filter.
 
@@ -68,9 +67,6 @@ class Find:
 
         Args:
             filter_fn (Callable): A function that execute the conditions of filtering.
-            max_workers (int): The maximum number of processes that can be used to
-                               execute the given calls. If None or not given then as many
-                               worker processes will be created as the machine has processors.
 
         Returns:
             Document or None.
@@ -80,7 +76,7 @@ class Find:
         hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
         class_model: Any = self._class_model
-        with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
+        with concurrent.futures.ThreadPoolExecutor(self._max_workers) as executor:
             for branch_number in branch_numbers:
                 future = executor.submit(
                     search_task_fn,
@@ -100,7 +96,6 @@ class Find:
         filter_fn: Callable = lambda _: True,
         limit_docs: int = 1000,
         page_number: int = 1,
-        max_workers: int | None = None,
     ) -> list[Any] | None:
         """Finds one or more documents matching the filter.
 
@@ -114,9 +109,6 @@ class Find:
             limit_docs (int): Limiting the number of documents. By default = 1000.
             page_number (int): For pagination output. By default = 1.
                                Number of documents per page = limit_docs.
-            max_workers (int): The maximum number of processes that can be used to
-                               execute the given calls. If None or not given then as many
-                               worker processes will be created as the machine has processors.
 
         Returns:
             List of documents or None.
@@ -130,7 +122,7 @@ class Find:
         number_docs_skippe: int = limit_docs * (page_number - 1) if page_number > 1 else 0
         result: list[Any] = []
         filter_is_checking: bool = False
-        with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
+        with concurrent.futures.ThreadPoolExecutor(self._max_workers) as executor:
             for branch_number in branch_numbers:
                 if number_docs_skippe == 0 and counter >= limit_docs:
                     return result[:limit_docs]

@@ -1,5 +1,12 @@
 ### CHANGELOG
 
+#### v0.27.2 2026-01-04
+
+- Added `MAX_WORKERS` to `settings` module.
+- Updated tests.
+- Updated documentation.
+- Updated README.md
+
 #### v0.27.1 2026-01-04
 
 - Renamed the `constants` module to `settings`.

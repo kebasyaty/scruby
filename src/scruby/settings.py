@@ -4,7 +4,7 @@
 #
 """Database settings.
 
-The module contains the following variables:
+The module contains the following parameters:
 
 - `DB_ROOT` - Path to root directory of database. `By default = "ScrubyDB" (in root of project)`.
 - `HASH_REDUCE_LEFT` - The length of the hash reduction on the left side.
@@ -12,6 +12,7 @@ The module contains the following variables:
     - `2` - 16777216 branches in collection.
     - `4` - 65536 branches in collection.
     - `6` - 256 branches in collection (by default).
+- `MAX_WORKERS` - The maximum number of processes that can be used `By default = None`.
 """
 
 from __future__ import annotations
@@ -19,6 +20,7 @@ from __future__ import annotations
 __all__ = (
     "DB_ROOT",
     "HASH_REDUCE_LEFT",
+    "MAX_WORKERS",
 )
 
 from typing import Literal
@@ -35,3 +37,8 @@ DB_ROOT: str = "ScrubyDB"
 # Number of branches is number of requests to the hard disk during quantum operations.
 # Quantum operations: find_one, find_many, count_documents, delete_many, run_custom_task.
 HASH_REDUCE_LEFT: Literal[0, 2, 4, 6] = 6
+
+# The maximum number of processes that can be used to execute the given calls.
+# If None, then as many worker processes will be
+# created as the machine has processors.
+MAX_WORKERS: int | None = None

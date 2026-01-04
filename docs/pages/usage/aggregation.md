@@ -17,6 +17,7 @@ from scruby.aggregation import Average
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 settings.HASH_REDUCE_LEFT = 6  # By default = 6
+settings.MAX_WORKERS = None  # By default = None
 
 
 class User(BaseModel):
@@ -112,6 +113,7 @@ from scruby.aggregation import Counter
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 settings.HASH_REDUCE_LEFT = 6  # By default = 6
+settings.MAX_WORKERS = None  # By default = None
 
 
 class User(BaseModel):
@@ -212,6 +214,7 @@ from scruby.aggregation import Max
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 settings.HASH_REDUCE_LEFT = 6  # By default = 6
+settings.MAX_WORKERS = None  # By default = None
 
 
 class User(BaseModel):
@@ -304,6 +307,7 @@ from scruby.aggregation import Min
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 settings.HASH_REDUCE_LEFT = 6  # By default = 6
+settings.MAX_WORKERS = None  # By default = None
 
 
 class User(BaseModel):
@@ -396,6 +400,7 @@ from scruby.aggregation import Sum
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 settings.HASH_REDUCE_LEFT = 6  # By default = 6
+settings.MAX_WORKERS = None  # By default = None
 
 
 class User(BaseModel):

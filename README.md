@@ -79,6 +79,7 @@ from scruby import Scruby, settings
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 settings.HASH_REDUCE_LEFT = 6  # By default = 6
+settings.MAX_WORKERS = None  # By default = None
 
 class User(BaseModel):
     """User model."""
@@ -148,6 +149,7 @@ from pprint import pprint as pp
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 settings.HASH_REDUCE_LEFT = 6  # By default = 6
+settings.MAX_WORKERS = None  # By default = None
 
 
 class Phone(BaseModel):
@@ -224,6 +226,7 @@ from pprint import pprint as pp
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 settings.HASH_REDUCE_LEFT = 6  # By default = 6
+settings.MAX_WORKERS = None  # By default = None
 
 
 class Car(BaseModel):

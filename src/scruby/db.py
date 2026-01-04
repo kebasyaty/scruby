@@ -32,7 +32,7 @@ class _Meta(BaseModel):
 
 
 class Scruby(
-    mixins.Docs,
+    mixins.Keys,
     mixins.Find,
     mixins.CustomTask,
     mixins.Collection,
@@ -49,6 +49,7 @@ class Scruby(
         self._meta = _Meta
         self._db_root = settings.DB_ROOT
         self._hash_reduce_left = settings.HASH_REDUCE_LEFT
+        self._max_workers = settings.MAX_WORKERS
         # The maximum number of branches.
         match self._hash_reduce_left:
             case 0:
