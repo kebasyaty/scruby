@@ -2,7 +2,7 @@
 # Copyright (c) 2025 Gennady Kostyunin
 # SPDX-License-Identifier: MIT
 #
-"""Constant variables.
+"""Database settings.
 
 The module contains the following variables:
 

@@ -1,8 +1,8 @@
-"""Testing Constants."""
+"""Testing Settings."""
 
 from __future__ import annotations
 
-from scruby.constants import DB_ROOT, HASH_REDUCE_LEFT
+from scruby.settings import DB_ROOT, HASH_REDUCE_LEFT
 
 
 def test_db_root() -> None:
