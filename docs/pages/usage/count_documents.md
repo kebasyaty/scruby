@@ -8,9 +8,9 @@ import datetime
 from typing import Annotated
 from pydantic import BaseModel, EmailStr
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
-from scruby import Scruby, constants
+from scruby import Scruby, settings
 
-constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
+settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 
 
 class User(BaseModel):
@@ -65,10 +65,10 @@ import datetime
 from typing import Annotated
 from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
-from scruby import Scruby, constants
+from scruby import Scruby, settings
 
-constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
-constants.HASH_REDUCE_LEFT = 6  # By default = 6
+settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
+settings.HASH_REDUCE_LEFT = 6  # By default = 6
 
 
 class User(BaseModel):

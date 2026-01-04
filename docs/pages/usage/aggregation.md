@@ -12,11 +12,11 @@ from typing import Annotated, Any
 from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, constants
+from scruby import Scruby, settings
 from scruby.aggregation import Average
 
-constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
-constants.HASH_REDUCE_LEFT = 6  # By default = 6
+settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
+settings.HASH_REDUCE_LEFT = 6  # By default = 6
 
 
 class User(BaseModel):
@@ -107,11 +107,11 @@ from typing import Annotated, Any
 from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, constants
+from scruby import Scruby, settings
 from scruby.aggregation import Counter
 
-constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
-constants.HASH_REDUCE_LEFT = 6  # By default = 6
+settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
+settings.HASH_REDUCE_LEFT = 6  # By default = 6
 
 
 class User(BaseModel):
@@ -207,11 +207,11 @@ from typing import Annotated, Any
 from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, constants
+from scruby import Scruby, settings
 from scruby.aggregation import Max
 
-constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
-constants.HASH_REDUCE_LEFT = 6  # By default = 6
+settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
+settings.HASH_REDUCE_LEFT = 6  # By default = 6
 
 
 class User(BaseModel):
@@ -299,11 +299,11 @@ from typing import Annotated, Any
 from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, constants
+from scruby import Scruby, settings
 from scruby.aggregation import Min
 
-constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
-constants.HASH_REDUCE_LEFT = 6  # By default = 6
+settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
+settings.HASH_REDUCE_LEFT = 6  # By default = 6
 
 
 class User(BaseModel):
@@ -391,11 +391,11 @@ from typing import Annotated, Any
 from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, constants
+from scruby import Scruby, settings
 from scruby.aggregation import Sum
 
-constants.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
-constants.HASH_REDUCE_LEFT = 6  # By default = 6
+settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
+settings.HASH_REDUCE_LEFT = 6  # By default = 6
 
 
 class User(BaseModel):
