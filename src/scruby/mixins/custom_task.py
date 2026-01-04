@@ -8,14 +8,11 @@ from __future__ import annotations
 
 __all__ = ("CustomTask",)
 
-import logging
 from collections.abc import Callable
 from typing import Any
 
 import orjson
 from anyio import Path
-
-logger = logging.getLogger(__name__)
 
 
 class CustomTask:

@@ -20,8 +20,6 @@ from pydantic import BaseModel
 
 from scruby import constants, mixins
 
-logger = logging.getLogger(__name__)
-
 
 class _Meta(BaseModel):
     """Metadata of Collection."""
@@ -63,7 +61,7 @@ class Scruby(
                 self._max_branch_number = 256
             case _ as unreachable:
                 msg: str = f"{unreachable} - Unacceptable value for HASH_REDUCE_LEFT."
-                logger.critical(msg)
+                logging.critical(msg)
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
     @classmethod
@@ -167,7 +165,7 @@ class Scruby(
         """
         if not isinstance(key, str):
             msg = "The key is not a string."
-            logger.error(msg)
+            logging.error(msg)
             raise KeyError(msg)
         # Prepare key.
         # Removes spaces at the beginning and end of a string.
@@ -176,7 +174,7 @@ class Scruby(
         # Check the key for an empty string.
         if len(prepared_key) == 0:
             msg = "The key should not be empty."
-            logger.error(msg)
+            logging.error(msg)
             raise KeyError(msg)
         # Key to crc32 sum.
         key_as_hash: str = f"{zlib.crc32(prepared_key.encode('utf-8')):08x}"[self._hash_reduce_left :]

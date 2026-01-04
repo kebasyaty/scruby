@@ -18,8 +18,6 @@ from scruby.errors import (
     KeyNotExistsError,
 )
 
-logger = logging.getLogger(__name__)
-
 
 class Docs:
     """Methods for working with document."""
@@ -40,7 +38,7 @@ class Docs:
             msg = (
                 f"(add_doc) Parameter `doc` => Model `{doc_class_name}` does not match collection `{collection_name}`!"
             )
-            logger.error(msg)
+            logging.error(msg)
             raise TypeError(msg)
         # The path to cell of collection.
         leaf_path, prepared_key = await self._get_leaf_path(doc.key)
@@ -57,7 +55,7 @@ class Docs:
                 await leaf_path.write_bytes(orjson.dumps(data))
             else:
                 err = KeyAlreadyExistsError()
-                logger.error(err.message)
+                logging.error(err.message)
                 raise err
         else:
             # Add new document to a blank leaf.
@@ -81,7 +79,7 @@ class Docs:
                 f"(update_doc) Parameter `doc` => Model `{doc_class_name}` "
                 f"does not match collection `{collection_name}`!"
             )
-            logger.error(msg)
+            logging.error(msg)
             raise TypeError(msg)
         # The path to cell of collection.
         leaf_path, prepared_key = await self._get_leaf_path(doc.key)
@@ -97,10 +95,10 @@ class Docs:
                 await leaf_path.write_bytes(orjson.dumps(data))
             except KeyError:
                 err = KeyNotExistsError()
-                logger.error(err.message)
+                logging.error(err.message)
                 raise err from None
         else:
-            logger.error("The key not exists.")
+            logging.error("The key not exists.")
             raise KeyError()
 
     async def get_key(self, key: str) -> Any:
@@ -121,7 +119,7 @@ class Docs:
             obj: Any = self._class_model.model_validate_json(data[prepared_key])
             return obj
         msg: str = "`get_key` - The unacceptable key value."
-        logger.error(msg)
+        logging.error(msg)
         raise KeyError()
 
     async def has_key(self, key: str) -> bool:
@@ -166,5 +164,5 @@ class Docs:
             await self._counter_documents(-1)
             return
         msg: str = "`delete_key` - The unacceptable key value."
-        logger.error(msg)
+        logging.error(msg)
         raise KeyError()
