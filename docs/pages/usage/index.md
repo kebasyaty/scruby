@@ -1,4 +1,4 @@
-Example collection of how to use a database.
+Examples of database use.
 
 ```shell
 # Run Development:
