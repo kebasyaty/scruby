@@ -28,6 +28,10 @@ requires a large number of processor threads.
 
 from __future__ import annotations
 
-__all__ = ("Scruby",)
+__all__ = (
+    "settings",
+    "Scruby",
+)
 
+from scruby import settings
 from scruby.db import Scruby

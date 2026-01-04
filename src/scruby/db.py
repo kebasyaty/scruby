@@ -18,7 +18,7 @@ from typing import Any, Literal, Never, assert_never
 from anyio import Path
 from pydantic import BaseModel
 
-from scruby import constants, mixins
+from scruby import mixins, settings
 
 
 class _Meta(BaseModel):
@@ -47,8 +47,8 @@ class Scruby(
     ) -> None:
         super().__init__()
         self._meta = _Meta
-        self._db_root = constants.DB_ROOT
-        self._hash_reduce_left = constants.HASH_REDUCE_LEFT
+        self._db_root = settings.DB_ROOT
+        self._hash_reduce_left = settings.HASH_REDUCE_LEFT
         # The maximum number of branches.
         match self._hash_reduce_left:
             case 0:
@@ -81,10 +81,10 @@ class Scruby(
         # Caching a pati for metadata.
         # The zero branch is reserved for metadata.
         branch_number: int = 0
-        branch_number_as_hash: str = f"{branch_number:08x}"[constants.HASH_REDUCE_LEFT :]
+        branch_number_as_hash: str = f"{branch_number:08x}"[settings.HASH_REDUCE_LEFT :]
         separated_hash: str = "/".join(list(branch_number_as_hash))
         meta_dir_path_tuple = (
-            constants.DB_ROOT,
+            settings.DB_ROOT,
             class_model.__name__,
             separated_hash,
         )
@@ -97,9 +97,9 @@ class Scruby(
         if not await branch_path.exists():
             await branch_path.mkdir(parents=True)
             meta = _Meta(
-                db_root=constants.DB_ROOT,
+                db_root=settings.DB_ROOT,
                 collection_name=class_model.__name__,
-                hash_reduce_left=constants.HASH_REDUCE_LEFT,
+                hash_reduce_left=settings.HASH_REDUCE_LEFT,
                 max_branch_number=instance.__dict__["_max_branch_number"],
                 counter_documents=0,
             )
@@ -208,5 +208,5 @@ class Scruby(
             None.
         """
         with contextlib.suppress(FileNotFoundError):
-            rmtree(constants.DB_ROOT)
+            rmtree(settings.DB_ROOT)
         return

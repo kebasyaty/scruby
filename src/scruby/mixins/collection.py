@@ -12,7 +12,7 @@ from shutil import rmtree
 
 from anyio import Path, to_thread
 
-from scruby import constants
+from scruby import settings
 
 
 class Collection:
@@ -29,7 +29,7 @@ class Collection:
     @staticmethod
     async def collection_list() -> list[str]:
         """Get collection list."""
-        target_directory = Path(constants.DB_ROOT)
+        target_directory = Path(settings.DB_ROOT)
         # Get all entries in the directory
         all_entries = Path.iterdir(target_directory)
         directory_names: list[str] = [entry.name async for entry in all_entries]
@@ -45,6 +45,6 @@ class Collection:
         Returns:
             None.
         """
-        target_directory = f"{constants.DB_ROOT}/{name}"
+        target_directory = f"{settings.DB_ROOT}/{name}"
         await to_thread.run_sync(rmtree, target_directory)  # pyrefly: ignore[bad-argument-type]
         return
