@@ -12,6 +12,7 @@ The module contains the following variables:
     - `2` - 16777216 branches in collection.
     - `4` - 65536 branches in collection.
     - `6` - 256 branches in collection (by default).
+- `MAX_WORKERS` - The maximum number of processes that can be used `By default = None`.
 """
 
 from __future__ import annotations
