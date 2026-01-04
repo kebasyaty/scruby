@@ -11,17 +11,15 @@ __all__ = ("Find",)
 import concurrent.futures
 import logging
 from collections.abc import Callable
-from typing import TypeVar
+from typing import Any
 
 import orjson
 from anyio import Path
 
 logger = logging.getLogger(__name__)
 
-T = TypeVar("T")
 
-
-class Find[T]:
+class Find:
     """Quantum methods for searching documents."""
 
     @staticmethod
@@ -30,8 +28,8 @@ class Find[T]:
         filter_fn: Callable,
         hash_reduce_left: str,
         db_root: str,
-        class_model: T,
-    ) -> list[T] | None:
+        class_model: Any,
+    ) -> list[Any] | None:
         """Task for find documents.
 
         This method is for internal use.
@@ -49,7 +47,7 @@ class Find[T]:
                 "leaf.json",
             ),
         )
-        docs: list[T] = []
+        docs: list[Any] = []
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
             data: dict[str, str] = orjson.loads(data_json) or {}
@@ -63,7 +61,7 @@ class Find[T]:
         self,
         filter_fn: Callable,
         max_workers: int | None = None,
-    ) -> T | None:
+    ) -> Any | None:
         """Finds a single document matching the filter.
 
         The search is based on the effect of a quantum loop.
@@ -83,7 +81,7 @@ class Find[T]:
         search_task_fn: Callable = self._task_find
         hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
-        class_model: T = self._class_model
+        class_model: Any = self._class_model
         with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
             for branch_number in branch_numbers:
                 future = executor.submit(
@@ -104,7 +102,7 @@ class Find[T]:
         filter_fn: Callable,
         limit_docs: int = 1000,
         max_workers: int | None = None,
-    ) -> list[T] | None:
+    ) -> list[Any] | None:
         """Finds one or more documents matching the filter.
 
         The search is based on the effect of a quantum loop.
@@ -125,9 +123,9 @@ class Find[T]:
         search_task_fn: Callable = self._task_find
         hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
-        class_model: T = self._class_model
+        class_model: Any = self._class_model
         counter: int = 0
-        result: list[T] = []
+        result: list[Any] = []
         with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
             for branch_number in branch_numbers:
                 if counter >= limit_docs:

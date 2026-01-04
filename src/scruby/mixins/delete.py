@@ -11,17 +11,15 @@ __all__ = ("Delete",)
 import concurrent.futures
 import logging
 from collections.abc import Callable
-from typing import TypeVar
+from typing import Any
 
 import orjson
 from anyio import Path
 
 logger = logging.getLogger(__name__)
 
-T = TypeVar("T")
 
-
-class Delete[T]:
+class Delete:
     """Methods for deleting documents."""
 
     @staticmethod
@@ -30,7 +28,7 @@ class Delete[T]:
         filter_fn: Callable,
         hash_reduce_left: int,
         db_root: str,
-        class_model: T,
+        class_model: Any,
     ) -> int:
         """Task for find and delete documents.
 
@@ -87,7 +85,7 @@ class Delete[T]:
         search_task_fn: Callable = self._task_delete
         hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
-        class_model: T = self._class_model
+        class_model: Any = self._class_model
         counter: int = 0
         with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
             for branch_number in branch_numbers:
