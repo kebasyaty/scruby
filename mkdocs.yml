@@ -96,7 +96,7 @@ nav:
       - Custom task: pages/usage/custom_task.md
       - Aggregation classes: pages/usage/aggregation.md
   - Aggregation classes: pages/aggregation.md
-  - Constants: pages/constants.md
+  - Settings: pages/settings.md
   - Database: pages/db.md
   - Mixins:
       - Mixins: pages/mixins/index.md

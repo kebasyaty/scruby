@@ -1,4 +1,4 @@
-::: scruby.constants
+::: scruby.settings
 
 <hr>
 
