@@ -1,5 +1,11 @@
 ### CHANGELOG
 
+#### v0.27.1 2026-01-04
+
+- Renamed the `constants` module to `settings`.
+- Updated tests.
+- Updated documentation.
+
 #### v0.27.0 2026-01-04
 
 - The `number_page` parameter for pagination output has been added to the `find_many` function.
