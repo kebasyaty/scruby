@@ -110,6 +110,7 @@ class Find:
 
         Args:
             filter_fn (Callable): A function that execute the conditions of filtering.
+                                  By default it searches for all documents.
             limit_docs (int): Limiting the number of documents. By default = 1000.
             page_number (int): For pagination output. By default = 1.
                                Number of documents per page = limit_docs.
