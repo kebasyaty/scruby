@@ -9,16 +9,13 @@ from __future__ import annotations
 __all__ = ("Collection",)
 
 from shutil import rmtree
-from typing import TypeVar
 
 from anyio import Path, to_thread
 
 from scruby import constants
 
-T = TypeVar("T")
 
-
-class Collection[T]:
+class Collection:
     """Methods for working with collections."""
 
     def collection_name(self) -> str:

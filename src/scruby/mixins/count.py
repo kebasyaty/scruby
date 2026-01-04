@@ -10,12 +10,10 @@ __all__ = ("Count",)
 
 import concurrent.futures
 from collections.abc import Callable
-from typing import TypeVar
-
-T = TypeVar("T")
+from typing import Any
 
 
-class Count[T]:
+class Count:
     """Methods for counting the number of documents."""
 
     async def estimated_document_count(self) -> int:
@@ -51,7 +49,7 @@ class Count[T]:
         search_task_fn: Callable = self._task_find
         hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
-        class_model: T = self._class_model
+        class_model: Any = self._class_model
         counter: int = 0
         with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
             for branch_number in branch_numbers:

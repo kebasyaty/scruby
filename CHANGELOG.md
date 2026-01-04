@@ -1,9 +1,17 @@
 ### CHANGELOG
 
-#### v0.26.4 2026-01-04
+#### v0.27.0 2026-01-04
+
+- The `number_page` parameter for pagination output has been added to the `find_many` function.
+- Now the `find_many` function, without specifying a filter, searches for all documents.
+- Upgraded all dependencies.
+- Updated tests.
+- Updated documentation.
+
+#### v0.26.4 2026-01-03
 
 - Added a `Copyright` commets.
-- Updated all dependencies.
+- Upgraded all dependencies.
 - Updated documentation.
 
 #### v0.26.0 2025-12-24

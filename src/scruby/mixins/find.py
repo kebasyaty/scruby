@@ -9,19 +9,14 @@ from __future__ import annotations
 __all__ = ("Find",)
 
 import concurrent.futures
-import logging
 from collections.abc import Callable
-from typing import TypeVar
+from typing import Any
 
 import orjson
 from anyio import Path
 
-logger = logging.getLogger(__name__)
 
-T = TypeVar("T")
-
-
-class Find[T]:
+class Find:
     """Quantum methods for searching documents."""
 
     @staticmethod
@@ -30,8 +25,9 @@ class Find[T]:
         filter_fn: Callable,
         hash_reduce_left: str,
         db_root: str,
-        class_model: T,
-    ) -> list[T] | None:
+        class_model: Any,
+        filter_is_checking: bool = True,
+    ) -> list[Any] | None:
         """Task for find documents.
 
         This method is for internal use.
@@ -49,13 +45,13 @@ class Find[T]:
                 "leaf.json",
             ),
         )
-        docs: list[T] = []
+        docs: list[Any] = []
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
             data: dict[str, str] = orjson.loads(data_json) or {}
             for _, val in data.items():
                 doc = class_model.model_validate_json(val)
-                if filter_fn(doc):
+                if not filter_is_checking or filter_fn(doc):
                     docs.append(doc)
         return docs or None
 
@@ -63,7 +59,7 @@ class Find[T]:
         self,
         filter_fn: Callable,
         max_workers: int | None = None,
-    ) -> T | None:
+    ) -> Any | None:
         """Finds a single document matching the filter.
 
         The search is based on the effect of a quantum loop.
@@ -71,10 +67,10 @@ class Find[T]:
         Ideally, hundreds and even thousands of threads are required.
 
         Args:
-            filter_fn: A function that execute the conditions of filtering.
-            max_workers: The maximum number of processes that can be used to
-                         execute the given calls. If None or not given then as many
-                         worker processes will be created as the machine has processors.
+            filter_fn (Callable): A function that execute the conditions of filtering.
+            max_workers (int): The maximum number of processes that can be used to
+                               execute the given calls. If None or not given then as many
+                               worker processes will be created as the machine has processors.
 
         Returns:
             Document or None.
@@ -83,7 +79,7 @@ class Find[T]:
         search_task_fn: Callable = self._task_find
         hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
-        class_model: T = self._class_model
+        class_model: Any = self._class_model
         with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
             for branch_number in branch_numbers:
                 future = executor.submit(
@@ -101,10 +97,11 @@ class Find[T]:
 
     async def find_many(
         self,
-        filter_fn: Callable,
+        filter_fn: Callable = lambda _: True,
         limit_docs: int = 1000,
+        page_number: int = 1,
         max_workers: int | None = None,
-    ) -> list[T] | None:
+    ) -> list[Any] | None:
         """Finds one or more documents matching the filter.
 
         The search is based on the effect of a quantum loop.
@@ -112,11 +109,14 @@ class Find[T]:
         Ideally, hundreds and even thousands of threads are required.
 
         Args:
-            filter_fn: A function that execute the conditions of filtering.
-            limit_docs: Limiting the number of documents. By default = 1000.
-            max_workers: The maximum number of processes that can be used to
-                         execute the given calls. If None or not given then as many
-                         worker processes will be created as the machine has processors.
+            filter_fn (Callable): A function that execute the conditions of filtering.
+                                  By default it searches for all documents.
+            limit_docs (int): Limiting the number of documents. By default = 1000.
+            page_number (int): For pagination output. By default = 1.
+                               Number of documents per page = limit_docs.
+            max_workers (int): The maximum number of processes that can be used to
+                               execute the given calls. If None or not given then as many
+                               worker processes will be created as the machine has processors.
 
         Returns:
             List of documents or None.
@@ -125,12 +125,14 @@ class Find[T]:
         search_task_fn: Callable = self._task_find
         hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
-        class_model: T = self._class_model
+        class_model: Any = self._class_model
         counter: int = 0
-        result: list[T] = []
+        number_docs_skippe: int = limit_docs * (page_number - 1) if page_number > 1 else 0
+        result: list[Any] = []
+        filter_is_checking: bool = False
         with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
             for branch_number in branch_numbers:
-                if counter >= limit_docs:
+                if number_docs_skippe == 0 and counter >= limit_docs:
                     return result[:limit_docs]
                 future = executor.submit(
                     search_task_fn,
@@ -139,12 +141,17 @@ class Find[T]:
                     hash_reduce_left,
                     db_root,
                     class_model,
+                    filter_is_checking,
                 )
                 docs = await future.result()
                 if docs is not None:
                     for doc in docs:
-                        if counter >= limit_docs:
-                            return result[:limit_docs]
-                        result.append(doc)
-                        counter += 1
+                        if number_docs_skippe == 0:
+                            if counter >= limit_docs:
+                                return result[:limit_docs]
+                            if filter_fn(doc):
+                                result.append(doc)
+                                counter += 1
+                        else:
+                            number_docs_skippe -= 1
         return result or None

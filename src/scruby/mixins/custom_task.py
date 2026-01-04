@@ -8,19 +8,14 @@ from __future__ import annotations
 
 __all__ = ("CustomTask",)
 
-import logging
 from collections.abc import Callable
-from typing import Any, TypeVar
+from typing import Any
 
 import orjson
 from anyio import Path
 
-logger = logging.getLogger(__name__)
 
-T = TypeVar("T")
-
-
-class CustomTask[T]:
+class CustomTask:
     """Quantum methods for running custom tasks."""
 
     @staticmethod
@@ -28,7 +23,7 @@ class CustomTask[T]:
         branch_number: int,
         hash_reduce_left: int,
         db_root: str,
-        class_model: T,
+        class_model: Any,
     ) -> list[Any]:
         """Get documents for custom task.
 
