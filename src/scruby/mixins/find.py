@@ -98,7 +98,7 @@ class Find:
         self,
         filter_fn: Callable,
         limit_docs: int = 1000,
-        page_number: int = 1,  # noqa: ARG002
+        page_number: int = 1,
         max_workers: int | None = None,
     ) -> list[Any] | None:
         """Finds one or more documents matching the filter.
@@ -125,6 +125,8 @@ class Find:
         db_root: str = self._db_root
         class_model: Any = self._class_model
         counter: int = 0
+        number_docs_skippe: int = limit_docs * (page_number - 1) if page_number > 1 else 0
+        limit_docs = limit_docs + number_docs_skippe
         result: list[Any] = []
         with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
             for branch_number in branch_numbers:
@@ -141,8 +143,9 @@ class Find:
                 docs = await future.result()
                 if docs is not None:
                     for doc in docs:
-                        if counter >= limit_docs:
-                            return result[:limit_docs]
-                        result.append(doc)
                         counter += 1
+                        if counter > number_docs_skippe:
+                            if counter >= limit_docs:
+                                return result[:limit_docs]
+                            result.append(doc)
         return result or None
