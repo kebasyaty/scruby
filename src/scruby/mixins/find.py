@@ -97,7 +97,7 @@ class Find:
 
     async def find_many(
         self,
-        filter_fn: Callable,
+        filter_fn: Callable = lambda _: True,
         limit_docs: int = 1000,
         page_number: int = 1,
         max_workers: int | None = None,

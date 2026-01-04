@@ -511,6 +511,11 @@ class TestPositive:
             )
             await db.add_doc(user)
 
+        # all arguments by default
+        results: list[User] | None = await db.find_many()
+        assert results is not None
+        assert len(results) == 9
+
         # limit docs = 1000, page number = 1
         results: list[User] | None = await db.find_many(
             filter_fn=lambda doc: doc.email == "John_Smith_1@gmail.com" or doc.email == "John_Smith_9@gmail.com",
