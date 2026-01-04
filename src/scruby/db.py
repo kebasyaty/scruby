@@ -141,6 +141,9 @@ class Scruby(
 
         This method is for internal use.
 
+        Args:
+            step (Literal[1, -1]): Number of documents added or removed.
+
         Returns:
             None.
         """
