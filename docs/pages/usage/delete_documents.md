@@ -17,6 +17,7 @@ from scruby import Scruby, settings
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 settings.HASH_REDUCE_LEFT = 6  # By default = 6
+settings.MAX_WORKERS = None  # By default = None
 
 
 class User(BaseModel):
@@ -87,6 +88,7 @@ from scruby import Scruby, settings
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 settings.HASH_REDUCE_LEFT = 6  # By default = 6
+settings.MAX_WORKERS = None  # By default = None
 
 
 class User(BaseModel):
