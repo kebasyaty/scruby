@@ -61,6 +61,13 @@ async def main() -> None:
     else:
         print("No users!")
 
+    # Find all users.
+    users: list[User] | None = await user_coll.find_many()
+    if users is not None:
+        pp(users)
+    else:
+        print("No users!")
+
     # Full database deletion.
     # Hint: The main purpose is tests.
     Scruby.napalm()
