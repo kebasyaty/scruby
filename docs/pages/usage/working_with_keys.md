@@ -11,6 +11,7 @@ from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, settings
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
+settings.HASH_REDUCE_LEFT = 6  # By default = 6
 
 
 class User(BaseModel):
