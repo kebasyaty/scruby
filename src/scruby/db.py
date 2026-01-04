@@ -127,6 +127,9 @@ class Scruby(
 
         This method is for internal use.
 
+        Args:
+            meta (_Meta): Metadata of Collection.
+
         Returns:
             None.
         """
