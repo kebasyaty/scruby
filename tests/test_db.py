@@ -553,40 +553,36 @@ class TestPositive:
             await db.add_doc(user)
 
         # all arguments by default
-        results: list[User] | None = await db.find_many()
-        assert results is not None
-        assert len(results) == 9
+        result_1: list[User] | None = await db.find_many()
+        assert result_1 is not None
+        assert len(result_1) == 9
 
-        # limit docs = 1000, page number = 1
-        results: list[User] | None = await db.find_many(
+        # all args by default
+        result_2: list[User] | None = await db.find_many(
             filter_fn=lambda doc: doc.email == "John_Smith_1@gmail.com" or doc.email == "John_Smith_9@gmail.com",
         )
-        assert results is not None
-        assert len(results) == 2
-        assert results[0].email in ["John_Smith_1@gmail.com", "John_Smith_9@gmail.com"]
-        assert results[1].email in ["John_Smith_1@gmail.com", "John_Smith_9@gmail.com"]
+        assert result_2 is not None
+        assert len(result_2) == 2
+        assert result_2[0].email in ["John_Smith_1@gmail.com", "John_Smith_9@gmail.com"]
+        assert result_2[1].email in ["John_Smith_1@gmail.com", "John_Smith_9@gmail.com"]
 
         # limit docs = 5, page number = 1
-        results: list[User] | None = await db.find_many(
-            filter_fn=lambda doc: doc.email == "John_Smith_1@gmail.com" or doc.email == "John_Smith_5@gmail.com",
+        result_3: list[User] | None = await db.find_many(
+            filter_fn=lambda doc: doc.last_name == "Smith",
             limit_docs=5,
             page_number=1,
         )
-        assert results is not None
-        assert len(results) == 2
-        assert results[0].email in ["John_Smith_1@gmail.com", "John_Smith_5@gmail.com"]
-        assert results[1].email in ["John_Smith_1@gmail.com", "John_Smith_5@gmail.com"]
+        assert result_3 is not None
+        assert len(result_3) == 5
 
         # limit docs = 5, page number = 2
-        results: list[User] | None = await db.find_many(
-            filter_fn=lambda doc: doc.email == "John_Smith_6@gmail.com" or doc.email == "John_Smith_8@gmail.com",
+        result_4: list[User] | None = await db.find_many(
+            filter_fn=lambda doc: doc.last_name == "Smith",
             limit_docs=5,
             page_number=2,
         )
-        assert results is not None
-        assert len(results) == 2
-        assert results[0].email in ["John_Smith_6@gmail.com", "John_Smith_8@gmail.com"]
-        assert results[1].email in ["John_Smith_6@gmail.com", "John_Smith_8@gmail.com"]
+        assert result_4 is not None
+        assert len(result_4) == 4
         #
         # Delete DB.
         Scruby.napalm()

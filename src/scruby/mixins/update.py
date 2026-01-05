@@ -79,8 +79,8 @@ class Update:
             The number of updated documents.
         """
         # Variable initialization
-        branch_numbers: range = range(1, self._max_branch_number)
         update_task_fn: Callable = self._task_update
+        branch_numbers: range = range(1, self._max_branch_number)
         hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
         class_model: Any = self._class_model
