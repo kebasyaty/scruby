@@ -267,9 +267,23 @@ async def main() -> None:
     else:
         print("No cars!")
 
-    # Get collection list.
-    collection_list = await Scruby.collection_list()
-    print(collection_list)  # ["Car"]
+    # # Find all cars.
+    car_list: list[Car] | None = await car_coll.find_many()
+    if car_list is not None:
+        pp(car_list)
+    else:
+        print("No cars!")
+
+    # For pagination output.
+    car_list: list[Car] | None = await car_coll.find_many(
+        filter_fn=lambda doc: doc.brand == "Mazda",
+        limit_docs=5,
+        page_number=2,
+    )
+    if car_list is not None:
+        pp(car_list)
+    else:
+        print("No cars!")
 
     # Full database deletion.
     # Hint: The main purpose is tests.
