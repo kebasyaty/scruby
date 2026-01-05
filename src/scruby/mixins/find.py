@@ -121,7 +121,6 @@ class Find:
         counter: int = 0
         number_docs_skippe: int = limit_docs * (page_number - 1) if page_number > 1 else 0
         result: list[Any] = []
-        filter_is_checking: bool = False
         with concurrent.futures.ThreadPoolExecutor(self._max_workers) as executor:
             for branch_number in branch_numbers:
                 if number_docs_skippe == 0 and counter >= limit_docs:
@@ -133,7 +132,7 @@ class Find:
                     hash_reduce_left,
                     db_root,
                     class_model,
-                    filter_is_checking,
+                    False,  # filter_is_checking
                 )
                 docs = await future.result()
                 if docs is not None:
