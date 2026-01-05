@@ -10,8 +10,6 @@ Number of branches is number of requests to the hard disk during quantum operati
 Quantum operations: find_one, find_many, count_documents, delete_many, run_custom_task.
 </p>
 
-<br>
-
 <p>
 MAX_WORKERS (clarification):<br>
 The maximum number of processes that can be used to execute the given calls.<br>
