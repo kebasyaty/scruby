@@ -28,8 +28,6 @@
 
 <hr>
 
-<br>
-
 <p>
   The library uses fractal-tree addressing and
   <br>
@@ -52,8 +50,6 @@
   <br>
   requires a large number of processor threads.
 </p>
-
-<br>
 
 #### Requirements
 
