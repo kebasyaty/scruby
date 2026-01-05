@@ -41,12 +41,14 @@ class Count:
         Returns:
             The number of documents.
         """
+        # Variable initialization
         branch_numbers: range = range(1, self._max_branch_number)
         search_task_fn: Callable = self._task_find
         hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
         class_model: Any = self._class_model
         counter: int = 0
+        # Run quantum loop
         with concurrent.futures.ThreadPoolExecutor(self._max_workers) as executor:
             for branch_number in branch_numbers:
                 future = executor.submit(
