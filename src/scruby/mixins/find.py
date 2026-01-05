@@ -26,7 +26,6 @@ class Find:
         hash_reduce_left: str,
         db_root: str,
         class_model: Any,
-        filter_is_checking: bool = True,
     ) -> list[Any] | None:
         """Task for find documents.
 
@@ -35,6 +34,7 @@ class Find:
         Returns:
             List of documents or None.
         """
+        # Variable initialization
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
         separated_hash: str = "/".join(list(branch_number_as_hash))
         leaf_path: Path = Path(
@@ -51,7 +51,7 @@ class Find:
             data: dict[str, str] = orjson.loads(data_json) or {}
             for _, val in data.items():
                 doc = class_model.model_validate_json(val)
-                if not filter_is_checking or filter_fn(doc):
+                if filter_fn(doc):
                     docs.append(doc)
         return docs or None
 
@@ -71,11 +71,13 @@ class Find:
         Returns:
             Document or None.
         """
-        branch_numbers: range = range(1, self._max_branch_number)
+        # Variable initialization
         search_task_fn: Callable = self._task_find
+        branch_numbers: range = range(1, self._max_branch_number)
         hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
         class_model: Any = self._class_model
+        # Run quantum loop
         with concurrent.futures.ThreadPoolExecutor(self._max_workers) as executor:
             for branch_number in branch_numbers:
                 future = executor.submit(
@@ -113,15 +115,18 @@ class Find:
         Returns:
             List of documents or None.
         """
-        branch_numbers: range = range(1, self._max_branch_number)
+        # The `page_number` parameter must not be less than one
+        assert page_number > 0, "`find_many` => The `page_number` parameter must not be less than one."
+        # Variable initialization
         search_task_fn: Callable = self._task_find
+        branch_numbers: range = range(1, self._max_branch_number)
         hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
         class_model: Any = self._class_model
         counter: int = 0
         number_docs_skippe: int = limit_docs * (page_number - 1) if page_number > 1 else 0
         result: list[Any] = []
-        filter_is_checking: bool = False
+        # Run quantum loop
         with concurrent.futures.ThreadPoolExecutor(self._max_workers) as executor:
             for branch_number in branch_numbers:
                 if number_docs_skippe == 0 and counter >= limit_docs:
@@ -133,7 +138,6 @@ class Find:
                     hash_reduce_left,
                     db_root,
                     class_model,
-                    filter_is_checking,
                 )
                 docs = await future.result()
                 if docs is not None:
@@ -141,9 +145,8 @@ class Find:
                         if number_docs_skippe == 0:
                             if counter >= limit_docs:
                                 return result[:limit_docs]
-                            if filter_fn(doc):
-                                result.append(doc)
-                                counter += 1
+                            result.append(doc)
+                            counter += 1
                         else:
                             number_docs_skippe -= 1
         return result or None

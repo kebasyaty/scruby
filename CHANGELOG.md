@@ -1,5 +1,16 @@
 ### CHANGELOG
 
+#### v0.28.0 2026-01-05
+
+- Fixed pagination in the `find_many` method.
+- Optimized the `find_many` method.
+- Optimized the `_task_find` method.
+- A lot of small changes have been made.
+- Upgraded all dependencies.
+- Updated tests.
+- Updated documentation.
+- Updated README.md
+
 #### v0.27.2 2026-01-04
 
 - Added `MAX_WORKERS` to `settings` module.

@@ -248,6 +248,47 @@ class TestNegative:
         # Delete DB.
         Scruby.napalm()
 
+    async def test_find_many_page_number_less_than_one(self) -> None:
+        """The `page_number` parameter must not be less than one."""
+        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+
+        db = await Scruby.collection(User)
+
+        for num in range(1, 10):
+            user = User(
+                first_name="John",
+                last_name="Smith",
+                birthday=datetime.datetime(1970, 1, num),  # noqa: DTZ001
+                email=f"John_Smith_{num}@gmail.com",
+                phone=f"+44798612345{num}",
+            )
+            await db.add_doc(user)
+
+        # limit docs = 5, page number = 0
+        with pytest.raises(
+            AssertionError,
+            match=r"`find_many` => The `page_number` parameter must not be less than one.",
+        ):
+            await db.find_many(
+                filter_fn=lambda doc: doc.last_name == "Smith",
+                limit_docs=5,
+                page_number=0,
+            )
+
+        # limit docs = 5, page number = -1
+        with pytest.raises(
+            AssertionError,
+            match=r"`find_many` => The `page_number` parameter must not be less than one.",
+        ):
+            await db.find_many(
+                filter_fn=lambda doc: doc.last_name == "Smith",
+                limit_docs=5,
+                page_number=-1,
+            )
+        #
+        # Delete DB.
+        Scruby.napalm()
+
 
 class TestPositive:
     """Positive tests."""
@@ -512,40 +553,36 @@ class TestPositive:
             await db.add_doc(user)
 
         # all arguments by default
-        results: list[User] | None = await db.find_many()
-        assert results is not None
-        assert len(results) == 9
+        result_1: list[User] | None = await db.find_many()
+        assert result_1 is not None
+        assert len(result_1) == 9
 
-        # limit docs = 1000, page number = 1
-        results: list[User] | None = await db.find_many(
+        # all args by default
+        result_2: list[User] | None = await db.find_many(
             filter_fn=lambda doc: doc.email == "John_Smith_1@gmail.com" or doc.email == "John_Smith_9@gmail.com",
         )
-        assert results is not None
-        assert len(results) == 2
-        assert results[0].email in ["John_Smith_1@gmail.com", "John_Smith_9@gmail.com"]
-        assert results[1].email in ["John_Smith_1@gmail.com", "John_Smith_9@gmail.com"]
+        assert result_2 is not None
+        assert len(result_2) == 2
+        assert result_2[0].email in ["John_Smith_1@gmail.com", "John_Smith_9@gmail.com"]
+        assert result_2[1].email in ["John_Smith_1@gmail.com", "John_Smith_9@gmail.com"]
 
         # limit docs = 5, page number = 1
-        results: list[User] | None = await db.find_many(
-            filter_fn=lambda doc: doc.email == "John_Smith_1@gmail.com" or doc.email == "John_Smith_5@gmail.com",
+        result_3: list[User] | None = await db.find_many(
+            filter_fn=lambda doc: doc.last_name == "Smith",
             limit_docs=5,
             page_number=1,
         )
-        assert results is not None
-        assert len(results) == 2
-        assert results[0].email in ["John_Smith_1@gmail.com", "John_Smith_5@gmail.com"]
-        assert results[1].email in ["John_Smith_1@gmail.com", "John_Smith_5@gmail.com"]
+        assert result_3 is not None
+        assert len(result_3) == 5
 
         # limit docs = 5, page number = 2
-        results: list[User] | None = await db.find_many(
-            filter_fn=lambda doc: doc.email == "John_Smith_6@gmail.com" or doc.email == "John_Smith_8@gmail.com",
+        result_4: list[User] | None = await db.find_many(
+            filter_fn=lambda doc: doc.last_name == "Smith",
             limit_docs=5,
             page_number=2,
         )
-        assert results is not None
-        assert len(results) == 2
-        assert results[0].email in ["John_Smith_6@gmail.com", "John_Smith_8@gmail.com"]
-        assert results[1].email in ["John_Smith_6@gmail.com", "John_Smith_8@gmail.com"]
+        assert result_4 is not None
+        assert len(result_4) == 4
         #
         # Delete DB.
         Scruby.napalm()

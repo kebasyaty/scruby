@@ -20,6 +20,6 @@ from scruby.mixins.collection import Collection
 from scruby.mixins.count import Count
 from scruby.mixins.custom_task import CustomTask
 from scruby.mixins.delete import Delete
-from scruby.mixins.docs import Keys
 from scruby.mixins.find import Find
+from scruby.mixins.keys import Keys
 from scruby.mixins.update import Update
