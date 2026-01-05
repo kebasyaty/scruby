@@ -248,6 +248,47 @@ class TestNegative:
         # Delete DB.
         Scruby.napalm()
 
+    async def test_find_many_page_number_less_than_one(self) -> None:
+        """The `page_number` parameter must not be less than one."""
+        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+
+        db = await Scruby.collection(User)
+
+        for num in range(1, 10):
+            user = User(
+                first_name="John",
+                last_name="Smith",
+                birthday=datetime.datetime(1970, 1, num),  # noqa: DTZ001
+                email=f"John_Smith_{num}@gmail.com",
+                phone=f"+44798612345{num}",
+            )
+            await db.add_doc(user)
+
+        # limit docs = 5, page number = 0
+        with pytest.raises(
+            AssertionError,
+            match=r"`find_many` => The `page_number` parameter must not be less than one.",
+        ):
+            await db.find_many(
+                filter_fn=lambda doc: doc.last_name == "Smith",
+                limit_docs=5,
+                page_number=0,
+            )
+
+        # limit docs = 5, page number = -1
+        with pytest.raises(
+            AssertionError,
+            match=r"`find_many` => The `page_number` parameter must not be less than one.",
+        ):
+            await db.find_many(
+                filter_fn=lambda doc: doc.last_name == "Smith",
+                limit_docs=5,
+                page_number=-1,
+            )
+        #
+        # Delete DB.
+        Scruby.napalm()
+
 
 class TestPositive:
     """Positive tests."""
