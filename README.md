@@ -247,7 +247,7 @@ async def main() -> None:
     car_coll = await Scruby.collection(Car)
 
     # Create cars.
-    for name in range(1, 10):
+    for num in range(1, 10):
         car = Car(
             brand="Mazda",
             model=f"EZ-6 {num}",
@@ -265,7 +265,7 @@ async def main() -> None:
     else:
         print("No cars!")
 
-    # # Find all cars.
+    # Find all cars.
     car_list: list[Car] | None = await car_coll.find_many()
     if car_list is not None:
         pp(car_list)
