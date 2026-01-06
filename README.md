@@ -133,7 +133,7 @@ if __name__ == "__main__":
 ```
 
 ```python
-"""Find a single document matching the filter.
+"""Find one document matching the filter.
 
 The search is based on the effect of a quantum loop.
 The search effectiveness depends on the number of processor threads.
@@ -209,7 +209,7 @@ if __name__ == "__main__":
 ```
 
 ```python
-"""Find one or more documents matching the filter.
+"""Find many documents matching the filter.
 
 The search is based on the effect of a quantum loop.
 The search effectiveness depends on the number of processor threads.
