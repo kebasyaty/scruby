@@ -65,7 +65,7 @@ class CustomTask:
         """
         kwargs = {
             "get_docs_fn": self._task_get_docs,
-            "branch_numbers": range(1, self._max_branch_number),
+            "branch_numbers": range(self._max_number_branch),
             "hash_reduce_left": self._hash_reduce_left,
             "db_root": self._db_root,
             "class_model": self._class_model,
