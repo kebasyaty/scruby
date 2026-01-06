@@ -1,5 +1,9 @@
 ### CHANGELOG
 
+#### v0.29.0 2026-01-06
+
+- Fixed a serious bug related to the null branch.
+
 #### v0.28.0 2026-01-05
 
 - Fixed pagination in the `find_many` method.
