@@ -4,6 +4,7 @@
 
 - Fixed a serious bug related to the null branch.
 - Now the metadata is located not in the zero branch, but at the root of the collection.
+- Upgraded all dependencies.
 
 #### v0.28.0 2026-01-05
 
