@@ -85,8 +85,8 @@ nav:
   - Usage:
       - Usage: pages/usage/index.md
       - Working with keys: pages/usage/working_with_keys.md
-      - Find a single document: pages/usage/find_a_single_document.md
-      - Find documents: pages/usage/find_documents.md
+      - Find one document: pages/usage/find_one_document.md
+      - Find many documents: pages/usage/find_many_documents.md
       - Get collection name: pages/usage/get_collection_name.md
       - Get collection list: pages/usage/get_collection_list.md
       - Delete collection: pages/usage/delete_collection.md

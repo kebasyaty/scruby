@@ -1,4 +1,4 @@
-#### Find one or more documents matching the filter
+#### Find many documents matching the filter
 
 ```py title="main.py" linenums="1"
 """Find many documents matching the filter.
