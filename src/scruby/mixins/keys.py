@@ -26,7 +26,7 @@ class Keys:
         """Asynchronous method for adding document to collection.
 
         Args:
-            doc: Value of key. Type, derived from `BaseModel`.
+            doc (Any): Value of key. Type, derived from `BaseModel`.
 
         Returns:
             None.
@@ -66,7 +66,7 @@ class Keys:
         """Asynchronous method for updating key to collection.
 
         Args:
-            doc: Value of key. Type `BaseModel`.
+            doc (Any): Value of key. Type `BaseModel`.
 
         Returns:
             None.
@@ -105,7 +105,7 @@ class Keys:
         """Asynchronous method for getting value of key from collection.
 
         Args:
-            key: Key name.
+            key (str): Key name.
 
         Returns:
             Value of key or KeyError.
@@ -126,7 +126,7 @@ class Keys:
         """Asynchronous method for checking presence of key in collection.
 
         Args:
-            key: Key name.
+            key (str): Key name.
 
         Returns:
             True, if the key is present.
@@ -148,7 +148,7 @@ class Keys:
         """Asynchronous method for deleting key from collection.
 
         Args:
-            key: Key name.
+            key (str): Key name.
 
         Returns:
             None.

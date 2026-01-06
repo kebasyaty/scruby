@@ -57,8 +57,8 @@ class CustomTask:
         Effectiveness running task depends on the number of processor threads.
 
         Args:
-            custom_task_fn: A function that execute the custom task.
-            limit_docs: Limiting the number of documents. By default = 1000.
+            custom_task_fn (Callable): A function that execute the custom task.
+            limit_docs (int): Limiting the number of documents. By default = 1000.
 
         Returns:
             The result of a custom task.
