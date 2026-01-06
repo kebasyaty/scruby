@@ -55,7 +55,6 @@ class CustomTask:
 
         This method running a task created on the basis of a quantum loop.
         Effectiveness running task depends on the number of processor threads.
-        Ideally, hundreds and even thousands of threads are required.
 
         Args:
             custom_task_fn: A function that execute the custom task.

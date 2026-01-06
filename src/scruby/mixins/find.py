@@ -59,11 +59,10 @@ class Find:
         self,
         filter_fn: Callable,
     ) -> Any | None:
-        """Finds a single document matching the filter.
+        """Find one document matching the filter.
 
         The search is based on the effect of a quantum loop.
         The search effectiveness depends on the number of processor threads.
-        Ideally, hundreds and even thousands of threads are required.
 
         Args:
             filter_fn (Callable): A function that execute the conditions of filtering.
@@ -99,11 +98,10 @@ class Find:
         limit_docs: int = 1000,
         page_number: int = 1,
     ) -> list[Any] | None:
-        """Finds one or more documents matching the filter.
+        """Find many documents matching the filter.
 
         The search is based on the effect of a quantum loop.
         The search effectiveness depends on the number of processor threads.
-        Ideally, hundreds and even thousands of threads are required.
 
         Args:
             filter_fn (Callable): A function that execute the conditions of filtering.
