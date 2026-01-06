@@ -1,7 +1,7 @@
 #### Find one or more documents matching the filter
 
 ```py title="main.py" linenums="1"
-"""Find one or more documents matching the filter.
+"""Find many documents matching the filter.
 
 The search is based on the effect of a quantum loop.
 The search effectiveness depends on the number of processor threads.
@@ -10,8 +10,7 @@ The search effectiveness depends on the number of processor threads.
 import anyio
 import datetime
 from typing import Annotated
-from pydantic import BaseModel, EmailStr, Field
-from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
+from pydantic import BaseModel, Field
 from scruby import Scruby, settings
 from pprint import pprint as pp
 
@@ -20,64 +19,61 @@ settings.HASH_REDUCE_LEFT = 6  # By default = 6
 settings.MAX_WORKERS = None  # By default = None
 
 
-class User(BaseModel):
-    """User model."""
-
-    first_name: str = Field(strict=True)
-    last_name: str = Field(strict=True)
-    birthday: datetime.datetime = Field(strict=True)
-    email: EmailStr = Field(strict=True)
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
+class Car(BaseModel):
+    """Car model."""
+    brand: str = Field(strict=True, frozen=True)
+    model: str = Field(strict=True, frozen=True)
+    year: int = Field(strict=True)
+    power_reserve: int = Field(strict=True)
     # The key is always at the bottom
     key: str = Field(
         strict=True,
         frozen=True,
-        default_factory=lambda data: data["phone"],
+        default_factory=lambda data: f"{data['brand']}:{data['model']}",
     )
 
 
 async def main() -> None:
     """Example."""
-    # Get collection `User`.
-    user_coll = await Scruby.collection(User)
+    # Get collection `Car`.
+    car_coll = await Scruby.collection(Car)
 
-    # Create users.
+    # Create cars.
     for num in range(1, 10):
-        user = User(
-            first_name="John",
-            last_name="Smith",
-            birthday=datetime.datetime(1970, 1, num),
-            email=f"John_Smith_{num}@gmail.com",
-            phone=f"+44798612345{num}",
+        car = Car(
+            brand="Mazda",
+            model=f"EZ-6 {num}",
+            year=2025,
+            power_reserve=600,
         )
-        await user_coll.add_doc(user)
+        await car_coll.add_doc(car)
 
-    # Find users by email.
-    users: list[User] | None = await user_coll.find_many(
-        filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
+    # Find cars by brand and year.
+    car_list: list[Car] | None = await car_coll.find_many(
+        filter_fn=lambda doc: doc.brand == "Mazda" and doc.year == 2025,
     )
-    if users is not None:
-        pp(users)
+    if car_list is not None:
+        pp(car_list)
     else:
-        print("No users!")
+        print("No cars!")
 
-    # Find all users.
-    users: list[User] | None = await user_coll.find_many()
-    if users is not None:
-        pp(users)
+    # Find all cars.
+    car_list: list[Car] | None = await car_coll.find_many()
+    if car_list is not None:
+        pp(car_list)
     else:
-        print("No users!")
+        print("No cars!")
 
     # For pagination output.
-    users: list[User] | None = await db.find_many(
-        filter_fn=lambda doc: doc.last_name == "Smith",
+    car_list: list[Car] | None = await car_coll.find_many(
+        filter_fn=lambda doc: doc.brand == "Mazda",
         limit_docs=5,
         page_number=2,
     )
-    if users is not None:
-        pp(users)
+    if car_list is not None:
+        pp(car_list)
     else:
-        print("No users!")
+        print("No cars!")
 
     # Full database deletion.
     # Hint: The main purpose is tests.
