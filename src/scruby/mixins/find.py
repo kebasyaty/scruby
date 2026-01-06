@@ -72,7 +72,7 @@ class Find:
         """
         # Variable initialization
         search_task_fn: Callable = self._task_find
-        branch_numbers: range = range(1, self._max_branch_number)
+        branch_numbers: range = range(self._max_branch_number)
         hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
         class_model: Any = self._class_model
@@ -117,7 +117,7 @@ class Find:
         assert page_number > 0, "`find_many` => The `page_number` parameter must not be less than one."
         # Variable initialization
         search_task_fn: Callable = self._task_find
-        branch_numbers: range = range(1, self._max_branch_number)
+        branch_numbers: range = range(self._max_branch_number)
         hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
         class_model: Any = self._class_model

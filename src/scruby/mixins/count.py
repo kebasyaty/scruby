@@ -35,14 +35,14 @@ class Count:
         The search effectiveness depends on the number of processor threads.
 
         Args:
-            filter_fn: A function that execute the conditions of filtering.
+            filter_fn (Callable): A function that execute the conditions of filtering.
 
         Returns:
             The number of documents.
         """
         # Variable initialization
         search_task_fn: Callable = self._task_find
-        branch_numbers: range = range(1, self._max_branch_number)
+        branch_numbers: range = range(self._max_branch_number)
         hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
         class_model: Any = self._class_model
