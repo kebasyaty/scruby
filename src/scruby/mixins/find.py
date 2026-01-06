@@ -63,7 +63,6 @@ class Find:
 
         The search is based on the effect of a quantum loop.
         The search effectiveness depends on the number of processor threads.
-        Ideally, hundreds and even thousands of threads are required.
 
         Args:
             filter_fn (Callable): A function that execute the conditions of filtering.
@@ -103,7 +102,6 @@ class Find:
 
         The search is based on the effect of a quantum loop.
         The search effectiveness depends on the number of processor threads.
-        Ideally, hundreds and even thousands of threads are required.
 
         Args:
             filter_fn (Callable): A function that execute the conditions of filtering.
