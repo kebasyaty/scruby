@@ -53,13 +53,13 @@ class Scruby(
         # The maximum number of branches.
         match self._hash_reduce_left:
             case 0:
-                self._max_branch_number = 4294967296
+                self._max_number_branch = 4294967296
             case 2:
-                self._max_branch_number = 16777216
+                self._max_number_branch = 16777216
             case 4:
-                self._max_branch_number = 65536
+                self._max_number_branch = 65536
             case 6:
-                self._max_branch_number = 256
+                self._max_number_branch = 256
             case _ as unreachable:
                 msg: str = f"{unreachable} - Unacceptable value for HASH_REDUCE_LEFT."
                 logging.critical(msg)
@@ -97,7 +97,7 @@ class Scruby(
                 db_root=settings.DB_ROOT,
                 collection_name=class_model.__name__,
                 hash_reduce_left=settings.HASH_REDUCE_LEFT,
-                max_branch_number=instance.__dict__["_max_branch_number"],
+                max_branch_number=instance.__dict__["_max_number_branch"],
                 counter_documents=0,
             )
             meta_json = meta.model_dump_json()

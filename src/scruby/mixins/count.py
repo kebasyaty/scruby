@@ -42,7 +42,7 @@ class Count:
         """
         # Variable initialization
         search_task_fn: Callable = self._task_find
-        branch_numbers: range = range(self._max_branch_number)
+        branch_numbers: range = range(self._max_number_branch)
         hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
         class_model: Any = self._class_model
