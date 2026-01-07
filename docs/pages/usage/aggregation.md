@@ -27,7 +27,10 @@ class User(BaseModel):
     age: int = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # The key is always at the bottom
+    # Extra fields
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -123,7 +126,10 @@ class User(BaseModel):
     age: int = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # The key is always at the bottom
+    # Extra fields
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -224,7 +230,10 @@ class User(BaseModel):
     age: int = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # The key is always at the bottom
+    # Extra fields
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -317,7 +326,10 @@ class User(BaseModel):
     age: int = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # The key is always at the bottom
+    # Extra fields
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -410,7 +422,10 @@ class User(BaseModel):
     age: int = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # The key is always at the bottom
+    # Extra fields
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,

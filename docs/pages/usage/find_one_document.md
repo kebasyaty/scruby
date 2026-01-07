@@ -25,7 +25,10 @@ class Phone(BaseModel):
     model: str = Field(strict=True, frozen=True)
     screen_diagonal: float = Field(strict=True)
     matrix_type: str = Field(strict=True)
-    # The key is always at the bottom
+    # Extra fields
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
