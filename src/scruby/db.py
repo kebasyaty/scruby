@@ -86,6 +86,11 @@ class Scruby(
         Returns:
             Instance of Scruby for access a collection.
         """
+        # Checking the model for the presence of a key.
+        if __debug__:
+            model_fields = list(class_model.model_fields.keys())
+            if "key" not in model_fields:
+                raise AssertionError(f"Model: {class_model.__name__} => The `key` field is missing!")
         # Check if the object belongs to the class `pydantic.BaseModel`
         assert ScrubyModel in class_model.__bases__, "`class_model` does not contain the base class `ScrubyModel`!"
         # Create instance of Scruby
