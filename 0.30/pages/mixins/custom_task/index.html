@@ -1560,8 +1560,7 @@
 <span class="normal"><a href="#__codelineno-0-71">71</a></span>
 <span class="normal"><a href="#__codelineno-0-72">72</a></span>
 <span class="normal"><a href="#__codelineno-0-73">73</a></span>
-<span class="normal"><a href="#__codelineno-0-74">74</a></span>
-<span class="normal"><a href="#__codelineno-0-75">75</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="k">class</span><span class="w"> </span><span class="nc">CustomTask</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-74">74</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="k">class</span><span class="w"> </span><span class="nc">CustomTask</span><span class="p">:</span>
 </span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Quantum methods for running custom tasks.&quot;&quot;&quot;</span>
 </span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a>
 </span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21"></a>    <span class="nd">@staticmethod</span>
@@ -1605,20 +1604,19 @@
 </span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59"></a>
 </span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="sd">        Args:</span>
 </span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="sd">            custom_task_fn (Callable): A function that execute the custom task.</span>
-</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="sd">            limit_docs (int): Limiting the number of documents. By default = 1000.</span>
-</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63"></a>
-</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="sd">        Returns:</span>
-</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="sd">            The result of a custom task.</span>
-</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a>        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span>
-</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a>            <span class="s2">&quot;get_docs_fn&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_task_get_docs</span><span class="p">,</span>
-</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69"></a>            <span class="s2">&quot;branch_numbers&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_number_branch</span><span class="p">),</span>
-</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70"></a>            <span class="s2">&quot;hash_reduce_left&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash_reduce_left</span><span class="p">,</span>
-</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71"></a>            <span class="s2">&quot;db_root&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db_root</span><span class="p">,</span>
-</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72"></a>            <span class="s2">&quot;class_model&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_class_model</span><span class="p">,</span>
-</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73"></a>            <span class="s2">&quot;max_workers&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_workers</span><span class="p">,</span>
-</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74"></a>        <span class="p">}</span>
-</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75"></a>        <span class="k">return</span> <span class="k">await</span> <span class="n">custom_task_fn</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62"></a>
+</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="sd">        Returns:</span>
+</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="sd">            The result of a custom task.</span>
+</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a>        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a>            <span class="s2">&quot;get_docs_fn&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_task_get_docs</span><span class="p">,</span>
+</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a>            <span class="s2">&quot;branch_numbers&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_number_branch</span><span class="p">),</span>
+</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69"></a>            <span class="s2">&quot;hash_reduce_left&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash_reduce_left</span><span class="p">,</span>
+</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70"></a>            <span class="s2">&quot;db_root&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db_root</span><span class="p">,</span>
+</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71"></a>            <span class="s2">&quot;class_model&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_class_model</span><span class="p">,</span>
+</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72"></a>            <span class="s2">&quot;max_workers&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_workers</span><span class="p">,</span>
+</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73"></a>        <span class="p">}</span>
+</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74"></a>        <span class="k">return</span> <span class="k">await</span> <span class="n">custom_task_fn</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
               </details>
 
@@ -1688,22 +1686,6 @@
                 <em>required</em>
             </td>
           </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>limit_docs</code>
-            </td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Limiting the number of documents. By default = 1000.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
       </tbody>
     </table>
 
@@ -1754,8 +1736,7 @@
 <span class="normal"><a href="#__codelineno-0-71">71</a></span>
 <span class="normal"><a href="#__codelineno-0-72">72</a></span>
 <span class="normal"><a href="#__codelineno-0-73">73</a></span>
-<span class="normal"><a href="#__codelineno-0-74">74</a></span>
-<span class="normal"><a href="#__codelineno-0-75">75</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_custom_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom_task_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-74">74</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_custom_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom_task_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 </span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Running custom task.</span>
 </span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55"></a>
 </span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="sd">    Attention:</span>
@@ -1764,20 +1745,19 @@
 </span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59"></a>
 </span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="sd">    Args:</span>
 </span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="sd">        custom_task_fn (Callable): A function that execute the custom task.</span>
-</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="sd">        limit_docs (int): Limiting the number of documents. By default = 1000.</span>
-</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63"></a>
-</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="sd">    Returns:</span>
-</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="sd">        The result of a custom task.</span>
-</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a>    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span>
-</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a>        <span class="s2">&quot;get_docs_fn&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_task_get_docs</span><span class="p">,</span>
-</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69"></a>        <span class="s2">&quot;branch_numbers&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_number_branch</span><span class="p">),</span>
-</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70"></a>        <span class="s2">&quot;hash_reduce_left&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash_reduce_left</span><span class="p">,</span>
-</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71"></a>        <span class="s2">&quot;db_root&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db_root</span><span class="p">,</span>
-</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72"></a>        <span class="s2">&quot;class_model&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_class_model</span><span class="p">,</span>
-</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73"></a>        <span class="s2">&quot;max_workers&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_workers</span><span class="p">,</span>
-</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74"></a>    <span class="p">}</span>
-</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75"></a>    <span class="k">return</span> <span class="k">await</span> <span class="n">custom_task_fn</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62"></a>
+</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="sd">    Returns:</span>
+</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="sd">        The result of a custom task.</span>
+</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a>    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a>        <span class="s2">&quot;get_docs_fn&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_task_get_docs</span><span class="p">,</span>
+</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a>        <span class="s2">&quot;branch_numbers&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_number_branch</span><span class="p">),</span>
+</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69"></a>        <span class="s2">&quot;hash_reduce_left&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash_reduce_left</span><span class="p">,</span>
+</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70"></a>        <span class="s2">&quot;db_root&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db_root</span><span class="p">,</span>
+</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71"></a>        <span class="s2">&quot;class_model&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_class_model</span><span class="p">,</span>
+</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72"></a>        <span class="s2">&quot;max_workers&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_workers</span><span class="p">,</span>
+</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73"></a>    <span class="p">}</span>
+</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74"></a>    <span class="k">return</span> <span class="k">await</span> <span class="n">custom_task_fn</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
