@@ -75,9 +75,11 @@ class Scruby(
         Returns:
             Instance of Scruby for access a collection.
         """
+        # Check if the object belongs to the class `pydantic.BaseModel`
         assert BaseModel in class_model.__bases__, "`class_model` does not contain the base class `pydantic.BaseModel`!"
-
+        # Create instance of Scruby
         instance = cls()
+        # Add model class to Scruby
         instance.__dict__["_class_model"] = class_model
         # Create a path for metadata.
         meta_dir_path_tuple = (

@@ -75,6 +75,43 @@ class User3(BaseModel):
     )
 
 
+class UserKeyError(BaseModel):
+    """The additional field `key` is missing."""
+
+    username: str = Field(strict=True)
+    # Extra fields
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+
+
+class UserCreatedError(BaseModel):
+    """The additional field `created_at` is missing."""
+
+    username: str = Field(strict=True)
+    # Extra fields
+    updated_at: datetime | None = None
+    # key is always at bottom
+    key: str = Field(
+        strict=True,
+        frozen=True,
+        default_factory=lambda data: data["username"],
+    )
+
+
+class UserUpdatedError(BaseModel):
+    """The additional field `updated_at` is missing."""
+
+    username: str = Field(strict=True)
+    # Extra fields
+    created_at: datetime | None = None
+    # key is always at bottom
+    key: str = Field(
+        strict=True,
+        frozen=True,
+        default_factory=lambda data: data["username"],
+    )
+
+
 async def custom_task(
     get_docs_fn: Callable,
     branch_numbers: range,
@@ -116,6 +153,17 @@ class TestNegative:
             match=r"`class_model` does not contain the base class `pydantic.BaseModel`!",
         ):
             await Scruby.collection(dict)
+        #
+        # Delete DB.
+        Scruby.napalm()
+
+    async def test_key_is_missing(self) -> None:
+        """The additional field `key` is missing."""
+        with pytest.raises(
+            AssertionError,
+            match=r"`class_model` does not contain the base class `pydantic.BaseModel`!",
+        ):
+            await Scruby.collection(UserKeyError)
         #
         # Delete DB.
         Scruby.napalm()
