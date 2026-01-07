@@ -59,7 +59,6 @@ class CustomTask:
 
         Args:
             custom_task_fn (Callable): A function that execute the custom task.
-            limit_docs (int): Limiting the number of documents. By default = 1000.
 
         Returns:
             The result of a custom task.
