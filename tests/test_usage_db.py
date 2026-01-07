@@ -7,15 +7,15 @@ from typing import Annotated
 from zoneinfo import ZoneInfo
 
 import pytest
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby
+from scruby import Scruby, ScrubyModel
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
 
-class User(BaseModel):
+class User(ScrubyModel):
     """User model."""
 
     first_name: str = Field(strict=True)
@@ -23,9 +23,6 @@ class User(BaseModel):
     birthday: datetime = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # Extra fields
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
     # key is always at bottom
     key: str = Field(
         strict=True,
@@ -34,16 +31,13 @@ class User(BaseModel):
     )
 
 
-class Phone(BaseModel):
+class Phone(ScrubyModel):
     """Phone model."""
 
     brand: str = Field(strict=True, frozen=True)
     model: str = Field(strict=True, frozen=True)
     screen_diagonal: float = Field(strict=True)
     matrix_type: str = Field(strict=True)
-    # Extra fields
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
     # key is always at bottom
     key: str = Field(
         strict=True,
@@ -52,16 +46,13 @@ class Phone(BaseModel):
     )
 
 
-class Car(BaseModel):
+class Car(ScrubyModel):
     """Car model."""
 
     brand: str = Field(strict=True, frozen=True)
     model: str = Field(strict=True, frozen=True)
     year: int = Field(strict=True)
     power_reserve: int = Field(strict=True)
-    # Extra fields
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
     # key is always at bottom
     key: str = Field(
         strict=True,

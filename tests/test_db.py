@@ -103,7 +103,7 @@ class TestNegative:
         """`class_model` does not contain the base class `pydantic.BaseMode."""
         with pytest.raises(
             AssertionError,
-            match=r"`class_model` does not contain the base class `pydantic.BaseModel`!",
+            match=r"`class_model` does not contain the base class `ScrubyModel`!",
         ):
             await Scruby.collection(dict)
         #

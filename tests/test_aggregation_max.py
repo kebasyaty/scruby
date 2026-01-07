@@ -4,29 +4,25 @@ from __future__ import annotations
 
 import concurrent.futures
 from collections.abc import Callable
-from datetime import datetime
 from typing import Annotated, Any
 
 import pytest
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, settings
+from scruby import Scruby, ScrubyModel, settings
 from scruby.aggregation import Max
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
 
-class User(BaseModel):
+class User(ScrubyModel):
     """User model."""
 
     first_name: str = Field(strict=True)
     age: int = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # Extra fields
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
     # key is always at bottom
     key: str = Field(
         strict=True,
