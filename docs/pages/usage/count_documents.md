@@ -4,7 +4,7 @@
 """Get an estimate of the number of documents in this collection using collection metadata."""
 
 import anyio
-import datetime
+from datetime import datetime
 from typing import Annotated
 from pydantic import BaseModel, EmailStr
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
@@ -63,7 +63,7 @@ if __name__ == "__main__":
 """Count the number of documents a matching the filter in this collection."""
 
 import anyio
-import datetime
+from datetime import datetime
 from typing import Annotated
 from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator

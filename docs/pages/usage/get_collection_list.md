@@ -4,7 +4,7 @@
 """Get collection list."""
 
 import anyio
-import datetime
+from datetime import datetime
 from typing import Annotated
 from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator

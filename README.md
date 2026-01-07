@@ -71,8 +71,9 @@ See more examples here [https://kebasyaty.github.io/scruby/latest/pages/usage/](
 """Working with keys."""
 
 import anyio
-import datetime
+from datetime import datetime
 from typing import Annotated
+from zoneinfo import ZoneInfo
 from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, settings
@@ -85,10 +86,13 @@ class User(BaseModel):
     """User model."""
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
-    birthday: datetime.datetime = Field(strict=True)
+    birthday: datetime = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # The key is always at the bottom
+    # Extra fields
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -104,7 +108,7 @@ async def main() -> None:
     user = User(
         first_name="John",
         last_name="Smith",
-        birthday=datetime.datetime(1970, 1, 1),
+        birthday=datetime.datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
         email="John_Smith@gmail.com",
         phone="+447986123456",
     )
@@ -140,7 +144,7 @@ The search effectiveness depends on the number of processor threads.
 """
 
 import anyio
-import datetime
+from datetime import datetime
 from typing import Annotated
 from pydantic import BaseModel, Field
 from scruby import Scruby, settings
@@ -157,7 +161,10 @@ class Phone(BaseModel):
     model: str = Field(strict=True, frozen=True)
     screen_diagonal: float = Field(strict=True)
     matrix_type: str = Field(strict=True)
-    # The key is always at the bottom
+    # Extra fields
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -216,7 +223,7 @@ The search effectiveness depends on the number of processor threads.
 """
 
 import anyio
-import datetime
+from datetime import datetime
 from typing import Annotated
 from pydantic import BaseModel, Field
 from scruby import Scruby, settings
@@ -233,7 +240,10 @@ class Car(BaseModel):
     model: str = Field(strict=True, frozen=True)
     year: int = Field(strict=True)
     power_reserve: int = Field(strict=True)
-    # The key is always at the bottom
+    # Extra fields
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,

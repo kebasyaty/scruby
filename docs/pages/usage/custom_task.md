@@ -8,7 +8,7 @@ Effectiveness running task depends on the number of processor threads.
 """
 
 import anyio
-import datetime
+from datetime import datetime
 import concurrent.futures
 from typing import Annotated, Any
 from collections.abc import Callable
