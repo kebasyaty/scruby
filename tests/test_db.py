@@ -10,7 +10,7 @@ from zoneinfo import ZoneInfo
 
 import pytest
 from anyio import Path
-from pydantic import EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
 from scruby import Scruby, ScrubyModel, settings
@@ -66,6 +66,24 @@ class User3(ScrubyModel):
     )
 
 
+class User4(BaseModel):
+    """User model."""
+
+    username: str = Field(strict=True)
+    # key is always at bottom
+    key: str = Field(
+        strict=True,
+        frozen=True,
+        default_factory=lambda data: data["username"],
+    )
+
+
+class User5(ScrubyModel):
+    """User model."""
+
+    username: str = Field(strict=True)
+
+
 async def custom_task(
     get_docs_fn: Callable,
     branch_numbers: range,
@@ -99,13 +117,24 @@ async def custom_task(
 class TestNegative:
     """Negative tests."""
 
-    async def test_assert_class_model(self) -> None:
-        """`class_model` does not contain the base class `pydantic.BaseMode."""
+    async def test_invalid_model_type(self) -> None:
+        """Invalid model type."""
         with pytest.raises(
             AssertionError,
-            match=r"`class_model` does not contain the base class `ScrubyModel`!",
+            match=r"Method: `collection` => argument `class_model` does not contain the base class `ScrubyModel`!",
         ):
-            await Scruby.collection(dict)
+            await Scruby.collection(User4)
+        #
+        # Delete DB.
+        Scruby.napalm()
+
+    async def test_model_key_is_missing(self) -> None:
+        """Key of Model is missing."""
+        with pytest.raises(
+            AssertionError,
+            match=r"Model: User5 => The `key` field is missing!",
+        ):
+            await Scruby.collection(User5)
         #
         # Delete DB.
         Scruby.napalm()
