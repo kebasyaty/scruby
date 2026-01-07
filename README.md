@@ -74,7 +74,7 @@ import anyio
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from typing import Annotated
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, ScrubyModel, settings
 
@@ -82,13 +82,14 @@ settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 settings.HASH_REDUCE_LEFT = 6  # By default = 6
 settings.MAX_WORKERS = None  # By default = None
 
-class User(BaseModel):
+class User(ScrubyModel):
     """User model."""
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
     birthday: datetime = Field(strict=True)
     email: EmailStr = Field(strict=True)
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)    # key is always at bottom
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -142,7 +143,7 @@ The search effectiveness depends on the number of processor threads.
 import anyio
 from datetime import datetime
 from typing import Annotated
-from pydantic import BaseModel, Field
+from pydantic import Field
 from scruby import Scruby, ScrubyModel, settings
 from pprint import pprint as pp
 
@@ -156,7 +157,8 @@ class Phone(ScrubyModel):
     brand: str = Field(strict=True, frozen=True)
     model: str = Field(strict=True, frozen=True)
     screen_diagonal: float = Field(strict=True)
-    matrix_type: str = Field(strict=True)    # key is always at bottom
+    matrix_type: str = Field(strict=True)
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -231,7 +233,8 @@ class Car(ScrubyModel):
     brand: str = Field(strict=True, frozen=True)
     model: str = Field(strict=True, frozen=True)
     year: int = Field(strict=True)
-    power_reserve: int = Field(strict=True)    # key is always at bottom
+    power_reserve: int = Field(strict=True)
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
