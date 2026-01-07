@@ -3,7 +3,7 @@
 #### v0.30.0 2026-01-07
 
 - Many changes and fixes have been made; see examples in the documentation.
-- Upgraded all dependencies.
+- Upgraded dependencies.
 - Updated tests.
 - Updated documentation.
 - Updated README.md
@@ -12,7 +12,7 @@
 
 - Fixed a serious bug related to the null branch.
 - Now the metadata is located not in the zero branch, but at the root of the collection.
-- Upgraded all dependencies.
+- Upgraded dependencies.
 
 #### v0.28.0 2026-01-05
 
@@ -20,7 +20,7 @@
 - Optimized the `find_many` method.
 - Optimized the `_task_find` method.
 - A lot of small changes have been made.
-- Upgraded all dependencies.
+- Upgraded dependencies.
 - Updated tests.
 - Updated documentation.
 - Updated README.md
@@ -42,14 +42,14 @@
 
 - The `number_page` parameter for pagination output has been added to the `find_many` function.
 - Now the `find_many` function, without specifying a filter, searches for all documents.
-- Upgraded all dependencies.
+- Upgraded dependencies.
 - Updated tests.
 - Updated documentation.
 
 #### v0.26.4 2026-01-03
 
 - Added a `Copyright` commets.
-- Upgraded all dependencies.
+- Upgraded dependencies.
 - Updated documentation.
 
 #### v0.26.0 2025-12-24
