@@ -166,7 +166,7 @@ class TestNegative:
         db = await Scruby.collection(User)
 
         with pytest.raises(KeyError):
-            await db.get_key("key missing")
+            await db.get_doc("key missing")
         #
         # Delete DB.
         Scruby.napalm()
@@ -176,7 +176,7 @@ class TestNegative:
         db = await Scruby.collection(User)
 
         with pytest.raises(KeyError):
-            await db.delete_key("key missing")
+            await db.delete_doc("key missing")
         #
         # Delete DB.
         Scruby.napalm()
@@ -240,7 +240,7 @@ class TestNegative:
             await db.update_doc(user)
 
         await db.add_doc(user)
-        await db.delete_key(user.key)
+        await db.delete_doc(user.key)
 
         with pytest.raises(KeyNotExistsError):
             await db.update_doc(user)
@@ -416,7 +416,7 @@ class TestPositive:
         )
 
         await db.add_doc(user)
-        data: User = await db.get_key("+447986123456")
+        data: User = await db.get_doc("+447986123456")
         assert data.model_dump() == user.model_dump()
         assert data.phone == "+447986123456"
         #
@@ -457,7 +457,7 @@ class TestPositive:
         assert await db.estimated_document_count() == 0
         await db.add_doc(user)
         assert await db.estimated_document_count() == 1
-        assert await db.delete_key("+447986123456") is None
+        assert await db.delete_doc("+447986123456") is None
         assert await db.estimated_document_count() == 0
         assert not await db.has_key("key missing")
         #
@@ -716,7 +716,7 @@ class TestPositive:
         )
         await db.add_doc(user)
         key = "+447986123456"
-        result = await db.get_key(key)
+        result = await db.get_doc(key)
 
         assert isinstance(result.created_at, datetime)
         assert isinstance(result.updated_at, datetime)
