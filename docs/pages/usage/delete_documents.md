@@ -55,10 +55,11 @@ async def main() -> None:
 
     # Find user by email.
     user_details: User | None = user_coll.find_one(
-        filter_fn=lambda doc: doc.email == "John_Smith@gmail.com",
+        filter_fn=lambda doc: doc.phone == "+447986123456",
     )
     # Delete user from collection.
-    await user_coll.delete_key(user_details.phone)
+    if user_details is not None:
+        await user_coll.delete_doc(user_details.key)
 
     # Full database deletion.
     # Hint: The main purpose is tests.

@@ -114,15 +114,15 @@ async def main() -> None:
 
     await user_coll.update_doc(user)
 
-    await user_coll.get_key("+447986123456")  # => user
-    await user_coll.get_key("key missing")  # => KeyError
+    await user_coll.get_doc("+447986123456")  # => user
+    await user_coll.get_doc("key missing")  # => KeyError
 
     await user_coll.has_key("+447986123456")  # => True
     await user_coll.has_key("key missing")  # => False
 
-    await user_coll.delete_key("+447986123456")
-    await user_coll.delete_key("+447986123456")  # => KeyError
-    await user_coll.delete_key("key missing")  # => KeyError
+    await user_coll.delete_doc("+447986123456")
+    await user_coll.delete_doc("+447986123456")  # => KeyError
+    await user_coll.delete_doc("key missing")  # => KeyError
 
     # Full database deletion.
     # Hint: The main purpose is tests.

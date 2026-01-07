@@ -52,7 +52,7 @@ async def main() -> None:
     print(await user_coll.estimated_document_count())  # => 1
 
     # Delete user from collection.
-    await user_coll.delete_key("+447986123456")
+    await user_coll.delete_doc("+447986123456")
     print(await user_coll.estimated_document_count())  # => 0
 
     # Full database deletion.
