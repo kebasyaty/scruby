@@ -6,12 +6,16 @@
 
 from __future__ import annotations
 
-__all__ = ("Scruby",)
+__all__ = (
+    "Scruby",
+    "ScrubyModel",
+)
 
 import contextlib
 import logging
 import re
 import zlib
+from datetime import datetime
 from shutil import rmtree
 from typing import Any, Literal, Never, assert_never
 
@@ -29,6 +33,13 @@ class _Meta(BaseModel):
     hash_reduce_left: int
     max_branch_number: int
     counter_documents: int
+
+
+class ScrubyModel(BaseModel):
+    """Additional fields for models."""
+
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
 
 class Scruby(
@@ -76,16 +87,7 @@ class Scruby(
             Instance of Scruby for access a collection.
         """
         # Check if the object belongs to the class `pydantic.BaseModel`
-        assert BaseModel in class_model.__bases__, "`class_model` does not contain the base class `pydantic.BaseModel`!"
-        # Check the model for additional fields
-        if __debug__:
-            model_fields = list(class_model.model_fields.keys())
-            if "key" not in model_fields:
-                raise AssertionError(f"Model: {class_model.__name__} => The `key` field is missing!")
-            if "created_at" not in model_fields:
-                raise AssertionError(f"Model: {class_model.__name__} => The `created_at` field is missing!")
-            if "updated_at" not in model_fields:
-                raise AssertionError(f"Model: {class_model.__name__} => The `updated_at` field is missing!")
+        assert ScrubyModel in class_model.__bases__, "`class_model` does not contain the base class `ScrubyModel`!"
         # Create instance of Scruby
         instance = cls()
         # Add model class to Scruby

@@ -10,10 +10,10 @@ from zoneinfo import ZoneInfo
 
 import pytest
 from anyio import Path
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, settings
+from scruby import Scruby, ScrubyModel, settings
 from scruby.errors import (
     KeyAlreadyExistsError,
     KeyNotExistsError,
@@ -22,7 +22,7 @@ from scruby.errors import (
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
 
-class User(BaseModel):
+class User(ScrubyModel):
     """User model."""
 
     first_name: str = Field(strict=True)
@@ -30,9 +30,6 @@ class User(BaseModel):
     birthday: datetime = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # Extra fields
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
     # key is always at bottom
     key: str = Field(
         strict=True,
@@ -41,7 +38,7 @@ class User(BaseModel):
     )
 
 
-class User2(BaseModel):
+class User2(ScrubyModel):
     """User model."""
 
     first_name: str = Field(strict=True)
@@ -49,9 +46,6 @@ class User2(BaseModel):
     birthday: datetime = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # Extra fields
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
     # key is always at bottom
     key: str = Field(
         strict=True,
@@ -60,50 +54,10 @@ class User2(BaseModel):
     )
 
 
-class User3(BaseModel):
+class User3(ScrubyModel):
     """User model."""
 
     username: str = Field(strict=True)
-    # Extra fields
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
-    # key is always at bottom
-    key: str = Field(
-        strict=True,
-        frozen=True,
-        default_factory=lambda data: data["username"],
-    )
-
-
-class UserKeyMissing(BaseModel):
-    """The additional field `key` is missing."""
-
-    username: str = Field(strict=True)
-    # Extra fields
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
-
-
-class UserCreatedMissing(BaseModel):
-    """The additional field `created_at` is missing."""
-
-    username: str = Field(strict=True)
-    # Extra fields
-    updated_at: datetime | None = None
-    # key is always at bottom
-    key: str = Field(
-        strict=True,
-        frozen=True,
-        default_factory=lambda data: data["username"],
-    )
-
-
-class UserUpdatedMissing(BaseModel):
-    """The additional field `updated_at` is missing."""
-
-    username: str = Field(strict=True)
-    # Extra fields
-    created_at: datetime | None = None
     # key is always at bottom
     key: str = Field(
         strict=True,
@@ -152,39 +106,6 @@ class TestNegative:
             match=r"`class_model` does not contain the base class `pydantic.BaseModel`!",
         ):
             await Scruby.collection(dict)
-        #
-        # Delete DB.
-        Scruby.napalm()
-
-    async def test_key_is_missing(self) -> None:
-        """The additional field `key` is missing."""
-        with pytest.raises(
-            AssertionError,
-            match=r"Model: UserKeyMissing => The `key` field is missing!",
-        ):
-            await Scruby.collection(UserKeyMissing)
-        #
-        # Delete DB.
-        Scruby.napalm()
-
-    async def test_created_is_missing(self) -> None:
-        """The additional field `created_at` is missing."""
-        with pytest.raises(
-            AssertionError,
-            match=r"Model: UserCreatedMissing => The `created_at` field is missing!",
-        ):
-            await Scruby.collection(UserCreatedMissing)
-        #
-        # Delete DB.
-        Scruby.napalm()
-
-    async def test_updated_is_missing(self) -> None:
-        """The additional field `updated_at` is missing."""
-        with pytest.raises(
-            AssertionError,
-            match=r"Model: UserUpdatedMissing => The `updated_at` field is missing!",
-        ):
-            await Scruby.collection(UserUpdatedMissing)
         #
         # Delete DB.
         Scruby.napalm()

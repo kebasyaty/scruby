@@ -28,7 +28,8 @@ from __future__ import annotations
 __all__ = (
     "settings",
     "Scruby",
+    "ScrubyModel",
 )
 
 from scruby import settings
-from scruby.db import Scruby
+from scruby.db import Scruby, ScrubyModel
