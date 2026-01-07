@@ -41,16 +41,16 @@ async def task_counter(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
-    limit_docs: int,
+    max_workers: int | None = None,
 ) -> list[User]:
     """Custom task.
 
     This task implements a counter of documents.
     """
-    max_workers: int | None = None
-    users: list[User] = []
+    limit_docs = 1000
     counter = Counter(limit=limit_docs)  # `limit` by default = 1000
-
+    users: list[User] = []
+    # Run quantum loop
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
@@ -72,7 +72,7 @@ async def task_counter(
 
 async def test_task_counter() -> None:
     """Test a Counter class in custom task."""
-    settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+    settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
     db = await Scruby.collection(User)
 
     for num in range(1, 10):

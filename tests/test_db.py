@@ -329,7 +329,7 @@ class TestNegative:
 
     async def test_find_many_page_number_less_than_one(self) -> None:
         """The `page_number` parameter must not be less than one."""
-        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
         db = await Scruby.collection(User)
 
@@ -571,7 +571,7 @@ class TestPositive:
         assert leaf_path == control_path
 
         Scruby.napalm()
-        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
         db = await Scruby.collection(User)
         control_path = Path(
             "ScrubyDB/User/d/1/leaf.json",
@@ -584,7 +584,7 @@ class TestPositive:
 
     async def test_find_one(self) -> None:
         """Find a single document."""
-        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
         db = await Scruby.collection(User)
 
@@ -617,7 +617,7 @@ class TestPositive:
 
     async def test_find_many(self) -> None:
         """Find documents."""
-        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
         db = await Scruby.collection(User)
 
@@ -677,7 +677,7 @@ class TestPositive:
 
     async def test_count_documents(self) -> None:
         """Test a count_documents method."""
-        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
         db = await Scruby.collection(User)
 
@@ -702,7 +702,7 @@ class TestPositive:
 
     async def test_delete_many(self) -> None:
         """Test a delete_many method."""
-        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
         db = await Scruby.collection(User)
 
@@ -732,7 +732,7 @@ class TestPositive:
 
     async def test_run_custom_task(self) -> None:
         """Test a run_custom_task method."""
-        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
         db = await Scruby.collection(User)
 
@@ -754,7 +754,7 @@ class TestPositive:
 
     async def test_update_many(self) -> None:
         """Test a update_many method."""
-        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
         db = await Scruby.collection(User)
 
@@ -776,6 +776,29 @@ class TestPositive:
         assert users is not None
         for user in users:
             assert user.first_name == "Georg"
+        #
+        # Delete DB.
+        Scruby.napalm()
+
+    async def test_extra_fields(self) -> None:
+        """Test extra fields - `created_att` and `updated_at`."""
+        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
+
+        db = await Scruby.collection(User)
+
+        user = User(
+            first_name="John",
+            last_name="Smith",
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
+            email="John_Smith@gmail.com",
+            phone="+447986123456",
+        )
+        await db.add_doc(user)
+        key = "+447986123456"
+        result = await db.get_key(key)
+
+        assert isinstance(result.created_at, datetime)
+        assert isinstance(result.updated_at, datetime)
         #
         # Delete DB.
         Scruby.napalm()

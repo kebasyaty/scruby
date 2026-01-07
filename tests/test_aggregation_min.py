@@ -41,15 +41,14 @@ async def task_calculate_min(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
-    limit_docs: int,  # noqa: ARG001
+    max_workers: int | None = None,
 ) -> int:
     """Custom task.
 
     Calculate the min value.
     """
-    max_workers: int | None = None
     min_age = Min()
-
+    # Run quantum loop
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
@@ -67,7 +66,7 @@ async def task_calculate_min(
 
 async def test_task_calculate_min() -> None:
     """Test a Min class in custom task."""
-    settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+    settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
     db = await Scruby.collection(User)
 
     for num in range(1, 10):

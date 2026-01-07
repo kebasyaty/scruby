@@ -42,18 +42,17 @@ async def task_calculate_average(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
-    limit_docs: int,  # noqa: ARG001
+    max_workers: int | None = None,
 ) -> float:
     """Custom task.
 
     Calculate the average value.
     """
-    max_workers: int | None = None
     average_age = Average(
         precision=".00",  # by default = .00
         rounding=ROUND_HALF_EVEN,  # by default = ROUND_HALF_EVEN
     )
-
+    # Run quantum loop
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
@@ -71,7 +70,7 @@ async def task_calculate_average(
 
 async def test_task_calculate_average() -> None:
     """Test a Average class in custom task."""
-    settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+    settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
     db = await Scruby.collection(User)
 
     for num in range(1, 10):
