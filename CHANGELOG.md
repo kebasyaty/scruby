@@ -1,5 +1,13 @@
 ### CHANGELOG
 
+#### v0.30.0 2026-01-07
+
+- Many changes and fixes have been made; see examples in the documentation.
+- Upgraded all dependencies.
+- Updated tests.
+- Updated documentation.
+- Updated README.md
+
 #### v0.29.0 2026-01-06
 
 - Fixed a serious bug related to the null branch.
