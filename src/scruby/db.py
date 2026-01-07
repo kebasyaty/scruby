@@ -80,9 +80,12 @@ class Scruby(
         # Check the model for additional fields
         if __debug__:
             model_fields = list(class_model.model_fields.keys())
-            assert "key" in model_fields, f"Model: {class_model.__name__} => The `key` field is missing!"
-            assert "created_at" in model_fields, f"Model: {class_model.__name__} => The `created_at` field is missing!"
-            assert "updated_at" in model_fields, f"Model: {class_model.__name__} => The `updated_at` field is missing!"
+            if "key" not in model_fields:
+                raise AssertionError(f"Model: {class_model.__name__} => The `key` field is missing!")
+            if "created_at" not in model_fields:
+                raise AssertionError(f"Model: {class_model.__name__} => The `created_at` field is missing!")
+            if "updated_at" not in model_fields:
+                raise AssertionError(f"Model: {class_model.__name__} => The `updated_at` field is missing!")
         # Create instance of Scruby
         instance = cls()
         # Add model class to Scruby
