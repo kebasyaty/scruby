@@ -8,26 +8,27 @@ The search effectiveness depends on the number of processor threads.
 """
 
 import anyio
-import datetime
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from typing import Annotated
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
-from scruby import Scruby, settings
+from scruby import Scruby, ScrubyModel, settings
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 settings.HASH_REDUCE_LEFT = 6  # By default = 6
 settings.MAX_WORKERS = None  # By default = None
 
 
-class User(BaseModel):
+class User(ScrubyModel):
     """User model."""
 
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
-    birthday: datetime.datetime = Field(strict=True)
+    birthday: datetime = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # The key is always at the bottom
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -44,7 +45,7 @@ async def main() -> None:
     user = User(
         first_name="John",
         last_name="Smith",
-        birthday=datetime.datetime(1970, 1, 1),
+        birthday=datetime(1970, 1, 1),
         email="John_Smith@gmail.com",
         phone="+447986123456",
     )
@@ -54,10 +55,11 @@ async def main() -> None:
 
     # Find user by email.
     user_details: User | None = user_coll.find_one(
-        filter_fn=lambda doc: doc.email == "John_Smith@gmail.com",
+        filter_fn=lambda doc: doc.phone == "+447986123456",
     )
     # Delete user from collection.
-    await user_coll.delete_key(user_details.phone)
+    if user_details is not None:
+        await user_coll.delete_doc(user_details.key)
 
     # Full database deletion.
     # Hint: The main purpose is tests.
@@ -78,26 +80,27 @@ The search effectiveness depends on the number of processor threads.
 """
 
 import anyio
-import datetime
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from typing import Annotated
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
-from scruby import Scruby, settings
+from scruby import Scruby, ScrubyModel, settings
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 settings.HASH_REDUCE_LEFT = 6  # By default = 6
 settings.MAX_WORKERS = None  # By default = None
 
 
-class User(BaseModel):
+class User(ScrubyModel):
     """User model."""
 
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
-    birthday: datetime.datetime = Field(strict=True)
+    birthday: datetime = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # The key is always at the bottom
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -115,7 +118,7 @@ async def main() -> None:
         user = User(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, num),
+            birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )

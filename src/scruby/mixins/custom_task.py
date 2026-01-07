@@ -50,15 +50,15 @@ class CustomTask:
                 docs.append(class_model.model_validate_json(val))
         return docs
 
-    async def run_custom_task(self, custom_task_fn: Callable, limit_docs: int = 1000) -> Any:
+    async def run_custom_task(self, custom_task_fn: Callable) -> Any:
         """Running custom task.
 
-        This method running a task created on the basis of a quantum loop.
-        Effectiveness running task depends on the number of processor threads.
+        Attention:
+            - The search is based on the effect of a quantum loop.
+            - The search effectiveness depends on the number of processor threads.
 
         Args:
             custom_task_fn (Callable): A function that execute the custom task.
-            limit_docs (int): Limiting the number of documents. By default = 1000.
 
         Returns:
             The result of a custom task.
@@ -69,6 +69,6 @@ class CustomTask:
             "hash_reduce_left": self._hash_reduce_left,
             "db_root": self._db_root,
             "class_model": self._class_model,
-            "limit_docs": limit_docs,
+            "max_workers": self._max_workers,
         }
         return await custom_task_fn(**kwargs)

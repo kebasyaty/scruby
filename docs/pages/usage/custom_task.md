@@ -8,28 +8,29 @@ Effectiveness running task depends on the number of processor threads.
 """
 
 import anyio
-import datetime
+from datetime import datetime
+from zoneinfo import ZoneInfo
 import concurrent.futures
 from typing import Annotated, Any
 from collections.abc import Callable
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
-from scruby import Scruby, settings
+from scruby import Scruby, ScrubyModel, settings
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 settings.HASH_REDUCE_LEFT = 6  # By default = 6
 settings.MAX_WORKERS = None  # By default = None
 
 
-class User(BaseModel):
+class User(ScrubyModel):
     """User model."""
 
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
-    birthday: datetime.datetime = Field(strict=True)
+    birthday: datetime = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # The key is always at the bottom
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -43,14 +44,14 @@ async def custom_task(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
+    max_workers: int | None = None,
 ) -> Any:
     """Custom task.
 
     Calculate the number of users named John.
     """
-    max_workers: int | None = None
     counter: int = 0
-
+    # Run quantum loop
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
@@ -77,7 +78,7 @@ async def main() -> None:
         user = User(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, num),
+            birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )

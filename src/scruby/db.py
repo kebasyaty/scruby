@@ -6,12 +6,16 @@
 
 from __future__ import annotations
 
-__all__ = ("Scruby",)
+__all__ = (
+    "Scruby",
+    "ScrubyModel",
+)
 
 import contextlib
 import logging
 import re
 import zlib
+from datetime import datetime
 from shutil import rmtree
 from typing import Any, Literal, Never, assert_never
 
@@ -29,6 +33,13 @@ class _Meta(BaseModel):
     hash_reduce_left: int
     max_branch_number: int
     counter_documents: int
+
+
+class ScrubyModel(BaseModel):
+    """Additional fields for models."""
+
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
 
 class Scruby(
@@ -70,16 +81,26 @@ class Scruby(
         """Get an object to access a collection.
 
         Args:
-            class_model (Any): Class of Model (pydantic.BaseModel).
+            class_model (Any): Class of Model (ScrubyModel).
 
         Returns:
             Instance of Scruby for access a collection.
         """
-        assert BaseModel in class_model.__bases__, "`class_model` does not contain the base class `pydantic.BaseModel`!"
-
+        if __debug__:
+            # Check if the object belongs to the class `ScrubyModel`
+            if ScrubyModel not in class_model.__bases__:
+                raise AssertionError(
+                    "Method: `collection` => argument `class_model` does not contain the base class `ScrubyModel`!",
+                )
+            # Checking the model for the presence of a key.
+            model_fields = list(class_model.model_fields.keys())
+            if "key" not in model_fields:
+                raise AssertionError(f"Model: {class_model.__name__} => The `key` field is missing!")
+        # Create instance of Scruby
         instance = cls()
+        # Add model class to Scruby
         instance.__dict__["_class_model"] = class_model
-        # Caching a pati for metadata.
+        # Create a path for metadata.
         meta_dir_path_tuple = (
             settings.DB_ROOT,
             class_model.__name__,

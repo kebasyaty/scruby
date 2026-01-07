@@ -9,10 +9,10 @@ from collections.abc import Callable
 from decimal import ROUND_HALF_EVEN
 from typing import Annotated, Any
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, settings
+from scruby import Scruby, ScrubyModel, settings
 from scruby.aggregation import Average
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
@@ -20,14 +20,14 @@ settings.HASH_REDUCE_LEFT = 6  # By default = 6
 settings.MAX_WORKERS = None  # By default = None
 
 
-class User(BaseModel):
+class User(ScrubyModel):
     """User model."""
 
     first_name: str = Field(strict=True)
     age: int = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # The key is always at the bottom
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -41,18 +41,17 @@ async def task_calculate_average(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
-    limit_docs: int,
+    max_workers: int | None = None,
 ) -> float:
     """Custom task.
 
     Calculate the average value.
     """
-    max_workers: int | None = None
     average_age = Average(
         precision=".00",           # by default = .00
         rounding=ROUND_HALF_EVEN,  # by default = ROUND_HALF_EVEN
     )
-
+    # Run quantum loop
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
@@ -105,10 +104,10 @@ import concurrent.futures
 from collections.abc import Callable
 from typing import Annotated, Any
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, settings
+from scruby import Scruby, ScrubyModel, settings
 from scruby.aggregation import Counter
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
@@ -123,7 +122,7 @@ class User(BaseModel):
     age: int = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # The key is always at the bottom
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -137,16 +136,16 @@ async def task_counter(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
-    limit_docs: int,
+    max_workers: int | None = None,
 ) -> list[User]:
     """Custom task.
 
     This task implements a counter of documents.
     """
-    max_workers: int | None = None
-    users: list[User] = []
+    limit_docs = 1000
     counter = Counter(limit=limit_docs)  # `limit` by default = 1000
-
+    users: list[User] = []
+    # Run quantum loop
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
@@ -206,10 +205,10 @@ import concurrent.futures
 from collections.abc import Callable
 from typing import Annotated, Any
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, settings
+from scruby import Scruby, ScrubyModel, settings
 from scruby.aggregation import Max
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
@@ -217,14 +216,14 @@ settings.HASH_REDUCE_LEFT = 6  # By default = 6
 settings.MAX_WORKERS = None  # By default = None
 
 
-class User(BaseModel):
+class User(ScrubyModel):
     """User model."""
 
     first_name: str = Field(strict=True)
     age: int = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # The key is always at the bottom
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -238,15 +237,14 @@ async def task_calculate_max(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
-    limit_docs: int,
+    max_workers: int | None = None,
 ) -> int:
     """Custom task.
 
     Calculate the max value.
     """
-    max_workers: int | None = None
     max_age = Max()
-
+    # Run quantum loop
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
@@ -299,10 +297,10 @@ import concurrent.futures
 from collections.abc import Callable
 from typing import Annotated, Any
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, settings
+from scruby import Scruby, ScrubyModel, settings
 from scruby.aggregation import Min
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
@@ -310,14 +308,14 @@ settings.HASH_REDUCE_LEFT = 6  # By default = 6
 settings.MAX_WORKERS = None  # By default = None
 
 
-class User(BaseModel):
+class User(ScrubyModel):
     """User model."""
 
     first_name: str = Field(strict=True)
     age: int = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # The key is always at the bottom
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -331,15 +329,14 @@ async def task_calculate_min(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
-    limit_docs: int,
+    max_workers: int | None = None,
 ) -> int:
     """Custom task.
 
     Calculate the min value.
     """
-    max_workers: int | None = None
     min_age = Min()
-
+    # Run quantum loop
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
@@ -392,10 +389,10 @@ import concurrent.futures
 from collections.abc import Callable
 from typing import Annotated, Any
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, settings
+from scruby import Scruby, ScrubyModel, settings
 from scruby.aggregation import Sum
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
@@ -403,14 +400,14 @@ settings.HASH_REDUCE_LEFT = 6  # By default = 6
 settings.MAX_WORKERS = None  # By default = None
 
 
-class User(BaseModel):
+class User(ScrubyModel):
     """User model."""
 
     first_name: str = Field(strict=True)
     age: int = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # The key is always at the bottom
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -424,15 +421,14 @@ async def task_calculate_sum(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
-    limit_docs: int,
+    max_workers: int | None = None,
 ) -> int:
     """Custom task.
 
     Calculate the sum of values.
     """
-    max_workers: int | None = None
     sum_age = Sum()
-
+    # Run quantum loop
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(

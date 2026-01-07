@@ -3,16 +3,17 @@
 from __future__ import annotations
 
 import concurrent.futures
-import datetime
 from collections.abc import Callable
+from datetime import datetime
 from typing import Annotated, Any
+from zoneinfo import ZoneInfo
 
 import pytest
 from anyio import Path
 from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, settings
+from scruby import Scruby, ScrubyModel, settings
 from scruby.errors import (
     KeyAlreadyExistsError,
     KeyNotExistsError,
@@ -21,15 +22,15 @@ from scruby.errors import (
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
 
-class User(BaseModel):
+class User(ScrubyModel):
     """User model."""
 
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
-    birthday: datetime.datetime = Field(strict=True)
+    birthday: datetime = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # The key is always at the bottom
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -37,15 +38,15 @@ class User(BaseModel):
     )
 
 
-class User2(BaseModel):
+class User2(ScrubyModel):
     """User model."""
 
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
-    birthday: datetime.datetime = Field(strict=True)
+    birthday: datetime = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # The key is always at the bottom
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -53,16 +54,34 @@ class User2(BaseModel):
     )
 
 
-class User3(BaseModel):
+class User3(ScrubyModel):
     """User model."""
 
     username: str = Field(strict=True)
-    # The key is always at the bottom
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
         default_factory=lambda data: data["username"],
     )
+
+
+class User4(BaseModel):
+    """User model."""
+
+    username: str = Field(strict=True)
+    # key is always at bottom
+    key: str = Field(
+        strict=True,
+        frozen=True,
+        default_factory=lambda data: data["username"],
+    )
+
+
+class User5(ScrubyModel):
+    """User model."""
+
+    username: str = Field(strict=True)
 
 
 async def custom_task(
@@ -71,15 +90,14 @@ async def custom_task(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
-    limit_docs: int,  # noqa: ARG001
+    max_workers: int | None = None,
 ) -> Any:
     """Custom task.
 
     Calculate the number of users named John.
     """
-    max_workers: int | None = None
     counter: int = 0
-
+    # Run quantum loop
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
@@ -99,13 +117,24 @@ async def custom_task(
 class TestNegative:
     """Negative tests."""
 
-    async def test_assert_class_model(self) -> None:
-        """`class_model` does not contain the base class `pydantic.BaseMode."""
+    async def test_invalid_model_type(self) -> None:
+        """Invalid model type."""
         with pytest.raises(
             AssertionError,
-            match=r"`class_model` does not contain the base class `pydantic.BaseModel`!",
+            match=r"Method: `collection` => argument `class_model` does not contain the base class `ScrubyModel`!",
         ):
-            await Scruby.collection(dict)
+            await Scruby.collection(User4)
+        #
+        # Delete DB.
+        Scruby.napalm()
+
+    async def test_model_key_is_missing(self) -> None:
+        """Key of Model is missing."""
+        with pytest.raises(
+            AssertionError,
+            match=r"Model: User5 => The `key` field is missing!",
+        ):
+            await Scruby.collection(User5)
         #
         # Delete DB.
         Scruby.napalm()
@@ -115,7 +144,7 @@ class TestNegative:
         user2 = User2(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
@@ -136,7 +165,7 @@ class TestNegative:
         user = User(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
@@ -144,7 +173,7 @@ class TestNegative:
         user2 = User2(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
@@ -166,7 +195,7 @@ class TestNegative:
         db = await Scruby.collection(User)
 
         with pytest.raises(KeyError):
-            await db.get_key("key missing")
+            await db.get_doc("key missing")
         #
         # Delete DB.
         Scruby.napalm()
@@ -176,7 +205,7 @@ class TestNegative:
         db = await Scruby.collection(User)
 
         with pytest.raises(KeyError):
-            await db.delete_key("key missing")
+            await db.delete_doc("key missing")
         #
         # Delete DB.
         Scruby.napalm()
@@ -211,7 +240,7 @@ class TestNegative:
         user = User(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
@@ -231,7 +260,7 @@ class TestNegative:
         user = User(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
@@ -240,7 +269,7 @@ class TestNegative:
             await db.update_doc(user)
 
         await db.add_doc(user)
-        await db.delete_key(user.key)
+        await db.delete_doc(user.key)
 
         with pytest.raises(KeyNotExistsError):
             await db.update_doc(user)
@@ -250,7 +279,7 @@ class TestNegative:
 
     async def test_find_many_page_number_less_than_one(self) -> None:
         """The `page_number` parameter must not be less than one."""
-        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
         db = await Scruby.collection(User)
 
@@ -258,7 +287,7 @@ class TestNegative:
             user = User(
                 first_name="John",
                 last_name="Smith",
-                birthday=datetime.datetime(1970, 1, num),  # noqa: DTZ001
+                birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
@@ -370,7 +399,7 @@ class TestPositive:
         user = User(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
@@ -389,7 +418,7 @@ class TestPositive:
         user = User(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
@@ -410,13 +439,13 @@ class TestPositive:
         user = User(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
 
         await db.add_doc(user)
-        data: User = await db.get_key("+447986123456")
+        data: User = await db.get_doc("+447986123456")
         assert data.model_dump() == user.model_dump()
         assert data.phone == "+447986123456"
         #
@@ -430,7 +459,7 @@ class TestPositive:
         user = User(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
@@ -449,7 +478,7 @@ class TestPositive:
         user = User(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
@@ -457,7 +486,7 @@ class TestPositive:
         assert await db.estimated_document_count() == 0
         await db.add_doc(user)
         assert await db.estimated_document_count() == 1
-        assert await db.delete_key("+447986123456") is None
+        assert await db.delete_doc("+447986123456") is None
         assert await db.estimated_document_count() == 0
         assert not await db.has_key("key missing")
         #
@@ -492,7 +521,7 @@ class TestPositive:
         assert leaf_path == control_path
 
         Scruby.napalm()
-        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
         db = await Scruby.collection(User)
         control_path = Path(
             "ScrubyDB/User/d/1/leaf.json",
@@ -505,7 +534,7 @@ class TestPositive:
 
     async def test_find_one(self) -> None:
         """Find a single document."""
-        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
         db = await Scruby.collection(User)
 
@@ -513,7 +542,7 @@ class TestPositive:
             user = User(
                 first_name="John",
                 last_name="Smith",
-                birthday=datetime.datetime(1970, 1, num),  # noqa: DTZ001
+                birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
@@ -528,17 +557,17 @@ class TestPositive:
 
         # by birthday
         result_2: User | None = await db.find_one(
-            filter_fn=lambda doc: doc.birthday == datetime.datetime(1970, 1, 8),  # noqa: DTZ001
+            filter_fn=lambda doc: doc.birthday == datetime(1970, 1, 8, tzinfo=ZoneInfo("UTC")),
         )
         assert result_2 is not None
-        assert result_2.birthday == datetime.datetime(1970, 1, 8)  # noqa: DTZ001
+        assert result_2.birthday == datetime(1970, 1, 8, tzinfo=ZoneInfo("UTC"))
         #
         # Delete DB.
         Scruby.napalm()
 
     async def test_find_many(self) -> None:
         """Find documents."""
-        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
         db = await Scruby.collection(User)
 
@@ -546,7 +575,7 @@ class TestPositive:
             user = User(
                 first_name="John",
                 last_name="Smith",
-                birthday=datetime.datetime(1970, 1, num),  # noqa: DTZ001
+                birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
@@ -598,7 +627,7 @@ class TestPositive:
 
     async def test_count_documents(self) -> None:
         """Test a count_documents method."""
-        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
         db = await Scruby.collection(User)
 
@@ -606,7 +635,7 @@ class TestPositive:
             user = User(
                 first_name="John",
                 last_name="Smith",
-                birthday=datetime.datetime(1970, 1, num),  # noqa: DTZ001
+                birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
@@ -623,7 +652,7 @@ class TestPositive:
 
     async def test_delete_many(self) -> None:
         """Test a delete_many method."""
-        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
         db = await Scruby.collection(User)
 
@@ -631,7 +660,7 @@ class TestPositive:
             user = User(
                 first_name="John",
                 last_name="Smith",
-                birthday=datetime.datetime(1970, 1, num),  # noqa: DTZ001
+                birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
@@ -653,7 +682,7 @@ class TestPositive:
 
     async def test_run_custom_task(self) -> None:
         """Test a run_custom_task method."""
-        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
         db = await Scruby.collection(User)
 
@@ -661,7 +690,7 @@ class TestPositive:
             user = User(
                 first_name="John",
                 last_name="Smith",
-                birthday=datetime.datetime(1970, 1, num),  # noqa: DTZ001
+                birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
@@ -675,7 +704,7 @@ class TestPositive:
 
     async def test_update_many(self) -> None:
         """Test a update_many method."""
-        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
         db = await Scruby.collection(User)
 
@@ -683,25 +712,43 @@ class TestPositive:
             user = User(
                 first_name="John",
                 last_name="Smith",
-                birthday=datetime.datetime(1970, 1, num),  # noqa: DTZ001
+                birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
             await db.add_doc(user)
 
-        number_updated_users = await db.update_many(
-            filter_fn=lambda _: True,  # Update all documents
-            new_data={"first_name": "Georg"},
-        )
+        number_updated_users = await db.update_many(new_data={"first_name": "Georg"})
         assert number_updated_users == 9
         #
         # by email
-        users: list[User] | None = await db.find_many(
-            filter_fn=lambda _: True,  # Find all documents
-        )
+        users: list[User] | None = await db.find_many()
         assert users is not None
         for user in users:
             assert user.first_name == "Georg"
+        #
+        # Delete DB.
+        Scruby.napalm()
+
+    async def test_extra_fields(self) -> None:
+        """Test extra fields - `created_att` and `updated_at`."""
+        settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
+
+        db = await Scruby.collection(User)
+
+        user = User(
+            first_name="John",
+            last_name="Smith",
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
+            email="John_Smith@gmail.com",
+            phone="+447986123456",
+        )
+        await db.add_doc(user)
+        key = "+447986123456"
+        result = await db.get_doc(key)
+
+        assert isinstance(result.created_at, datetime)
+        assert isinstance(result.updated_at, datetime)
         #
         # Delete DB.
         Scruby.napalm()

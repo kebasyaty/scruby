@@ -7,23 +7,23 @@ from collections.abc import Callable
 from typing import Annotated, Any
 
 import pytest
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, settings
+from scruby import Scruby, ScrubyModel, settings
 from scruby.aggregation import Counter
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
 
-class User(BaseModel):
+class User(ScrubyModel):
     """User model."""
 
     first_name: str = Field(strict=True)
     age: int = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # The key is always at the bottom
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -37,16 +37,16 @@ async def task_counter(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
-    limit_docs: int,
+    max_workers: int | None = None,
 ) -> list[User]:
     """Custom task.
 
     This task implements a counter of documents.
     """
-    max_workers: int | None = None
-    users: list[User] = []
+    limit_docs = 5
     counter = Counter(limit=limit_docs)  # `limit` by default = 1000
-
+    users: list[User] = []
+    # Run quantum loop
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
@@ -68,7 +68,7 @@ async def task_counter(
 
 async def test_task_counter() -> None:
     """Test a Counter class in custom task."""
-    settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+    settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
     db = await Scruby.collection(User)
 
     for num in range(1, 10):
@@ -82,7 +82,6 @@ async def test_task_counter() -> None:
 
     result = await db.run_custom_task(
         custom_task_fn=task_counter,
-        limit_docs=5,
     )
     assert len(result) == 5
     #

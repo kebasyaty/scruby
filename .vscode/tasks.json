@@ -88,10 +88,10 @@
       "problemMatcher": []
     },
     {
-      "label": "MkDocs: Run Deploy 0.29",
+      "label": "MkDocs: Run Deploy 0.30",
       "type": "shell",
       "command": [
-        "uv run mike deploy --push --update-aliases 0.29 latest;",
+        "uv run mike deploy --push --update-aliases 0.30 latest;",
         "uv run mike set-default --push latest"
       ],
       "problemMatcher": []

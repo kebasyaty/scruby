@@ -8,23 +8,23 @@ from decimal import ROUND_HALF_EVEN
 from typing import Annotated, Any
 
 import pytest
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, settings
+from scruby import Scruby, ScrubyModel, settings
 from scruby.aggregation import Average
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
 
-class User(BaseModel):
+class User(ScrubyModel):
     """User model."""
 
     first_name: str = Field(strict=True)
     age: int = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # The key is always at the bottom
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -38,18 +38,17 @@ async def task_calculate_average(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
-    limit_docs: int,  # noqa: ARG001
+    max_workers: int | None = None,
 ) -> float:
     """Custom task.
 
     Calculate the average value.
     """
-    max_workers: int | None = None
     average_age = Average(
         precision=".00",  # by default = .00
         rounding=ROUND_HALF_EVEN,  # by default = ROUND_HALF_EVEN
     )
-
+    # Run quantum loop
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
@@ -67,7 +66,7 @@ async def task_calculate_average(
 
 async def test_task_calculate_average() -> None:
     """Test a Average class in custom task."""
-    settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection (main purpose is tests).
+    settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
     db = await Scruby.collection(User)
 
     for num in range(1, 10):

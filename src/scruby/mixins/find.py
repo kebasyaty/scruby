@@ -61,8 +61,9 @@ class Find:
     ) -> Any | None:
         """Find one document matching the filter.
 
-        The search is based on the effect of a quantum loop.
-        The search effectiveness depends on the number of processor threads.
+        Attention:
+            - The search is based on the effect of a quantum loop.
+            - The search effectiveness depends on the number of processor threads.
 
         Args:
             filter_fn (Callable): A function that execute the conditions of filtering.
@@ -100,8 +101,9 @@ class Find:
     ) -> list[Any] | None:
         """Find many documents matching the filter.
 
-        The search is based on the effect of a quantum loop.
-        The search effectiveness depends on the number of processor threads.
+        Attention:
+            - The search is based on the effect of a quantum loop.
+            - The search effectiveness depends on the number of processor threads.
 
         Args:
             filter_fn (Callable): A function that execute the conditions of filtering.

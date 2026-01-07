@@ -64,8 +64,9 @@ class Delete:
     ) -> int:
         """Delete one or more documents matching the filter.
 
-        The search is based on the effect of a quantum loop.
-        The search effectiveness depends on the number of processor threads.
+        Attention:
+            - The search is based on the effect of a quantum loop.
+            - The search effectiveness depends on the number of processor threads.
 
         Args:
             filter_fn (Callable): A function that execute the conditions of filtering.

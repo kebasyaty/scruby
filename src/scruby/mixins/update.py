@@ -62,13 +62,16 @@ class Update:
 
     async def update_many(
         self,
-        filter_fn: Callable,
         new_data: dict[str, Any],
+        filter_fn: Callable = lambda _: True,
     ) -> int:
-        """Updates one or more documents matching the filter.
+        """Updates many documents matching the filter.
 
-        The search is based on the effect of a quantum loop.
-        The search effectiveness depends on the number of processor threads.
+        Attention:
+            - For a complex case, a custom task may be needed.
+            - See documentation on creating custom tasks.
+            - The search is based on the effect of a quantum loop.
+            - The search effectiveness depends on the number of processor threads.
 
         Args:
             filter_fn (Callable): A function that execute the conditions of filtering.
