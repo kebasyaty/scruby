@@ -53,8 +53,9 @@ class CustomTask:
     async def run_custom_task(self, custom_task_fn: Callable, limit_docs: int = 1000) -> Any:
         """Running custom task.
 
-        This method running a task created on the basis of a quantum loop.
-        Effectiveness running task depends on the number of processor threads.
+        Attention:
+            - The search is based on the effect of a quantum loop.
+            - The search effectiveness depends on the number of processor threads.
 
         Args:
             custom_task_fn (Callable): A function that execute the custom task.
