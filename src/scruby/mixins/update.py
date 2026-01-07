@@ -62,8 +62,8 @@ class Update:
 
     async def update_many(
         self,
-        filter_fn: Callable,
         new_data: dict[str, Any],
+        filter_fn: Callable = lambda _: True,
     ) -> int:
         """Updates one or more documents matching the filter.
 
