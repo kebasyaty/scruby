@@ -75,7 +75,7 @@ class User3(BaseModel):
     )
 
 
-class UserKeyError(BaseModel):
+class UserKeyMissing(BaseModel):
     """The additional field `key` is missing."""
 
     username: str = Field(strict=True)
@@ -84,7 +84,7 @@ class UserKeyError(BaseModel):
     updated_at: datetime | None = None
 
 
-class UserCreatedError(BaseModel):
+class UserCreatedMissing(BaseModel):
     """The additional field `created_at` is missing."""
 
     username: str = Field(strict=True)
@@ -98,7 +98,7 @@ class UserCreatedError(BaseModel):
     )
 
 
-class UserUpdatedError(BaseModel):
+class UserUpdatedMissing(BaseModel):
     """The additional field `updated_at` is missing."""
 
     username: str = Field(strict=True)
@@ -161,9 +161,31 @@ class TestNegative:
         """The additional field `key` is missing."""
         with pytest.raises(
             AssertionError,
-            match=r"`class_model` does not contain the base class `pydantic.BaseModel`!",
+            match=r"Model: UserKeyMissing => The `key` field is missing!",
         ):
-            await Scruby.collection(UserKeyError)
+            await Scruby.collection(UserKeyMissing)
+        #
+        # Delete DB.
+        Scruby.napalm()
+
+    async def test_created_is_missing(self) -> None:
+        """The additional field `created_at` is missing."""
+        with pytest.raises(
+            AssertionError,
+            match=r"Model: UserCreatedMissing => The `created_at` field is missing!",
+        ):
+            await Scruby.collection(UserCreatedMissing)
+        #
+        # Delete DB.
+        Scruby.napalm()
+
+    async def test_updated_is_missing(self) -> None:
+        """The additional field `updated_at` is missing."""
+        with pytest.raises(
+            AssertionError,
+            match=r"Model: UserUpdatedMissing => The `updated_at` field is missing!",
+        ):
+            await Scruby.collection(UserUpdatedMissing)
         #
         # Delete DB.
         Scruby.napalm()
