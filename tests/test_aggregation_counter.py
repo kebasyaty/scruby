@@ -47,7 +47,7 @@ async def task_counter(
 
     This task implements a counter of documents.
     """
-    limit_docs = 1000
+    limit_docs = 5
     counter = Counter(limit=limit_docs)  # `limit` by default = 1000
     users: list[User] = []
     # Run quantum loop
@@ -86,7 +86,6 @@ async def test_task_counter() -> None:
 
     result = await db.run_custom_task(
         custom_task_fn=task_counter,
-        limit_docs=5,
     )
     assert len(result) == 5
     #
