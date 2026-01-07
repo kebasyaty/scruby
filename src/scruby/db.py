@@ -81,7 +81,7 @@ class Scruby(
         """Get an object to access a collection.
 
         Args:
-            class_model (Any): Class of Model (pydantic.BaseModel).
+            class_model (Any): Class of Model (ScrubyModel).
 
         Returns:
             Instance of Scruby for access a collection.
