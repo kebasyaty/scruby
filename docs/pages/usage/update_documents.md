@@ -47,21 +47,19 @@ async def main() -> None:
     for num in range(1, 10):
         user = User(
             first_name="John",
-            age=f"{num * 10}",
+            last_name="Smith",
+            birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await user_coll.add_doc(user)
+        await db.add_doc(user)
 
     number_updated_users = await user_coll.update_many(
-        filter_fn=lambda _: True,  # Update all documents.
         new_data={"first_name": "Georg"},
     )
     print(number_updated_users)  # => 9
 
-    users: list[User] | None = await user_coll.find_many(
-        filter_fn=lambda _: True,  # Find all documents
-    )
+    users: list[User] | None = await user_coll.find_many()
     for user in users:
         print(user.first_name)  # => Georg
 

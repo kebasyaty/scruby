@@ -769,16 +769,11 @@ class TestPositive:
             )
             await db.add_doc(user)
 
-        number_updated_users = await db.update_many(
-            filter_fn=lambda _: True,  # Update all documents
-            new_data={"first_name": "Georg"},
-        )
+        number_updated_users = await db.update_many(new_data={"first_name": "Georg"})
         assert number_updated_users == 9
         #
         # by email
-        users: list[User] | None = await db.find_many(
-            filter_fn=lambda _: True,  # Find all documents
-        )
+        users: list[User] | None = await db.find_many()
         assert users is not None
         for user in users:
             assert user.first_name == "Georg"

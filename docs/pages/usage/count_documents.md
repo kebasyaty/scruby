@@ -4,7 +4,8 @@
 """Get an estimate of the number of documents in this collection using collection metadata."""
 
 import anyio
-from daimport datetime
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from typing import Annotated
 from pydantic import BaseModel, EmailStr
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
@@ -72,7 +73,7 @@ if __name__ == "__main__":
 """Count the number of documents a matching the filter in this collection."""
 
 import anyio
-from daimport import datetime
+from datetime import datetime
 from typing import Annotated
 from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
@@ -88,7 +89,7 @@ class User(BaseModel):
 
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
-    birthday: datetime.datetime = Field(strict=True)
+    birthday: datetime = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
     # Extra fields

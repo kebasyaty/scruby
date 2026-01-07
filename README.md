@@ -72,8 +72,8 @@ See more examples here [https://kebasyaty.github.io/scruby/latest/pages/usage/](
 
 import anyio
 from datetime import datetime
-from typing import Annotated
 from zoneinfo import ZoneInfo
+from typing import Annotated
 from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, settings

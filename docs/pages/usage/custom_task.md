@@ -9,6 +9,7 @@ Effectiveness running task depends on the number of processor threads.
 
 import anyio
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import concurrent.futures
 from typing import Annotated, Any
 from collections.abc import Callable
@@ -26,7 +27,7 @@ class User(BaseModel):
 
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
-    birthday: datetime.datetime = Field(strict=True)
+    birthday: datetime = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
     # Extra fields

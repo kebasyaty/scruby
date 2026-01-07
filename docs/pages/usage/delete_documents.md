@@ -9,6 +9,7 @@ The search effectiveness depends on the number of processor threads.
 
 import anyio
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from typing import Annotated
 from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
@@ -82,6 +83,7 @@ The search effectiveness depends on the number of processor threads.
 
 import anyio
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from typing import Annotated
 from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
@@ -97,7 +99,7 @@ class User(BaseModel):
 
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
-    birthday: datetime.datetime = Field(strict=True)
+    birthday: datetime = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
     # Extra fields
