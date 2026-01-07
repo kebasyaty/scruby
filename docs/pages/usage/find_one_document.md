@@ -10,8 +10,8 @@ The search effectiveness depends on the number of processor threads.
 import anyio
 from datetime import datetime
 from typing import Annotated
-from pydantic import BaseModel, Field
-from scruby import Scruby, settings
+from pydantic import Field
+from scruby import Scruby, ScrubyModel, settings
 from pprint import pprint as pp
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
@@ -19,15 +19,12 @@ settings.HASH_REDUCE_LEFT = 6  # By default = 6
 settings.MAX_WORKERS = None  # By default = None
 
 
-class Phone(BaseModel):
+class Phone(ScrubyModel):
     """Phone model."""
     brand: str = Field(strict=True, frozen=True)
     model: str = Field(strict=True, frozen=True)
     screen_diagonal: float = Field(strict=True)
     matrix_type: str = Field(strict=True)
-    # Extra fields
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
     # key is always at bottom
     key: str = Field(
         strict=True,

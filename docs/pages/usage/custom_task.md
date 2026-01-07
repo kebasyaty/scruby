@@ -13,16 +13,16 @@ from zoneinfo import ZoneInfo
 import concurrent.futures
 from typing import Annotated, Any
 from collections.abc import Callable
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
-from scruby import Scruby, settings
+from scruby import Scruby, ScrubyModel, settings
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 settings.HASH_REDUCE_LEFT = 6  # By default = 6
 settings.MAX_WORKERS = None  # By default = None
 
 
-class User(BaseModel):
+class User(ScrubyModel):
     """User model."""
 
     first_name: str = Field(strict=True)
@@ -30,9 +30,6 @@ class User(BaseModel):
     birthday: datetime = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # Extra fields
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
     # key is always at bottom
     key: str = Field(
         strict=True,

@@ -88,8 +88,7 @@ class User(BaseModel):
     last_name: str = Field(strict=True)
     birthday: datetime = Field(strict=True)
     email: EmailStr = Field(strict=True)
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # key is always at bottom
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -157,8 +156,7 @@ class Phone(ScrubyModel):
     brand: str = Field(strict=True, frozen=True)
     model: str = Field(strict=True, frozen=True)
     screen_diagonal: float = Field(strict=True)
-    matrix_type: str = Field(strict=True)
-    # key is always at bottom
+    matrix_type: str = Field(strict=True)    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -233,8 +231,7 @@ class Car(ScrubyModel):
     brand: str = Field(strict=True, frozen=True)
     model: str = Field(strict=True, frozen=True)
     year: int = Field(strict=True)
-    power_reserve: int = Field(strict=True)
-    # key is always at bottom
+    power_reserve: int = Field(strict=True)    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
