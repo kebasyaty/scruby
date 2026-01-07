@@ -118,13 +118,12 @@ async def custom_task(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
-    limit_docs: int,  # noqa: ARG001
+    max_workers: int | None = None,
 ) -> Any:
     """Custom task.
 
     Calculate the number of users named John.
     """
-    max_workers: int | None = None
     counter: int = 0
     # Run quantum loop
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:

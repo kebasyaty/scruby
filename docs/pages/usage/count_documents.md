@@ -43,7 +43,7 @@ async def main() -> None:
     user = User(
         first_name="John",
         last_name="Smith",
-        birthday=datetime(1970, 1, 1),
+        birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
         email="John_Smith@gmail.com",
         phone="+447986123456",
     )
@@ -113,7 +113,7 @@ async def main() -> None:
         user = User(
             first_name="John",
             last_name="Smith",
-            birthday=datetime(1970, 1, num),
+            birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )

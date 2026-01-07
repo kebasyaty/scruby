@@ -50,7 +50,7 @@ class CustomTask:
                 docs.append(class_model.model_validate_json(val))
         return docs
 
-    async def run_custom_task(self, custom_task_fn: Callable, limit_docs: int = 1000) -> Any:
+    async def run_custom_task(self, custom_task_fn: Callable) -> Any:
         """Running custom task.
 
         Attention:
@@ -70,6 +70,6 @@ class CustomTask:
             "hash_reduce_left": self._hash_reduce_left,
             "db_root": self._db_root,
             "class_model": self._class_model,
-            "limit_docs": limit_docs,
+            "max_workers": self._max_workers,
         }
         return await custom_task_fn(**kwargs)
