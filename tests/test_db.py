@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import concurrent.futures
-import datetime
 from collections.abc import Callable
+from datetime import datetime
 from typing import Annotated, Any
+from zoneinfo import ZoneInfo
 
 import pytest
 from anyio import Path
@@ -26,10 +27,13 @@ class User(BaseModel):
 
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
-    birthday: datetime.datetime = Field(strict=True)
+    birthday: datetime = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # The key is always at the bottom
+    # Extra fields
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -42,10 +46,13 @@ class User2(BaseModel):
 
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
-    birthday: datetime.datetime = Field(strict=True)
+    birthday: datetime = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # The key is always at the bottom
+    # Extra fields
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -57,7 +64,10 @@ class User3(BaseModel):
     """User model."""
 
     username: str = Field(strict=True)
-    # The key is always at the bottom
+    # Extra fields
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -115,7 +125,7 @@ class TestNegative:
         user2 = User2(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
@@ -136,7 +146,7 @@ class TestNegative:
         user = User(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
@@ -144,7 +154,7 @@ class TestNegative:
         user2 = User2(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
@@ -211,7 +221,7 @@ class TestNegative:
         user = User(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
@@ -231,7 +241,7 @@ class TestNegative:
         user = User(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
@@ -258,7 +268,7 @@ class TestNegative:
             user = User(
                 first_name="John",
                 last_name="Smith",
-                birthday=datetime.datetime(1970, 1, num),  # noqa: DTZ001
+                birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
@@ -370,7 +380,7 @@ class TestPositive:
         user = User(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
@@ -389,7 +399,7 @@ class TestPositive:
         user = User(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
@@ -410,7 +420,7 @@ class TestPositive:
         user = User(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
@@ -430,7 +440,7 @@ class TestPositive:
         user = User(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
@@ -449,7 +459,7 @@ class TestPositive:
         user = User(
             first_name="John",
             last_name="Smith",
-            birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
@@ -513,7 +523,7 @@ class TestPositive:
             user = User(
                 first_name="John",
                 last_name="Smith",
-                birthday=datetime.datetime(1970, 1, num),  # noqa: DTZ001
+                birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
@@ -528,10 +538,10 @@ class TestPositive:
 
         # by birthday
         result_2: User | None = await db.find_one(
-            filter_fn=lambda doc: doc.birthday == datetime.datetime(1970, 1, 8),  # noqa: DTZ001
+            filter_fn=lambda doc: doc.birthday == datetime(1970, 1, 8, tzinfo=ZoneInfo("UTC")),
         )
         assert result_2 is not None
-        assert result_2.birthday == datetime.datetime(1970, 1, 8)  # noqa: DTZ001
+        assert result_2.birthday == datetime(1970, 1, 8, tzinfo=ZoneInfo("UTC"))
         #
         # Delete DB.
         Scruby.napalm()
@@ -546,7 +556,7 @@ class TestPositive:
             user = User(
                 first_name="John",
                 last_name="Smith",
-                birthday=datetime.datetime(1970, 1, num),  # noqa: DTZ001
+                birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
@@ -606,7 +616,7 @@ class TestPositive:
             user = User(
                 first_name="John",
                 last_name="Smith",
-                birthday=datetime.datetime(1970, 1, num),  # noqa: DTZ001
+                birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
@@ -631,7 +641,7 @@ class TestPositive:
             user = User(
                 first_name="John",
                 last_name="Smith",
-                birthday=datetime.datetime(1970, 1, num),  # noqa: DTZ001
+                birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
@@ -661,7 +671,7 @@ class TestPositive:
             user = User(
                 first_name="John",
                 last_name="Smith",
-                birthday=datetime.datetime(1970, 1, num),  # noqa: DTZ001
+                birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
@@ -683,7 +693,7 @@ class TestPositive:
             user = User(
                 first_name="John",
                 last_name="Smith",
-                birthday=datetime.datetime(1970, 1, num),  # noqa: DTZ001
+                birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )

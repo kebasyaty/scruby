@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-import datetime
+from datetime import datetime
 from typing import Annotated
+from zoneinfo import ZoneInfo
 
 import pytest
 from pydantic import BaseModel, EmailStr, Field
@@ -19,10 +20,13 @@ class User(BaseModel):
 
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
-    birthday: datetime.datetime = Field(strict=True)
+    birthday: datetime = Field(strict=True)
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
-    # The key is always at the bottom
+    # Extra fields
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -37,7 +41,10 @@ class Phone(BaseModel):
     model: str = Field(strict=True, frozen=True)
     screen_diagonal: float = Field(strict=True)
     matrix_type: str = Field(strict=True)
-    # The key is always at the bottom
+    # Extra fields
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -52,7 +59,10 @@ class Car(BaseModel):
     model: str = Field(strict=True, frozen=True)
     year: int = Field(strict=True)
     power_reserve: int = Field(strict=True)
-    # The key is always at the bottom
+    # Extra fields
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    # key is always at bottom
     key: str = Field(
         strict=True,
         frozen=True,
@@ -69,7 +79,7 @@ async def test_user() -> None:
     user = User(
         first_name="John",
         last_name="Smith",
-        birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+        birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
         email="John_Smith@gmail.com",
         phone="+447986123456",
     )
@@ -86,7 +96,7 @@ async def test_user_2() -> None:
     user = User(
         first_name="John_2",
         last_name="Smith_2",
-        birthday=datetime.datetime(1970, 1, 1),  # noqa: DTZ001
+        birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
         email="John_Smith_2@gmail.com",
         phone="+447986123457",
     )

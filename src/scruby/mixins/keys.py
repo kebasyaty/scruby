@@ -9,7 +9,9 @@ from __future__ import annotations
 __all__ = ("Keys",)
 
 import logging
+from datetime import datetime
 from typing import Any
+from zoneinfo import ZoneInfo
 
 import orjson
 
@@ -42,6 +44,11 @@ class Keys:
             raise TypeError(msg)
         # The path to cell of collection.
         leaf_path, prepared_key = await self._get_leaf_path(doc.key)
+        # Init a `created_at` and `updated_at` fields
+        tz = ZoneInfo("UTC")
+        doc.created_at = datetime.now(tz)
+        doc.updated_at = datetime.now(tz)
+        # Convert doc to json
         doc_json: str = doc.model_dump_json()
         # Write key-value to collection.
         if await leaf_path.exists():
@@ -83,6 +90,9 @@ class Keys:
             raise TypeError(msg)
         # The path to cell of collection.
         leaf_path, prepared_key = await self._get_leaf_path(doc.key)
+        # Update a `updated_at` field
+        doc.updated_at = datetime.now(ZoneInfo("UTC"))
+        # Convert doc to json
         doc_json: str = doc.model_dump_json()
         # Update the existing key.
         if await leaf_path.exists():

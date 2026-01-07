@@ -79,7 +79,7 @@ class Scruby(
 
         instance = cls()
         instance.__dict__["_class_model"] = class_model
-        # Caching a pati for metadata.
+        # Create a path for metadata.
         meta_dir_path_tuple = (
             settings.DB_ROOT,
             class_model.__name__,
