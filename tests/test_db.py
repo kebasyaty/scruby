@@ -67,7 +67,7 @@ class User3(ScrubyModel):
 
 
 class User4(BaseModel):
-    """User model."""
+    """Invalid model type."""
 
     username: str = Field(strict=True)
     # key is always at bottom
@@ -79,7 +79,7 @@ class User4(BaseModel):
 
 
 class User5(ScrubyModel):
-    """User model."""
+    """Key of Model is missing."""
 
     username: str = Field(strict=True)
 
