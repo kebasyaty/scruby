@@ -1,6 +1,7 @@
 # Scruby - Asynchronous library for building and managing a hybrid database, by scheme of key-value.
 # Copyright (c) 2025 Gennady Kostyunin
 # SPDX-License-Identifier: MIT
+#
 """Methods for working with keys."""
 
 from __future__ import annotations
