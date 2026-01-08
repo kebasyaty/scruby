@@ -383,10 +383,20 @@ class TestPositive:
         db = await Scruby.collection(User)
 
         meta = await db.get_meta()
+        assert meta.db_root == "ScrubyDB"
+        assert meta.collection_name == "User"
+        assert meta.hash_reduce_left == 6
+        assert meta.max_branch_number == 256
         assert meta.counter_documents == 0
+
         meta.counter_documents = 1
         await db._set_meta(meta)
+
         meta_2 = await db.get_meta()
+        assert meta_2.db_root == "ScrubyDB"
+        assert meta_2.collection_name == "User"
+        assert meta_2.hash_reduce_left == 6
+        assert meta_2.max_branch_number == 256
         assert meta_2.counter_documents == 1
         #
         # Delete DB.
