@@ -63,6 +63,15 @@ Online browsable documentation is available at [https://kebasyaty.github.io/scru
 uv add scruby
 ```
 
+## Run
+
+```shell
+# Run Development:
+uv run python main.py
+# Run Production:
+uv run python -OOP main.py
+```
+
 ## Usage
 
 See more examples here [https://kebasyaty.github.io/scruby/latest/pages/usage/](https://kebasyaty.github.io/scruby/latest/pages/usage/ "Examples").
