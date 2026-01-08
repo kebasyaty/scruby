@@ -89,17 +89,29 @@ class Scruby(
         if __debug__:
             # Check if the object belongs to the class `ScrubyModel`
             if ScrubyModel not in class_model.__bases__:
-                raise AssertionError(
-                    "Method: `collection` => argument `class_model` does not contain the base class `ScrubyModel`!",
+                msg = (
+                    "Method: `collection` => argument `class_model` " + "does not contain the base class `ScrubyModel`!"
                 )
+                raise AssertionError(msg)
             # Checking the model for the presence of a key.
             model_fields = list(class_model.model_fields.keys())
             if "key" not in model_fields:
-                raise AssertionError(f"Model: {class_model.__name__} => The `key` field is missing!")
+                msg = f"Model: {class_model.__name__} => The `key` field is missing!"
+                raise AssertionError(msg)
             if "created_at" not in model_fields:
-                raise AssertionError(f"Model: {class_model.__name__} => The `created_at` field is missing!")
+                msg = f"Model: {class_model.__name__} => The `created_at` field is missing!"
+                raise AssertionError(msg)
             if "updated_at" not in model_fields:
-                raise AssertionError(f"Model: {class_model.__name__} => The `updated_at` field is missing!")
+                msg = f"Model: {class_model.__name__} => The `updated_at` field is missing!"
+                raise AssertionError(msg)
+            # Check the length of the collection name for an acceptable size.
+            len_db_root_absolut_path = len(str(await Path(settings.DB_ROOT).resolve()).encode("utf-8"))
+            len_model_name = len(class_model.__name__)
+            len_full_path_leaf = len_db_root_absolut_path + len_model_name + 26
+            if len_full_path_leaf > 255:
+                excess = len_full_path_leaf - 255
+                msg = f"The collection name is too long, it exceeds the limit of `{excess}` characters!"
+                raise AssertionError(msg)
         # Create instance of Scruby
         instance = cls()
         # Add model class to Scruby
