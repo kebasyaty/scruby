@@ -114,7 +114,7 @@ async def main() -> None:
     user = User(
         first_name="John",
         last_name="Smith",
-        birthday=datetime.datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
+        birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
         email="John_Smith@gmail.com",
         phone="+447986123456",
     )
@@ -150,7 +150,6 @@ The search effectiveness depends on the number of processor threads.
 """
 
 import anyio
-from datetime import datetime
 from typing import Annotated
 from pydantic import Field
 from scruby import Scruby, ScrubyModel, settings
@@ -226,7 +225,6 @@ The search effectiveness depends on the number of processor threads.
 """
 
 import anyio
-from datetime import datetime
 from typing import Annotated
 from pydantic import Field
 from scruby import Scruby, ScrubyModel, settings
