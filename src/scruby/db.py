@@ -104,6 +104,17 @@ class Scruby(
             if "updated_at" not in model_fields:
                 msg = f"Model: {class_model.__name__} => The `updated_at` field is missing!"
                 raise AssertionError(msg)
+            # Check the length of the collection name for an acceptable size.
+            len_db_root_absolut_path = len(str(await Path(settings.DB_ROOT).resolve()).encode("utf-8"))
+            len_model_name = len(class_model.__name__)
+            len_full_path_leaf = len_db_root_absolut_path + len_model_name + 26
+            if len_full_path_leaf > 255:
+                excess = len_full_path_leaf - 255
+                msg = (
+                    f"Model: {class_model.__name__} => The collection name is too long, "
+                    + f"it exceeds the limit of {excess} characters!"
+                )
+                raise AssertionError(msg)
         # Create instance of Scruby
         instance = cls()
         # Add model class to Scruby
