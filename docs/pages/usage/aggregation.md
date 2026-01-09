@@ -36,7 +36,8 @@ class User(ScrubyModel):
 
 
 async def task_calculate_average(
-    get_docs_fn: Callable,
+    search_task_fn: Callable,
+    filter_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
     db_root: str,
@@ -55,15 +56,17 @@ async def task_calculate_average(
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
-                get_docs_fn,
+                search_task_fn,
                 branch_number,
+                filter_fn,
                 hash_reduce_left,
                 db_root,
                 class_model,
             )
             docs = await future.result()
-            for doc in docs:
-                average_age.set(doc.age)
+            if docs is not None:
+                for doc in docs:
+                    average_age.set(doc.age)
     return float(average_age.get())
 
 
@@ -131,13 +134,14 @@ class User(BaseModel):
 
 
 async def task_counter(
-    get_docs_fn: Callable,
+    search_task_fn: Callable,
+    filter_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
     max_workers: int | None = None,
-    limit_docs: int = 1000,
+    limit_docs: int = 1000,  # optional
 ) -> list[User]:
     """Custom task.
 
@@ -149,19 +153,21 @@ async def task_counter(
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
-                get_docs_fn,
+                search_task_fn,
                 branch_number,
+                filter_fn,
                 hash_reduce_left,
                 db_root,
                 class_model,
             )
             docs = await future.result()
-            for doc in docs:
-                if counter.check():
-                    # [:limit_docs] - Control overflow in a multithreaded environment.
-                    return users[:limit_docs]
-                users.append(doc)
-                counter.next()
+            if docs is not None:
+                for doc in docs:
+                    if counter.check():
+                        # [:limit_docs] - Control overflow in a multithreaded environment.
+                        return users[:limit_docs]
+                    users.append(doc)
+                    counter.next()
     return users
 
 
@@ -182,7 +188,7 @@ async def main() -> None:
 
     result = await user_coll.run_custom_task(
         custom_task_fn=task_counter,
-        limit_docs=5,
+        limit_docs=5,  # optional
     )
     print(len(result))  # => 5
 
@@ -232,7 +238,8 @@ class User(ScrubyModel):
 
 
 async def task_calculate_max(
-    get_docs_fn: Callable,
+    search_task_fn: Callable,
+    filter_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
     db_root: str,
@@ -248,15 +255,17 @@ async def task_calculate_max(
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
-                get_docs_fn,
+                search_task_fn,
                 branch_number,
+                filter_fn,
                 hash_reduce_left,
                 db_root,
                 class_model,
             )
             docs = await future.result()
-            for doc in docs:
-                max_age.set(doc.age)
+            if docs is not None:
+                for doc in docs:
+                    max_age.set(doc.age)
     return max_age.get()
 
 
@@ -324,7 +333,8 @@ class User(ScrubyModel):
 
 
 async def task_calculate_min(
-    get_docs_fn: Callable,
+    search_task_fn: Callable,
+    filter_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
     db_root: str,
@@ -340,15 +350,17 @@ async def task_calculate_min(
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
-                get_docs_fn,
+                search_task_fn,
                 branch_number,
+                filter_fn,
                 hash_reduce_left,
                 db_root,
                 class_model,
             )
             docs = await future.result()
-            for doc in docs:
-                min_age.set(doc.age)
+            if docs is not None:
+                for doc in docs:
+                    min_age.set(doc.age)
     return min_age.get()
 
 
@@ -416,7 +428,8 @@ class User(ScrubyModel):
 
 
 async def task_calculate_sum(
-    get_docs_fn: Callable,
+    search_task_fn: Callable,
+    filter_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
     db_root: str,
@@ -432,15 +445,17 @@ async def task_calculate_sum(
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
-                get_docs_fn,
+                search_task_fn,
                 branch_number,
+                filter_fn,
                 hash_reduce_left,
                 db_root,
                 class_model,
             )
             docs = await future.result()
-            for doc in docs:
-                sum_age.set(doc.age)
+            if docs is not None:
+                for doc in docs:
+                    sum_age.set(doc.age)
     return int(sum_age.get())
 
 
