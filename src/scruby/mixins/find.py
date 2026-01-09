@@ -1,7 +1,6 @@
 # Scruby - Asynchronous library for building and managing a hybrid database, by scheme of key-value.
 # Copyright (c) 2025 Gennady Kostyunin
 # SPDX-License-Identifier: MIT
-#
 """Quantum methods for searching documents."""
 
 from __future__ import annotations
@@ -109,7 +108,7 @@ class Find:
             filter_fn (Callable): A function that execute the conditions of filtering.
                                   By default it searches for all documents.
             limit_docs (int): Limiting the number of documents. By default = 1000.
-            page_number (int): For pagination output. By default = 1.
+            page_number (int): For pagination. By default = 1.
                                Number of documents per page = limit_docs.
 
         Returns:

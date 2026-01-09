@@ -1,4 +1,3 @@
-#
 # .dP"Y8  dP""b8 88""Yb 88   88 88""Yb Yb  dP
 # `Ybo." dP   `" 88__dP 88   88 88__dP  YbdP
 # o.`Y8b Yb      88"Yb  Y8   8P 88""Yb   8P
@@ -6,7 +5,6 @@
 #
 # Copyright (c) 2025 Gennady Kostyunin
 # SPDX-License-Identifier: MIT
-#
 """Asynchronous library for building and managing a hybrid database, by scheme of key-value.
 
 The library uses fractal-tree addressing and

@@ -1,7 +1,10 @@
-#### Find many documents matching the filter
+#### Pagination documents matching the filter
 
 ```py title="main.py" linenums="1"
-"""Find many documents matching the filter.
+"""Pagination documents matching the filter.
+
+Pagination is used to separate long sets of data so
+that it is easier for a user to consume information.
 
 The search is based on the effect of a quantum loop.
 The search effectiveness depends on the number of processor threads.
@@ -47,23 +50,7 @@ async def main() -> None:
         )
         await car_coll.add_doc(car)
 
-    # Find cars by brand and year.
-    car_list: list[Car] | None = await car_coll.find_many(
-        filter_fn=lambda doc: doc.brand == "Mazda" and doc.year == 2025,
-    )
-    if car_list is not None:
-        pp(car_list)
-    else:
-        print("No cars!")
-
-    # Find all cars.
-    car_list: list[Car] | None = await car_coll.find_many()
-    if car_list is not None:
-        pp(car_list)
-    else:
-        print("No cars!")
-
-    # For pagination output.
+    # Pagination.
     car_list: list[Car] | None = await car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
         limit_docs=5,

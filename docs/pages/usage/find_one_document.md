@@ -8,7 +8,6 @@ The search effectiveness depends on the number of processor threads.
 """
 
 import anyio
-from datetime import datetime
 from typing import Annotated
 from pydantic import Field
 from scruby import Scruby, ScrubyModel, settings
