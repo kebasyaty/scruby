@@ -16,6 +16,7 @@ from collections.abc import Callable
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, ScrubyModel, settings
+from scruby.aggregation import Counter
 
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 settings.HASH_REDUCE_LEFT = 6  # By default = 6
@@ -38,34 +39,43 @@ class User(ScrubyModel):
     )
 
 
-async def custom_task(
-    get_docs_fn: Callable,
+async def task_counter(
+    search_task_fn: Callable,
+    filter_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
     max_workers: int | None = None,
-) -> Any:
+    limit_docs: int = 1000,  # optional
+) -> list[User]:
     """Custom task.
 
-    Calculate the number of users named John.
+    This task implements a counter of documents.
     """
-    counter: int = 0
+    counter = Counter(limit=limit_docs)  # `limit` by default = 1000
+    users: list[User] = []
     # Run quantum loop
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
-                get_docs_fn,
+                search_task_fn,
                 branch_number,
+                filter_fn,
                 hash_reduce_left,
                 db_root,
                 class_model,
             )
             docs = await future.result()
-            for doc in docs:
-                if doc.first_name == "John":
-                    counter += 1
-    return counter
+            if docs is not None:
+                for doc in docs:
+                    if counter.check():
+                        # [:limit_docs] - Control overflow in a multithreaded environment.
+                        return users[:limit_docs]
+                    if filter_fn(doc):
+                        users.append(doc)
+                        counter.next()
+    return users
 
 
 async def main() -> None:
@@ -84,7 +94,11 @@ async def main() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(custom_task)
+    result = await user_coll.run_custom_task(
+        custom_task_fn=task_counter,
+        filter_fn=lambda doc: doc.first_name == "John",
+        limit_docs=5,  # optional
+    )
     print(result)  # => 9
 
     # Full database deletion.

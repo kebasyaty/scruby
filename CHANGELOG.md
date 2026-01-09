@@ -1,8 +1,16 @@
 ### CHANGELOG
 
+#### v0.31.0 2026-01-09
+
+- Significant changes have been made to the operation of custom tasks.
+- See usage examples in the documentation.
+- Updated tests.
+- Updated documentation.
+
 #### v0.30.0 2026-01-07
 
-- Many changes and fixes have been made; see examples in the documentation.
+- Many changes and fixes have been made.
+- See usage examples in the documentation.
 - Upgraded dependencies.
 - Updated tests.
 - Updated documentation.

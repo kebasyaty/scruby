@@ -32,7 +32,8 @@ class User(ScrubyModel):
 
 
 async def task_calculate_min(
-    get_docs_fn: Callable,
+    search_task_fn: Callable,
+    filter_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
     db_root: str,
@@ -48,22 +49,24 @@ async def task_calculate_min(
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
-                get_docs_fn,
+                search_task_fn,
                 branch_number,
+                filter_fn,
                 hash_reduce_left,
                 db_root,
                 class_model,
             )
             docs = await future.result()
-            for doc in docs:
-                min_age.set(doc.age)
+            if docs is not None:
+                for doc in docs:
+                    min_age.set(doc.age)
     return min_age.get()
 
 
 async def test_task_calculate_min() -> None:
     """Test a Min class in custom task."""
     settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
-    db = await Scruby.collection(User)
+    user_coll = await Scruby.collection(User)
 
     for num in range(1, 10):
         user = User(
@@ -72,9 +75,9 @@ async def test_task_calculate_min() -> None:
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await db.add_doc(user)
+        await user_coll.add_doc(user)
 
-    result = await db.run_custom_task(task_calculate_min)
+    result = await user_coll.run_custom_task(task_calculate_min)
     assert result == 10.0
     #
     # Delete DB.
