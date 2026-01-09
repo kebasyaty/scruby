@@ -1,6 +1,6 @@
 [project]
 name = "scruby"
-version = "0.30.3"
+version = "0.31.0"
 description = "Asynchronous library for building and managing a hybrid database, by scheme of key-value."
 readme = "README.md"
 authors = [{ name = "kebasyaty", email = "kebasyaty@gmail.com" }]
