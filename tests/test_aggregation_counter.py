@@ -39,7 +39,7 @@ async def task_counter(
     db_root: str,
     class_model: Any,
     max_workers: int | None = None,
-    limit_docs=5,  # optional
+    limit_docs=5,  # custom parameter
 ) -> list[User]:
     """Custom task.
 
@@ -92,7 +92,7 @@ async def test_task_counter() -> None:
     result = await db.run_custom_task(
         custom_task_fn=task_counter,
         filter_fn=lambda doc: doc.first_name == "John",
-        limit_docs=5,  # optional
+        limit_docs=5,  # custom parameter
     )
     assert len(result) == 5
     #
