@@ -85,7 +85,8 @@ class User5(ScrubyModel):
 
 
 async def custom_task(
-    get_docs_fn: Callable,
+    search_task_fn: Callable,
+    filter_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
     db_root: str,
@@ -101,15 +102,16 @@ async def custom_task(
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
-                get_docs_fn,
+                search_task_fn,
                 branch_number,
+                filter_fn,
                 hash_reduce_left,
                 db_root,
                 class_model,
             )
             docs = await future.result()
-            for doc in docs:
-                if doc.first_name == "John":
+            if docs is not None:
+                for _ in docs:
                     counter += 1
     return counter
 
@@ -192,50 +194,50 @@ class TestNegative:
 
     async def test_get_non_existent_key(self) -> None:
         """Get a non-existent key."""
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
 
         with pytest.raises(KeyError):
-            await db.get_doc("key missing")
+            await user_coll.get_doc("key missing")
         #
         # Delete DB.
         Scruby.napalm()
 
     async def test_del_non_existent_key(self) -> None:
         """Delete a non-existent key."""
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
 
         with pytest.raises(KeyError):
-            await db.delete_doc("key missing")
+            await user_coll.delete_doc("key missing")
         #
         # Delete DB.
         Scruby.napalm()
 
     async def test_key_is_empty(self) -> None:
         """The key should not be empty."""
-        db = await Scruby.collection(User3)
+        user_coll = await Scruby.collection(User3)
 
         user = User3(username="")
         with pytest.raises(KeyError, match=r"The key should not be empty."):
-            await db.add_doc(user)
+            await user_coll.add_doc(user)
 
         user = User3(username=" ")
         with pytest.raises(KeyError, match=r"The key should not be empty."):
-            await db.add_doc(user)
+            await user_coll.add_doc(user)
 
         user = User3(username="  ")
         with pytest.raises(KeyError, match=r"The key should not be empty."):
-            await db.add_doc(user)
+            await user_coll.add_doc(user)
 
         user = User3(username="\t\n\r\f\v")
         with pytest.raises(KeyError, match=r"The key should not be empty."):
-            await db.add_doc(user)
+            await user_coll.add_doc(user)
         #
         # Delete DB.
         Scruby.napalm()
 
     async def test_key_already_exists(self) -> None:
         """If the key already exists."""
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
 
         user = User(
             first_name="John",
@@ -245,17 +247,17 @@ class TestNegative:
             phone="+447986123456",
         )
 
-        await db.add_doc(user)
+        await user_coll.add_doc(user)
 
         with pytest.raises(KeyAlreadyExistsError):
-            await db.add_doc(user)
+            await user_coll.add_doc(user)
         #
         # Delete DB.
         Scruby.napalm()
 
     async def test_key_not_exists(self) -> None:
         """If the key not exists."""
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
 
         user = User(
             first_name="John",
@@ -266,13 +268,13 @@ class TestNegative:
         )
 
         with pytest.raises(KeyError):
-            await db.update_doc(user)
+            await user_coll.update_doc(user)
 
-        await db.add_doc(user)
-        await db.delete_doc(user.key)
+        await user_coll.add_doc(user)
+        await user_coll.delete_doc(user.key)
 
         with pytest.raises(KeyNotExistsError):
-            await db.update_doc(user)
+            await user_coll.update_doc(user)
         #
         # Delete DB.
         Scruby.napalm()
@@ -281,7 +283,7 @@ class TestNegative:
         """The `page_number` parameter must not be less than one."""
         settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
 
         for num in range(1, 10):
             user = User(
@@ -291,14 +293,14 @@ class TestNegative:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.add_doc(user)
+            await user_coll.add_doc(user)
 
         # limit docs = 5, page number = 0
         with pytest.raises(
             AssertionError,
             match=r"`find_many` => The `page_number` parameter must not be less than one.",
         ):
-            await db.find_many(
+            await user_coll.find_many(
                 filter_fn=lambda doc: doc.last_name == "Smith",
                 limit_docs=5,
                 page_number=0,
@@ -309,7 +311,7 @@ class TestNegative:
             AssertionError,
             match=r"`find_many` => The `page_number` parameter must not be less than one.",
         ):
-            await db.find_many(
+            await user_coll.find_many(
                 filter_fn=lambda doc: doc.last_name == "Smith",
                 limit_docs=5,
                 page_number=-1,
@@ -324,7 +326,7 @@ class TestPositive:
 
     async def test_create_db(self) -> None:
         """Create instance of database by default."""
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
 
         control_path = Path(
             "ScrubyDB/User/d/1/leaf.json",
@@ -332,7 +334,7 @@ class TestPositive:
 
         key_name = "key name"
 
-        leaf_path, prepared_key = await db._get_leaf_path(key_name)
+        leaf_path, prepared_key = await user_coll._get_leaf_path(key_name)
 
         assert leaf_path == control_path
         assert prepared_key == key_name
@@ -380,9 +382,9 @@ class TestPositive:
 
     async def test_metadata(self) -> None:
         """Test metadata of collection."""
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
 
-        meta = await db.get_meta()
+        meta = await user_coll.get_meta()
         assert meta.db_root == "ScrubyDB"
         assert meta.collection_name == "User"
         assert meta.hash_reduce_left == 6
@@ -390,9 +392,9 @@ class TestPositive:
         assert meta.counter_documents == 0
 
         meta.counter_documents = 1
-        await db._set_meta(meta)
+        await user_coll._set_meta(meta)
 
-        meta_2 = await db.get_meta()
+        meta_2 = await user_coll.get_meta()
         assert meta_2.db_root == "ScrubyDB"
         assert meta_2.collection_name == "User"
         assert meta_2.hash_reduce_left == 6
@@ -404,7 +406,7 @@ class TestPositive:
 
     async def test_add_doc(self) -> None:
         """Testing a add_doc method."""
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
 
         user = User(
             first_name="John",
@@ -414,16 +416,16 @@ class TestPositive:
             phone="+447986123456",
         )
 
-        assert await db.estimated_document_count() == 0
-        assert await db.add_doc(user) is None
-        assert await db.estimated_document_count() == 1
+        assert await user_coll.estimated_document_count() == 0
+        assert await user_coll.add_doc(user) is None
+        assert await user_coll.estimated_document_count() == 1
         #
         # Delete DB.
         Scruby.napalm()
 
     async def test_update_doc(self) -> None:
         """Testing a update_doc method."""
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
 
         user = User(
             first_name="John",
@@ -433,18 +435,18 @@ class TestPositive:
             phone="+447986123456",
         )
 
-        assert await db.estimated_document_count() == 0
-        await db.add_doc(user)
-        assert await db.estimated_document_count() == 1
-        await db.update_doc(user)
-        assert await db.estimated_document_count() == 1
+        assert await user_coll.estimated_document_count() == 0
+        await user_coll.add_doc(user)
+        assert await user_coll.estimated_document_count() == 1
+        await user_coll.update_doc(user)
+        assert await user_coll.estimated_document_count() == 1
         #
         # Delete DB.
         Scruby.napalm()
 
     async def test_get_key(self) -> None:
         """Testing a get_key method."""
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
 
         user = User(
             first_name="John",
@@ -454,8 +456,8 @@ class TestPositive:
             phone="+447986123456",
         )
 
-        await db.add_doc(user)
-        data: User = await db.get_doc("+447986123456")
+        await user_coll.add_doc(user)
+        data: User = await user_coll.get_doc("+447986123456")
         assert data.model_dump() == user.model_dump()
         assert data.phone == "+447986123456"
         #
@@ -464,7 +466,7 @@ class TestPositive:
 
     async def test_has_key(self) -> None:
         """Testing a has_key method."""
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
 
         user = User(
             first_name="John",
@@ -474,16 +476,16 @@ class TestPositive:
             phone="+447986123456",
         )
 
-        await db.add_doc(user)
-        assert await db.has_key("+447986123456")
-        assert not await db.has_key("key missing")
+        await user_coll.add_doc(user)
+        assert await user_coll.has_key("+447986123456")
+        assert not await user_coll.has_key("key missing")
         #
         # Delete DB.
         Scruby.napalm()
 
     async def test_delete_key(self) -> None:
         """Testing a delete_key method."""
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
 
         user = User(
             first_name="John",
@@ -493,50 +495,50 @@ class TestPositive:
             phone="+447986123456",
         )
 
-        assert await db.estimated_document_count() == 0
-        await db.add_doc(user)
-        assert await db.estimated_document_count() == 1
-        assert await db.delete_doc("+447986123456") is None
-        assert await db.estimated_document_count() == 0
-        assert not await db.has_key("key missing")
+        assert await user_coll.estimated_document_count() == 0
+        await user_coll.add_doc(user)
+        assert await user_coll.estimated_document_count() == 1
+        assert await user_coll.delete_doc("+447986123456") is None
+        assert await user_coll.estimated_document_count() == 0
+        assert not await user_coll.has_key("key missing")
         #
         # Delete DB.
         Scruby.napalm()
 
     async def test_HASH_REDUCE_LEFT(self) -> None:
         """Length of reduction hash."""
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
         control_path = Path(
             "ScrubyDB/User/d/1/leaf.json",
         )
-        leaf_path, _ = await db._get_leaf_path("key name")
+        leaf_path, _ = await user_coll._get_leaf_path("key name")
         assert leaf_path == control_path
 
         Scruby.napalm()
         settings.HASH_REDUCE_LEFT = 2  # 16777216 branches in collection.
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
         control_path = Path(
             "ScrubyDB/User/a/6/d/2/d/1/leaf.json",
         )
-        leaf_path, _ = await db._get_leaf_path("key name")
+        leaf_path, _ = await user_coll._get_leaf_path("key name")
         assert leaf_path == control_path
 
         Scruby.napalm()
         settings.HASH_REDUCE_LEFT = 4  # 65536 branches in collection.
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
         control_path = Path(
             "ScrubyDB/User/d/2/d/1/leaf.json",
         )
-        leaf_path, _ = await db._get_leaf_path("key name")
+        leaf_path, _ = await user_coll._get_leaf_path("key name")
         assert leaf_path == control_path
 
         Scruby.napalm()
         settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
         control_path = Path(
             "ScrubyDB/User/d/1/leaf.json",
         )
-        leaf_path, _ = await db._get_leaf_path("key name")
+        leaf_path, _ = await user_coll._get_leaf_path("key name")
         assert leaf_path == control_path
         #
         # Delete DB.
@@ -546,7 +548,7 @@ class TestPositive:
         """Find a single document."""
         settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
 
         for num in range(1, 10):
             user = User(
@@ -556,17 +558,17 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.add_doc(user)
+            await user_coll.add_doc(user)
 
         # by email
-        result: User | None = await db.find_one(
+        result: User | None = await user_coll.find_one(
             filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com",
         )
         assert result is not None
         assert result.email == "John_Smith_5@gmail.com"
 
         # by birthday
-        result_2: User | None = await db.find_one(
+        result_2: User | None = await user_coll.find_one(
             filter_fn=lambda doc: doc.birthday == datetime(1970, 1, 8, tzinfo=ZoneInfo("UTC")),
         )
         assert result_2 is not None
@@ -579,7 +581,7 @@ class TestPositive:
         """Find documents."""
         settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
 
         for num in range(1, 10):
             user = User(
@@ -589,15 +591,15 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.add_doc(user)
+            await user_coll.add_doc(user)
 
         # all arguments by default
-        result_1: list[User] | None = await db.find_many()
+        result_1: list[User] | None = await user_coll.find_many()
         assert result_1 is not None
         assert len(result_1) == 9
 
         # all args by default
-        result_2: list[User] | None = await db.find_many(
+        result_2: list[User] | None = await user_coll.find_many(
             filter_fn=lambda doc: doc.email == "John_Smith_1@gmail.com" or doc.email == "John_Smith_9@gmail.com",
         )
         assert result_2 is not None
@@ -606,7 +608,7 @@ class TestPositive:
         assert result_2[1].email in ["John_Smith_1@gmail.com", "John_Smith_9@gmail.com"]
 
         # limit docs = 5, page number = 1
-        result_3: list[User] | None = await db.find_many(
+        result_3: list[User] | None = await user_coll.find_many(
             filter_fn=lambda doc: doc.last_name == "Smith",
             limit_docs=5,
             page_number=1,
@@ -615,7 +617,7 @@ class TestPositive:
         assert len(result_3) == 5
 
         # limit docs = 5, page number = 2
-        result_4: list[User] | None = await db.find_many(
+        result_4: list[User] | None = await user_coll.find_many(
             filter_fn=lambda doc: doc.last_name == "Smith",
             limit_docs=5,
             page_number=2,
@@ -628,9 +630,9 @@ class TestPositive:
 
     async def test_collection_name(self) -> None:
         """Test a collection_name method."""
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
 
-        assert db.collection_name() == "User"
+        assert user_coll.collection_name() == "User"
         #
         # Delete DB.
         Scruby.napalm()
@@ -639,7 +641,7 @@ class TestPositive:
         """Test a count_documents method."""
         settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
 
         for num in range(1, 10):
             user = User(
@@ -649,10 +651,10 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.add_doc(user)
+            await user_coll.add_doc(user)
 
-        assert await db.estimated_document_count() == 9
-        result: int = await db.count_documents(
+        assert await user_coll.estimated_document_count() == 9
+        result: int = await user_coll.count_documents(
             filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
         )
         assert result == 2
@@ -664,7 +666,7 @@ class TestPositive:
         """Test a delete_many method."""
         settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
 
         for num in range(1, 10):
             user = User(
@@ -674,15 +676,15 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.add_doc(user)
+            await user_coll.add_doc(user)
 
         # by emails
-        result: int = await db.delete_many(
+        result: int = await user_coll.delete_many(
             filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
         )
         assert result == 2
-        assert await db.estimated_document_count() == 7
-        result = await db.count_documents(
+        assert await user_coll.estimated_document_count() == 7
+        result = await user_coll.count_documents(
             filter_fn=lambda _: True,
         )
         assert result == 7
@@ -694,7 +696,7 @@ class TestPositive:
         """Test a run_custom_task method."""
         settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
 
         for num in range(1, 10):
             user = User(
@@ -704,9 +706,12 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.add_doc(user)
+            await user_coll.add_doc(user)
 
-        result = await db.run_custom_task(custom_task)
+        result = await user_coll.run_custom_task(
+            custom_task_fn=custom_task,
+            filter_fn=lambda doc: doc.first_name == "John",
+        )
         assert result == 9
         #
         # Delete DB.
@@ -716,7 +721,7 @@ class TestPositive:
         """Test a update_many method."""
         settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
 
         for num in range(1, 10):
             user = User(
@@ -726,13 +731,13 @@ class TestPositive:
                 email=f"John_Smith_{num}@gmail.com",
                 phone=f"+44798612345{num}",
             )
-            await db.add_doc(user)
+            await user_coll.add_doc(user)
 
-        number_updated_users = await db.update_many(new_data={"first_name": "Georg"})
+        number_updated_users = await user_coll.update_many(new_data={"first_name": "Georg"})
         assert number_updated_users == 9
         #
         # by email
-        users: list[User] | None = await db.find_many()
+        users: list[User] | None = await user_coll.find_many()
         assert users is not None
         for user in users:
             assert user.first_name == "Georg"
@@ -744,7 +749,7 @@ class TestPositive:
         """Test extra fields - `created_att` and `updated_at`."""
         settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
 
-        db = await Scruby.collection(User)
+        user_coll = await Scruby.collection(User)
 
         user = User(
             first_name="John",
@@ -753,9 +758,9 @@ class TestPositive:
             email="John_Smith@gmail.com",
             phone="+447986123456",
         )
-        await db.add_doc(user)
+        await user_coll.add_doc(user)
         key = "+447986123456"
-        result = await db.get_doc(key)
+        result = await user_coll.get_doc(key)
 
         assert isinstance(result.created_at, datetime)
         assert isinstance(result.updated_at, datetime)

@@ -32,13 +32,14 @@ class User(ScrubyModel):
 
 
 async def task_counter(
-    get_docs_fn: Callable,
+    search_task_fn: Callable,
+    filter_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
     max_workers: int | None = None,
-    limit_docs: int = 1000,
+    limit_docs=5,  # optional
 ) -> list[User]:
     """Custom task.
 
@@ -50,19 +51,21 @@ async def task_counter(
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
-                get_docs_fn,
+                search_task_fn,
                 branch_number,
+                filter_fn,
                 hash_reduce_left,
                 db_root,
                 class_model,
             )
             docs = await future.result()
-            for doc in docs:
-                if counter.check():
-                    # [:limit_docs] - Control overflow in a multithreaded environment.
-                    return users[:limit_docs]
-                users.append(doc)
-                counter.next()
+            if docs is not None:
+                for doc in docs:
+                    if counter.check():
+                        # [:limit_docs] - Control overflow in a multithreaded environment.
+                        return users[:limit_docs]
+                    users.append(doc)
+                    counter.next()
     return users
 
 
@@ -82,7 +85,14 @@ async def test_task_counter() -> None:
 
     result = await db.run_custom_task(
         custom_task_fn=task_counter,
-        limit_docs=5,
+        limit_docs=5,  # optional
+    )
+    assert len(result) == 5
+
+    result = await db.run_custom_task(
+        custom_task_fn=task_counter,
+        filter_fn=lambda doc: doc.first_name == "John",
+        limit_docs=5,  # optional
     )
     assert len(result) == 5
     #

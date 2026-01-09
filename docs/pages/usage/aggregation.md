@@ -137,12 +137,12 @@ async def task_counter(
     db_root: str,
     class_model: Any,
     max_workers: int | None = None,
+    limit_docs: int = 1000,
 ) -> list[User]:
     """Custom task.
 
     This task implements a counter of documents.
     """
-    limit_docs = 1000
     counter = Counter(limit=limit_docs)  # `limit` by default = 1000
     users: list[User] = []
     # Run quantum loop

@@ -33,7 +33,6 @@ class Find:
         Returns:
             List of documents or None.
         """
-        # Variable initialization
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
         separated_hash: str = "/".join(list(branch_number_as_hash))
         leaf_path: Path = Path(
