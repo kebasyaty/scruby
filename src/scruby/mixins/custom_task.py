@@ -49,7 +49,7 @@ class CustomTask:
                 docs.append(class_model.model_validate_json(val))
         return docs
 
-    async def run_custom_task(self, custom_task_fn: Callable) -> Any:
+    async def run_custom_task(self, custom_task_fn: Callable, **kwargs) -> Any:
         """Running custom task.
 
         Attention:
@@ -62,12 +62,12 @@ class CustomTask:
         Returns:
             The result of a custom task.
         """
-        kwargs = {
-            "get_docs_fn": self._task_get_docs,
-            "branch_numbers": range(self._max_number_branch),
-            "hash_reduce_left": self._hash_reduce_left,
-            "db_root": self._db_root,
-            "class_model": self._class_model,
-            "max_workers": self._max_workers,
-        }
-        return await custom_task_fn(**kwargs)
+        return await custom_task_fn(
+            get_docs_fn=self._task_get_docs,
+            branch_numbers=range(self._max_number_branch),
+            hash_reduce_left=self._hash_reduce_left,
+            db_root=self._db_root,
+            class_model=self._class_model,
+            max_workers=self._max_workers,
+            **kwargs,
+        )
