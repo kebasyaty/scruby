@@ -1,5 +1,11 @@
 ### CHANGELOG
 
+#### v0.32.0 2026-01-11
+
+- Added support plugins connection.
+- Upgraded dependencies.
+- Updated tests.
+
 #### v0.31.0 2026-01-09
 
 - Significant changes have been made to the operation of custom tasks.
