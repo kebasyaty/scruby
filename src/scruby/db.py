@@ -20,6 +20,7 @@ from typing import Any, Literal, Never, assert_never
 
 from anyio import Path
 from pydantic import BaseModel
+from xloft import NamedTuple
 
 from scruby import mixins, settings
 
@@ -74,6 +75,13 @@ class Scruby(
                 msg: str = f"{unreachable} - Unacceptable value for HASH_REDUCE_LEFT."
                 logging.critical(msg)
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
+        # Plugins connection.
+        plugin_list: dict[str, Any] = {}
+        for plugin in settings.PLUGINS:
+            name = plugin.__name__
+            name = name[0].lower() + name[1:]
+            plugin_list[name] = plugin(self)
+        self.plugins = NamedTuple(**plugin_list)
 
     @classmethod
     async def collection(cls, class_model: Any) -> Any:

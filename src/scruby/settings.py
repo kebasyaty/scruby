@@ -12,6 +12,7 @@ The module contains the following parameters:
     - `4` - 65536 branches in collection.
     - `6` - 256 branches in collection (by default).
 - `MAX_WORKERS` - The maximum number of processes that can be used `By default = None`.
+- `PLUGINS` - For adding plugins.
 """
 
 from __future__ import annotations
@@ -20,9 +21,10 @@ __all__ = (
     "DB_ROOT",
     "HASH_REDUCE_LEFT",
     "MAX_WORKERS",
+    "PLUGINS",
 )
 
-from typing import Literal
+from typing import Any, Literal
 
 # Path to root directory of database
 # By default = "ScrubyDB" (in root of project).
@@ -41,3 +43,6 @@ HASH_REDUCE_LEFT: Literal[0, 2, 4, 6] = 6
 # If None, then as many worker processes will be
 # created as the machine has processors.
 MAX_WORKERS: int | None = None
+
+# For adding plugins.
+PLUGINS: list[Any] = []

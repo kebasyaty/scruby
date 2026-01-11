@@ -33,6 +33,7 @@ dependencies = [
     "pydantic[email,timezone]>=2.11.7",
     "pydantic-extra-types>=2.10.5",
     "phonenumbers>=9.0.13",
+    "xloft>=0.9.8",
 ]
 
 [project.urls]
