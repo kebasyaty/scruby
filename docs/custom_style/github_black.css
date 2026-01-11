@@ -1,7 +1,7 @@
 /* Basic body and typography adjustments to resemble GitHub's default */
 body {
-  background: #0d1117;
-  color: #becada; /* Dark text color */
+  background: #212830;
+  color: #d1d7e0; /* Dark text color */
 }
 
 /* Headings */
@@ -11,7 +11,7 @@ h3,
 h4,
 h5,
 h6 {
-  color: #becada;
+  color: #d1d7e0;
 }
 
 .md-typeset h1 {
@@ -20,13 +20,13 @@ h6 {
 .md-nav__title {
   background: none !important;
   box-shadow: none !important;
-  color: #becada;
+  color: #d1d7e0;
 }
 
 .md-nav--lifted > .md-nav__list > .md-nav__item--active > .md-nav__link {
   background: none !important;
   box-shadow: none !important;
-  color: #becada;
+  color: #d1d7e0;
 }
 
 .md-top {
@@ -58,33 +58,39 @@ h6 {
 }
 
 .md-header {
-  background-color: #010409;
-  color: #becada;
+  background-color: #151b23;
+  color: #d1d7e0;
 }
 
 .md-tabs {
   background-color: #010409;
-  color: #becada;
+  color: #d1d7e0;
 }
 
 .md-search__form {
-  background-color: #151b23;
-  color: #becada;
+  background-color: #11161e;
+  color: #d1d7e0;
 }
 
 .md-search__form:hover {
-  background-color: #2c3138;
+  background-color: #1f2837;
 }
 
 .md-search-result_meta {
-  background-color: #151b23;
+  background-color: #253348;
+  color: #d1d7e0;
 }
 
 .md-footer__inner {
-  color: #becada;
+  color: #d1d7e0;
 }
 
 .md-footer-meta {
-  background-color: #010409;
-  color: #becada;
+  background-color: #151b23;
+  color: #d1d7e0;
+}
+
+.md-footer {
+  background-color: #13161d75;
+  color: #d1d7e0;
 }
