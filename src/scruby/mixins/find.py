@@ -94,7 +94,7 @@ class Find:
     async def find_many(
         self,
         filter_fn: Callable = lambda _: True,
-        limit_docs: int = 1000,
+        limit_docs: int = 100,
         page_number: int = 1,
     ) -> list[Any] | None:
         """Find many documents matching the filter.
@@ -106,7 +106,7 @@ class Find:
         Args:
             filter_fn (Callable): A function that execute the conditions of filtering.
                                   By default it searches for all documents.
-            limit_docs (int): Limiting the number of documents. By default = 1000.
+            limit_docs (int): Limiting the number of documents. By default = 100.
             page_number (int): For pagination. By default = 1.
                                Number of documents per page = limit_docs.
 
