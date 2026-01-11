@@ -58,7 +58,7 @@ h6 {
 }
 
 .md-header {
-  background-color: #010409;
+  background-color: #151b23;
   color: #d1d7e0;
 }
 
@@ -68,16 +68,17 @@ h6 {
 }
 
 .md-search__form {
-  background-color: #151b23;
+  background-color: #11161e;
   color: #d1d7e0;
 }
 
 .md-search__form:hover {
-  background-color: #2c3138;
+  background-color: #1f2837;
 }
 
 .md-search-result_meta {
-  background-color: #151b23;
+  background-color: #253348;
+  color: #d1d7e0;
 }
 
 .md-footer__inner {
