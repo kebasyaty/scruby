@@ -77,7 +77,7 @@ h6 {
   color: #d1d7e0;
 }
 .md-search__form:hover {
-  background-color: #1762fe;
+  background-color: #1d3ffc;
 }
 
 [data-md-toggle="search"]:checked ~ .md-header .md-search__form {

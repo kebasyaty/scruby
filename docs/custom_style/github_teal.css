@@ -73,11 +73,11 @@ h6 {
 }
 
 .md-search__form {
-  background-color: #16504a;
+  background-color: #15534d;
   color: #d1d7e0;
 }
 .md-search__form:hover {
-  background-color: #009787;
+  background-color: #1c746b;
 }
 
 [data-md-toggle="search"]:checked ~ .md-header .md-search__form {
