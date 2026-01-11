@@ -95,6 +95,7 @@ nav:
       - Update documents: pages/usage/update_documents.md
       - Delete documents: pages/usage/delete_documents.md
       - Custom task: pages/usage/custom_task.md
+      - Plugins: pages/usage/plugins.md
       - Aggregation classes: pages/usage/aggregation.md
   - Aggregation classes: pages/aggregation.md
   - Settings: pages/settings.md
