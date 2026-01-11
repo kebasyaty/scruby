@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from scruby.settings import DB_ROOT, HASH_REDUCE_LEFT, MAX_WORKERS
+from scruby.settings import DB_ROOT, HASH_REDUCE_LEFT, MAX_WORKERS, PLUGINS
 
 
 def test_db_root() -> None:
@@ -18,3 +18,9 @@ def test_hash_reduce_left() -> None:
 def test_max_workers() -> None:
     """Test a MAX_WORKERS parameter."""
     assert MAX_WORKERS is None
+
+
+def test_plugins() -> None:
+    """Test a PLUGINS parameter."""
+    assert isinstance(PLUGINS, list)
+    assert len(PLUGINS) == 0
