@@ -4,7 +4,7 @@ version = "0.32.0"
 description = "Asynchronous library for building and managing a hybrid database, by scheme of key-value."
 readme = "README.md"
 authors = [{ name = "kebasyaty", email = "kebasyaty@gmail.com" }]
-license = "MIT"
+license = "GPL-3.0"
 license-files = ["LICENSE"]
 requires-python = ">=3.12,<4.0"
 keywords = ["database", "db", "store", "scruby"]
