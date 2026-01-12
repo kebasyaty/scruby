@@ -306,4 +306,4 @@ if __name__ == "__main__":
 
 ## License
 
-This project is licensed under the [MIT](https://github.com/kebasyaty/scruby/blob/main/LICENSE "MIT").
+This project is licensed under the [GPL-3.0-or-later](https://github.com/kebasyaty/scruby/blob/main/LICENSE "GPL-3.0-or-later").
