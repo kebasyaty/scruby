@@ -1,10 +1,10 @@
 [project]
 name = "scruby"
-version = "0.32.0"
+version = "0.32.1"
 description = "Asynchronous library for building and managing a hybrid database, by scheme of key-value."
 readme = "README.md"
 authors = [{ name = "kebasyaty", email = "kebasyaty@gmail.com" }]
-license = "GPL-3.0"
+license = "GPL-3.0-or-later"
 license-files = ["LICENSE"]
 requires-python = ">=3.12,<4.0"
 keywords = ["database", "db", "store", "scruby"]
@@ -12,7 +12,7 @@ classifiers = [
     "Development Status :: 4 - Beta",
     # "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: GPL-3.0-or-later License",
     "Operating System :: MacOS :: MacOS X",
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX",
@@ -52,9 +52,12 @@ check-url = "https://pypi.org/simple"
 [tool.uv.build-backend]
 module-root = "src"
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/scruby"]
+
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["uv_build>=0.9.24,<0.10.0"]
+build-backend = "uv_build"
 
 [dependency-groups]
 dev = []
