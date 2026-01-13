@@ -1,7 +1,7 @@
-#### Custom task
+#### Run a custom task without asynchronous code
 
 ```py title="main.py" linenums="1"
-"""Running custom task.
+"""Custom task.
 
 This method running a task created on the basis of a quantum loop.
 Effectiveness running task depends on the number of processor threads.
@@ -111,10 +111,10 @@ if __name__ == "__main__":
     anyio.run(main)
 ```
 
-#### Asynchronous custom task
+#### Run a custom task with asynchronous code
 
 ```py title="main.py" linenums="1"
-"""Running asynchronous custom task.
+"""Asynchronous custom task.
 
 This method running a task created on the basis of a quantum loop.
 Effectiveness running task depends on the number of processor threads.
