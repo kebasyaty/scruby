@@ -73,9 +73,8 @@ def task_counter(
                     if counter.check():
                         # [:limit_docs] - Control overflow in a multithreaded environment.
                         return users[:limit_docs]
-                    if filter_fn(doc):
-                        users.append(doc)
-                        counter.next()
+                    users.append(doc)
+                    counter.next()
     return users
 
 
@@ -186,9 +185,8 @@ async def task_counter(
                     if counter.check():
                         # [:limit_docs] - Control overflow in a multithreaded environment.
                         return users[:limit_docs]
-                    if filter_fn(doc):
-                        users.append(doc)
-                        counter.next()
+                    users.append(doc)
+                    counter.next()
     return users
 
 
