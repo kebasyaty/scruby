@@ -1,5 +1,14 @@
 ### CHANGELOG
 
+#### v0.33.0 2026-01-13
+
+- Optimized quantum methods:
+  `find_one`, `find_many`, `count_documents`,
+  `delete_many`, `run_async_custom_task`, `run_custom_task`.
+- Upgraded dependencies.
+- Updated tests.
+- Updated documentation.
+
 #### v0.32.0 2026-01-11
 
 - Added support plugins connection.
