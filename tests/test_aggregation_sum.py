@@ -31,7 +31,7 @@ class User(ScrubyModel):
     )
 
 
-async def task_calculate_sum(
+def task_calculate_sum(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
@@ -56,7 +56,7 @@ async def task_calculate_sum(
                 db_root,
                 class_model,
             )
-            docs = await future.result()
+            docs = future.result()
             if docs is not None:
                 for doc in docs:
                     sum_age.set(doc.age)
@@ -77,7 +77,7 @@ async def test_task_calculate_sum() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(task_calculate_sum)
+    result = user_coll.run_custom_task(task_calculate_sum)
     assert result == 450.0
     #
     # Delete DB.

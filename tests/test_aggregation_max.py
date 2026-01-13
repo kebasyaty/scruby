@@ -31,7 +31,7 @@ class User(ScrubyModel):
     )
 
 
-async def task_calculate_max(
+def task_calculate_max(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
@@ -56,7 +56,7 @@ async def task_calculate_max(
                 db_root,
                 class_model,
             )
-            docs = await future.result()
+            docs = future.result()
             if docs is not None:
                 for doc in docs:
                     max_age.set(doc.age)
@@ -77,7 +77,7 @@ async def test_task_calculate_max() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(task_calculate_max)
+    result = user_coll.run_custom_task(task_calculate_max)
     assert result == 90.0
     #
     # Delete DB.

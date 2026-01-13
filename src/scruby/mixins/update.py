@@ -8,18 +8,19 @@ from __future__ import annotations
 __all__ = ("Update",)
 
 import concurrent.futures
+import copy
 from collections.abc import Callable
+from pathlib import Path as SyncPath
 from typing import Any
 
 import orjson
-from anyio import Path
 
 
 class Update:
     """Methods for updating documents."""
 
     @staticmethod
-    async def _task_update(
+    def _task_update(
         branch_number: int,
         filter_fn: Callable,
         hash_reduce_left: str,
@@ -36,7 +37,7 @@ class Update:
         """
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
         separated_hash: str = "/".join(list(branch_number_as_hash))
-        leaf_path: Path = Path(
+        leaf_path = SyncPath(
             *(
                 db_root,
                 class_model.__name__,
@@ -45,8 +46,8 @@ class Update:
             ),
         )
         counter: int = 0
-        if await leaf_path.exists():
-            data_json: bytes = await leaf_path.read_bytes()
+        if leaf_path.exists():
+            data_json: bytes = leaf_path.read_bytes()
             data: dict[str, str] = orjson.loads(data_json) or {}
             new_state: dict[str, str] = {}
             for _, val in data.items():
@@ -56,7 +57,7 @@ class Update:
                         doc.__dict__[key] = value
                         new_state[key] = doc.model_dump_json()
                     counter += 1
-            await leaf_path.write_bytes(orjson.dumps(new_state))
+            leaf_path.write_bytes(orjson.dumps(new_state))
         return counter
 
     async def update_many(
@@ -96,7 +97,7 @@ class Update:
                     hash_reduce_left,
                     db_root,
                     class_model,
-                    new_data,
+                    copy.deepcopy(new_data),
                 )
-                counter += await future.result()
+                counter += future.result()
         return counter

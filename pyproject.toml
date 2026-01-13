@@ -1,13 +1,13 @@
 [project]
 name = "scruby"
-version = "0.32.1"
+version = "0.33.0"
 description = "Asynchronous library for building and managing a hybrid database, by scheme of key-value."
 readme = "README.md"
 authors = [{ name = "kebasyaty", email = "kebasyaty@gmail.com" }]
 license = "GPL-3.0-or-later"
 license-files = ["LICENSE"]
 requires-python = ">=3.12,<4.0"
-keywords = ["database", "db", "store", "scruby"]
+keywords = ["database", "store", "scruby", "async"]
 classifiers = [
     "Development Status :: 4 - Beta",
     # "Development Status :: 5 - Production/Stable",
@@ -24,6 +24,8 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: Implementation :: CPython",
     # "Programming Language :: Python :: Implementation :: PyPy",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Database",
     "Typing :: Typed",
 ]
@@ -203,7 +205,7 @@ missing-attribute = false
 matches = "tests/**"
 
 [tool.pyrefly.sub-config.errors]
-
+missing-attribute = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
