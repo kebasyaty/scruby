@@ -161,7 +161,10 @@ async def task_counter(
     class_model: Any,
     max_workers: int | None = None,
 ) -> str:
-    """Asynchronous custom task."""
+    """Asynchronous custom task.
+
+    A highly simplified example of a custom task that uses `await`.
+    """
     # Run quantum loop
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
