@@ -77,7 +77,7 @@ async def test_task_calculate_sum() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(task_calculate_sum)
+    result = user_coll.run_custom_task(task_calculate_sum)
     assert result == 450.0
     #
     # Delete DB.

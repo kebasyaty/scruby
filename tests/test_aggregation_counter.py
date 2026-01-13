@@ -83,13 +83,13 @@ async def test_task_counter() -> None:
         )
         await coll_user.add_doc(user)
 
-    result = await coll_user.run_custom_task(
+    result = coll_user.run_custom_task(
         custom_task_fn=task_counter,
         limit_docs=5,  # optional
     )
     assert len(result) == 5
 
-    result = await coll_user.run_custom_task(
+    result = coll_user.run_custom_task(
         custom_task_fn=task_counter,
         filter_fn=lambda doc: doc.first_name == "John",
         limit_docs=5,  # custom parameter

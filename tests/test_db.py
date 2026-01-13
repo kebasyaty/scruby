@@ -708,7 +708,7 @@ class TestPositive:
             )
             await user_coll.add_doc(user)
 
-        result = await user_coll.run_custom_task(
+        result = user_coll.run_custom_task(
             custom_task_fn=custom_task,
             filter_fn=lambda doc: doc.first_name == "John",
         )

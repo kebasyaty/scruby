@@ -77,7 +77,7 @@ async def test_task_calculate_min() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(task_calculate_min)
+    result = user_coll.run_custom_task(task_calculate_min)
     assert result == 10.0
     #
     # Delete DB.
