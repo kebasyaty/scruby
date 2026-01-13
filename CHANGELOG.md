@@ -5,6 +5,7 @@
 - Optimized quantum methods:
   `find_one`, `find_many`, `count_documents`,
   `delete_many`, `run_async_custom_task`, `run_custom_task`.
+- Added new method `run_async_custom_task`.
 - Upgraded dependencies.
 - Updated tests.
 - Updated documentation.
