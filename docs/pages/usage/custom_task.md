@@ -95,7 +95,7 @@ async def main() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_async_custom_task(
+    result = user_coll.run_custom_task(
         custom_task_fn=task_counter,
         filter_fn=lambda doc: doc.first_name == "John",
         limit_docs=5,  # custom parameter
@@ -153,7 +153,7 @@ class User(ScrubyModel):
     )
 
 
-def task_counter(
+async def task_counter(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
@@ -163,7 +163,7 @@ def task_counter(
     max_workers: int | None = None,
     limit_docs: int = 1000,  # custom parameter
 ) -> list[User]:
-    """Custom task.
+    """Asynchronous custom task.
 
     This task implements a counter of documents.
     """
