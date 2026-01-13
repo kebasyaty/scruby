@@ -8,6 +8,7 @@ from __future__ import annotations
 __all__ = ("Update",)
 
 import concurrent.futures
+import copy
 from collections.abc import Callable
 from pathlib import Path as SyncPath
 from typing import Any
@@ -96,7 +97,7 @@ class Update:
                     hash_reduce_left,
                     db_root,
                     class_model,
-                    new_data,
+                    copy.deepcopy(new_data),
                 )
                 counter += future.result()
         return counter
