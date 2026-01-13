@@ -31,7 +31,7 @@ class User(ScrubyModel):
     )
 
 
-async def task_calculate_min(
+def task_calculate_min(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
@@ -56,7 +56,7 @@ async def task_calculate_min(
                 db_root,
                 class_model,
             )
-            docs = await future.result()
+            docs = future.result()
             if docs is not None:
                 for doc in docs:
                     min_age.set(doc.age)

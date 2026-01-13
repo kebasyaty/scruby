@@ -84,7 +84,7 @@ class User5(ScrubyModel):
     username: str = Field(strict=True)
 
 
-async def custom_task(
+def custom_task(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
@@ -109,7 +109,7 @@ async def custom_task(
                 db_root,
                 class_model,
             )
-            docs = await future.result()
+            docs = future.result()
             if docs is not None:
                 for _ in docs:
                     counter += 1
@@ -729,7 +729,7 @@ class TestPositive:
                 last_name="Smith",
                 birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
                 email=f"John_Smith_{num}@gmail.com",
-                phone=f"+44798612345{num}",
+                phone=f"+44798612340{num}",
             )
             await user_coll.add_doc(user)
 
@@ -756,10 +756,10 @@ class TestPositive:
             last_name="Smith",
             birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
             email="John_Smith@gmail.com",
-            phone="+447986123456",
+            phone="+447986123450",
         )
         await user_coll.add_doc(user)
-        key = "+447986123456"
+        key = "+447986123450"
         result = await user_coll.get_doc(key)
 
         assert isinstance(result.created_at, datetime)

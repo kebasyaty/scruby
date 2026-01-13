@@ -9,17 +9,17 @@ __all__ = ("Find",)
 
 import concurrent.futures
 from collections.abc import Callable
+from pathlib import Path as SyncPath
 from typing import Any
 
 import orjson
-from anyio import Path
 
 
 class Find:
     """Quantum methods for searching documents."""
 
     @staticmethod
-    async def _task_find(
+    def _task_find(
         branch_number: int,
         filter_fn: Callable,
         hash_reduce_left: str,
@@ -35,7 +35,7 @@ class Find:
         """
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
         separated_hash: str = "/".join(list(branch_number_as_hash))
-        leaf_path: Path = Path(
+        leaf_path = SyncPath(
             *(
                 db_root,
                 class_model.__name__,
@@ -44,8 +44,8 @@ class Find:
             ),
         )
         docs: list[Any] = []
-        if await leaf_path.exists():
-            data_json: bytes = await leaf_path.read_bytes()
+        if leaf_path.exists():
+            data_json: bytes = leaf_path.read_bytes()
             data: dict[str, str] = orjson.loads(data_json) or {}
             for _, val in data.items():
                 doc = class_model.model_validate_json(val)
@@ -86,7 +86,7 @@ class Find:
                     db_root,
                     class_model,
                 )
-                docs = await future.result()
+                docs = future.result()
                 if docs is not None:
                     return docs[0]
         return None
@@ -137,7 +137,7 @@ class Find:
                     db_root,
                     class_model,
                 )
-                docs = await future.result()
+                docs = future.result()
                 if docs is not None:
                     for doc in docs:
                         if number_docs_skippe == 0:

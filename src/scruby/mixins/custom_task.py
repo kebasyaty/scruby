@@ -32,7 +32,7 @@ class CustomTask:
         Returns:
             The result of a custom task.
         """
-        return await custom_task_fn(
+        return custom_task_fn(
             search_task_fn=self._task_find,
             filter_fn=filter_fn,
             branch_numbers=range(self._max_number_branch),

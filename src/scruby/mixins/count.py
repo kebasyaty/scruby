@@ -58,6 +58,7 @@ class Count:
                     db_root,
                     class_model,
                 )
-                if await future.result() is not None:
-                    counter += 1
+                docs = future.result()
+                if docs is not None:
+                    counter += len(docs)
         return counter

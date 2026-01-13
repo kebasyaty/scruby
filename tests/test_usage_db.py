@@ -15,7 +15,7 @@ from scruby import Scruby, ScrubyModel
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
 
-class User(ScrubyModel):
+class UserTest(ScrubyModel):
     """User model."""
 
     first_name: str = Field(strict=True)
@@ -31,7 +31,7 @@ class User(ScrubyModel):
     )
 
 
-class Phone(ScrubyModel):
+class PhoneTest(ScrubyModel):
     """Phone model."""
 
     brand: str = Field(strict=True, frozen=True)
@@ -46,7 +46,7 @@ class Phone(ScrubyModel):
     )
 
 
-class Car(ScrubyModel):
+class CarTest(ScrubyModel):
     """Car model."""
 
     brand: str = Field(strict=True, frozen=True)
@@ -64,10 +64,10 @@ class Car(ScrubyModel):
 async def test_user() -> None:
     """Test User 1."""
     # Get collection `User`.
-    user_coll = await Scruby.collection(User)
+    user_coll = await Scruby.collection(UserTest)
 
     # Create user.
-    user = User(
+    user = UserTest(
         first_name="John",
         last_name="Smith",
         birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
@@ -81,10 +81,10 @@ async def test_user() -> None:
 async def test_user_2() -> None:
     """Test User 2."""
     # Get collection `User`.
-    user_coll = await Scruby.collection(User)
+    user_coll = await Scruby.collection(UserTest)
 
     # Create user.
-    user = User(
+    user = UserTest(
         first_name="John_2",
         last_name="Smith_2",
         birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
@@ -98,10 +98,10 @@ async def test_user_2() -> None:
 async def test_phone() -> None:
     """Test Phone."""
     # Get collection `Phone`.
-    phone_coll = await Scruby.collection(Phone)
+    phone_coll = await Scruby.collection(PhoneTest)
 
     # Create phone.
-    phone = Phone(
+    phone = PhoneTest(
         brand="Samsung",
         model="Galaxy A26",
         screen_diagonal=6.7,
@@ -115,10 +115,10 @@ async def test_phone() -> None:
 async def test_car() -> None:
     """Test Car."""
     # Get collection `Car`.
-    car_coll = await Scruby.collection(Car)
+    car_coll = await Scruby.collection(CarTest)
 
     # Create car.
-    car = Car(
+    car = CarTest(
         brand="Mazda",
         model="EZ-6",
         year=2025,

@@ -9,17 +9,17 @@ __all__ = ("Delete",)
 
 import concurrent.futures
 from collections.abc import Callable
+from pathlib import Path as SyncPath
 from typing import Any
 
 import orjson
-from anyio import Path
 
 
 class Delete:
     """Methods for deleting documents."""
 
     @staticmethod
-    async def _task_delete(
+    def _task_delete(
         branch_number: int,
         filter_fn: Callable,
         hash_reduce_left: int,
@@ -35,7 +35,7 @@ class Delete:
         """
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
         separated_hash: str = "/".join(list(branch_number_as_hash))
-        leaf_path: Path = Path(
+        leaf_path = SyncPath(
             *(
                 db_root,
                 class_model.__name__,
@@ -44,8 +44,8 @@ class Delete:
             ),
         )
         counter: int = 0
-        if await leaf_path.exists():
-            data_json: bytes = await leaf_path.read_bytes()
+        if leaf_path.exists():
+            data_json: bytes = leaf_path.read_bytes()
             data: dict[str, str] = orjson.loads(data_json) or {}
             new_state: dict[str, str] = {}
             for key, val in data.items():
@@ -54,7 +54,7 @@ class Delete:
                     counter -= 1
                 else:
                     new_state[key] = val
-            await leaf_path.write_bytes(orjson.dumps(new_state))
+            leaf_path.write_bytes(orjson.dumps(new_state))
         return counter
 
     async def delete_many(
@@ -91,7 +91,7 @@ class Delete:
                     db_root,
                     class_model,
                 )
-                counter += await future.result()
+                counter += future.result()
         if counter < 0:
             await self._counter_documents(counter)
         return abs(counter)
