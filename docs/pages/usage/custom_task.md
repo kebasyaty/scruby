@@ -160,14 +160,8 @@ async def task_counter(
     db_root: str,
     class_model: Any,
     max_workers: int | None = None,
-    limit_docs: int = 1000,  # custom parameter
-) -> list[User]:
-    """Asynchronous custom task.
-
-    This task implements a counter of documents.
-    """
-    counter = Counter(limit=limit_docs)  # `limit` by default = 1000
-    users: list[User] = []
+) -> str:
+    """Asynchronous custom task."""
     # Run quantum loop
     with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
@@ -182,12 +176,8 @@ async def task_counter(
             docs = future.result()
             if docs is not None:
                 for doc in docs:
-                    if counter.check():
-                        # [:limit_docs] - Control overflow in a multithreaded environment.
-                        return users[:limit_docs]
-                    users.append(doc)
-                    counter.next()
-    return users
+                    ...your code that uses `await`...
+    return "Example"
 
 
 async def main() -> None:
@@ -209,7 +199,6 @@ async def main() -> None:
     result = await user_coll.run_async_custom_task(
         custom_task_fn=task_counter,
         filter_fn=lambda doc: doc.first_name == "John",
-        limit_docs=5,  # custom parameter
     )
     print(result)  # => 9
 
