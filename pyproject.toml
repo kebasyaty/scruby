@@ -203,7 +203,7 @@ missing-attribute = false
 matches = "tests/**"
 
 [tool.pyrefly.sub-config.errors]
-
+missing-attribute = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

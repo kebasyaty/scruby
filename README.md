@@ -90,6 +90,7 @@ from scruby import Scruby, ScrubyModel, settings
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 settings.HASH_REDUCE_LEFT = 6  # By default = 6
 settings.MAX_WORKERS = None  # By default = None
+settings.PLUGINS = []  # By default = []
 
 class User(ScrubyModel):
     """User model."""
@@ -150,7 +151,6 @@ The search effectiveness depends on the number of processor threads.
 """
 
 import anyio
-from typing import Annotated
 from pydantic import Field
 from scruby import Scruby, ScrubyModel, settings
 from pprint import pprint as pp
@@ -158,6 +158,7 @@ from pprint import pprint as pp
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 settings.HASH_REDUCE_LEFT = 6  # By default = 6
 settings.MAX_WORKERS = None  # By default = None
+settings.PLUGINS = []  # By default = []
 
 
 class Phone(ScrubyModel):
@@ -225,7 +226,6 @@ The search effectiveness depends on the number of processor threads.
 """
 
 import anyio
-from typing import Annotated
 from pydantic import Field
 from scruby import Scruby, ScrubyModel, settings
 from pprint import pprint as pp
@@ -233,7 +233,7 @@ from pprint import pprint as pp
 settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
 settings.HASH_REDUCE_LEFT = 6  # By default = 6
 settings.MAX_WORKERS = None  # By default = None
-
+settings.PLUGINS = []  # By default = []
 
 class Car(ScrubyModel):
     """Car model."""
