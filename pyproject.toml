@@ -54,9 +54,6 @@ check-url = "https://pypi.org/simple"
 [tool.uv.build-backend]
 module-root = "src"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/scruby"]
-
 [build-system]
 requires = ["uv_build>=0.9.24,<0.10.0"]
 build-backend = "uv_build"
