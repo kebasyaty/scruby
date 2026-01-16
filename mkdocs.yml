@@ -37,7 +37,8 @@ theme:
     accent: teal
 
 extra_css:
-  - custom_style/github_teal.css
+  - stylesheets/themes/github_teal.css
+  - stylesheets/extra.css
 
 plugins:
   - search
