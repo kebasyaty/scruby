@@ -16,6 +16,9 @@ from scruby.aggregation import Average
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
+# Delete DB.
+Scruby.napalm()
+
 
 class User(ScrubyModel):
     """User model."""

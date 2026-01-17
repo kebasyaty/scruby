@@ -14,6 +14,9 @@ from scruby import Scruby, ScrubyModel
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
+# Delete DB.
+Scruby.napalm()
+
 
 class UserTest(ScrubyModel):
     """User model."""
