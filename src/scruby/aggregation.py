@@ -14,9 +14,10 @@ __all__ = (
 )
 
 from decimal import ROUND_HALF_EVEN, Decimal
-from typing import Any
+from typing import Any, final
 
 
+@final
 class Average:
     """Aggregation class for calculating the average value.
 
@@ -56,6 +57,7 @@ class Average:
         )
 
 
+@final
 class Counter:
     """Aggregation class for calculating the number of documents.
 
@@ -80,6 +82,7 @@ class Counter:
         self.counter += 1
 
 
+@final
 class Max:
     """Aggregation class for calculating the maximum value."""
 
@@ -104,6 +107,7 @@ class Max:
         return self.value
 
 
+@final
 class Min:
     """Aggregation class for calculating the minimum value."""
 
@@ -128,6 +132,7 @@ class Min:
         return self.value
 
 
+@final
 class Sum:
     """Aggregation class for calculating sum of values."""
 

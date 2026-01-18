@@ -11,12 +11,11 @@ __all__ = (
 )
 
 import contextlib
-import logging
 import re
 import zlib
 from datetime import datetime
 from shutil import rmtree
-from typing import Any, Literal, Never, assert_never
+from typing import Any, Literal, Never, assert_never, final
 
 from anyio import Path
 from pydantic import BaseModel
@@ -42,6 +41,7 @@ class ScrubyModel(BaseModel):
     updated_at: datetime | None = None
 
 
+@final
 class Scruby(
     mixins.Keys,
     mixins.Find,
@@ -72,8 +72,6 @@ class Scruby(
             case 6:
                 self._max_number_branch = 256
             case _ as unreachable:
-                msg: str = f"{unreachable} - Unacceptable value for HASH_REDUCE_LEFT."
-                logging.critical(msg)
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
         # Plugins connection.
         plugin_list: dict[str, Any] = {}
@@ -208,18 +206,14 @@ class Scruby(
             Path to cell of collection.
         """
         if not isinstance(key, str):
-            msg = "The key is not a string."
-            logging.error(msg)
-            raise KeyError(msg)
+            raise KeyError("The key is not a string.")
         # Prepare key.
         # Removes spaces at the beginning and end of a string.
         # Replaces all whitespace characters with a single space.
         prepared_key = re.sub(r"\s+", " ", key).strip().lower()
         # Check the key for an empty string.
         if len(prepared_key) == 0:
-            msg = "The key should not be empty."
-            logging.error(msg)
-            raise KeyError(msg)
+            raise KeyError("The key should not be empty.")
         # Key to crc32 sum.
         key_as_hash: str = f"{zlib.crc32(prepared_key.encode('utf-8')):08x}"[self._hash_reduce_left :]
         # Convert crc32 sum in the segment of path.

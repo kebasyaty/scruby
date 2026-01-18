@@ -8,7 +8,7 @@
     </a>
   </p>
   <p>
-    <h1>Scruby</h1>
+    <h1>Scruby (small shrub)</h1>
     <h3>Asynchronous library for building and managing a hybrid database,<br>by scheme of key-value.</h3>
     <p align="center">
       <a href="https://github.com/kebasyaty/scruby/actions/workflows/test.yml" alt="Build Status"><img src="https://github.com/kebasyaty/scruby/actions/workflows/test.yml/badge.svg" alt="Build Status"></a>

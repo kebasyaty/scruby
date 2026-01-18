@@ -7,7 +7,7 @@ from __future__ import annotations
 
 __all__ = ("Keys",)
 
-import logging
+
 from datetime import datetime
 from typing import Any
 from zoneinfo import ZoneInfo
@@ -39,7 +39,6 @@ class Keys:
             msg = (
                 f"(add_doc) Parameter `doc` => Model `{doc_class_name}` does not match collection `{collection_name}`!"
             )
-            logging.error(msg)
             raise TypeError(msg)
         # The path to cell of collection.
         leaf_path, prepared_key = await self._get_leaf_path(doc.key)
@@ -60,9 +59,7 @@ class Keys:
                 data[prepared_key] = doc_json
                 await leaf_path.write_bytes(orjson.dumps(data))
             else:
-                err = KeyAlreadyExistsError()
-                logging.error(err.message)
-                raise err
+                raise KeyAlreadyExistsError()
         else:
             # Add new document to a blank leaf.
             await leaf_path.write_bytes(orjson.dumps({prepared_key: doc_json}))
@@ -85,7 +82,6 @@ class Keys:
                 f"(update_doc) Parameter `doc` => Model `{doc_class_name}` "
                 f"does not match collection `{collection_name}`!"
             )
-            logging.error(msg)
             raise TypeError(msg)
         # The path to cell of collection.
         leaf_path, prepared_key = await self._get_leaf_path(doc.key)
@@ -104,11 +100,9 @@ class Keys:
                 await leaf_path.write_bytes(orjson.dumps(data))
             except KeyError:
                 err = KeyNotExistsError()
-                logging.error(err.message)
                 raise err from None
         else:
             msg: str = f"`update_doc` - The key `{doc.key}` is missing!"
-            logging.error(msg)
             raise KeyError(msg)
 
     async def get_doc(self, key: str) -> Any:
@@ -129,7 +123,6 @@ class Keys:
             obj: Any = self._class_model.model_validate_json(data[prepared_key])
             return obj
         msg: str = f"`get_doc` - The key `{key}` is missing!"
-        logging.error(msg)
         raise KeyError(msg)
 
     async def has_key(self, key: str) -> bool:
@@ -174,5 +167,4 @@ class Keys:
             await self._counter_documents(-1)
             return
         msg: str = f"`delete_doc` - The key `{key}` is missing!"
-        logging.error(msg)
         raise KeyError(msg)
