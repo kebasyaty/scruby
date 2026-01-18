@@ -1,5 +1,6 @@
 # Scruby - Asynchronous library for building and managing a hybrid database, by scheme of key-value.
 # Copyright (c) 2025 Gennady Kostyunin
+# SPDX-License-Identifier: MIT
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Methods for counting the number of documents."""
 

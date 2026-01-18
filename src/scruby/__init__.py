@@ -4,6 +4,7 @@
 # 8bodP'  YboodP 88  Yb `YbodP' 88oodP  dP
 #
 # Copyright (c) 2025 Gennady Kostyunin
+# SPDX-License-Identifier: MIT
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Asynchronous library for building and managing a hybrid database, by scheme of key-value.
 
