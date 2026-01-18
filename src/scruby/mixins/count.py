@@ -16,7 +16,9 @@ class Count:
     """Methods for counting the number of documents."""
 
     async def estimated_document_count(self) -> int:
-        """Get an estimate of the number of documents in this collection using collection metadata.
+        """Asynchronous method.
+
+        Get an estimate of the number of documents in this collection using collection metadata.
 
         Returns:
             The number of documents.
@@ -28,7 +30,9 @@ class Count:
         self,
         filter_fn: Callable,
     ) -> int:
-        """Count the number of documents a matching the filter in this collection.
+        """Asynchronous method.
+
+        Count the number of documents a matching the filter in this collection.
 
         Attention:
             - The search is based on the effect of a quantum loop.
@@ -58,7 +62,7 @@ class Count:
                     db_root,
                     class_model,
                 )
-                docs = future.result()
+                docs = await future.result()
                 if docs is not None:
                     counter += len(docs)
         return counter

@@ -18,7 +18,7 @@ class Collection:
     """Methods for working with collections."""
 
     def collection_name(self) -> str:
-        """Get collection name.
+        """Asynchronous method for getting the collection name.
 
         Returns:
             Collection name.
@@ -27,7 +27,7 @@ class Collection:
 
     @staticmethod
     async def collection_list() -> list[str]:
-        """Get collection list."""
+        """Asynchronous method for getting collection list."""
         target_directory = Path(settings.DB_ROOT)
         # Get all entries in the directory
         all_entries = Path.iterdir(target_directory)

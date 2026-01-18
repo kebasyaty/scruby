@@ -15,6 +15,9 @@ from scruby.aggregation import Max
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
+# Delete DB.
+Scruby.napalm()
+
 
 class User(ScrubyModel):
     """User model."""
@@ -31,7 +34,7 @@ class User(ScrubyModel):
     )
 
 
-def task_calculate_max(
+async def task_calculate_max(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
@@ -56,7 +59,7 @@ def task_calculate_max(
                 db_root,
                 class_model,
             )
-            docs = future.result()
+            docs = await future.result()
             if docs is not None:
                 for doc in docs:
                     max_age.set(doc.age)
@@ -77,7 +80,7 @@ async def test_task_calculate_max() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = user_coll.run_custom_task(task_calculate_max)
+    result = await user_coll.run_custom_task(task_calculate_max)
     assert result == 90.0
     #
     # Delete DB.
