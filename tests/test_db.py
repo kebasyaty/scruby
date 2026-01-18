@@ -87,7 +87,7 @@ class User5(ScrubyModel):
     username: str = Field(strict=True)
 
 
-def custom_task(
+async def custom_task(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
@@ -112,7 +112,7 @@ def custom_task(
                 db_root,
                 class_model,
             )
-            docs = future.result()
+            docs = await future.result()
             if docs is not None:
                 for _ in docs:
                     counter += 1
@@ -711,7 +711,7 @@ class TestPositive:
             )
             await user_coll.add_doc(user)
 
-        result = user_coll.run_custom_task(
+        result = await user_coll.run_custom_task(
             custom_task_fn=custom_task,
             filter_fn=lambda doc: doc.first_name == "John",
         )
