@@ -1,6 +1,6 @@
 [project]
 name = "scruby"
-version = "0.33.3"
+version = "0.33.4"
 description = "Asynchronous library for building and managing a hybrid database, by scheme of key-value."
 readme = "README.md"
 authors = [{ name = "kebasyaty", email = "kebasyaty@gmail.com" }]
@@ -25,9 +25,9 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: Implementation :: CPython",
     # "Programming Language :: Python :: Implementation :: PyPy",
-    "Topic :: Database",
     "Topic :: Software Development :: Libraries",
     "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Database",
     "Typing :: Typed",
 ]
 dependencies = [
