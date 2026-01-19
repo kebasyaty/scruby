@@ -66,4 +66,5 @@
 #### License
 
 _This project is licensed under the_ [MIT](https://github.com/kebasyaty/scruby/blob/main/MIT-LICENSE "MIT").
+<br>
 _This project is licensed under the_ [GPL-3.0-or-later](https://github.com/kebasyaty/scruby/blob/main/GPL-3.0-LICENSE "GPL-3.0-or-later").
