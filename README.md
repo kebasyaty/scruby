@@ -49,6 +49,10 @@
 
 <br>
 
+## List of plugins for Scruby
+
+[View the list of plugins](https://github.com/kebasyaty/scruby/blob/v0/PLUGINS.md "List of plugins").
+
 ## Documentation
 
 Online browsable documentation is available at [https://kebasyaty.github.io/scruby/](https://kebasyaty.github.io/scruby/ "Documentation").

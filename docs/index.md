@@ -51,6 +51,10 @@
   requires a large number of processor threads.
 </p>
 
+#### List of plugins for Scruby
+
+[View the list of plugins](https://github.com/kebasyaty/scruby/blob/v0/PLUGINS.md "List of plugins").
+
 #### Requirements
 
 [View the list of requirements.](https://github.com/kebasyaty/scruby/blob/main/REQUIREMENTS.md "View the list of requirements.")
