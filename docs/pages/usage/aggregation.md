@@ -12,13 +12,13 @@ from typing import Annotated, Any
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyModel, settings
+from scruby import Scruby, ScrubyModel, ScrubySettings
 from scruby.aggregation import Average
 
-settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
-settings.HASH_REDUCE_LEFT = 6  # By default = 6
-settings.MAX_WORKERS = None  # By default = None
-settings.PLUGINS = []  # By default = []
+ScrubySettings.db_root = "ScrubyDB"  # By default = "ScrubyDB"
+ScrubySettings.hash_reduce_left = 6  # By default = 6
+ScrubySettings.max_workers = None  # By default = None
+ScrubySettings.plugins = []  # By default = []
 
 
 class User(ScrubyModel):
@@ -111,13 +111,13 @@ from typing import Annotated, Any
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyModel, settings
+from scruby import Scruby, ScrubyModel, ScrubySettings
 from scruby.aggregation import Counter
 
-settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
-settings.HASH_REDUCE_LEFT = 6  # By default = 6
-settings.MAX_WORKERS = None  # By default = None
-settings.PLUGINS = []  # By default = []
+ScrubySettings.db_root = "ScrubyDB"  # By default = "ScrubyDB"
+ScrubySettings.hash_reduce_left = 6  # By default = 6
+ScrubySettings.max_workers = None  # By default = None
+ScrubySettings.plugins = []  # By default = []
 
 
 class User(BaseModel):
@@ -216,13 +216,13 @@ from typing import Annotated, Any
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyModel, settings
+from scruby import Scruby, ScrubyModel, ScrubySettings
 from scruby.aggregation import Max
 
-settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
-settings.HASH_REDUCE_LEFT = 6  # By default = 6
-settings.MAX_WORKERS = None  # By default = None
-settings.PLUGINS = []  # By default = []
+ScrubySettings.db_root = "ScrubyDB"  # By default = "ScrubyDB"
+ScrubySettings.hash_reduce_left = 6  # By default = 6
+ScrubySettings.max_workers = None  # By default = None
+ScrubySettings.plugins = []  # By default = []
 
 
 class User(ScrubyModel):
@@ -312,13 +312,13 @@ from typing import Annotated, Any
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyModel, settings
+from scruby import Scruby, ScrubyModel, ScrubySettings
 from scruby.aggregation import Min
 
-settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
-settings.HASH_REDUCE_LEFT = 6  # By default = 6
-settings.MAX_WORKERS = None  # By default = None
-settings.PLUGINS = []  # By default = []
+ScrubySettings.db_root = "ScrubyDB"  # By default = "ScrubyDB"
+ScrubySettings.hash_reduce_left = 6  # By default = 6
+ScrubySettings.max_workers = None  # By default = None
+ScrubySettings.plugins = []  # By default = []
 
 
 class User(ScrubyModel):
@@ -408,13 +408,13 @@ from typing import Annotated, Any
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyModel, settings
+from scruby import Scruby, ScrubyModel, ScrubySettings
 from scruby.aggregation import Sum
 
-settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
-settings.HASH_REDUCE_LEFT = 6  # By default = 6
-settings.MAX_WORKERS = None  # By default = None
-settings.PLUGINS = []  # By default = []
+ScrubySettings.db_root = "ScrubyDB"  # By default = "ScrubyDB"
+ScrubySettings.hash_reduce_left = 6  # By default = 6
+ScrubySettings.max_workers = None  # By default = None
+ScrubySettings.plugins = []  # By default = []
 
 
 class User(ScrubyModel):

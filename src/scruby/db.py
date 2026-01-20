@@ -22,7 +22,8 @@ from anyio import Path
 from pydantic import BaseModel
 from xloft import NamedTuple
 
-from scruby import mixins, settings
+from scruby import mixins
+from scruby.settings import ScrubySettings
 
 
 class _Meta(BaseModel):
@@ -59,9 +60,9 @@ class Scruby(
     ) -> None:
         super().__init__()
         self._meta = _Meta
-        self._db_root = settings.DB_ROOT
-        self._hash_reduce_left = settings.HASH_REDUCE_LEFT
-        self._max_workers = settings.MAX_WORKERS
+        self._db_root = ScrubySettings.db_root
+        self._hash_reduce_left = ScrubySettings.hash_reduce_left
+        self._max_workers = ScrubySettings.max_workers
         # The maximum number of branches.
         match self._hash_reduce_left:
             case 0:
@@ -76,7 +77,7 @@ class Scruby(
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
         # Plugins connection.
         plugin_list: dict[str, Any] = {}
-        for plugin in settings.PLUGINS:
+        for plugin in ScrubySettings.plugins:
             name = plugin.__name__
             name = name[0].lower() + name[1:]
             plugin_list[name] = plugin(self)
@@ -111,7 +112,7 @@ class Scruby(
                 msg = f"Model: {class_model.__name__} => The `updated_at` field is missing!"
                 raise AssertionError(msg)
             # Check the length of the collection name for an acceptable size.
-            len_db_root_absolut_path = len(str(await Path(settings.DB_ROOT).resolve()).encode("utf-8"))
+            len_db_root_absolut_path = len(str(await Path(ScrubySettings.db_root).resolve()).encode("utf-8"))
             len_model_name = len(class_model.__name__)
             len_full_path_leaf = len_db_root_absolut_path + len_model_name + 26
             if len_full_path_leaf > 255:
@@ -127,7 +128,7 @@ class Scruby(
         instance.__dict__["_class_model"] = class_model
         # Create a path for metadata.
         meta_dir_path_tuple = (
-            settings.DB_ROOT,
+            ScrubySettings.db_root,
             class_model.__name__,
             "meta",
         )
@@ -140,9 +141,9 @@ class Scruby(
         if not await meta_dir_path.exists():
             await meta_dir_path.mkdir(parents=True)
             meta = _Meta(
-                db_root=settings.DB_ROOT,
+                db_root=ScrubySettings.db_root,
                 collection_name=class_model.__name__,
-                hash_reduce_left=settings.HASH_REDUCE_LEFT,
+                hash_reduce_left=ScrubySettings.hash_reduce_left,
                 max_branch_number=instance.__dict__["_max_number_branch"],
                 counter_documents=0,
             )
@@ -247,5 +248,5 @@ class Scruby(
             None.
         """
         with contextlib.suppress(FileNotFoundError):
-            rmtree(settings.DB_ROOT)
+            rmtree(ScrubySettings.db_root)
         return

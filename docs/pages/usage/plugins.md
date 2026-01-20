@@ -23,7 +23,7 @@ class PluginName(ScrubyPlugin):
 import anyio
 from typing import Any
 from pydantic import Field
-from scruby import Scruby, ScrubyModel, settings
+from scruby import Scruby, ScrubyModel, ScrubySettings
 from scruby_plugin import ScrubyPlugin
 from pprint import pprint as pp
 

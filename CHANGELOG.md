@@ -1,5 +1,13 @@
 ### CHANGELOG
 
+#### v0.34.0 2026-01-20
+
+- Moved all parameters in the settings module to the `ScrubySettings` class.
+- Upgraded dependencies.
+- Updated tests.
+- Updated documentation.
+- Updated README.md
+
 #### v0.33.0 2026-01-13
 
 - Optimized quantum methods:
