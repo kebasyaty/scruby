@@ -1,6 +1,6 @@
 [project]
 name = "scruby"
-version = "0.34.1"
+version = "0.34.2"
 description = "Asynchronous library for building and managing a hybrid database, by scheme of key-value."
 readme = "README.md"
 authors = [{ name = "kebasyaty", email = "kebasyaty@gmail.com" }]
@@ -9,8 +9,7 @@ license-files = ["MIT-LICENSE", "GPL-3.0-LICENSE"]
 requires-python = ">=3.12,<4.0"
 keywords = ["database", "store", "scruby", "async"]
 classifiers = [
-    "Development Status :: 4 - Beta",
-    # "Development Status :: 5 - Production/Stable",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
@@ -24,7 +23,6 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: Implementation :: CPython",
-    # "Programming Language :: Python :: Implementation :: PyPy",
     "Topic :: Software Development :: Libraries",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Database",

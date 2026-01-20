@@ -10,7 +10,7 @@ __all__ = ("Find",)
 
 import concurrent.futures
 from collections.abc import Callable
-from typing import Any
+from typing import Any, final
 
 import orjson
 from anyio import Path
@@ -19,6 +19,7 @@ from anyio import Path
 class Find:
     """Quantum methods for searching documents."""
 
+    @final
     @staticmethod
     async def _task_find(
         branch_number: int,
@@ -54,6 +55,7 @@ class Find:
                     docs.append(doc)
         return docs or None
 
+    @final
     async def find_one(
         self,
         filter_fn: Callable,
@@ -92,6 +94,7 @@ class Find:
                     return docs[0]
         return None
 
+    @final
     async def find_many(
         self,
         filter_fn: Callable = lambda _: True,

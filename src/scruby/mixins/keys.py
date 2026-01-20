@@ -10,7 +10,7 @@ __all__ = ("Keys",)
 
 
 from datetime import datetime
-from typing import Any
+from typing import Any, final
 from zoneinfo import ZoneInfo
 
 import orjson
@@ -24,6 +24,7 @@ from scruby.errors import (
 class Keys:
     """Methods for working with keys."""
 
+    @final
     async def add_doc(self, doc: Any) -> None:
         """Asynchronous method for adding document to collection.
 
@@ -66,6 +67,7 @@ class Keys:
             await leaf_path.write_bytes(orjson.dumps({prepared_key: doc_json}))
         await self._counter_documents(1)
 
+    @final
     async def update_doc(self, doc: Any) -> None:
         """Asynchronous method for updating document to collection.
 
@@ -106,6 +108,7 @@ class Keys:
             msg: str = f"`update_doc` - The key `{doc.key}` is missing!"
             raise KeyError(msg)
 
+    @final
     async def get_doc(self, key: str) -> Any:
         """Asynchronous method for getting document from collection the by key.
 
@@ -126,6 +129,7 @@ class Keys:
         msg: str = f"`get_doc` - The key `{key}` is missing!"
         raise KeyError(msg)
 
+    @final
     async def has_key(self, key: str) -> bool:
         """Asynchronous method for checking presence of key in collection.
 
@@ -148,6 +152,7 @@ class Keys:
                 return False
         return False
 
+    @final
     async def delete_doc(self, key: str) -> None:
         """Asynchronous method for deleting document from collection the by key.
 

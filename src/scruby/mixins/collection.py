@@ -9,6 +9,7 @@ from __future__ import annotations
 __all__ = ("Collection",)
 
 from shutil import rmtree
+from typing import final
 
 from anyio import Path, to_thread
 
@@ -18,6 +19,7 @@ from scruby.settings import ScrubySettings
 class Collection:
     """Methods for working with collections."""
 
+    @final
     def collection_name(self) -> str:
         """Asynchronous method for getting the collection name.
 
@@ -26,6 +28,7 @@ class Collection:
         """
         return self._class_model.__name__
 
+    @final
     @staticmethod
     async def collection_list() -> list[str]:
         """Asynchronous method for getting collection list."""
@@ -35,6 +38,7 @@ class Collection:
         directory_names: list[str] = [entry.name async for entry in all_entries]
         return directory_names
 
+    @final
     @staticmethod
     async def delete_collection(name: str) -> None:
         """Asynchronous method for deleting a collection by its name.

@@ -10,12 +10,13 @@ __all__ = ("Count",)
 
 import concurrent.futures
 from collections.abc import Callable
-from typing import Any
+from typing import Any, final
 
 
 class Count:
     """Methods for counting the number of documents."""
 
+    @final
     async def estimated_document_count(self) -> int:
         """Asynchronous method.
 
@@ -27,6 +28,7 @@ class Count:
         meta = await self.get_meta()
         return meta.counter_documents
 
+    @final
     async def count_documents(
         self,
         filter_fn: Callable,

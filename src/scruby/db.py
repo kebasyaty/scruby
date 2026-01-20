@@ -75,13 +75,6 @@ class Scruby(
                 self._max_number_branch = 256
             case _ as unreachable:
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
-        # Plugins connection.
-        plugin_list: dict[str, Any] = {}
-        for plugin in ScrubySettings.plugins:
-            name = plugin.__name__
-            name = name[0].lower() + name[1:]
-            plugin_list[name] = plugin(scruby=self)
-        self.plugins = NamedTuple(**plugin_list)
 
     @classmethod
     async def collection(cls, class_model: Any) -> Any:
@@ -150,6 +143,13 @@ class Scruby(
             meta_json = meta.model_dump_json()
             meta_path = Path(*(meta_dir_path, "meta.json"))
             await meta_path.write_text(meta_json, "utf-8")
+        # Plugins connection.
+        plugin_list: dict[str, Any] = {}
+        for plugin in ScrubySettings.plugins:
+            name = plugin.__name__
+            name = name[0].lower() + name[1:]
+            plugin_list[name] = plugin(scruby=instance)
+        instance.__dict__["plugins"] = NamedTuple(**plugin_list)
         return instance
 
     async def get_meta(self) -> _Meta:
