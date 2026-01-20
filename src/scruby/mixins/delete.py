@@ -10,7 +10,7 @@ __all__ = ("Delete",)
 
 import concurrent.futures
 from collections.abc import Callable
-from typing import Any
+from typing import Any, final
 
 import orjson
 from anyio import Path
@@ -19,6 +19,7 @@ from anyio import Path
 class Delete:
     """Methods for deleting documents."""
 
+    @final
     @staticmethod
     async def _task_delete(
         branch_number: int,
@@ -58,6 +59,7 @@ class Delete:
             await leaf_path.write_bytes(orjson.dumps(new_state))
         return counter
 
+    @final
     async def delete_many(
         self,
         filter_fn: Callable,

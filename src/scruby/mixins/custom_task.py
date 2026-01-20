@@ -9,12 +9,13 @@ from __future__ import annotations
 __all__ = ("CustomTask",)
 
 from collections.abc import Callable
-from typing import Any
+from typing import Any, final
 
 
 class CustomTask:
     """Quantum methods for running custom tasks."""
 
+    @final
     async def run_custom_task(
         self,
         custom_task_fn: Callable,

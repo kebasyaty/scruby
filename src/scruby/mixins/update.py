@@ -11,7 +11,7 @@ __all__ = ("Update",)
 import concurrent.futures
 import copy
 from collections.abc import Callable
-from typing import Any
+from typing import Any, final
 
 import orjson
 from anyio import Path
@@ -20,6 +20,7 @@ from anyio import Path
 class Update:
     """Methods for updating documents."""
 
+    @final
     @staticmethod
     async def _task_update(
         branch_number: int,
@@ -61,6 +62,7 @@ class Update:
             await leaf_path.write_bytes(orjson.dumps(new_state))
         return counter
 
+    @final
     async def update_many(
         self,
         new_data: dict[str, Any],
