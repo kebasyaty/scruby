@@ -80,7 +80,7 @@ class Scruby(
         for plugin in ScrubySettings.plugins:
             name = plugin.__name__
             name = name[0].lower() + name[1:]
-            plugin_list[name] = plugin(self)
+            plugin_list[name] = plugin(scruby=self)
         self.plugins = NamedTuple(**plugin_list)
 
     @classmethod
