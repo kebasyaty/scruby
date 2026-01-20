@@ -10,13 +10,13 @@ The search effectiveness depends on the number of processor threads.
 import anyio
 from typing import Annotated
 from pydantic import Field
-from scruby import Scruby, ScrubyModel, settings
+from scruby import Scruby, ScrubyModel, ScrubySettings
 from pprint import pprint as pp
 
-settings.DB_ROOT = "ScrubyDB"  # By default = "ScrubyDB"
-settings.HASH_REDUCE_LEFT = 6  # By default = 6
-settings.MAX_WORKERS = None  # By default = None
-settings.PLUGINS = []  # By default = []
+ScrubySettings.db_root = "ScrubyDB"  # By default = "ScrubyDB"
+ScrubySettings.hash_reduce_left = 6  # By default = 6
+ScrubySettings.max_workers = None  # By default = None
+ScrubySettings.plugins = []  # By default = []
 
 
 class Phone(ScrubyModel):

@@ -11,7 +11,7 @@ Quantum operations: find_one, find_many, count_documents, delete_many, run_custo
 </p>
 
 <p>
-MAX_WORKERS (clarification):<br>
+ScrubySettings.max_workers (clarification):<br>
 The maximum number of processes that can be used to execute the given calls.<br>
 If None, then as many worker processes will be<br>
 reated as the machine has processors.<br>
