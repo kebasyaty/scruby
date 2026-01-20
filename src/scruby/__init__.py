@@ -25,10 +25,10 @@ requires a large number of processor threads.
 from __future__ import annotations
 
 __all__ = (
-    "settings",
     "Scruby",
     "ScrubyModel",
+    "ScrubySettings",
 )
 
-from scruby import settings
 from scruby.db import Scruby, ScrubyModel
+from scruby.settings import ScrubySettings

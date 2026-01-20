@@ -10,7 +10,7 @@ import pytest
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyModel, settings
+from scruby import Scruby, ScrubyModel, ScrubySettings
 from scruby.aggregation import Max
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
@@ -68,7 +68,7 @@ async def task_calculate_max(
 
 async def test_task_calculate_max() -> None:
     """Test a Max class in custom task."""
-    settings.HASH_REDUCE_LEFT = 6  # 256 branches in collection
+    ScrubySettings.hash_reduce_left = 6  # 256 branches in collection
     user_coll = await Scruby.collection(User)
 
     for num in range(1, 10):
