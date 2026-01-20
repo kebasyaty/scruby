@@ -20,9 +20,10 @@ from __future__ import annotations
 
 __all__ = ("ScrubySettings",)
 
-from typing import Any, ClassVar, Literal
+from typing import Any, ClassVar, Literal, final
 
 
+@final
 class ScrubySettings:
     """Database settings."""
 

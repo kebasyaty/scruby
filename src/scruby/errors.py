@@ -13,6 +13,8 @@ __all__ = (
     "KeyNotExistsError",
 )
 
+from typing import final
+
 
 class ScrubyException(Exception):
     """Root Custom Exception."""
@@ -21,6 +23,7 @@ class ScrubyException(Exception):
         super().__init__(*args, **kwargs)
 
 
+@final
 class MetadataValueError(ScrubyException):
     """Exception is raised if value of variable in metadata does not matching expected."""
 
@@ -29,6 +32,7 @@ class MetadataValueError(ScrubyException):
         super().__init__(self.message)
 
 
+@final
 class KeyAlreadyExistsError(ScrubyException):
     """Exception is raised if the key already exists."""
 
@@ -37,6 +41,7 @@ class KeyAlreadyExistsError(ScrubyException):
         super().__init__(self.message)
 
 
+@final
 class KeyNotExistsError(ScrubyException):
     """Exception is raised If the key is not exists."""
 
