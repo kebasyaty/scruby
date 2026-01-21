@@ -148,7 +148,7 @@ class Scruby(
         for plugin in ScrubySettings.plugins:
             name = plugin.__name__
             name = name[0].lower() + name[1:]
-            plugin_list[name] = plugin(scruby=instance)
+            plugin_list[name] = plugin(scruby_self=instance)
         instance.__dict__["plugins"] = NamedTuple(**plugin_list)
         return instance
 
