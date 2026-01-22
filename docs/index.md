@@ -53,18 +53,18 @@
 
 #### List of plugins for Scruby
 
-[![List of plugins](https://raw.githubusercontent.com/kebasyaty/scruby/v0/assets/links/link-plugins.svg "List of plugins")](https://github.com/kebasyaty/scruby/blob/v0/PLUGINS.md "List of plugins")
+[![List of plugins](https://raw.githubusercontent.com/kebasyaty/scruby/v0/assets/links/plugins.svg "List of plugins")](https://github.com/kebasyaty/scruby/blob/v0/PLUGINS.md "List of plugins")
 
 #### Requirements
 
-[![Requirements](https://raw.githubusercontent.com/kebasyaty/scruby/v0/assets/links/link-requirements.svg "Requirements")](https://github.com/kebasyaty/scruby/blob/v0/REQUIREMENTS.md "Requirements")
+[![Requirements](https://raw.githubusercontent.com/kebasyaty/scruby/v0/assets/links/requirements.svg "Requirements")](https://github.com/kebasyaty/scruby/blob/v0/REQUIREMENTS.md "Requirements")
 
 #### Changelog
 
-[![Changelog](https://raw.githubusercontent.com/kebasyaty/scruby/v0/assets/links/link-changelog.svg "Changelog")](https://github.com/kebasyaty/scruby/blob/v0/CHANGELOG.md "Changelog")
+[![Changelog](https://raw.githubusercontent.com/kebasyaty/scruby/v0/assets/links/changelog.svg "Changelog")](https://github.com/kebasyaty/scruby/blob/v0/CHANGELOG.md "Changelog")
 
 #### License
 
-[![MIT](https://raw.githubusercontent.com/kebasyaty/scruby/v0/assets/links/link-mit.svg "MIT")](https://github.com/kebasyaty/scruby/blob/main/MIT-LICENSE "MIT")
+[![MIT](https://raw.githubusercontent.com/kebasyaty/scruby/v0/assets/links/mit.svg "MIT")](https://github.com/kebasyaty/scruby/blob/main/MIT-LICENSE "MIT")
 
-[![GPL-3.0](https://raw.githubusercontent.com/kebasyaty/scruby/v0/assets/links/link-gpl-3.0-or-later.svg "GPL-3.0")](https://github.com/kebasyaty/scruby/blob/main/GPL-3.0-LICENSE "GPL-3.0")
+[![GPL-3.0](https://raw.githubusercontent.com/kebasyaty/scruby/v0/assets/links/gpl-3.0-or-later.svg "GPL-3.0")](https://github.com/kebasyaty/scruby/blob/main/GPL-3.0-LICENSE "GPL-3.0")
