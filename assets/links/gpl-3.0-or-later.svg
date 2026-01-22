@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg class="badge-svg" data-v-3c87b7b4="" version="1.1" width="184.32" height="26" viewBox="0 0 184.32 26" xmlns="http://www.w3.org/2000/svg">
- <g transform="scale(.74286)">
-  <path d="m10 0h46v35h-46q-10 0-10-10v-15q0-10 10-10z" fill="#424242" data-v-3c87b7b4=""/>
-  <path d="m56 0h182.12q10 0 10 10v15q0 10-10 10h-182.12z" fill="#c62828" data-v-3c87b7b4=""/>
-  <text x="28" y="17.5" dy="0.34999999em" fill="#ffffff" font-family="Roboto, sans-serif" font-size="12px" font-weight="600" letter-spacing="2" text-anchor="middle" style="text-decoration-line:none;text-transform:uppercase" data-v-3c87b7b4="">LINK</text>
-  <g transform="matrix(.66667 0 0 .66667 66 9.5)" data-v-3c87b7b4="">
-   <path d="m6.74 6.772a7.436 7.436 0 0 1 10.519 0 7.432 7.432 0 0 1 0 10.515 7.436 7.436 0 0 1-10.52 0c-2.904-2.905-2.904-7.64 0-10.515m5.261 13.565c-4.59 0-8.338-3.747-8.338-8.337s3.748-8.308 8.338-8.308c4.591 0 8.31 3.748 8.31 8.308 0 4.619-3.719 8.337-8.31 8.337zm12-8.366-2.73-2.471 1.103-3.514-3.603-0.784-0.784-3.602-3.515 1.133-2.501-2.729-2.47 2.73-3.514-1.104-0.786 3.601-3.602 0.785 1.133 3.515-2.731 2.499 2.732 2.47-1.105 3.514 3.603 0.784 0.784 3.603 3.516-1.134 2.5 2.731 2.468-2.73 3.516 1.103 0.785-3.602 3.603-0.813-1.134-3.515 2.732-2.471z" fill="#fff" data-v-3c87b7b4=""/>
+<svg class="badge-svg" width="184.15" height="26" data-v-3c87b7b4="" version="1.1" viewBox="0 0 230.19 32.5" xmlns="http://www.w3.org/2000/svg">
+ <g transform="scale(.92857)">
+  <path d="m10 0h45.958v35h-45.958q-10 0-10-10v-15q0-10 10-10z" fill="#424242" data-v-3c87b7b4=""/>
+  <path d="m55.958 0h181.93q10 0 10 10v15q0 10-10 10h-181.93z" fill="#ad1457" data-v-3c87b7b4=""/>
+  <text x="27.978783" y="17.5" dy="0.34999999em" fill="#ffffff" font-family="Roboto, sans-serif" font-size="12px" font-weight="600" letter-spacing="2" text-anchor="middle" style="text-decoration-line:none;text-transform:uppercase" data-v-3c87b7b4="">LINK</text>
+  <g transform="matrix(.66667 0 0 .66667 65.958 9.5)" data-v-3c87b7b4="">
+   <path d="m12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0.344 20.251a8.251 8.251 0 1 1 0-16.502 8.21 8.21 0 0 1 5.633 2.234l-2.458 2.547a4.686 4.686 0 0 0-3.175-1.239 4.709 4.709 0 1 0 3.284 8.081l2.657 2.346a8.224 8.224 0 0 1-5.941 2.533z" fill="#fff" data-v-3c87b7b4=""/>
   </g>
-  <text x="162.0625" y="17.5" dy="0.34999999em" fill="#ffffff" font-family="Montserrat, sans-serif" font-size="12px" font-weight="900" letter-spacing="2" text-anchor="middle" style="text-decoration-line:none;text-transform:uppercase" data-v-3c87b7b4="">GPL 3.0 OR LATER</text>
+  <text x="161.92462" y="17.5" dy="0.34999999em" fill="#ffffff" font-family="Montserrat, sans-serif" font-size="12px" font-weight="900" letter-spacing="2" text-anchor="middle" style="text-decoration-line:none;text-transform:uppercase" data-v-3c87b7b4="">GPL 3.0 OR LATER</text>
  </g>
 </svg>
