@@ -1,4 +1,4 @@
-## additional assets for the project
+## Additional assets for the project
 
 ### Badge Generator
 
