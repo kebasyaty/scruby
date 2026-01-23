@@ -1,5 +1,7 @@
 # Additional assets for the project
 
+<br>
+
 ## List of useful Internet resources
 
 ### Badge Generator
