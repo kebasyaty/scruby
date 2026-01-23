@@ -1,8 +1,10 @@
-## Additional assets for the project
+# Additional assets for the project
+
+## List of useful Internet resources
 
 ### Badge Generator
 
-Create custom badges for your projects:
+Create custom badges for your projects:<br>
 [https://forthebadge.com/generator](https://forthebadge.com/generator "Badge Generator")
 
 ### Readme Typing SVG
@@ -11,7 +13,7 @@ Create custom badges for your projects:
 
 ### List of Badges, in Markdown
 
-A list of badges, with their Markdown code,
-that can be included in a README.md file for a
-GitHub or Bitbucket project:
+A list of badges, with their Markdown code,<br>
+that can be included in a README.md file for a<br>
+GitHub or Bitbucket project:<br>
 [https://naereen.github.io/badges/](https://naereen.github.io/badges/ "List of Badges, in Markdown")
