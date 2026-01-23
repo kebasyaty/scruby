@@ -50,15 +50,9 @@
 
 <br>
 
-## List of plugins for Scruby
-
 [![List of plugins](https://raw.githubusercontent.com/kebasyaty/scruby/v0/assets/links/plugins.svg "List of plugins")](https://github.com/kebasyaty/scruby/blob/v0/PLUGINS.md "List of plugins")
 
-## Documentation
-
 [![Documentation](https://raw.githubusercontent.com/kebasyaty/scruby/v0/assets/links/documentation.svg "Documentation")](https://kebasyaty.github.io/scruby/ "Documentation")
-
-## Requirements
 
 [![Requirements](https://raw.githubusercontent.com/kebasyaty/scruby/v0/assets/links/requirements.svg "Requirements")](https://github.com/kebasyaty/scruby/blob/v0/REQUIREMENTS.md "Requirements")
 
@@ -305,11 +299,9 @@ if __name__ == "__main__":
     anyio.run(main)
 ```
 
-## Changelog
+<br>
 
 [![Changelog](https://raw.githubusercontent.com/kebasyaty/scruby/v0/assets/links/changelog.svg "Changelog")](https://github.com/kebasyaty/scruby/blob/v0/CHANGELOG.md "Changelog")
-
-## License
 
 [![MIT](https://raw.githubusercontent.com/kebasyaty/scruby/v0/assets/links/mit.svg "MIT")](https://github.com/kebasyaty/scruby/blob/main/MIT-LICENSE "MIT")
 
