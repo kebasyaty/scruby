@@ -51,19 +51,13 @@
   requires a large number of processor threads.
 </p>
 
-#### List of plugins for Scruby
+<hr>
 
 [![List of plugins](https://raw.githubusercontent.com/kebasyaty/scruby/v0/assets/links/plugins.svg "List of plugins")](https://github.com/kebasyaty/scruby/blob/v0/PLUGINS.md "List of plugins")
 
-#### Requirements
-
 [![Requirements](https://raw.githubusercontent.com/kebasyaty/scruby/v0/assets/links/requirements.svg "Requirements")](https://github.com/kebasyaty/scruby/blob/v0/REQUIREMENTS.md "Requirements")
 
-#### Changelog
-
 [![Changelog](https://raw.githubusercontent.com/kebasyaty/scruby/v0/assets/links/changelog.svg "Changelog")](https://github.com/kebasyaty/scruby/blob/v0/CHANGELOG.md "Changelog")
-
-#### License
 
 [![MIT](https://raw.githubusercontent.com/kebasyaty/scruby/v0/assets/links/mit.svg "MIT")](https://github.com/kebasyaty/scruby/blob/main/MIT-LICENSE "MIT")
 

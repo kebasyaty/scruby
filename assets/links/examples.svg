@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg class="badge-svg" data-v-3c87b7b4="" version="1.1" width="138.16" height="26" viewBox="0 0 138.16 26" xmlns="http://www.w3.org/2000/svg">
- <g transform="scale(.74286)">
+<svg class="badge-svg" data-v-3c87b7b4="" version="1.1" width="148.78" height="28" viewBox="0 0 148.78 28" xmlns="http://www.w3.org/2000/svg">
+ <g transform="scale(.8)">
   <path d="m10 0h46v35h-46q-10 0-10-10v-15q0-10 10-10z" fill="#424242" data-v-3c87b7b4=""/>
   <path d="m56 0h119.98q10 0 10 10v15q0 10-10 10h-119.98z" fill="#455a64" data-v-3c87b7b4=""/>
   <text x="28" y="17.5" dy="0.34999999em" fill="#ffffff" font-family="Roboto, sans-serif" font-size="12px" font-weight="600" letter-spacing="2" text-anchor="middle" style="text-decoration-line:none;text-transform:uppercase" data-v-3c87b7b4="">LINK</text>
