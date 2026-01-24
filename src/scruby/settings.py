@@ -56,10 +56,12 @@ class ScrubySettings:
     # For adding plugins.
     plugins: ClassVar[list[Any]] = []
 
-    def get_db_id(cls) -> str:
+    @classmethod
+    def get_db_id(cls) -> None:
         """Get the database ID."""
         id: str | None = None
         db_meta_path: str = f"{cls.db_root}/meta/meta.env"
+
         if Path(db_meta_path).exists():
             meta: dict[str, str | None] = dotenv_values(db_meta_path)
             id = meta.get("id")
@@ -72,4 +74,11 @@ class ScrubySettings:
             id = str(uuid.uuid4())[:8]
             content = f"id={id}"
             Path(db_meta_path).write_text(data=content, encoding="utf-8")
-        return id
+
+        if id is None:
+            raise ValueError("Failed attempt to obtain database ID.")
+
+        cls.db_id = id
+
+
+ScrubySettings.get_db_id()
