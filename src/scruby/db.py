@@ -61,6 +61,7 @@ class Scruby(
         super().__init__()
         self._meta = _Meta
         self._db_root = ScrubySettings.db_root
+        self._db_id = ScrubySettings.db_id
         self._hash_reduce_left = ScrubySettings.hash_reduce_left
         self._max_workers = ScrubySettings.max_workers
         # The maximum number of branches.
