@@ -60,20 +60,21 @@ class ScrubySettings:
     def get_db_id(cls) -> None:
         """Get the database ID."""
         id: str | None = None
-        db_meta_path: str = f"{cls.db_root}/meta/meta.env"
+        db_meta_path: Path = Path(f"{cls.db_root}/meta/meta.env")
 
-        if Path(db_meta_path).exists():
+        if db_meta_path.exists():
             meta: dict[str, str | None] = dotenv_values(db_meta_path)
             id = meta.get("id")
             if id is None:
-                with Path(db_meta_path).open("a+", encoding="utf-8") as env_file:
+                with db_meta_path.open("a+", encoding="utf-8") as env_file:
                     id = str(uuid.uuid4())[:8]
                     content = f"\nid={id}"
                     env_file.write(content)
         else:
+            Path(f"{cls.db_root}/meta").mkdir(parents=True)
             id = str(uuid.uuid4())[:8]
             content = f"id={id}"
-            Path(db_meta_path).write_text(data=content, encoding="utf-8")
+            db_meta_path.write_text(data=content, encoding="utf-8")
 
         if id is None:
             raise ValueError("Failed attempt to obtain database ID.")
