@@ -1,5 +1,12 @@
 ### CHANGELOG
 
+#### v0.35.0 2026-01-24
+
+- Added database ID management algorithm to `ScrubySettings`.
+- Upgraded dependencies.
+- Updated tests.
+- Updated documentation.
+
 #### v0.34.0 2026-01-20
 
 - Moved all parameters in the settings module to the `ScrubySettings` class.
