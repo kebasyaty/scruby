@@ -35,6 +35,7 @@ dependencies = [
     "pydantic-extra-types>=2.10.5",
     "phonenumbers>=9.0.13",
     "xloft>=0.9.8",
+    "python-dotenv>=1.2.1",
 ]
 
 [project.urls]

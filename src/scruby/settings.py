@@ -7,6 +7,7 @@
 The settings class contains the following parameters:
 
 - `db_root` - Path to root directory of database. `By default = "ScrubyDB" (in root of project)`.
+- `db_id` - Database ID.
 - `hash_reduce_left` - The length of the hash reduction on the left side.
     - `0` - 4294967296 branches in collection.
     - `2` - 16777216 branches in collection.
@@ -20,7 +21,11 @@ from __future__ import annotations
 
 __all__ = ("ScrubySettings",)
 
+import uuid
+from pathlib import Path
 from typing import Any, ClassVar, Literal, final
+
+from dotenv import dotenv_values
 
 
 @final
@@ -30,6 +35,9 @@ class ScrubySettings:
     # Path to root directory of database
     # By default = "ScrubyDB" (in root of project).
     db_root: ClassVar[str] = "ScrubyDB"
+
+    # Database ID
+    db_id: str = ""
 
     # The length of the hash reduction on the left side.
     # 0 = 4294967296 branches in collection.
@@ -47,3 +55,21 @@ class ScrubySettings:
 
     # For adding plugins.
     plugins: ClassVar[list[Any]] = []
+
+    def get_db_id(cls) -> str:
+        """Get the database ID."""
+        id: str | None = None
+        db_meta_path: str = f"{cls.db_root}/meta/meta.env"
+        if Path(db_meta_path).exists():
+            meta: dict[str, str | None] = dotenv_values(db_meta_path)
+            id = meta.get("id")
+            if id is None:
+                with Path(db_meta_path).open("a+", encoding="utf-8") as env_file:
+                    id = str(uuid.uuid4())[:8]
+                    content = f"\nid={id}"
+                    env_file.write(content)
+        else:
+            id = str(uuid.uuid4())[:8]
+            content = f"id={id}"
+            Path(db_meta_path).write_text(data=content, encoding="utf-8")
+        return id
