@@ -60,6 +60,7 @@ class ScrubySettings:
         """Get the database ID."""
         key = "id"
         dotenv_path: str = f"{cls.db_root}/.env.meta"
+
         db_id: str | None = get_from_env(
             key=key,
             dotenv_path=dotenv_path,
@@ -68,10 +69,11 @@ class ScrubySettings:
             value=str(uuid.uuid4())[:8],
             dotenv_path=dotenv_path,
         )
-        if db_id is not None:
-            cls.db_id = db_id
-        else:
+
+        if db_id is None:
             raise ValueError("ScrubySettings.get_db_id() => Failed to get database ID.")
+
+        cls.db_id = db_id
 
 
 ScrubySettings.get_db_id()
