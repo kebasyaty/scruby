@@ -10,6 +10,11 @@ def test_db_root() -> None:
     assert ScrubySettings.db_root == "ScrubyDB"
 
 
+def test_db_id() -> None:
+    """ScrubySettings.db_id."""
+    assert len(ScrubySettings.db_id) == 8
+
+
 def test_hash_reduce_left() -> None:
     """Test a HASH_REDUCE_LEFT parameter."""
     assert ScrubySettings.hash_reduce_left == 6
