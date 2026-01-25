@@ -22,7 +22,6 @@ from __future__ import annotations
 __all__ = ("ScrubySettings",)
 
 import uuid
-from pathlib import Path
 from typing import Any, ClassVar, Literal, final
 
 from scruby.utils import add_to_env, get_from_env
@@ -60,7 +59,7 @@ class ScrubySettings:
     def get_db_id(cls) -> None:
         """Get the database ID."""
         key = "id"
-        dotenv_path: Path = Path(cls.db_root, ".env.meta")
+        dotenv_path: str = f"{cls.db_root}/.env.meta"
         db_id: str | None = get_from_env(
             key=key,
             dotenv_path=dotenv_path,
