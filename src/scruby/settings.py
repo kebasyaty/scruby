@@ -60,7 +60,7 @@ class ScrubySettings:
     def get_db_id(cls) -> None:
         """Get the database ID."""
         key = "id"
-        dotenv_path: Path = Path(cls.db_root) / ".env.meta"
+        dotenv_path: Path = Path(cls.db_root, ".env.meta")
         db_id: str | None = get_from_env(
             key=key,
             dotenv_path=dotenv_path,
