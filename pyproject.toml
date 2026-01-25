@@ -1,6 +1,6 @@
 [project]
 name = "scruby"
-version = "0.35.0"
+version = "0.35.2"
 description = "Asynchronous library for building and managing a hybrid database, by scheme of key-value."
 readme = "README.md"
 authors = [{ name = "kebasyaty", email = "kebasyaty@gmail.com" }]
@@ -14,7 +14,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     "Operating System :: MacOS :: MacOS X",
-    "Operating System :: Microsoft :: Windows",
+    # "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX",
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3",
