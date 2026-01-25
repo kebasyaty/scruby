@@ -56,7 +56,7 @@ def add_to_env(
         else:
             raise KeyError(f"add_to_env => Key `{key}` already exists.")
     else:
-        target_dir = "/".join(str(dotenv_path).split("/")[:-1])
+        target_dir = "/".join(str(dotenv_path.resolve()).split("/")[:-1])
         Path(target_dir).mkdir(parents=True, exist_ok=True)
         content = f"{key}={value}"
         dotenv_path.write_text(data=content, encoding="utf-8")
