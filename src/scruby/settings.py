@@ -25,7 +25,7 @@ import uuid
 from pathlib import Path
 from typing import Any, ClassVar, Literal, final
 
-from dotenv import dotenv_values
+from scruby.utils import add_to_env, get_from_env
 
 
 @final
@@ -37,7 +37,7 @@ class ScrubySettings:
     db_root: ClassVar[str] = "ScrubyDB"
 
     # Database ID
-    db_id: str = ""
+    db_id: ClassVar[str] = ""
 
     # The length of the hash reduction on the left side.
     # 0 = 4294967296 branches in collection.
@@ -59,27 +59,20 @@ class ScrubySettings:
     @classmethod
     def get_db_id(cls) -> None:
         """Get the database ID."""
-        id: str | None = None
-        db_meta_path: Path = Path(f"{cls.db_root}/meta/meta.env")
-
-        if db_meta_path.exists():
-            meta: dict[str, str | None] = dotenv_values(db_meta_path)
-            id = meta.get("id")
-            if id is None:
-                with db_meta_path.open("a+", encoding="utf-8") as env_file:
-                    id = str(uuid.uuid4())[:8]
-                    content = f"\nid={id}"
-                    env_file.write(content)
+        key = "id"
+        dotenv_path: Path = Path(f"{cls.db_root}/.env.meta")
+        db_id: str | None = get_from_env(
+            key=key,
+            dotenv_path=dotenv_path,
+        ) or add_to_env(
+            key=key,
+            value=str(uuid.uuid4())[:8],
+            dotenv_path=dotenv_path,
+        )
+        if db_id is not None:
+            cls.db_id = db_id
         else:
-            Path(f"{cls.db_root}/meta").mkdir(parents=True)
-            id = str(uuid.uuid4())[:8]
-            content = f"id={id}"
-            db_meta_path.write_text(data=content, encoding="utf-8")
-
-        if id is None:
-            raise ValueError("Failed attempt to obtain database ID.")
-
-        cls.db_id = id
+            raise ValueError("ScrubySettings.get_db_id() => Failed to get database ID.")
 
 
 ScrubySettings.get_db_id()
