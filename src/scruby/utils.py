@@ -7,6 +7,7 @@ __all__ = (
     "add_to_env",
 )
 
+
 from pathlib import Path
 
 from dotenv import dotenv_values
@@ -43,6 +44,8 @@ def add_to_env(
     Returns:
         `value` or None
     """
+    assert len(value) > 0, "add_to_env => `value` must not be the empty string."
+
     if isinstance(dotenv_path, str):
         dotenv_path = Path(dotenv_path)
 
@@ -56,7 +59,7 @@ def add_to_env(
         else:
             raise KeyError(f"add_to_env => Key `{key}` already exists.")
     else:
-        target_dir = "/".join(str(dotenv_path.resolve()).split("/")[:-1])
+        target_dir: str = "/".join(str(dotenv_path).split("/")[:-1])
         Path(target_dir).mkdir(parents=True, exist_ok=True)
         content = f"{key}={value}"
         dotenv_path.write_text(data=content, encoding="utf-8")

@@ -56,10 +56,11 @@ class ScrubySettings:
     plugins: ClassVar[list[Any]] = []
 
     @classmethod
-    def get_db_id(cls) -> None:
+    def init_db_id(cls) -> None:
         """Get the database ID."""
         key = "id"
         dotenv_path: str = f"{cls.db_root}/.env.meta"
+
         db_id: str | None = get_from_env(
             key=key,
             dotenv_path=dotenv_path,
@@ -68,10 +69,8 @@ class ScrubySettings:
             value=str(uuid.uuid4())[:8],
             dotenv_path=dotenv_path,
         )
-        if db_id is not None:
-            cls.db_id = db_id
-        else:
+
+        if db_id is None:
             raise ValueError("ScrubySettings.get_db_id() => Failed to get database ID.")
 
-
-ScrubySettings.get_db_id()
+        cls.db_id = db_id

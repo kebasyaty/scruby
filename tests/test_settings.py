@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from scruby import ScrubySettings
+from scruby.utils import get_from_env
 
 
 def test_db_root() -> None:
@@ -12,7 +13,10 @@ def test_db_root() -> None:
 
 def test_db_id() -> None:
     """ScrubySettings.db_id."""
+    ScrubySettings.init_db_id()
     assert len(ScrubySettings.db_id) == 8
+    db_id = get_from_env(key="id", dotenv_path=f"{ScrubySettings.db_root}/.env.meta")
+    assert db_id == ScrubySettings.db_id
 
 
 def test_hash_reduce_left() -> None:
