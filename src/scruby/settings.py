@@ -74,6 +74,3 @@ class ScrubySettings:
             raise ValueError("ScrubySettings.get_db_id() => Failed to get database ID.")
 
         cls.db_id = db_id
-
-
-ScrubySettings.get_db_id()
