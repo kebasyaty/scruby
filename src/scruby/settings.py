@@ -56,7 +56,7 @@ class ScrubySettings:
     plugins: ClassVar[list[Any]] = []
 
     @classmethod
-    def get_db_id(cls) -> None:
+    def init_db_id(cls) -> None:
         """Get the database ID."""
         key = "id"
         dotenv_path: str = f"{cls.db_root}/.env.meta"
