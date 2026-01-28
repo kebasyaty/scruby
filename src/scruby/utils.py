@@ -46,13 +46,11 @@ def add_to_env(
     Returns:
         `value` or None
     """
-    if __debug__:
-        if len(key) == 0:
-            raise KeyError("`add_to_env` => `key` must not be the empty string.")
-        if len(value) == 0:
-            raise ValueError("`add_to_env` => `value` must not be the empty string.")
+    assert len(key) > 0, "`add_to_env` => `key` must not be the empty string."
+    assert len(value) > 0, "`add_to_env` => `value` must not be the empty string."
 
     if isinstance(dotenv_path, str):
+        assert len(dotenv_path) > 0, "`add_to_env` => `dotenv_path` must not be the empty string."
         dotenv_path = Path(dotenv_path)
 
     if dotenv_path.exists():
@@ -63,7 +61,7 @@ def add_to_env(
                 content = f"\n{key}={value}"
                 env_file.write(content)
         else:
-            raise KeyError(f"add_to_env => Key `{key}` already exists.")
+            raise KeyError(f"`add_to_env` => Key `{key}` already exists.")
     else:
         target_dir: str = "/".join(str(dotenv_path).split("/")[:-1])
         Path(target_dir).mkdir(parents=True, exist_ok=True)
