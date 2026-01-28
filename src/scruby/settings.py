@@ -62,7 +62,7 @@ class ScrubySettings:
 
     @classmethod
     def init_db_id(cls) -> None:
-        """Get the database ID."""
+        """Initialize the `db_id` parameter from `db_root/.env.meta`."""
         key = "id"
         dotenv_path: str = f"{cls.db_root}/.env.meta"
 
