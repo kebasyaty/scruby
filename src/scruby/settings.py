@@ -21,6 +21,7 @@ from __future__ import annotations
 
 __all__ = ("ScrubySettings",)
 
+import sys
 import uuid
 from typing import Any, ClassVar, Literal, final
 
@@ -64,7 +65,8 @@ class ScrubySettings:
     def init_db_id(cls) -> None:
         """Initialize the `db_id` parameter from `db_root/.env.meta`."""
         key = "id"
-        dotenv_path: str = f"{cls.db_root}/.env.meta"
+        delimiter: str = "/" if sys.platform != "win32" else ""
+        dotenv_path: str = f"{cls.db_root}{delimiter}.env.meta"
 
         db_id: str | None = get_from_env(
             key=key,
