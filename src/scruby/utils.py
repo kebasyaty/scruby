@@ -22,6 +22,8 @@ def get_from_env(
     Returns:
         None
     """
+    assert len(key) > 0, "`get_from_env` => `key` must not be the empty string."
+
     value: str | None = None
 
     if isinstance(dotenv_path, str):
@@ -44,7 +46,11 @@ def add_to_env(
     Returns:
         `value` or None
     """
-    assert len(value) > 0, "add_to_env => `value` must not be the empty string."
+    if __debug__:
+        if len(key) == 0:
+            raise KeyError("`add_to_env` => `key` must not be the empty string.")
+        if len(value) == 0:
+            raise ValueError("`add_to_env` => `value` must not be the empty string.")
 
     if isinstance(dotenv_path, str):
         dotenv_path = Path(dotenv_path)
