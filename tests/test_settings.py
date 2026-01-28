@@ -14,6 +14,7 @@ def test_db_root() -> None:
 def test_db_id() -> None:
     """ScrubySettings.db_id."""
     ScrubySettings.init_db_id()
+    assert ScrubySettings.db_id is not None
     assert len(ScrubySettings.db_id) == 8
     db_id = get_from_env(key="id", dotenv_path=f"{ScrubySettings.db_root}/.env.meta")
     assert db_id == ScrubySettings.db_id

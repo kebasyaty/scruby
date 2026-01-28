@@ -36,7 +36,7 @@ class ScrubySettings:
     db_root: ClassVar[str] = "ScrubyDB"
 
     # Database ID
-    db_id: ClassVar[str] = ""
+    db_id: ClassVar[str | None] = None
 
     # The length of the hash reduction on the left side.
     # 0 = 4294967296 branches in collection.
@@ -54,6 +54,11 @@ class ScrubySettings:
 
     # For adding plugins.
     plugins: ClassVar[list[Any]] = []
+
+    @classmethod
+    def init_params(cls) -> None:
+        """Method for general initialization of parameters."""
+        cls.init_db_id()
 
     @classmethod
     def init_db_id(cls) -> None:
