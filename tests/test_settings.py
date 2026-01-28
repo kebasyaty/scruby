@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import sys
+
 from scruby import ScrubySettings
 from scruby.utils import get_from_env
 
@@ -13,9 +15,11 @@ def test_db_root() -> None:
 
 def test_db_id() -> None:
     """ScrubySettings.db_id."""
-    ScrubySettings.init_db_id()
+    ScrubySettings.init_params()
+    assert ScrubySettings.db_id is not None
     assert len(ScrubySettings.db_id) == 8
-    db_id = get_from_env(key="id", dotenv_path=f"{ScrubySettings.db_root}/.env.meta")
+    delimiter: str = "/" if sys.platform != "win32" else ""
+    db_id = get_from_env(key="id", dotenv_path=f"{ScrubySettings.db_root}{delimiter}.env.meta")
     assert db_id == ScrubySettings.db_id
 
 

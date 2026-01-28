@@ -21,6 +21,7 @@ from __future__ import annotations
 
 __all__ = ("ScrubySettings",)
 
+import sys
 import uuid
 from typing import Any, ClassVar, Literal, final
 
@@ -36,7 +37,7 @@ class ScrubySettings:
     db_root: ClassVar[str] = "ScrubyDB"
 
     # Database ID
-    db_id: ClassVar[str] = ""
+    db_id: ClassVar[str | None] = None
 
     # The length of the hash reduction on the left side.
     # 0 = 4294967296 branches in collection.
@@ -56,10 +57,16 @@ class ScrubySettings:
     plugins: ClassVar[list[Any]] = []
 
     @classmethod
+    def init_params(cls) -> None:
+        """Method for general initialization of parameters."""
+        cls.init_db_id()
+
+    @classmethod
     def init_db_id(cls) -> None:
-        """Get the database ID."""
+        """Initialize the `db_id` parameter from `db_root/.env.meta`."""
         key = "id"
-        dotenv_path: str = f"{cls.db_root}/.env.meta"
+        delimiter: str = "/" if sys.platform != "win32" else ""
+        dotenv_path: str = f"{cls.db_root}{delimiter}.env.meta"
 
         db_id: str | None = get_from_env(
             key=key,

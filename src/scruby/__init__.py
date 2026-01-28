@@ -33,4 +33,4 @@ __all__ = (
 from scruby.db import Scruby, ScrubyModel
 from scruby.settings import ScrubySettings
 
-ScrubySettings.init_db_id()  # noqa: RUF067
+ScrubySettings.init_params()  # noqa: RUF067
