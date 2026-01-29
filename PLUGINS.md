@@ -1,5 +1,7 @@
 ### PLUGINS LIST
 
+- [scruby-plugin](https://pypi.org/project/scruby-plugin/ "scruby-plugin") - Library for creating plugins for Scruby.
+
 - [scruby-full-text](https://pypi.org/project/scruby-full-text/ "scruby-full-text") - Full-text search with Manticore Search.
 
 - [scruby-return-dict](https://pypi.org/project/scruby-return-dict/ "scruby-return-dict") - In search methods, returns result as dictionaries.
