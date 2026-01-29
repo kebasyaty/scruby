@@ -21,9 +21,9 @@ from __future__ import annotations
 
 __all__ = ("ScrubySettings",)
 
-import sys
-import uuid
+from sys import platform
 from typing import Any, ClassVar, Literal, final
+from uuid import uuid4
 
 from scruby.utils import add_to_env, get_from_env
 
@@ -57,7 +57,7 @@ class ScrubySettings:
     plugins: ClassVar[list[Any]] = []
 
     # Information about the operating system.
-    sys_platform: ClassVar[str] = sys.platform  # "linux", "win32", "cygwin", "darwin", "os2", "os2emx"
+    sys_platform: ClassVar[str] = platform  # "linux", "win32", "cygwin", "darwin", "os2", "os2emx"
 
     @classmethod
     def init_params(cls) -> None:
@@ -76,7 +76,7 @@ class ScrubySettings:
             dotenv_path=dotenv_path,
         ) or add_to_env(
             key=key,
-            value=str(uuid.uuid4())[:8],
+            value=str(uuid4())[:8],
             dotenv_path=dotenv_path,
         )
 
