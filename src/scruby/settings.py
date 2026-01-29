@@ -21,9 +21,9 @@ from __future__ import annotations
 
 __all__ = ("ScrubySettings",)
 
-import sys
-import uuid
+from sys import platform
 from typing import Any, ClassVar, Literal, final
+from uuid import uuid4
 
 from scruby.utils import add_to_env, get_from_env
 
@@ -56,6 +56,9 @@ class ScrubySettings:
     # For adding plugins.
     plugins: ClassVar[list[Any]] = []
 
+    # Information about the operating system.
+    sys_platform: ClassVar[str] = platform  # "linux", "win32", "cygwin", "darwin", "os2", "os2emx"
+
     @classmethod
     def init_params(cls) -> None:
         """Method for general initialization of parameters."""
@@ -65,7 +68,7 @@ class ScrubySettings:
     def init_db_id(cls) -> None:
         """Initialize the `db_id` parameter from `db_root/.env.meta`."""
         key = "id"
-        delimiter: str = "/" if sys.platform != "win32" else ""
+        delimiter: str = "/" if cls.sys_platform != "win32" else ""
         dotenv_path: str = f"{cls.db_root}{delimiter}.env.meta"
 
         db_id: str | None = get_from_env(
@@ -73,7 +76,7 @@ class ScrubySettings:
             dotenv_path=dotenv_path,
         ) or add_to_env(
             key=key,
-            value=str(uuid.uuid4())[:8],
+            value=str(uuid4())[:8],
             dotenv_path=dotenv_path,
         )
 
