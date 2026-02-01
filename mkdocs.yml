@@ -1,8 +1,8 @@
 site_name: Scruby Docs
 site_description: "A fast key-value storage library."
 site_url: https://kebasyaty.github.io/scruby/
-site_author: Kebasyaty
-copyright: Copyright &copy; 2025 Maintained by <a href="https://github.com/kebasyaty">Kebasyaty</a>
+site_author: kebasyaty
+copyright: Copyright &copy; 2025 Maintained by <a href="https://github.com/kebasyaty">kebasyaty</a>
 repo_name: kebasyaty/scruby
 repo_url: https://github.com/kebasyaty/scruby
 
