@@ -21,7 +21,7 @@ from __future__ import annotations
 
 __all__ = ("ScrubySettings",)
 
-from sys import platform
+import sys
 from typing import Any, ClassVar, Literal, final
 from uuid import uuid4
 
@@ -57,7 +57,7 @@ class ScrubySettings:
     plugins: ClassVar[list[Any]] = []
 
     # Information about the operating system.
-    sys_platform: ClassVar[str] = platform  # "linux", "win32", "cygwin", "darwin", "os2", "os2emx"
+    sys_platform: ClassVar[str] = sys.platform  # "linux", "win32", "cygwin", "darwin", "os2", "os2emx"
 
     @classmethod
     def init_params(cls) -> None:
