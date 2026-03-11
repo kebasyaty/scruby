@@ -88,7 +88,7 @@ async def test_task_calculate_average() -> None:
         await user_coll.add_doc(user)
 
     result = await user_coll.run_custom_task(task_calculate_average)
-    assert result == 50.0
+    assert result == 50.0  # noqa: RUF069
     #
     # Delete DB.
     Scruby.napalm()
