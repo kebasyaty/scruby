@@ -29,10 +29,9 @@ from scruby.settings import ScrubySettings
 class _Meta(BaseModel):
     """Metadata of Collection."""
 
-    db_root: str
     collection_name: str
     hash_reduce_left: int
-    max_branch_number: int
+    max_number_branch: int
     counter_documents: int
 
 
@@ -62,20 +61,7 @@ class Scruby(
         self._meta = _Meta
         self._db_root = ScrubySettings.db_root
         self._db_id = ScrubySettings.db_id
-        self._hash_reduce_left = ScrubySettings.hash_reduce_left
         self._max_workers = ScrubySettings.max_workers
-        # The maximum number of branches.
-        match self._hash_reduce_left:
-            case 0:
-                self._max_number_branch = 4294967296
-            case 2:
-                self._max_number_branch = 16777216
-            case 4:
-                self._max_number_branch = 65536
-            case 6:
-                self._max_number_branch = 256
-            case _ as unreachable:
-                assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
     @classmethod
     async def collection(cls, class_model: Any) -> Any:
@@ -134,16 +120,36 @@ class Scruby(
         meta_dir_path = Path(*meta_dir_path_tuple)
         if not await meta_dir_path.exists():
             await meta_dir_path.mkdir(parents=True)
+            instance.__dict__["_hash_reduce_left"] = ScrubySettings.HASH_REDUCE_LEFT
+            # Get maximum number of branches.
+            match instance.__dict__["_hash_reduce_left"]:
+                case 0:
+                    instance.__dict__["_max_number_branch"] = 4294967296
+                case 2:
+                    instance.__dict__["_max_number_branch"] = 16777216
+                case 4:
+                    instance.__dict__["_max_number_branch"] = 65536
+                case 6:
+                    instance.__dict__["_max_number_branch"] = 256
+                case _ as unreachable:
+                    assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
+            # Create metadata.
             meta = _Meta(
-                db_root=ScrubySettings.db_root,
                 collection_name=class_model.__name__,
-                hash_reduce_left=ScrubySettings.hash_reduce_left,
-                max_branch_number=instance.__dict__["_max_number_branch"],
+                hash_reduce_left=instance.__dict__["_hash_reduce_left"],
+                max_number_branch=instance.__dict__["_max_number_branch"],
                 counter_documents=0,
             )
+            # Save metadata to database.
             meta_json = meta.model_dump_json()
             meta_path = Path(*(meta_dir_path, "meta.json"))
             await meta_path.write_text(meta_json, "utf-8")
+        else:
+            # Get metadata if it already exists.
+            meta_json = await instance.__dict__["_meta_path"].read_text()
+            meta: _Meta = instance.__dict__["_meta"].model_validate_json(meta_json)
+            instance.__dict__["_hash_reduce_left"] = meta.hash_reduce_left
+            instance.__dict__["_max_number_branch"] = meta.max_number_branch
         # Plugins connection.
         plugin_list: dict[str, Any] = {}
         for plugin in ScrubySettings.plugins:
