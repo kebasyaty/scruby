@@ -16,7 +16,7 @@ from scruby import Scruby, ScrubyModel, ScrubySettings
 from scruby.aggregation import Average
 
 ScrubySettings.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubySettings.hash_reduce_left = 6  # By default = 6
+ScrubySettings.HASH_REDUCE_LEFT = 6  # By default = 6
 ScrubySettings.max_workers = None  # By default = None
 ScrubySettings.plugins = []  # By default = []
 
@@ -40,7 +40,7 @@ async def task_calculate_average(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
-    hash_reduce_left: int,
+    HASH_REDUCE_LEFT: int,
     db_root: str,
     class_model: Any,
     max_workers: int | None = None,
@@ -60,7 +60,7 @@ async def task_calculate_average(
                 search_task_fn,
                 branch_number,
                 filter_fn,
-                hash_reduce_left,
+                HASH_REDUCE_LEFT,
                 db_root,
                 class_model,
             )
@@ -115,7 +115,7 @@ from scruby import Scruby, ScrubyModel, ScrubySettings
 from scruby.aggregation import Counter
 
 ScrubySettings.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubySettings.hash_reduce_left = 6  # By default = 6
+ScrubySettings.HASH_REDUCE_LEFT = 6  # By default = 6
 ScrubySettings.max_workers = None  # By default = None
 ScrubySettings.plugins = []  # By default = []
 
@@ -139,7 +139,7 @@ async def task_counter(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
-    hash_reduce_left: int,
+    HASH_REDUCE_LEFT: int,
     db_root: str,
     class_model: Any,
     max_workers: int | None = None,
@@ -158,7 +158,7 @@ async def task_counter(
                 search_task_fn,
                 branch_number,
                 filter_fn,
-                hash_reduce_left,
+                HASH_REDUCE_LEFT,
                 db_root,
                 class_model,
             )
@@ -220,7 +220,7 @@ from scruby import Scruby, ScrubyModel, ScrubySettings
 from scruby.aggregation import Max
 
 ScrubySettings.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubySettings.hash_reduce_left = 6  # By default = 6
+ScrubySettings.HASH_REDUCE_LEFT = 6  # By default = 6
 ScrubySettings.max_workers = None  # By default = None
 ScrubySettings.plugins = []  # By default = []
 
@@ -244,7 +244,7 @@ async def task_calculate_max(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
-    hash_reduce_left: int,
+    HASH_REDUCE_LEFT: int,
     db_root: str,
     class_model: Any,
     max_workers: int | None = None,
@@ -261,7 +261,7 @@ async def task_calculate_max(
                 search_task_fn,
                 branch_number,
                 filter_fn,
-                hash_reduce_left,
+                HASH_REDUCE_LEFT,
                 db_root,
                 class_model,
             )
@@ -316,7 +316,7 @@ from scruby import Scruby, ScrubyModel, ScrubySettings
 from scruby.aggregation import Min
 
 ScrubySettings.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubySettings.hash_reduce_left = 6  # By default = 6
+ScrubySettings.HASH_REDUCE_LEFT = 6  # By default = 6
 ScrubySettings.max_workers = None  # By default = None
 ScrubySettings.plugins = []  # By default = []
 
@@ -340,7 +340,7 @@ async def task_calculate_min(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
-    hash_reduce_left: int,
+    HASH_REDUCE_LEFT: int,
     db_root: str,
     class_model: Any,
     max_workers: int | None = None,
@@ -357,7 +357,7 @@ async def task_calculate_min(
                 search_task_fn,
                 branch_number,
                 filter_fn,
-                hash_reduce_left,
+                HASH_REDUCE_LEFT,
                 db_root,
                 class_model,
             )
@@ -412,7 +412,7 @@ from scruby import Scruby, ScrubyModel, ScrubySettings
 from scruby.aggregation import Sum
 
 ScrubySettings.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubySettings.hash_reduce_left = 6  # By default = 6
+ScrubySettings.HASH_REDUCE_LEFT = 6  # By default = 6
 ScrubySettings.max_workers = None  # By default = None
 ScrubySettings.plugins = []  # By default = []
 
@@ -436,7 +436,7 @@ async def task_calculate_sum(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
-    hash_reduce_left: int,
+    HASH_REDUCE_LEFT: int,
     db_root: str,
     class_model: Any,
     max_workers: int | None = None,
@@ -453,7 +453,7 @@ async def task_calculate_sum(
                 search_task_fn,
                 branch_number,
                 filter_fn,
-                hash_reduce_left,
+                HASH_REDUCE_LEFT,
                 db_root,
                 class_model,
             )

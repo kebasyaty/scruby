@@ -46,7 +46,7 @@ class ScrubySettings:
     # 6 = 256 branches in collection (by default).
     # Number of branches is number of requests to the hard disk during quantum operations.
     # Quantum operations: find_one, find_many, count_documents, delete_many, run_custom_task.
-    hash_reduce_left: ClassVar[Literal[0, 2, 4, 6]] = 6
+    HASH_REDUCE_LEFT: ClassVar[Literal[0, 2, 4, 6]] = 6
 
     # The maximum number of processes that can be used to execute the given calls.
     # If None, then as many worker processes will be

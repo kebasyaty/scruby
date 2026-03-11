@@ -1,5 +1,14 @@
 ### CHANGELOG
 
+#### v0.36.0 2026-03-11
+
+- Updated work with metadata.
+- After creating the database the `ScrubySettings.HASH_REDUCE_LEFT` parameter cannot be changed.
+- Upgraded dependencies.
+- Updated tests.
+- Updated documentation.
+- Updated README.md
+
 #### v0.35.0 2026-01-24
 
 - Added database ID management algorithm to `ScrubySettings`.
