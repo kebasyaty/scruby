@@ -87,7 +87,7 @@ from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, ScrubyModel, ScrubySettings
 
 ScrubySettings.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubySettings.hash_reduce_left = 6  # By default = 6
+ScrubySettings.HASH_REDUCE_LEFT = 6  # By default = 6
 ScrubySettings.max_workers = None  # By default = None
 ScrubySettings.plugins = []  # By default = []
 
@@ -155,7 +155,7 @@ from scruby import Scruby, ScrubyModel, ScrubySettings
 from pprint import pprint as pp
 
 ScrubySettings.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubySettings.hash_reduce_left = 6  # By default = 6
+ScrubySettings.HASH_REDUCE_LEFT = 6  # By default = 6
 ScrubySettings.max_workers = None  # By default = None
 ScrubySettings.plugins = []  # By default = []
 
@@ -230,7 +230,7 @@ from scruby import Scruby, ScrubyModel, ScrubySettings
 from pprint import pprint as pp
 
 ScrubySettings.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubySettings.hash_reduce_left = 6  # By default = 6
+ScrubySettings.HASH_REDUCE_LEFT = 6  # By default = 6
 ScrubySettings.max_workers = None  # By default = None
 ScrubySettings.plugins = []  # By default = []
 
