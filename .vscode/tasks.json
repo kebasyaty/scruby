@@ -63,9 +63,9 @@
       "label": "PyTest: Run Tests",
       "type": "shell",
       "command": [
-        "uv run python remove_pycache.py;",
+        "uv run python pyhelpers/remove_pycache.py;",
         "uv run pytest -v tests/;",
-        "uv run python remove_pycache.py"
+        "uv run python pyhelpers/remove_pycache.py;"
       ],
       "problemMatcher": []
     },
