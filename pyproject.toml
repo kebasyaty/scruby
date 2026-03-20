@@ -204,5 +204,6 @@ matches = "tests/**"
 [tool.pyrefly.sub-config.errors]
 missing-attribute = false
 
-[tool.pytest.ini_options]
+[tool.pytest]
+addopts = ["--strict-markers"]
 testpaths = ["tests"]
