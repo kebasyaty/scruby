@@ -24,7 +24,7 @@ class Find:
     async def _task_find(
         branch_number: int,
         filter_fn: Callable,
-        hash_reduce_left: str,
+        hash_reduce_left: int,
         db_root: str,
         class_model: Any,
     ) -> list[Any] | None:
