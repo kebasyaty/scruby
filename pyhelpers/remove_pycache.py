@@ -18,4 +18,4 @@ def remove_pycache(path: str) -> None:
 
 
 if __name__ == "__main__":
-    remove_pycache(".")
+    remove_pycache("..")
