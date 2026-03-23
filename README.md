@@ -105,7 +105,7 @@ class User(ScrubyModel):
 
 async def main() -> None:
     """Example."""
-    # Create/Get collection `User`.
+    # Create/get the `User` collection.
     user_coll = await Scruby.collection(User)
 
     # Create user
@@ -117,7 +117,7 @@ async def main() -> None:
         phone="+447986123456",
     )
 
-    # Add user to collection
+    # Add data of user to collection.
     await user_coll.add_doc(user)
 
     # Update user data in a collection
