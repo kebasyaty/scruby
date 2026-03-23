@@ -10,6 +10,7 @@ from typing import Annotated
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, ScrubyModel, ScrubySettings
+from pprint import pprint as pp
 
 ScrubySettings.db_root = "ScrubyDB"  # By default = "ScrubyDB"
 ScrubySettings.HASH_REDUCE_LEFT = 6  # By default = 6
@@ -35,7 +36,7 @@ class User(ScrubyModel):
 
 async def main() -> None:
     """Example."""
-    # Get collection `User`.
+    # Create/get the `User` collection.
     user_coll = await Scruby.collection(User)
 
     # Create user.
@@ -53,7 +54,8 @@ async def main() -> None:
     await user_coll.update_doc(user)
 
     # Get user from collection.
-    await user_coll.get_doc("+447986123456")  # => user
+    user = await user_coll.get_doc("+447986123456")  # => user
+    pp(user)
     await user_coll.get_doc("key missing")  # => KeyError
 
     await user_coll.has_key("+447986123456")  # => True
