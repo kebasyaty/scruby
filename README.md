@@ -85,11 +85,8 @@ from typing import Annotated
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, ScrubyModel, ScrubySettings
+from pprint import pprint as pp
 
-ScrubySettings.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubySettings.HASH_REDUCE_LEFT = 6  # By default = 6
-ScrubySettings.max_workers = None  # By default = None
-ScrubySettings.plugins = []  # By default = []
 
 class User(ScrubyModel):
     """User model."""
@@ -108,9 +105,10 @@ class User(ScrubyModel):
 
 async def main() -> None:
     """Example."""
-    # Get collection `User`.
+    # Create/Get collection `User`.
     user_coll = await Scruby.collection(User)
 
+    # Create user
     user = User(
         first_name="John",
         last_name="Smith",
@@ -119,19 +117,21 @@ async def main() -> None:
         phone="+447986123456",
     )
 
+    # Add user to collection
     await user_coll.add_doc(user)
 
+    # Update user data in a collection
     await user_coll.update_doc(user)
 
-    await user_coll.get_doc("+447986123456")  # => user
-    await user_coll.get_doc("key missing")  # => KeyError
+    # Update user details
+    user = await user_coll.get_doc("+447986123456")
+    pp(user)
 
+    # Check for the presence of a key in the collection
     await user_coll.has_key("+447986123456")  # => True
-    await user_coll.has_key("key missing")  # => False
 
+    # Delete a document by key
     await user_coll.delete_doc("+447986123456")
-    await user_coll.delete_doc("+447986123456")  # => KeyError
-    await user_coll.delete_doc("key missing")  # => KeyError
 
     # Full database deletion.
     # Hint: The main purpose is tests.
@@ -154,11 +154,6 @@ from pydantic import Field
 from scruby import Scruby, ScrubyModel, ScrubySettings
 from pprint import pprint as pp
 
-ScrubySettings.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubySettings.HASH_REDUCE_LEFT = 6  # By default = 6
-ScrubySettings.max_workers = None  # By default = None
-ScrubySettings.plugins = []  # By default = []
-
 
 class Phone(ScrubyModel):
     """Phone model."""
@@ -176,7 +171,7 @@ class Phone(ScrubyModel):
 
 async def main() -> None:
     """Example."""
-    # Get collection `Phone`.
+    # Create/Get collection `Phone`.
     phone_coll = await Scruby.collection(Phone)
 
     # Create phone.
@@ -229,10 +224,6 @@ from pydantic import Field
 from scruby import Scruby, ScrubyModel, ScrubySettings
 from pprint import pprint as pp
 
-ScrubySettings.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubySettings.HASH_REDUCE_LEFT = 6  # By default = 6
-ScrubySettings.max_workers = None  # By default = None
-ScrubySettings.plugins = []  # By default = []
 
 class Car(ScrubyModel):
     """Car model."""
