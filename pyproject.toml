@@ -82,6 +82,9 @@ indent-width = 4
 src = ["src", "tests"]
 include = ["src/**/*.py", "tests/**/*.py"]
 exclude = [
+    "**/node_modules",
+    "**/__pycache__",
+    "**/.[!/.]*/**",
     ".bzr",
     ".direnv",
     ".eggs",
@@ -89,7 +92,6 @@ exclude = [
     ".git-rewrite",
     ".hg",
     ".ipynb_checkpoints",
-    ".mypy_cache",
     ".nox",
     ".pants.d",
     ".pyenv",
@@ -105,9 +107,8 @@ exclude = [
     "buck-out",
     "build",
     "dist",
-    "node_modules",
     "site-packages",
-    "venv",
+    "examples",
     ".github",
     "assets",
     "docs",
@@ -190,6 +191,39 @@ line-ending = "auto"
 [tool.pyrefly]
 project-includes = ["src", "tests"]
 search-path = ["src", "tests"]
+project-excludes = [
+    "**/node_modules",
+    "**/__pycache__",
+    "**/.[!/.]*/**",
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "site-packages",
+    "examples",
+    ".github",
+    "assets",
+    "docs",
+    "site",
+]
 ignore-errors-in-generated-code = true
 untyped_def_behavior = "check-and-infer-return-any"
 
