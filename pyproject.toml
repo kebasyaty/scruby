@@ -224,6 +224,7 @@ project-excludes = [
     "docs",
     "site",
 ]
+site-package-path = [".venv/lib/python3.14/site-packages"]
 ignore-errors-in-generated-code = true
 untyped_def_behavior = "check-and-infer-return-any"
 
