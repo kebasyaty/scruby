@@ -3,77 +3,124 @@ name = "scruby"
 version = "0.36.3"
 description = "Asynchronous library for building and managing a hybrid database, by scheme of key-value."
 readme = "README.md"
-authors = [{ name = "kebasyaty", email = "kebasyaty@gmail.com" }]
-license = "MIT or GPL-3.0-or-later"
-license-files = ["MIT-LICENSE", "GPL-3.0-LICENSE"]
 requires-python = ">=3.12,<4.0"
-keywords = ["database", "store", "scruby", "async"]
+license = "MIT or GPL-3.0-or-later"
+license-files = ["GPL-3.0-LICENSE", "MIT-LICENSE"]
+authors = [{ name = "kebasyaty", email = "kebasyaty@gmail.com" }]
+keywords = ["async", "database", "scruby", "store"]
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Intended Audience :: Developers",
-    "Operating System :: MacOS :: MacOS X",
-    "Operating System :: Microsoft :: Windows",
-    "Operating System :: POSIX",
-    "Operating System :: POSIX :: Linux",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3.14",
-    "Programming Language :: Python :: Implementation :: CPython",
-    "Topic :: Software Development :: Libraries",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Database",
-    "Typing :: Typed",
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Operating System :: MacOS :: MacOS X",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Topic :: Database",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Typing :: Typed",
 ]
 dependencies = [
-    "anyio>=4.10.0",
-    "orjson>=3.11.3",
-    "pydantic[email,timezone]>=2.11.7",
-    "pydantic-extra-types>=2.10.5",
-    "phonenumbers>=9.0.13",
-    "xloft>=0.9.8",
-    "python-dotenv>=1.2.1",
+  "anyio>=4.10.0",
+  "orjson>=3.11.3",
+  "phonenumbers>=9.0.13",
+  "pydantic-extra-types>=2.10.5",
+  "pydantic[email,timezone]>=2.11.7",
+  "python-dotenv>=1.2.1",
+  "xloft>=0.9.8",
 ]
 
 [project.urls]
+"Bug Tracker" = "https://github.com/kebasyaty/scruby/issues"
+Changelog = "https://github.com/kebasyaty/scruby/blob/v0/CHANGELOG.md"
 Homepage = "https://kebasyaty.github.io/scruby/"
 Repository = "https://github.com/kebasyaty/scruby"
 Source = "https://github.com/kebasyaty/scruby"
-"Bug Tracker" = "https://github.com/kebasyaty/scruby/issues"
-Changelog = "https://github.com/kebasyaty/scruby/blob/v0/CHANGELOG.md"
 
-[tool.uv]
-package = true
-default-groups = ["dev", "lint", "test", "docs", "types"]
-compile-bytecode = true
-check-url = "https://pypi.org/simple"
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/scruby"]
+[dependency-groups]
+dev = []
+docs = [
+  "mike>=2.1.3",
+  "mkdocs>=1.6.1",
+  "mkdocs-material>=9.6.16",
+  "mkdocstrings[python]>=0.30.0",
+  "pygments>=2.19.2",
+  "pymdown-extensions>=10.16.1",
+]
+lint = ["pre-commit>=4.3.0", "pyrefly>=0.46.0", "ruff>=0.12.8"]
+test = [
+  "pytest>=8.4.1",
+  "pytest-asyncio>=1.1.0",
+  "pytest-httpx>=0.35.0",
+  "pytest-mock>=3.14.1",
+]
+types = []
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[dependency-groups]
-dev = []
-lint = ["pre-commit>=4.3.0", "pyrefly>=0.46.0", "ruff>=0.12.8"]
-test = [
-    "pytest>=8.4.1",
-    "pytest-asyncio>=1.1.0",
-    "pytest-httpx>=0.35.0",
-    "pytest-mock>=3.14.1",
+[tool.hatch.build.targets.wheel]
+packages = ["src/scruby"]
+
+[tool.pyrefly]
+project-includes = ["src", "tests"]
+search-path = ["src", "tests"]
+project-excludes = [
+  "**/node_modules",
+  "**/__pycache__",
+  "**/.[!/.]*/**",
+  ".bzr",
+  ".direnv",
+  ".eggs",
+  ".git",
+  ".git-rewrite",
+  ".hg",
+  ".ipynb_checkpoints",
+  ".nox",
+  ".pants.d",
+  ".pyenv",
+  ".pytest_cache",
+  ".pytype",
+  ".ruff_cache",
+  ".svn",
+  ".tox",
+  ".venv",
+  ".vscode",
+  "__pypackages__",
+  "_build",
+  "buck-out",
+  "build",
+  "dist",
+  "site-packages",
+  "examples",
+  ".github",
+  "assets",
+  "docs",
+  "site",
 ]
-docs = [
-    "mike>=2.1.3",
-    "mkdocs>=1.6.1",
-    "mkdocs-material>=9.6.16",
-    "mkdocstrings[python]>=0.30.0",
-    "pygments>=2.19.2",
-    "pymdown-extensions>=10.16.1",
-]
-types = []
+site-package-path = [".venv/lib/python3.14/site-packages"]
+ignore-errors-in-generated-code = true
+untyped_def_behavior = "check-and-infer-return-any"
+
+[tool.pyrefly.errors]
+missing-attribute = false
+
+[[tool.pyrefly.sub-config]]
+matches = "tests/**"
+
+[tool.pyrefly.sub-config.errors]
+missing-attribute = false
+
+[tool.pytest]
+addopts = ["--strict-markers"]
+testpaths = ["tests"]
 
 [tool.ruff]
 fix = true
@@ -81,98 +128,98 @@ line-length = 120
 indent-width = 4
 src = ["src", "tests"]
 include = [
-    "pyhelpers/**/*.py",
-    "src/**/*.py",
-    "tests/**/*.py",
+  "pyhelpers/**/*.py",
+  "src/**/*.py",
+  "tests/**/*.py",
 ]
 exclude = [
-    "**/node_modules",
-    "**/__pycache__",
-    "**/.[!/.]*/**",
-    ".bzr",
-    ".direnv",
-    ".eggs",
-    ".git",
-    ".git-rewrite",
-    ".hg",
-    ".ipynb_checkpoints",
-    ".nox",
-    ".pants.d",
-    ".pyenv",
-    ".pytest_cache",
-    ".pytype",
-    ".ruff_cache",
-    ".svn",
-    ".tox",
-    ".venv",
-    ".vscode",
-    "__pypackages__",
-    "_build",
-    "buck-out",
-    "build",
-    "dist",
-    "site-packages",
-    "examples",
-    ".github",
-    "assets",
-    "docs",
-    "site",
+  "**/node_modules",
+  "**/__pycache__",
+  "**/.[!/.]*/**",
+  ".bzr",
+  ".direnv",
+  ".eggs",
+  ".git",
+  ".git-rewrite",
+  ".hg",
+  ".ipynb_checkpoints",
+  ".nox",
+  ".pants.d",
+  ".pyenv",
+  ".pytest_cache",
+  ".pytype",
+  ".ruff_cache",
+  ".svn",
+  ".tox",
+  ".venv",
+  ".vscode",
+  "__pypackages__",
+  "_build",
+  "buck-out",
+  "build",
+  "dist",
+  "site-packages",
+  "examples",
+  ".github",
+  "assets",
+  "docs",
+  "site",
 ]
 
 [tool.ruff.lint]
 preview = true
 select = [
-    "D",     # pydocstyle
-    "I",     # isort
-    "E",     # flake8-errors
-    "W",     # flake8-warnings
-    "F",     # flake8-pyflakes
-    "B",     # flake8-bugbear
-    "C4",    # flake8-comprehensions
-    "S",     # flake8-bandit
-    "BLE",   # flake8-blind-except
-    "T20",   # flake8-print
-    "T10",   # flake8-debugger
-    "PT",    # flake8-pytest-style
-    "RUF",   # Ruff-specific
-    "DTZ",   # flake8-datetimez
-    "ERA",   # eradicate
-    "FURB",  # refurb
-    "ARG",   # flake8-unused-arguments
-    "EM",    # flake8-errmsg
-    "ICN",   # flake8-import-conventions
-    "G",     # flake8-logging-format
-    "PGH",   # pygrep-hooks
-    "PIE",   # flake8-pie
-    "PL",    # pylint
-    "PTH",   # flake8-use-pathlib
-    "RET",   # flake8-return
-    "SIM",   # flake8-simplify
-    "UP",    # pyupgrade
-    "YTT",   # flake8-2020
-    "EXE",   # flake8-executable
-    "ASYNC", # flake8-async
+  "D",  # pydocstyle
+  "I",  # isort
+  "E",  # flake8-errors
+  "W",  # flake8-warnings
+  "F",  # flake8-pyflakes
+  "B",  # flake8-bugbear
+  "C4",  # flake8-comprehensions
+  "S",  # flake8-bandit
+  "BLE",  # flake8-blind-except
+  "T20",  # flake8-print
+  "T10",  # flake8-debugger
+  "PT",  # flake8-pytest-style
+  "RUF",  # Ruff-specific
+  "DTZ",  # flake8-datetimez
+  "ERA",  # eradicate
+  "FURB",  # refurb
+  "ARG",  # flake8-unused-arguments
+  "EM",  # flake8-errmsg
+  "ICN",  # flake8-import-conventions
+  "G",  # flake8-logging-format
+  "PGH",  # pygrep-hooks
+  "PIE",  # flake8-pie
+  "PL",  # pylint
+  "PTH",  # flake8-use-pathlib
+  "RET",  # flake8-return
+  "SIM",  # flake8-simplify
+  "UP",  # pyupgrade
+  "YTT",  # flake8-2020
+  "EXE",  # flake8-executable
+  "ASYNC",  # flake8-async
 ]
 ignore = [
-    "D417",   # Missing argument descriptions in the docstring
-    "D206",   # Docstring should be indented with spaces, not tabs
-    "C408",   # Unnecessary `dict` call (rewrite as a literal)
-    "RUF001", # ambiguous-unicode-character-docstring
-    "RUF002", # ambiguous-unicode-character-docstring
-    "RUF003", # ambiguous-unicode-character-docstring
-    "RUF022", # unsorted-dunder-all
-    "E722",   # Do not use bare except
-    "S110",   # try-except-pass detected, consider logging the exception
-    "S101",   # Use of `assert` detected
-    "PLR",    # Design related pylint codes
-    "EM101",  # Exception must not use a string literal, assign to variable first
-    "EM102",  # Exception must not use an f-string literal, assign to variable first
+  "D417",  # Missing argument descriptions in the docstring
+  "D206",  # Docstring should be indented with spaces, not tabs
+  "C408",  # Unnecessary `dict` call (rewrite as a literal)
+  "RUF001",  # ambiguous-unicode-character-docstring
+  "RUF002",  # ambiguous-unicode-character-docstring
+  "RUF003",  # ambiguous-unicode-character-docstring
+  "RUF022",  # unsorted-dunder-all
+  "E722",  # Do not use bare except
+  "S110",  # try-except-pass detected, consider logging the exception
+  "S101",  # Use of `assert` detected
+  "PLR",  # Design related pylint codes
+  "EM101",  # Exception must not use a string literal, assign to variable first
+  "EM102",  # Exception must not use an f-string literal, assign to variable first
 ]
 fixable = ["I"]
 unfixable = [
-    "RUF100", # Unused noqa
-    "T20",    # Removes print statements
-    "F841",   # Removes unused variables
+  "RUF100",  # Unused noqa
+  "T20",  # Removes print statements
+  "F841",  # Removes unused variables
 ]
 flake8-unused-arguments.ignore-variadic-names = true
 isort.required-imports = ["from __future__ import annotations"]
@@ -192,55 +239,8 @@ docstring-code-line-length = 120
 skip-magic-trailing-comma = false
 line-ending = "auto"
 
-[tool.pyrefly]
-project-includes = ["src", "tests"]
-search-path = ["src", "tests"]
-project-excludes = [
-    "**/node_modules",
-    "**/__pycache__",
-    "**/.[!/.]*/**",
-    ".bzr",
-    ".direnv",
-    ".eggs",
-    ".git",
-    ".git-rewrite",
-    ".hg",
-    ".ipynb_checkpoints",
-    ".nox",
-    ".pants.d",
-    ".pyenv",
-    ".pytest_cache",
-    ".pytype",
-    ".ruff_cache",
-    ".svn",
-    ".tox",
-    ".venv",
-    ".vscode",
-    "__pypackages__",
-    "_build",
-    "buck-out",
-    "build",
-    "dist",
-    "site-packages",
-    "examples",
-    ".github",
-    "assets",
-    "docs",
-    "site",
-]
-site-package-path = [".venv/lib/python3.14/site-packages"]
-ignore-errors-in-generated-code = true
-untyped_def_behavior = "check-and-infer-return-any"
-
-[tool.pyrefly.errors]
-missing-attribute = false
-
-[[tool.pyrefly.sub-config]]
-matches = "tests/**"
-
-[tool.pyrefly.sub-config.errors]
-missing-attribute = false
-
-[tool.pytest]
-addopts = ["--strict-markers"]
-testpaths = ["tests"]
+[tool.uv]
+package = true
+default-groups = ["dev", "lint", "test", "docs", "types"]
+compile-bytecode = true
+check-url = "https://pypi.org/simple"
