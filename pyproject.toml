@@ -80,7 +80,11 @@ fix = true
 line-length = 120
 indent-width = 4
 src = ["src", "tests"]
-include = ["src/**/*.py", "tests/**/*.py"]
+include = [
+    "pyhelpers/**/*.py",
+    "src/**/*.py",
+    "tests/**/*.py",
+]
 exclude = [
     "**/node_modules",
     "**/__pycache__",
