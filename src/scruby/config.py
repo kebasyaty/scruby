@@ -19,7 +19,7 @@ The settings class contains the following parameters:
 
 from __future__ import annotations
 
-__all__ = ("ScrubySettings",)
+__all__ = ("ScrubyConfig",)
 
 import sys
 from typing import Any, ClassVar, Literal, final
@@ -29,7 +29,7 @@ from scruby.utils import add_to_env, get_from_env
 
 
 @final
-class ScrubySettings:
+class ScrubyConfig:
     """Database settings."""
 
     # Path to root directory of database
@@ -81,6 +81,6 @@ class ScrubySettings:
         )
 
         if db_id is None:
-            raise ValueError("ScrubySettings.get_db_id() => Failed to get database ID.")
+            raise ValueError("ScrubyConfig.get_db_id() => Failed to get database ID.")
 
         cls.db_id = db_id

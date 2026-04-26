@@ -23,7 +23,7 @@ from pydantic import BaseModel
 from xloft import NamedTuple
 
 from scruby import mixins
-from scruby.settings import ScrubySettings
+from scruby.config import ScrubyConfig
 
 
 class _Meta(BaseModel):
@@ -59,9 +59,9 @@ class Scruby(
     ) -> None:
         super().__init__()
         self._meta = _Meta
-        self._db_root = ScrubySettings.db_root
-        self._db_id = ScrubySettings.db_id
-        self._max_workers = ScrubySettings.max_workers
+        self._db_root = ScrubyConfig.db_root
+        self._db_id = ScrubyConfig.db_id
+        self._max_workers = ScrubyConfig.max_workers
 
     @classmethod
     async def collection(cls, class_model: Any) -> Any:
@@ -92,7 +92,7 @@ class Scruby(
                 msg = f"Model: {class_model.__name__} => The `updated_at` field is missing!"
                 raise AssertionError(msg)
             # Check the length of the collection name for an acceptable size.
-            len_db_root_absolut_path = len(str(await Path(ScrubySettings.db_root).resolve()).encode("utf-8"))
+            len_db_root_absolut_path = len(str(await Path(ScrubyConfig.db_root).resolve()).encode("utf-8"))
             len_model_name = len(class_model.__name__)
             len_full_path_leaf = len_db_root_absolut_path + len_model_name + 26
             if len_full_path_leaf > 255:
@@ -108,7 +108,7 @@ class Scruby(
         instance.__dict__["_class_model"] = class_model
         # Create a path for metadata.
         meta_dir_path_tuple = (
-            ScrubySettings.db_root,
+            ScrubyConfig.db_root,
             class_model.__name__,
             "meta",
         )
@@ -120,7 +120,7 @@ class Scruby(
         meta_dir_path = Path(*meta_dir_path_tuple)
         if not await meta_dir_path.exists():
             await meta_dir_path.mkdir(parents=True)
-            instance.__dict__["_hash_reduce_left"] = ScrubySettings.HASH_REDUCE_LEFT
+            instance.__dict__["_hash_reduce_left"] = ScrubyConfig.HASH_REDUCE_LEFT
             # Get maximum number of branches.
             match instance.__dict__["_hash_reduce_left"]:
                 case 0:
@@ -152,7 +152,7 @@ class Scruby(
             instance.__dict__["_max_number_branch"] = meta.max_number_branch
         # Plugins connection.
         plugin_list: dict[str, Any] = {}
-        for plugin in ScrubySettings.plugins:
+        for plugin in ScrubyConfig.plugins:
             name = plugin.__name__
             name = name[0].lower() + name[1:]
             plugin_list[name] = plugin(scruby_self=instance)
@@ -255,5 +255,5 @@ class Scruby(
             None.
         """
         with contextlib.suppress(FileNotFoundError):
-            rmtree(ScrubySettings.db_root)
+            rmtree(ScrubyConfig.db_root)
         return

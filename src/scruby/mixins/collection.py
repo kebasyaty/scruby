@@ -13,7 +13,7 @@ from typing import final
 
 from anyio import Path, to_thread
 
-from scruby.settings import ScrubySettings
+from scruby.config import ScrubyConfig
 
 
 class Collection:
@@ -32,7 +32,7 @@ class Collection:
     @staticmethod
     async def collection_list() -> list[str]:
         """Asynchronous method for getting collection list."""
-        target_directory = Path(ScrubySettings.db_root)
+        target_directory = Path(ScrubyConfig.db_root)
         # Get all entries in the directory
         all_entries = Path.iterdir(target_directory)
         directory_names: list[str] = [entry.name async for entry in all_entries]
@@ -49,6 +49,6 @@ class Collection:
         Returns:
             None.
         """
-        target_directory = f"{ScrubySettings.db_root}/{name}"
+        target_directory = f"{ScrubyConfig.db_root}/{name}"
         await to_thread.run_sync(rmtree, target_directory)  # pyrefly: ignore[bad-argument-type]
         return

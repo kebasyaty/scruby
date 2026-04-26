@@ -84,7 +84,7 @@ from zoneinfo import ZoneInfo
 from typing import Annotated
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
-from scruby import Scruby, ScrubyModel, ScrubySettings
+from scruby import Scruby, ScrubyModel, ScrubyConfig
 from pprint import pprint as pp
 
 
@@ -151,7 +151,7 @@ The search effectiveness depends on the number of processor threads.
 
 import anyio
 from pydantic import Field
-from scruby import Scruby, ScrubyModel, ScrubySettings
+from scruby import Scruby, ScrubyModel, ScrubyConfig
 from pprint import pprint as pp
 
 
@@ -221,7 +221,7 @@ The search effectiveness depends on the number of processor threads.
 
 import anyio
 from pydantic import Field
-from scruby import Scruby, ScrubyModel, ScrubySettings
+from scruby import Scruby, ScrubyModel, ScrubyConfig
 from pprint import pprint as pp
 
 
