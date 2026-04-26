@@ -1,6 +1,6 @@
 [project]
 name = "scruby"
-version = "0.36.5"
+version = "0.37.0"
 description = "Asynchronous library for building and managing a hybrid database, by scheme of key-value."
 readme = "README.md"
 requires-python = ">=3.12,<4.0"
