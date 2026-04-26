@@ -10,13 +10,13 @@ The search effectiveness depends on the number of processor threads.
 import anyio
 from typing import Annotated
 from pydantic import Field
-from scruby import Scruby, ScrubyModel, ScrubySettings
+from scruby import Scruby, ScrubyModel, ScrubyConfig
 from pprint import pprint as pp
 
-ScrubySettings.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubySettings.HASH_REDUCE_LEFT = 6  # By default = 6
-ScrubySettings.max_workers = None  # By default = None
-ScrubySettings.plugins = []  # By default = []
+ScrubyConfig.db_root = "ScrubyDB"  # By default = "ScrubyDB"
+ScrubyConfig.HASH_REDUCE_LEFT = 6  # By default = 6
+ScrubyConfig.max_workers = None  # By default = None
+ScrubyConfig.plugins = []  # By default = []
 
 
 class Car(ScrubyModel):

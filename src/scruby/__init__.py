@@ -27,10 +27,10 @@ from __future__ import annotations
 __all__ = (
     "Scruby",
     "ScrubyModel",
-    "ScrubySettings",
+    "ScrubyConfig",
 )
 
+from scruby.config import ScrubyConfig
 from scruby.db import Scruby, ScrubyModel
-from scruby.settings import ScrubySettings
 
-ScrubySettings.init_params()  # noqa: RUF067
+ScrubyConfig.init_params()  # noqa: RUF067
