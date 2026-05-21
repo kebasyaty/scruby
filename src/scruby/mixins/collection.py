@@ -50,5 +50,5 @@ class Collection:
             None.
         """
         target_directory = f"{ScrubyConfig.db_root}/{name}"
-        await to_thread.run_sync(rmtree, target_directory)  # pyrefly: ignore[bad-argument-type]
+        await to_thread.run_sync(rmtree, target_directory)  # pyrefly: ignore [bad-argument-type, incompatible-overload-residual]
         return
