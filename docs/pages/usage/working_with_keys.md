@@ -20,7 +20,6 @@ ScrubyConfig.plugins = []  # By default = []
 
 class User(ScrubyModel):
     """User model."""
-
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
     birthday: datetime = Field(strict=True)
@@ -53,7 +52,7 @@ async def main() -> None:
     # Update data of  user to collection.
     await user_coll.update_doc(user)
 
-    # Get user from collection.
+    # Get user details
     user = await user_coll.get_doc("+447986123456")  # => user
     pp(user)
     await user_coll.get_doc("key missing")  # => KeyError

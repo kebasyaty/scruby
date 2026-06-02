@@ -18,7 +18,6 @@ ScrubyConfig.plugins = []  # By default = []
 
 class User(ScrubyModel):
     """User model."""
-
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
     birthday: datetime = Field(strict=True)
@@ -38,7 +37,7 @@ async def main() -> None:
     user_coll = await Scruby.collection(User)
 
     collection_list = await Scruby.collection_list()
-    print(ucollection_list)  # ["User"]
+    print(collection_list)  # ["User"]
 
     # Full database deletion.
     # Hint: The main purpose is tests.

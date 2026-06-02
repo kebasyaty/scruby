@@ -46,7 +46,6 @@ settings.PLUGINS = [
 
 class Car(ScrubyModel):
     """Car model."""
-
     brand: str = Field(strict=True, frozen=True)
     model: str = Field(strict=True, frozen=True)
     year: int = Field(strict=True)
