@@ -123,7 +123,7 @@ async def main() -> None:
     # Update user data in a collection
     await user_coll.update_doc(user)
 
-    # Update user details
+    # Get user details
     user = await user_coll.get_doc("+447986123456")
     pp(user)
 
