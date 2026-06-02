@@ -19,7 +19,6 @@ ScrubyConfig.plugins = []  # By default = []
 
 class User(ScrubyModel):
     """User model."""
-
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
     birthday: datetime = Field(strict=True)

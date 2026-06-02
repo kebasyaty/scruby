@@ -23,7 +23,6 @@ ScrubyConfig.plugins = []  # By default = []
 
 class User(ScrubyModel):
     """User model."""
-
     first_name: str = Field(strict=True)
     age: int = Field(strict=True)
     email: EmailStr = Field(strict=True)
@@ -122,7 +121,6 @@ ScrubyConfig.plugins = []  # By default = []
 
 class User(BaseModel):
     """User model."""
-
     first_name: str = Field(strict=True)
     age: int = Field(strict=True)
     email: EmailStr = Field(strict=True)
@@ -227,7 +225,6 @@ ScrubyConfig.plugins = []  # By default = []
 
 class User(ScrubyModel):
     """User model."""
-
     first_name: str = Field(strict=True)
     age: int = Field(strict=True)
     email: EmailStr = Field(strict=True)
@@ -323,7 +320,6 @@ ScrubyConfig.plugins = []  # By default = []
 
 class User(ScrubyModel):
     """User model."""
-
     first_name: str = Field(strict=True)
     age: int = Field(strict=True)
     email: EmailStr = Field(strict=True)
@@ -419,7 +415,6 @@ ScrubyConfig.plugins = []  # By default = []
 
 class User(ScrubyModel):
     """User model."""
-
     first_name: str = Field(strict=True)
     age: int = Field(strict=True)
     email: EmailStr = Field(strict=True)

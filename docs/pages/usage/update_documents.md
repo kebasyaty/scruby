@@ -9,6 +9,7 @@ The search effectiveness depends on the number of processor threads.
 
 import anyio
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from typing import Annotated
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
@@ -22,7 +23,6 @@ ScrubyConfig.plugins = []  # By default = []
 
 class User(ScrubyModel):
     """User model."""
-
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
     birthday: datetime = Field(strict=True)

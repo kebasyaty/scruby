@@ -23,7 +23,6 @@ ScrubyConfig.plugins = []  # By default = []
 
 class User(ScrubyModel):
     """User model."""
-
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
     birthday: datetime = Field(strict=True)
@@ -46,7 +45,7 @@ async def main() -> None:
     user = User(
         first_name="John",
         last_name="Smith",
-        birthday=datetime(1970, 1, 1),
+        birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
         email="John_Smith@gmail.com",
         phone="+447986123456",
     )
@@ -96,7 +95,6 @@ ScrubyConfig.plugins = []  # By default = []
 
 class User(ScrubyModel):
     """User model."""
-
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
     birthday: datetime = Field(strict=True)
