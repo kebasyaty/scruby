@@ -4,7 +4,6 @@
 
 - Added document sorting to the `find many` method.
 - Upgraded dependencies.
-- Updated tests.
 - Updated documentation.
 
 #### v0.36.0 2026-03-11
