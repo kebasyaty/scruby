@@ -100,7 +100,7 @@ class Find:
         filter_fn: Callable = lambda _: True,
         limit_docs: int = 100,
         page_number: int = 1,
-        sort_fn: Callable = lambda doc: doc.created_at,
+        sort_fn: Callable = lambda doc: (doc.created_at, doc.updated_at),
         sort_reverse: bool = True,
     ) -> list[Any] | None:
         """Asynchronous method for find many documents matching the filter.
@@ -117,7 +117,7 @@ class Find:
                                Default = 1.
                                Number of documents per page = limit_docs.
             sort_fn (Callable | None): Sort the list of documents.
-                                       By default, sort documents by creation date.
+                                       By default, documents are sorted by creation and update dates.
             sort_reverse: (bool): Sorting direction.
                                   By default, sort descending (newest to oldest).
 
