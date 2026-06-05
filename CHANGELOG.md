@@ -1,8 +1,13 @@
 ### CHANGELOG
 
+#### v1.1.1 2026-06-05
+
+- Fixed a `find_many` method.
+- Updated documentation.
+
 #### v1.1.0 2026-06-05
 
-- Added document sorting to the `find many` method.
+- Added document sorting to the `find_many` method.
 - Upgraded dependencies.
 - Updated documentation.
 

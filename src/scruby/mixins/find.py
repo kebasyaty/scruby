@@ -139,7 +139,7 @@ class Find:
         with concurrent.futures.ThreadPoolExecutor(self._max_workers) as executor:
             for branch_number in branch_numbers:
                 if number_docs_skippe == 0 and counter >= limit_docs:
-                    return result[:limit_docs]
+                    return sorted(result[:limit_docs], key=sort_fn, reverse=sort_reverse)
                 future = executor.submit(
                     search_task_fn,
                     branch_number,
