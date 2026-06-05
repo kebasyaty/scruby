@@ -100,6 +100,8 @@ class Find:
         filter_fn: Callable = lambda _: True,
         limit_docs: int = 100,
         page_number: int = 1,
+        sort_fn: Callable = lambda doc: (doc.created_at, doc.updated_at),
+        sort_reverse: bool = True,
     ) -> list[Any] | None:
         """Asynchronous method for find many documents matching the filter.
 
@@ -109,13 +111,18 @@ class Find:
 
         Args:
             filter_fn (Callable): A function that execute the conditions of filtering.
-                                  By default it searches for all documents.
+                                  By default, it searches all documents.
             limit_docs (int): Limiting the number of documents. By default = 100.
-            page_number (int): For pagination. By default = 1.
+            page_number (int): For pagination.
+                               Default = 1.
                                Number of documents per page = limit_docs.
+            sort_fn (Callable | None): Sort the list of documents.
+                                       By default, documents are sorted by creation and update dates.
+            sort_reverse: (bool): Sorting direction.
+                                  By default, sort descending (newest to oldest).
 
         Returns:
-            List of documents or None.
+            Document list or None.
         """
         # The `page_number` parameter must not be less than one
         assert page_number > 0, "`find_many` => The `page_number` parameter must not be less than one."
@@ -146,9 +153,10 @@ class Find:
                     for doc in docs:
                         if number_docs_skippe == 0:
                             if counter >= limit_docs:
-                                return result[:limit_docs]
+                                return sorted(result[:limit_docs], key=sort_fn, reverse=sort_reverse)
                             result.append(doc)
                             counter += 1
                         else:
                             number_docs_skippe -= 1
+        result.sort(key=sort_fn, reverse=sort_reverse)
         return result or None

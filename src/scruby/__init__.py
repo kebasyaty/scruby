@@ -1,7 +1,11 @@
-# .dP"Y8  dP""b8 88""Yb 88   88 88""Yb Yb  dP
-# `Ybo." dP   `" 88__dP 88   88 88__dP  YbdP
-# o.`Y8b Yb      88"Yb  Y8   8P 88""Yb   8P
-# 8bodP'  YboodP 88  Yb `YbodP' 88oodP  dP
+#                      _
+#                     | |
+#  ___  ___ _ __ _   _| |__  _   _
+# / __|/ __| '__| | | | '_ \| | | |
+# \__ \ (__| |  | |_| | |_) | |_| |
+# |___/\___|_|   \__,_|_.__/ \__, |
+#                             __/ |
+#                            |___/
 #
 # Copyright (c) 2025 Gennady Kostyunin
 # SPDX-License-Identifier: MIT
