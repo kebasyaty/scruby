@@ -1,8 +1,11 @@
-#    .dMMMb  .aMMMb  dMMMMb  dMP dMP dMMMMb  dMP dMP
-#   dMP" VP dMP"VMP dMP.dMP dMP dMP dMP"dMP dMP.dMP
-#   VMMMb  dMP     dMMMMK" dMP dMP dMMMMK"  VMMMMP
-# dP .dMP dMP.aMP dMP"AMF dMP.aMP dMP.aMF dA .dMP
-# VMMMP"  VMMMP" dMP dMP  VMMMP" dMMMMP"  VMMMP"
+#                      _
+#                     | |
+#  ___  ___ _ __ _   _| |__  _   _
+# / __|/ __| '__| | | | '_ \| | | |
+# \__ \ (__| |  | |_| | |_) | |_| |
+# |___/\___|_|   \__,_|_.__/ \__, |
+#                             __/ |
+#                            |___/
 #
 # Copyright (c) 2025 Gennady Kostyunin
 # SPDX-License-Identifier: MIT
