@@ -153,10 +153,7 @@ class Find:
                     for doc in docs:
                         if number_docs_skippe == 0:
                             if counter >= limit_docs:
-                                return result[:limit_docs].sort(
-                                    key=sort_fn,
-                                    reverse=sort_reverse,
-                                )
+                                return sorted(result[:limit_docs], key=sort_fn, reverse=sort_reverse)
                             result.append(doc)
                             counter += 1
                         else:
