@@ -161,4 +161,5 @@ class Find:
                             counter += 1
                         else:
                             number_docs_skippe -= 1
-        return result.sort(key=sort_fn, reverse=sort_reverse) or None
+        result.sort(key=sort_fn, reverse=sort_reverse)
+        return result or None
