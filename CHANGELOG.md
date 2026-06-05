@@ -1,5 +1,12 @@
 ### CHANGELOG
 
+#### v1.1.0 2026-06-05
+
+- Added document sorting to the `find many` method.
+- Upgraded dependencies.
+- Updated tests.
+- Updated documentation.
+
 #### v0.36.0 2026-03-11
 
 - Updated work with metadata.
