@@ -148,10 +148,13 @@ class Find:
         Returns:
             Document list or None.
         """
-        # The `limit_docs` parameter must not be less than one
-        assert limit_docs > 0, "`find_many` => The `limit_docs` parameter must not be less than one."
-        # The `page_number` parameter must not be less than one
-        assert page_number > 0, "`find_many` => The `page_number` parameter must not be less than one."
+        if __debug__:
+            if limit_docs <= 0:
+                msg = "`find_many` => The `limit_docs` parameter must not be less than one."
+                raise AssertionError(msg)
+            if page_number <= 0:
+                msg = "`find_many` => The `page_number` parameter must not be less than one."
+                raise AssertionError(msg)
         # Variable initialization
         search_task_fn: Callable = self._task_find
         branch_numbers: range = range(self._max_number_branch)
