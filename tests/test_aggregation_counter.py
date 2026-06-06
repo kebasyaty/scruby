@@ -50,6 +50,7 @@ async def task_counter(
 
     This task implements a counter of documents.
     """
+    stop_outer_loop: bool = False
     counter = Counter(limit=limit_docs)  # `limit` by default = 1000
     users: list[User] = []
     # Run quantum loop
@@ -68,10 +69,17 @@ async def task_counter(
             if docs is not None:
                 for doc in docs:
                     if counter.check():
-                        # [:limit_docs] - Control overflow in a multithreaded environment.
-                        return users[:limit_docs]
+                        # Cancel all pending tasks in the queue instantly
+                        executor.shutdown(wait=False, cancel_futures=True)
+                        # Trigger the event to tell running tasks to exit
+                        stop_signal.set()
+                        # For stop outer loop
+                        stop_outer_loop = True
+                        break
                     users.append(doc)
                     counter.next()
+            if stop_outer_loop:
+                break
     return users
 
 
