@@ -191,7 +191,7 @@ class Find:
                                 executor.shutdown(wait=False, cancel_futures=True)
                                 # Trigger the event to tell running tasks to exit
                                 stop_signal.set()
-                                # For stop outer loop
+                                # Stop loops
                                 stop_outer_loop = True
                                 break
                             result.append(doc)
