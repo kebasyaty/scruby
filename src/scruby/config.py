@@ -37,6 +37,7 @@ class ScrubyConfig:
     db_root: ClassVar[str] = "ScrubyDB"
 
     # Database ID
+    # Will be automatically assigned.
     db_id: ClassVar[str | None] = None
 
     # The length of the hash reduction on the left side.
