@@ -48,6 +48,15 @@
 
 ##
 
+<img src="https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/attention.svg" alt="Attention">
+<br>
+**`hash_reduce_left` - The length of the hash reduction on the left side.**
+<br>
+- `0` - 4294967296 branches in collection.
+- `2` - 16777216 branches in collection.
+- `4` - 65536 branches in collection.
+- `6` - 256 branches in collection (by default).
+
 <br>
 
 [![List of plugins](https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/links/plugins.svg "List of plugins")](https://github.com/kebasyaty/scruby/blob/v1/PLUGINS.md "List of plugins")
