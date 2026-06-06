@@ -9,6 +9,7 @@ from __future__ import annotations
 __all__ = ("CustomTask",)
 
 from collections.abc import Callable
+from threading import Event
 from typing import Any, final
 
 
@@ -42,5 +43,6 @@ class CustomTask:
             db_root=self._db_root,
             class_model=self._class_model,
             max_workers=self._max_workers,
+            stop_signal=Event(),
             **kwargs,
         )

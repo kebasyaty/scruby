@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
+from threading import Event
 from typing import Annotated, Any
 
 import pytest
@@ -41,7 +42,8 @@ async def task_counter(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
-    max_workers: int | None = None,
+    max_workers: int | None,
+    stop_signal: Event,
     limit_docs=5,  # custom parameter
 ) -> list[User]:
     """Custom task.
@@ -60,6 +62,7 @@ async def task_counter(
                 hash_reduce_left,
                 db_root,
                 class_model,
+                stop_signal,
             )
             docs = await future.result()
             if docs is not None:

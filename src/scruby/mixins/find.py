@@ -10,6 +10,7 @@ __all__ = ("Find",)
 
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
+from threading import Event
 from typing import Any, final
 
 import orjson
@@ -27,6 +28,7 @@ class Find:
         hash_reduce_left: int,
         db_root: str,
         class_model: Any,
+        stop_event: Event,
     ) -> list[Any] | None:
         """Task for find documents.
 
@@ -35,6 +37,9 @@ class Find:
         Returns:
             List of documents or None.
         """
+        if stop_event.is_set():
+            return None
+        #
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
         separated_hash: str = "/".join(list(branch_number_as_hash))
         leaf_path = Path(
@@ -50,6 +55,8 @@ class Find:
             data_json: bytes = await leaf_path.read_bytes()
             data: dict[str, str] = orjson.loads(data_json) or {}
             for _, val in data.items():
+                if stop_event.is_set():
+                    return None
                 doc = class_model.model_validate_json(val)
                 if filter_fn(doc):
                     docs.append(doc)
@@ -78,6 +85,8 @@ class Find:
         hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
         class_model: Any = self._class_model
+        stop_signal = Event()
+        doc: Any | None = None
         # Run quantum loop
         with ThreadPoolExecutor(self._max_workers) as executor:
             for branch_number in branch_numbers:
@@ -88,11 +97,20 @@ class Find:
                     hash_reduce_left,
                     db_root,
                     class_model,
+                    stop_signal,
                 )
                 docs = await future.result()
                 if docs is not None:
-                    return docs[0]
-        return None
+                    # Get first document
+                    doc = docs[0]
+                    # Cancel all pending tasks in the queue instantly
+                    executor.shutdown(wait=False, cancel_futures=True)
+                    # Trigger the event to tell running tasks to exit
+                    stop_signal.set()
+                    # Stop loop
+                    break
+        # Return document
+        return doc
 
     @final
     async def find_many(
@@ -133,6 +151,8 @@ class Find:
         hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
         class_model: Any = self._class_model
+        stop_signal = Event()
+        stop_outer_loop: bool = False
         counter: int = 0
         number_docs_skippe: int = limit_docs * (page_number - 1) if page_number > 1 else 0
         result: list[Any] = []
@@ -140,7 +160,11 @@ class Find:
         with ThreadPoolExecutor(self._max_workers) as executor:
             for branch_number in branch_numbers:
                 if number_docs_skippe == 0 and counter >= limit_docs:
-                    return sorted(result[:limit_docs], key=sort_fn, reverse=sort_reverse)
+                    # Cancel all pending tasks in the queue instantly
+                    executor.shutdown(wait=False, cancel_futures=True)
+                    # Trigger the event to tell running tasks to exit
+                    stop_signal.set()
+                    break
                 future = executor.submit(
                     search_task_fn,
                     branch_number,
@@ -148,16 +172,26 @@ class Find:
                     hash_reduce_left,
                     db_root,
                     class_model,
+                    stop_signal,
                 )
                 docs = await future.result()
                 if docs is not None:
                     for doc in docs:
                         if number_docs_skippe == 0:
                             if counter >= limit_docs:
-                                return sorted(result[:limit_docs], key=sort_fn, reverse=sort_reverse)
+                                # Cancel all pending tasks in the queue instantly
+                                executor.shutdown(wait=False, cancel_futures=True)
+                                # Trigger the event to tell running tasks to exit
+                                stop_signal.set()
+                                # For stop outer loop
+                                stop_outer_loop = True
+                                break
                             result.append(doc)
                             counter += 1
                         else:
                             number_docs_skippe -= 1
+                if stop_outer_loop:
+                    break
+        # Return a document list
         result.sort(key=sort_fn, reverse=sort_reverse)
         return result or None

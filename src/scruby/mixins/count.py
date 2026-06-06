@@ -10,6 +10,7 @@ __all__ = ("Count",)
 
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
+from threading import Event
 from typing import Any, final
 
 
@@ -53,6 +54,7 @@ class Count:
         hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
         class_model: Any = self._class_model
+        stop_signal = Event()
         counter: int = 0
         # Run quantum loop
         with ThreadPoolExecutor(self._max_workers) as executor:
@@ -64,6 +66,7 @@ class Count:
                     hash_reduce_left,
                     db_root,
                     class_model,
+                    stop_signal,
                 )
                 docs = await future.result()
                 if docs is not None:
