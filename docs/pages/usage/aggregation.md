@@ -4,7 +4,7 @@
 """Aggregation class for calculating the average value."""
 
 import anyio
-import concurrent.futures
+from concurrent.futures import ThreadPoolExecutor
 from collections.abc import Callable
 from decimal import ROUND_HALF_EVEN
 from typing import Annotated, Any
@@ -53,7 +53,7 @@ async def task_calculate_average(
         rounding=ROUND_HALF_EVEN,  # by default = ROUND_HALF_EVEN
     )
     # Run quantum loop
-    with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
+    with ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
                 search_task_fn,
@@ -103,7 +103,7 @@ if __name__ == "__main__":
 """Aggregation class for calculating sum of values."""
 
 import anyio
-import concurrent.futures
+from concurrent.futures import ThreadPoolExecutor
 from collections.abc import Callable
 from typing import Annotated, Any
 
@@ -150,7 +150,7 @@ async def task_counter(
     counter = Counter(limit=limit_docs)  # `limit` by default = 1000
     users: list[User] = []
     # Run quantum loop
-    with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
+    with ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
                 search_task_fn,
@@ -207,7 +207,7 @@ if __name__ == "__main__":
 """Aggregation class for calculating the maximum value."""
 
 import anyio
-import concurrent.futures
+from concurrent.futures import ThreadPoolExecutor
 from collections.abc import Callable
 from typing import Annotated, Any
 
@@ -252,7 +252,7 @@ async def task_calculate_max(
     """
     max_age = Max()
     # Run quantum loop
-    with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
+    with ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
                 search_task_fn,
@@ -302,7 +302,7 @@ if __name__ == "__main__":
 """Aggregation class for calculating the minimum value."""
 
 import anyio
-import concurrent.futures
+from concurrent.futures import ThreadPoolExecutor
 from collections.abc import Callable
 from typing import Annotated, Any
 
@@ -347,7 +347,7 @@ async def task_calculate_min(
     """
     min_age = Min()
     # Run quantum loop
-    with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
+    with ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
                 search_task_fn,
@@ -397,7 +397,7 @@ if __name__ == "__main__":
 """Aggregation class for calculating sum of values."""
 
 import anyio
-import concurrent.futures
+from concurrent.futures import ThreadPoolExecutor
 from collections.abc import Callable
 from typing import Annotated, Any
 
@@ -442,7 +442,7 @@ async def task_calculate_sum(
     """
     sum_age = Sum()
     # Run quantum loop
-    with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
+    with ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
                 search_task_fn,

@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-import concurrent.futures
 from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from typing import Annotated, Any
 from zoneinfo import ZoneInfo
@@ -102,7 +102,7 @@ async def custom_task(
     """
     counter: int = 0
     # Run quantum loop
-    with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
+    with ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
                 search_task_fn,

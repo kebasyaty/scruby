@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-import concurrent.futures
 from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 from typing import Annotated, Any
 
 import pytest
@@ -51,7 +51,7 @@ async def task_counter(
     counter = Counter(limit=limit_docs)  # `limit` by default = 1000
     users: list[User] = []
     # Run quantum loop
-    with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
+    with ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
                 search_task_fn,

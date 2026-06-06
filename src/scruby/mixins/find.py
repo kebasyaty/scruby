@@ -8,8 +8,8 @@ from __future__ import annotations
 
 __all__ = ("Find",)
 
-import concurrent.futures
 from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any, final
 
 import orjson
@@ -79,7 +79,7 @@ class Find:
         db_root: str = self._db_root
         class_model: Any = self._class_model
         # Run quantum loop
-        with concurrent.futures.ThreadPoolExecutor(self._max_workers) as executor:
+        with ThreadPoolExecutor(self._max_workers) as executor:
             for branch_number in branch_numbers:
                 future = executor.submit(
                     search_task_fn,
@@ -136,7 +136,7 @@ class Find:
         number_docs_skippe: int = limit_docs * (page_number - 1) if page_number > 1 else 0
         result: list[Any] = []
         # Run quantum loop
-        with concurrent.futures.ThreadPoolExecutor(self._max_workers) as executor:
+        with ThreadPoolExecutor(self._max_workers) as executor:
             for branch_number in branch_numbers:
                 if number_docs_skippe == 0 and counter >= limit_docs:
                     return sorted(result[:limit_docs], key=sort_fn, reverse=sort_reverse)

@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-import concurrent.futures
 from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 from decimal import ROUND_HALF_EVEN
 from typing import Annotated, Any
 
@@ -56,7 +56,7 @@ async def task_calculate_average(
         rounding=ROUND_HALF_EVEN,  # by default = ROUND_HALF_EVEN
     )
     # Run quantum loop
-    with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
+    with ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
                 search_task_fn,
