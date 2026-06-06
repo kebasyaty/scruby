@@ -48,6 +48,8 @@
 
 ##
 
+<br>
+
 <img src="https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/attention.svg" alt="Attention">
 <p>
 <b>Parameter `ScrubyConfig.HASH_REDUCE_LEFT`:</b>
