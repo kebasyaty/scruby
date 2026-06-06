@@ -78,7 +78,7 @@ async def main() -> None:
     # Sorting
     car_list: list[Car] | None = await car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
-        sort_fn=lambda doc: (doc.created_at, doc.updated_at),
+        sort_fn=lambda doc: (doc.brand, doc.updated_at),
         sort_reverse=True,
     )
     if car_list is not None:
