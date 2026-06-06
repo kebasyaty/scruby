@@ -10,7 +10,7 @@ Effectiveness running task depends on the number of processor threads.
 import anyio
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
 from threading import Event
 from typing import Annotated, Any
 from collections.abc import Callable
@@ -78,7 +78,7 @@ async def task_counter(
                         executor.shutdown(wait=False, cancel_futures=True)
                         # Trigger the event to tell running tasks to exit
                         stop_signal.set()
-                        # For stop outer loop
+                        # Stop loops
                         stop_outer_loop = True
                         break
                     users.append(doc)
