@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
 from datetime import datetime
 from threading import Event
 from typing import Annotated, Any
@@ -105,16 +105,20 @@ async def custom_task(
     counter: int = 0
     # Run quantum loop
     with ThreadPoolExecutor(max_workers) as executor:
+        futures: list[Future] = []
         for branch_number in branch_numbers:
-            future = executor.submit(
-                search_task_fn,
-                branch_number,
-                filter_fn,
-                hash_reduce_left,
-                db_root,
-                class_model,
-                stop_signal,
+            futures.append(
+                executor.submit(
+                    search_task_fn,
+                    branch_number,
+                    filter_fn,
+                    hash_reduce_left,
+                    db_root,
+                    class_model,
+                    stop_signal,
+                ),
             )
+        for future in futures:
             docs = await future.result()
             if docs is not None:
                 for _ in docs:
