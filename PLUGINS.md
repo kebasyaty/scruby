@@ -7,3 +7,5 @@
 - [scruby-dict](https://pypi.org/project/scruby-dict/ "scruby-dict") - In search methods, returns result as dictionaries.
 
 - [scruby-json](https://pypi.org/project/scruby-json/ "scruby-json") - In search methods, returns result as json strings.
+
+- [scruby-gpu](https://github.com/kebasyaty/scruby-gpu "scruby-gpu") - Using a graphics accelerator in methods with quantum loop.
