@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
 from threading import Event
 from typing import Annotated, Any
 
@@ -50,28 +50,40 @@ async def task_counter(
 
     This task implements a counter of documents.
     """
+    stop_outer_loop: bool = False
     counter = Counter(limit=limit_docs)  # `limit` by default = 1000
     users: list[User] = []
     # Run quantum loop
     with ThreadPoolExecutor(max_workers) as executor:
+        futures: list[Future] = []
         for branch_number in branch_numbers:
-            future = executor.submit(
-                search_task_fn,
-                branch_number,
-                filter_fn,
-                hash_reduce_left,
-                db_root,
-                class_model,
-                stop_signal,
+            futures.append(
+                executor.submit(
+                    search_task_fn,
+                    branch_number,
+                    filter_fn,
+                    hash_reduce_left,
+                    db_root,
+                    class_model,
+                    stop_signal,
+                ),
             )
+        for future in futures:
             docs = await future.result()
             if docs is not None:
                 for doc in docs:
                     if counter.check():
-                        # [:limit_docs] - Control overflow in a multithreaded environment.
-                        return users[:limit_docs]
+                        # Cancel all pending tasks in the queue instantly
+                        executor.shutdown(wait=False, cancel_futures=True)
+                        # Trigger the event to tell running tasks to exit
+                        stop_signal.set()
+                        # Stop loops
+                        stop_outer_loop = True
+                        break
                     users.append(doc)
                     counter.next()
+            if stop_outer_loop:
+                break
     return users
 
 

@@ -10,7 +10,8 @@ Effectiveness running task depends on the number of processor threads.
 import anyio
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
+from threading import Event
 from typing import Annotated, Any
 from collections.abc import Callable
 from pydantic import EmailStr, Field
@@ -46,13 +47,15 @@ async def task_counter(
     HASH_REDUCE_LEFT: int,
     db_root: str,
     class_model: Any,
-    max_workers: int | None = None,
+    max_workers: int | None,
+    stop_signal: Event,
     limit_docs: int = 1000,  # custom parameter
 ) -> list[User]:
     """Custom task.
 
     This task implements a counter of documents.
     """
+    stop_outer_loop: bool = False
     counter = Counter(limit=limit_docs)  # `limit` by default = 1000
     users: list[User] = []
     # Run quantum loop
@@ -65,15 +68,23 @@ async def task_counter(
                 HASH_REDUCE_LEFT,
                 db_root,
                 class_model,
+                stop_signal,
             )
             docs = await future.result()
             if docs is not None:
                 for doc in docs:
                     if counter.check():
-                        # [:limit_docs] - Control overflow in a multithreaded environment.
-                        return users[:limit_docs]
+                        # Cancel all pending tasks in the queue instantly
+                        executor.shutdown(wait=False, cancel_futures=True)
+                        # Trigger the event to tell running tasks to exit
+                        stop_signal.set()
+                        # Stop loops
+                        stop_outer_loop = True
+                        break
                     users.append(doc)
                     counter.next()
+            if stop_outer_loop:
+                break
     return users
 
 

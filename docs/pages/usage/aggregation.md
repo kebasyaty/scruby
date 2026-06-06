@@ -4,7 +4,8 @@
 """Aggregation class for calculating the average value."""
 
 import anyio
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
+from threading import Event
 from collections.abc import Callable
 from decimal import ROUND_HALF_EVEN
 from typing import Annotated, Any
@@ -42,7 +43,8 @@ async def task_calculate_average(
     HASH_REDUCE_LEFT: int,
     db_root: str,
     class_model: Any,
-    max_workers: int | None = None,
+    max_workers: int | None,
+    stop_signal: Event,
 ) -> float:
     """Custom task.
 
@@ -62,6 +64,7 @@ async def task_calculate_average(
                 HASH_REDUCE_LEFT,
                 db_root,
                 class_model,
+                stop_signal,
             )
             docs = await future.result()
             if docs is not None:
@@ -103,7 +106,8 @@ if __name__ == "__main__":
 """Aggregation class for calculating sum of values."""
 
 import anyio
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
+from threading import Event
 from collections.abc import Callable
 from typing import Annotated, Any
 
@@ -140,7 +144,8 @@ async def task_counter(
     HASH_REDUCE_LEFT: int,
     db_root: str,
     class_model: Any,
-    max_workers: int | None = None,
+    max_workers: int | None,
+    stop_signal: Event,
     limit_docs: int = 1000,  # custom parameter
 ) -> list[User]:
     """Custom task.
@@ -151,23 +156,35 @@ async def task_counter(
     users: list[User] = []
     # Run quantum loop
     with ThreadPoolExecutor(max_workers) as executor:
+        futures: list[Future] = []
         for branch_number in branch_numbers:
-            future = executor.submit(
-                search_task_fn,
-                branch_number,
-                filter_fn,
-                HASH_REDUCE_LEFT,
-                db_root,
-                class_model,
+            futures.append(
+                executor.submit(
+                    search_task_fn,
+                    branch_number,
+                    filter_fn,
+                    hash_reduce_left,
+                    db_root,
+                    class_model,
+                    stop_signal,
+                ),
             )
+        for future in futures:
             docs = await future.result()
             if docs is not None:
                 for doc in docs:
                     if counter.check():
-                        # [:limit_docs] - Control overflow in a multithreaded environment.
-                        return users[:limit_docs]
+                        # Cancel all pending tasks in the queue instantly
+                        executor.shutdown(wait=False, cancel_futures=True)
+                        # Trigger the event to tell running tasks to exit
+                        stop_signal.set()
+                        # Stop loops
+                        stop_outer_loop = True
+                        break
                     users.append(doc)
                     counter.next()
+            if stop_outer_loop:
+                break
     return users
 
 
@@ -207,7 +224,8 @@ if __name__ == "__main__":
 """Aggregation class for calculating the maximum value."""
 
 import anyio
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
+from threading import Event
 from collections.abc import Callable
 from typing import Annotated, Any
 
@@ -244,7 +262,8 @@ async def task_calculate_max(
     HASH_REDUCE_LEFT: int,
     db_root: str,
     class_model: Any,
-    max_workers: int | None = None,
+    max_workers: int | None,
+    stop_signal: Event,
 ) -> int:
     """Custom task.
 
@@ -253,15 +272,20 @@ async def task_calculate_max(
     max_age = Max()
     # Run quantum loop
     with ThreadPoolExecutor(max_workers) as executor:
+        futures: list[Future] = []
         for branch_number in branch_numbers:
-            future = executor.submit(
-                search_task_fn,
-                branch_number,
-                filter_fn,
-                HASH_REDUCE_LEFT,
-                db_root,
-                class_model,
+            futures.append(
+                executor.submit(
+                    search_task_fn,
+                    branch_number,
+                    filter_fn,
+                    hash_reduce_left,
+                    db_root,
+                    class_model,
+                    stop_signal,
+                ),
             )
+        for future in futures:
             docs = await future.result()
             if docs is not None:
                 for doc in docs:
@@ -302,7 +326,8 @@ if __name__ == "__main__":
 """Aggregation class for calculating the minimum value."""
 
 import anyio
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
+from threading import Event
 from collections.abc import Callable
 from typing import Annotated, Any
 
@@ -339,7 +364,8 @@ async def task_calculate_min(
     HASH_REDUCE_LEFT: int,
     db_root: str,
     class_model: Any,
-    max_workers: int | None = None,
+    max_workers: int | None,
+    stop_signal: Event,
 ) -> int:
     """Custom task.
 
@@ -348,15 +374,20 @@ async def task_calculate_min(
     min_age = Min()
     # Run quantum loop
     with ThreadPoolExecutor(max_workers) as executor:
+        futures: list[Future] = []
         for branch_number in branch_numbers:
-            future = executor.submit(
-                search_task_fn,
-                branch_number,
-                filter_fn,
-                HASH_REDUCE_LEFT,
-                db_root,
-                class_model,
+            futures.append(
+                executor.submit(
+                    search_task_fn,
+                    branch_number,
+                    filter_fn,
+                    hash_reduce_left,
+                    db_root,
+                    class_model,
+                    stop_signal,
+                ),
             )
+        for future in futures:
             docs = await future.result()
             if docs is not None:
                 for doc in docs:
@@ -397,7 +428,8 @@ if __name__ == "__main__":
 """Aggregation class for calculating sum of values."""
 
 import anyio
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
+from threading import Event
 from collections.abc import Callable
 from typing import Annotated, Any
 
@@ -434,7 +466,8 @@ async def task_calculate_sum(
     HASH_REDUCE_LEFT: int,
     db_root: str,
     class_model: Any,
-    max_workers: int | None = None,
+    max_workers: int | None,
+    stop_signal: Event,
 ) -> int:
     """Custom task.
 
@@ -443,15 +476,20 @@ async def task_calculate_sum(
     sum_age = Sum()
     # Run quantum loop
     with ThreadPoolExecutor(max_workers) as executor:
+        futures: list[Future] = []
         for branch_number in branch_numbers:
-            future = executor.submit(
-                search_task_fn,
-                branch_number,
-                filter_fn,
-                HASH_REDUCE_LEFT,
-                db_root,
-                class_model,
+            futures.append(
+                executor.submit(
+                    search_task_fn,
+                    branch_number,
+                    filter_fn,
+                    hash_reduce_left,
+                    db_root,
+                    class_model,
+                    stop_signal,
+                ),
             )
+        for future in futures:
             docs = await future.result()
             if docs is not None:
                 for doc in docs:
