@@ -8,8 +8,9 @@ from __future__ import annotations
 
 __all__ = ("Find",)
 
+import warnings
 from collections.abc import Callable
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
 from threading import Event
 from typing import Any, final
 
@@ -37,9 +38,9 @@ class Find:
         Returns:
             List of documents or None.
         """
-        if stop_event.is_set():
-            return None
-        #
+        # Suppress warning - RuntimeWarning: coroutine 'Find._task_find' was never awaited
+        warnings.filterwarnings("ignore", category=RuntimeWarning)
+        # Variable initialization
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
         separated_hash: str = "/".join(list(branch_number_as_hash))
         leaf_path = Path(
@@ -89,16 +90,20 @@ class Find:
         doc: Any | None = None
         # Run quantum loop
         with ThreadPoolExecutor(self._max_workers) as executor:
+            futures: list[Future] = []
             for branch_number in branch_numbers:
-                future = executor.submit(
-                    search_task_fn,
-                    branch_number,
-                    filter_fn,
-                    hash_reduce_left,
-                    db_root,
-                    class_model,
-                    stop_signal,
+                futures.append(
+                    executor.submit(
+                        search_task_fn,
+                        branch_number,
+                        filter_fn,
+                        hash_reduce_left,
+                        db_root,
+                        class_model,
+                        stop_signal,
+                    ),
                 )
+            for future in futures:
                 docs = await future.result()
                 if docs is not None:
                     # Get first document
@@ -158,40 +163,39 @@ class Find:
         result: list[Any] = []
         # Run quantum loop
         with ThreadPoolExecutor(self._max_workers) as executor:
-            for branch_number in branch_numbers:
-                if number_docs_skippe == 0 and counter >= limit_docs:
-                    # Cancel all pending tasks in the queue instantly
-                    executor.shutdown(wait=False, cancel_futures=True)
-                    # Trigger the event to tell running tasks to exit
-                    stop_signal.set()
-                    break
-                future = executor.submit(
-                    search_task_fn,
-                    branch_number,
-                    filter_fn,
-                    hash_reduce_left,
-                    db_root,
-                    class_model,
-                    stop_signal,
-                )
-                docs = await future.result()
-                if docs is not None:
-                    for doc in docs:
-                        if number_docs_skippe == 0:
-                            if counter >= limit_docs:
-                                # Cancel all pending tasks in the queue instantly
-                                executor.shutdown(wait=False, cancel_futures=True)
-                                # Trigger the event to tell running tasks to exit
-                                stop_signal.set()
-                                # For stop outer loop
-                                stop_outer_loop = True
-                                break
-                            result.append(doc)
-                            counter += 1
-                        else:
-                            number_docs_skippe -= 1
-                if stop_outer_loop:
-                    break
+            futures: list[Future] = []
+            if not (number_docs_skippe == 0 and counter >= limit_docs):
+                for branch_number in branch_numbers:
+                    futures.append(
+                        executor.submit(
+                            search_task_fn,
+                            branch_number,
+                            filter_fn,
+                            hash_reduce_left,
+                            db_root,
+                            class_model,
+                            stop_signal,
+                        ),
+                    )
+                for future in futures:
+                    docs = await future.result()
+                    if docs is not None:
+                        for doc in docs:
+                            if number_docs_skippe == 0:
+                                if counter >= limit_docs:
+                                    # Cancel all pending tasks in the queue instantly
+                                    executor.shutdown(wait=False, cancel_futures=True)
+                                    # Trigger the event to tell running tasks to exit
+                                    stop_signal.set()
+                                    # For stop outer loop
+                                    stop_outer_loop = True
+                                    break
+                                result.append(doc)
+                                counter += 1
+                            else:
+                                number_docs_skippe -= 1
+                    if stop_outer_loop:
+                        break
         # Return a document list
         result.sort(key=sort_fn, reverse=sort_reverse)
         return result or None
