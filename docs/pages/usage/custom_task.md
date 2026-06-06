@@ -10,7 +10,7 @@ Effectiveness running task depends on the number of processor threads.
 import anyio
 from datetime import datetime
 from zoneinfo import ZoneInfo
-import concurrent.futures
+from concurrent.futures import ThreadPoolExecutor
 from typing import Annotated, Any
 from collections.abc import Callable
 from pydantic import EmailStr, Field
@@ -56,7 +56,7 @@ async def task_counter(
     counter = Counter(limit=limit_docs)  # `limit` by default = 1000
     users: list[User] = []
     # Run quantum loop
-    with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
+    with ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
                 search_task_fn,

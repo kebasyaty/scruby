@@ -8,9 +8,9 @@ from __future__ import annotations
 
 __all__ = ("Update",)
 
-import concurrent.futures
 import copy
 from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any, final
 
 import orjson
@@ -91,7 +91,7 @@ class Update:
         class_model: Any = self._class_model
         counter: int = 0
         # Run quantum loop
-        with concurrent.futures.ThreadPoolExecutor(self._max_workers) as executor:
+        with ThreadPoolExecutor(self._max_workers) as executor:
             for branch_number in branch_numbers:
                 future = executor.submit(
                     update_task_fn,

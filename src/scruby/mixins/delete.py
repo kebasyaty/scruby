@@ -8,8 +8,8 @@ from __future__ import annotations
 
 __all__ = ("Delete",)
 
-import concurrent.futures
 from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any, final
 
 import orjson
@@ -84,7 +84,7 @@ class Delete:
         class_model: Any = self._class_model
         counter: int = 0
         # Run quantum loop
-        with concurrent.futures.ThreadPoolExecutor(self._max_workers) as executor:
+        with ThreadPoolExecutor(self._max_workers) as executor:
             for branch_number in branch_numbers:
                 future = executor.submit(
                     search_task_fn,

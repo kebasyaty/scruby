@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-import concurrent.futures
 from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
+from threading import Event
 from typing import Annotated, Any
 from zoneinfo import ZoneInfo
 
@@ -94,7 +95,8 @@ async def custom_task(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
-    max_workers: int | None = None,
+    max_workers: int | None,
+    stop_signal: Event,
 ) -> Any:
     """Custom task.
 
@@ -102,7 +104,7 @@ async def custom_task(
     """
     counter: int = 0
     # Run quantum loop
-    with concurrent.futures.ThreadPoolExecutor(max_workers) as executor:
+    with ThreadPoolExecutor(max_workers) as executor:
         for branch_number in branch_numbers:
             future = executor.submit(
                 search_task_fn,
@@ -111,6 +113,7 @@ async def custom_task(
                 hash_reduce_left,
                 db_root,
                 class_model,
+                stop_signal,
             )
             docs = await future.result()
             if docs is not None:
