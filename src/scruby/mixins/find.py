@@ -148,6 +148,8 @@ class Find:
         Returns:
             Document list or None.
         """
+        # The `limit_docs` parameter must not be less than one
+        assert limit_docs > 0, "`find_many` => The `limit_docs` parameter must not be less than one."
         # The `page_number` parameter must not be less than one
         assert page_number > 0, "`find_many` => The `page_number` parameter must not be less than one."
         # Variable initialization
@@ -164,38 +166,37 @@ class Find:
         # Run quantum loop
         with ThreadPoolExecutor(self._max_workers) as executor:
             futures: list[Future] = []
-            if not (number_docs_skippe == 0 and counter >= limit_docs):
-                for branch_number in branch_numbers:
-                    futures.append(
-                        executor.submit(
-                            search_task_fn,
-                            branch_number,
-                            filter_fn,
-                            hash_reduce_left,
-                            db_root,
-                            class_model,
-                            stop_signal,
-                        ),
-                    )
-                for future in futures:
-                    docs = await future.result()
-                    if docs is not None:
-                        for doc in docs:
-                            if number_docs_skippe == 0:
-                                if counter >= limit_docs:
-                                    # Cancel all pending tasks in the queue instantly
-                                    executor.shutdown(wait=False, cancel_futures=True)
-                                    # Trigger the event to tell running tasks to exit
-                                    stop_signal.set()
-                                    # For stop outer loop
-                                    stop_outer_loop = True
-                                    break
-                                result.append(doc)
-                                counter += 1
-                            else:
-                                number_docs_skippe -= 1
-                    if stop_outer_loop:
-                        break
+            for branch_number in branch_numbers:
+                futures.append(
+                    executor.submit(
+                        search_task_fn,
+                        branch_number,
+                        filter_fn,
+                        hash_reduce_left,
+                        db_root,
+                        class_model,
+                        stop_signal,
+                    ),
+                )
+            for future in futures:
+                docs = await future.result()
+                if docs is not None:
+                    for doc in docs:
+                        if number_docs_skippe == 0:
+                            if counter >= limit_docs:
+                                # Cancel all pending tasks in the queue instantly
+                                executor.shutdown(wait=False, cancel_futures=True)
+                                # Trigger the event to tell running tasks to exit
+                                stop_signal.set()
+                                # For stop outer loop
+                                stop_outer_loop = True
+                                break
+                            result.append(doc)
+                            counter += 1
+                        else:
+                            number_docs_skippe -= 1
+                if stop_outer_loop:
+                    break
         # Return a document list
         result.sort(key=sort_fn, reverse=sort_reverse)
         return result or None
