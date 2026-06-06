@@ -5,6 +5,7 @@
 
 import anyio
 from concurrent.futures import ThreadPoolExecutor
+from threading import Event
 from collections.abc import Callable
 from decimal import ROUND_HALF_EVEN
 from typing import Annotated, Any
@@ -42,7 +43,8 @@ async def task_calculate_average(
     HASH_REDUCE_LEFT: int,
     db_root: str,
     class_model: Any,
-    max_workers: int | None = None,
+    max_workers: int | None,
+    stop_signal: Event,
 ) -> float:
     """Custom task.
 
@@ -62,6 +64,7 @@ async def task_calculate_average(
                 HASH_REDUCE_LEFT,
                 db_root,
                 class_model,
+                stop_signal,
             )
             docs = await future.result()
             if docs is not None:
