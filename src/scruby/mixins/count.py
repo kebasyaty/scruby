@@ -9,7 +9,7 @@ from __future__ import annotations
 __all__ = ("Count",)
 
 from collections.abc import Callable
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from threading import Event
 from typing import Any, final
 
@@ -58,8 +58,8 @@ class Count:
         counter: int = 0
         # Run quantum loop
         with ThreadPoolExecutor(self._max_workers) as executor:
-            for branch_number in branch_numbers:
-                future = executor.submit(
+            futures: list[Future] = [
+                executor.submit(
                     search_task_fn,
                     branch_number,
                     filter_fn,
@@ -68,6 +68,9 @@ class Count:
                     class_model,
                     stop_signal,
                 )
+                for branch_number in branch_numbers
+            ]
+            for future in as_completed(futures):
                 docs = await future.result()
                 if docs is not None:
                     counter += len(docs)
