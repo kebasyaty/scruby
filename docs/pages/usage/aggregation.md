@@ -4,7 +4,7 @@
 """Aggregation class for calculating the average value."""
 
 import anyio
-from concurrent.futures import Future, ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from threading import Event
 from collections.abc import Callable
 from decimal import ROUND_HALF_EVEN
@@ -16,10 +16,10 @@ from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, ScrubyModel, ScrubyConfig
 from scruby.aggregation import Average
 
-ScrubyConfig.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubyConfig.HASH_REDUCE_LEFT = 6  # By default = 6
-ScrubyConfig.max_workers = None  # By default = None
-ScrubyConfig.plugins = []  # By default = []
+ScrubyConfig.db_root = "ScrubyDB"  # Default = "ScrubyDB"
+ScrubyConfig.HASH_REDUCE_LEFT = 6  # Default = 6
+ScrubyConfig.max_workers = None  # Default = None
+ScrubyConfig.plugins = []  # Default = []
 
 
 class User(ScrubyModel):
@@ -51,21 +51,24 @@ async def task_calculate_average(
     Calculate the average value.
     """
     average_age = Average(
-        precision=".00",           # by default = .00
-        rounding=ROUND_HALF_EVEN,  # by default = ROUND_HALF_EVEN
+        precision=".00",           # Default = .00
+        rounding=ROUND_HALF_EVEN,  # Default = ROUND_HALF_EVEN
     )
     # Run quantum loop
     with ThreadPoolExecutor(max_workers) as executor:
-        for branch_number in branch_numbers:
-            future = executor.submit(
+        futures: list[Future] = [
+            executor.submit(
                 search_task_fn,
                 branch_number,
                 filter_fn,
-                HASH_REDUCE_LEFT,
+                hash_reduce_left,
                 db_root,
                 class_model,
                 stop_signal,
             )
+            for branch_number in branch_numbers
+        ]
+        for future in as_completed(futures):
             docs = await future.result()
             if docs is not None:
                 for doc in docs:
@@ -106,7 +109,7 @@ if __name__ == "__main__":
 """Aggregation class for calculating sum of values."""
 
 import anyio
-from concurrent.futures import Future, ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from threading import Event
 from collections.abc import Callable
 from typing import Annotated, Any
@@ -117,10 +120,10 @@ from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, ScrubyModel, ScrubyConfig
 from scruby.aggregation import Counter
 
-ScrubyConfig.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubyConfig.HASH_REDUCE_LEFT = 6  # By default = 6
-ScrubyConfig.max_workers = None  # By default = None
-ScrubyConfig.plugins = []  # By default = []
+ScrubyConfig.db_root = "ScrubyDB"  # Default = "ScrubyDB"
+ScrubyConfig.HASH_REDUCE_LEFT = 6  # Default = 6
+ScrubyConfig.max_workers = None  # Default = None
+ScrubyConfig.plugins = []  # Default = []
 
 
 class User(BaseModel):
@@ -156,20 +159,19 @@ async def task_counter(
     users: list[User] = []
     # Run quantum loop
     with ThreadPoolExecutor(max_workers) as executor:
-        futures: list[Future] = []
-        for branch_number in branch_numbers:
-            futures.append(
-                executor.submit(
-                    search_task_fn,
-                    branch_number,
-                    filter_fn,
-                    hash_reduce_left,
-                    db_root,
-                    class_model,
-                    stop_signal,
-                ),
+        futures: list[Future] = [
+            executor.submit(
+                search_task_fn,
+                branch_number,
+                filter_fn,
+                hash_reduce_left,
+                db_root,
+                class_model,
+                stop_signal,
             )
-        for future in futures:
+            for branch_number in branch_numbers
+        ]
+        for future in as_completed(futures):
             docs = await future.result()
             if docs is not None:
                 for doc in docs:
@@ -224,7 +226,7 @@ if __name__ == "__main__":
 """Aggregation class for calculating the maximum value."""
 
 import anyio
-from concurrent.futures import Future, ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from threading import Event
 from collections.abc import Callable
 from typing import Annotated, Any
@@ -235,10 +237,10 @@ from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, ScrubyModel, ScrubyConfig
 from scruby.aggregation import Max
 
-ScrubyConfig.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubyConfig.HASH_REDUCE_LEFT = 6  # By default = 6
-ScrubyConfig.max_workers = None  # By default = None
-ScrubyConfig.plugins = []  # By default = []
+ScrubyConfig.db_root = "ScrubyDB"  # Default = "ScrubyDB"
+ScrubyConfig.HASH_REDUCE_LEFT = 6  # Default = 6
+ScrubyConfig.max_workers = None  # Default = None
+ScrubyConfig.plugins = []  # Default = []
 
 
 class User(ScrubyModel):
@@ -272,20 +274,19 @@ async def task_calculate_max(
     max_age = Max()
     # Run quantum loop
     with ThreadPoolExecutor(max_workers) as executor:
-        futures: list[Future] = []
-        for branch_number in branch_numbers:
-            futures.append(
-                executor.submit(
-                    search_task_fn,
-                    branch_number,
-                    filter_fn,
-                    hash_reduce_left,
-                    db_root,
-                    class_model,
-                    stop_signal,
-                ),
+        futures: list[Future] = [
+            executor.submit(
+                search_task_fn,
+                branch_number,
+                filter_fn,
+                hash_reduce_left,
+                db_root,
+                class_model,
+                stop_signal,
             )
-        for future in futures:
+            for branch_number in branch_numbers
+        ]
+        for future in as_completed(futures):
             docs = await future.result()
             if docs is not None:
                 for doc in docs:
@@ -326,7 +327,7 @@ if __name__ == "__main__":
 """Aggregation class for calculating the minimum value."""
 
 import anyio
-from concurrent.futures import Future, ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from threading import Event
 from collections.abc import Callable
 from typing import Annotated, Any
@@ -337,10 +338,10 @@ from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, ScrubyModel, ScrubyConfig
 from scruby.aggregation import Min
 
-ScrubyConfig.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubyConfig.HASH_REDUCE_LEFT = 6  # By default = 6
-ScrubyConfig.max_workers = None  # By default = None
-ScrubyConfig.plugins = []  # By default = []
+ScrubyConfig.db_root = "ScrubyDB"  # Default = "ScrubyDB"
+ScrubyConfig.HASH_REDUCE_LEFT = 6  # Default = 6
+ScrubyConfig.max_workers = None  # Default = None
+ScrubyConfig.plugins = []  # Default = []
 
 
 class User(ScrubyModel):
@@ -374,20 +375,19 @@ async def task_calculate_min(
     min_age = Min()
     # Run quantum loop
     with ThreadPoolExecutor(max_workers) as executor:
-        futures: list[Future] = []
-        for branch_number in branch_numbers:
-            futures.append(
-                executor.submit(
-                    search_task_fn,
-                    branch_number,
-                    filter_fn,
-                    hash_reduce_left,
-                    db_root,
-                    class_model,
-                    stop_signal,
-                ),
+        futures: list[Future] = [
+            executor.submit(
+                search_task_fn,
+                branch_number,
+                filter_fn,
+                hash_reduce_left,
+                db_root,
+                class_model,
+                stop_signal,
             )
-        for future in futures:
+            for branch_number in branch_numbers
+        ]
+        for future in as_completed(futures):
             docs = await future.result()
             if docs is not None:
                 for doc in docs:
@@ -428,7 +428,7 @@ if __name__ == "__main__":
 """Aggregation class for calculating sum of values."""
 
 import anyio
-from concurrent.futures import Future, ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from threading import Event
 from collections.abc import Callable
 from typing import Annotated, Any
@@ -439,10 +439,10 @@ from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, ScrubyModel, ScrubyConfig
 from scruby.aggregation import Sum
 
-ScrubyConfig.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubyConfig.HASH_REDUCE_LEFT = 6  # By default = 6
-ScrubyConfig.max_workers = None  # By default = None
-ScrubyConfig.plugins = []  # By default = []
+ScrubyConfig.db_root = "ScrubyDB"  # Default = "ScrubyDB"
+ScrubyConfig.HASH_REDUCE_LEFT = 6  # Default = 6
+ScrubyConfig.max_workers = None  # Default = None
+ScrubyConfig.plugins = []  # Default = []
 
 
 class User(ScrubyModel):
@@ -476,20 +476,19 @@ async def task_calculate_sum(
     sum_age = Sum()
     # Run quantum loop
     with ThreadPoolExecutor(max_workers) as executor:
-        futures: list[Future] = []
-        for branch_number in branch_numbers:
-            futures.append(
-                executor.submit(
-                    search_task_fn,
-                    branch_number,
-                    filter_fn,
-                    hash_reduce_left,
-                    db_root,
-                    class_model,
-                    stop_signal,
-                ),
+        futures: list[Future] = [
+            executor.submit(
+                search_task_fn,
+                branch_number,
+                filter_fn,
+                hash_reduce_left,
+                db_root,
+                class_model,
+                stop_signal,
             )
-        for future in futures:
+            for branch_number in branch_numbers
+        ]
+        for future in as_completed(futures):
             docs = await future.result()
             if docs is not None:
                 for doc in docs:

@@ -15,10 +15,10 @@ from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, ScrubyModel, ScrubyConfig
 
-ScrubyConfig.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubyConfig.HASH_REDUCE_LEFT = 6  # By default = 6
-ScrubyConfig.max_workers = None  # By default = None
-ScrubyConfig.plugins = []  # By default = []
+ScrubyConfig.db_root = "ScrubyDB"  # Default = "ScrubyDB"
+ScrubyConfig.HASH_REDUCE_LEFT = 6  # Default = 6
+ScrubyConfig.max_workers = None  # Default = None
+ScrubyConfig.plugins = []  # Default = []
 
 
 class User(ScrubyModel):
@@ -87,10 +87,10 @@ from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, ScrubyModel, ScrubyConfig
 
-ScrubyConfig.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubyConfig.HASH_REDUCE_LEFT = 6  # By default = 6
-ScrubyConfig.max_workers = None  # By default = None
-ScrubyConfig.plugins = []  # By default = []
+ScrubyConfig.db_root = "ScrubyDB"  # Default = "ScrubyDB"
+ScrubyConfig.HASH_REDUCE_LEFT = 6  # Default = 6
+ScrubyConfig.max_workers = None  # Default = None
+ScrubyConfig.plugins = []  # Default = []
 
 
 class User(ScrubyModel):

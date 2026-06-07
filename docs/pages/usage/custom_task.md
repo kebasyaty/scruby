@@ -10,7 +10,7 @@ Effectiveness running task depends on the number of processor threads.
 import anyio
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from concurrent.futures import Future, ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from threading import Event
 from typing import Annotated, Any
 from collections.abc import Callable
@@ -19,10 +19,10 @@ from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, ScrubyModel, ScrubyConfig
 from scruby.aggregation import Counter
 
-ScrubyConfig.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubyConfig.HASH_REDUCE_LEFT = 6  # By default = 6
-ScrubyConfig.max_workers = None  # By default = None
-ScrubyConfig.plugins = []  # By default = []
+ScrubyConfig.db_root = "ScrubyDB"  # Default = "ScrubyDB"
+ScrubyConfig.HASH_REDUCE_LEFT = 6  # Default = 6
+ScrubyConfig.max_workers = None  # Default = None
+ScrubyConfig.plugins = []  # Default = []
 
 
 class User(ScrubyModel):
@@ -60,16 +60,19 @@ async def task_counter(
     users: list[User] = []
     # Run quantum loop
     with ThreadPoolExecutor(max_workers) as executor:
-        for branch_number in branch_numbers:
-            future = executor.submit(
+        futures: list[Future] = [
+            executor.submit(
                 search_task_fn,
                 branch_number,
                 filter_fn,
-                HASH_REDUCE_LEFT,
+                hash_reduce_left,
                 db_root,
                 class_model,
                 stop_signal,
             )
+            for branch_number in branch_numbers
+        ]
+        for future in as_completed(futures):
             docs = await future.result()
             if docs is not None:
                 for doc in docs:

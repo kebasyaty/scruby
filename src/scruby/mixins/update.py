@@ -10,7 +10,7 @@ __all__ = ("Update",)
 
 import copy
 from collections.abc import Callable
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from typing import Any, final
 
 import orjson
@@ -92,8 +92,8 @@ class Update:
         counter: int = 0
         # Run quantum loop
         with ThreadPoolExecutor(self._max_workers) as executor:
-            for branch_number in branch_numbers:
-                future = executor.submit(
+            futures: list[Future] = [
+                executor.submit(
                     update_task_fn,
                     branch_number,
                     filter_fn,
@@ -102,5 +102,8 @@ class Update:
                     class_model,
                     copy.deepcopy(new_data),
                 )
+                for branch_number in branch_numbers
+            ]
+            for future in as_completed(futures):
                 counter += await future.result()
         return counter
