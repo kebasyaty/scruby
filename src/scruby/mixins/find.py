@@ -122,7 +122,7 @@ class Find:
         filter_fn: Callable = lambda _: True,
         limit_docs: int = 100,
         page_number: int = 1,
-        sort_fn: Callable = lambda doc: doc.created_at,
+        sort_fn: Callable | None = lambda doc: doc.created_at,
         sort_reverse: bool = True,
     ) -> list[Any] | None:
         """Asynchronous method for find many documents matching the filter.
@@ -198,6 +198,8 @@ class Find:
                             number_docs_skippe -= 1
                 if stop_outer_loop:
                     break
+        # Sorting
+        if sort_fn is not None:
+            result.sort(key=sort_fn, reverse=sort_reverse)
         # Return a document list
-        result.sort(key=sort_fn, reverse=sort_reverse)
         return result or None
