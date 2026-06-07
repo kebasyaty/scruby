@@ -9,7 +9,7 @@ from __future__ import annotations
 __all__ = ("Delete",)
 
 from collections.abc import Callable
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from typing import Any, final
 
 import orjson
@@ -85,8 +85,8 @@ class Delete:
         counter: int = 0
         # Run quantum loop
         with ThreadPoolExecutor(self._max_workers) as executor:
-            for branch_number in branch_numbers:
-                future = executor.submit(
+            futures: list[Future] = [
+                executor.submit(
                     search_task_fn,
                     branch_number,
                     filter_fn,
@@ -94,6 +94,9 @@ class Delete:
                     db_root,
                     class_model,
                 )
+                for branch_number in branch_numbers
+            ]
+            for future in as_completed(futures):
                 counter += await future.result()
         if counter < 0:
             await self._counter_documents(counter)
