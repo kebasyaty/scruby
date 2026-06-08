@@ -109,7 +109,7 @@ class Keys:
             raise KeyError(msg)
 
     @final
-    async def get_doc(self, key: str) -> Any:
+    async def get_doc(self, key: str) -> Any | None:
         """Asynchronous method for getting document from collection the by key.
 
         Args:
@@ -120,14 +120,16 @@ class Keys:
         """
         # The path to the database cell.
         leaf_path, prepared_key = await self._get_leaf_path(key)
+        #
+        doc: Any | None = None
         # Get value of key.
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            obj: Any = self._class_model.model_validate_json(data[prepared_key])
-            return obj
-        msg: str = f"`get_doc` - The key `{key}` is missing!"
-        raise KeyError(msg)
+            doc_json: str | None = data.get(prepared_key)
+            if doc_json is not None:
+                doc = self._class_model.model_validate_json(doc_json)
+        return doc
 
     @final
     async def has_key(self, key: str) -> bool:

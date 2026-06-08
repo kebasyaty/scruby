@@ -53,9 +53,9 @@ async def main() -> None:
     await user_coll.update_doc(user)
 
     # Get user details
-    user = await user_coll.get_doc("+447986123456")  # => user
+    user = await user_coll.get_doc("+447986123456")
     pp(user)
-    await user_coll.get_doc("key missing")  # => KeyError
+    await user_coll.get_doc("key missing")  # => None
 
     await user_coll.has_key("+447986123456")  # => True
     await user_coll.has_key("key missing")  # => False

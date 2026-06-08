@@ -201,16 +201,6 @@ class TestNegative:
         # Delete DB.
         Scruby.napalm()
 
-    async def test_get_non_existent_key(self) -> None:
-        """Get a non-existent key."""
-        user_coll = await Scruby.collection(User)
-
-        with pytest.raises(KeyError):
-            await user_coll.get_doc("key missing")
-        #
-        # Delete DB.
-        Scruby.napalm()
-
     async def test_del_non_existent_key(self) -> None:
         """Delete a non-existent key."""
         user_coll = await Scruby.collection(User)
@@ -464,9 +454,12 @@ class TestPositive:
         )
 
         await user_coll.add_doc(user)
-        data: User = await user_coll.get_doc("+447986123456")
+        data: User | None = await user_coll.get_doc("+447986123456")
         assert data.model_dump() == user.model_dump()
         assert data.phone == "+447986123456"
+
+        # result is None
+        assert await user_coll.get_doc("key missing") is None
         #
         # Delete DB.
         Scruby.napalm()
@@ -580,6 +573,12 @@ class TestPositive:
         )
         assert result_2 is not None
         assert result_2.birthday == datetime(1970, 1, 8, tzinfo=ZoneInfo("UTC"))
+
+        # result is None
+        result_3: User | None = await user_coll.find_one(
+            filter_fn=lambda doc: doc.first_name == "???",
+        )
+        assert result_3 is None
         #
         # Delete DB.
         Scruby.napalm()
@@ -631,6 +630,12 @@ class TestPositive:
         )
         assert result_4 is not None
         assert len(result_4) == 4
+
+        # result is None
+        result_5: list[User] | None = await user_coll.find_many(
+            filter_fn=lambda doc: doc.last_name == "???",
+        )
+        assert result_5 is None
         #
         # Delete DB.
         Scruby.napalm()
