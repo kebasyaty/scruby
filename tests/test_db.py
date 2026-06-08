@@ -201,16 +201,6 @@ class TestNegative:
         # Delete DB.
         Scruby.napalm()
 
-    async def test_get_non_existent_key(self) -> None:
-        """Get a non-existent key."""
-        user_coll = await Scruby.collection(User)
-
-        with pytest.raises(KeyError):
-            await user_coll.get_doc("key missing")
-        #
-        # Delete DB.
-        Scruby.napalm()
-
     async def test_del_non_existent_key(self) -> None:
         """Delete a non-existent key."""
         user_coll = await Scruby.collection(User)
@@ -464,9 +454,12 @@ class TestPositive:
         )
 
         await user_coll.add_doc(user)
-        data: User = await user_coll.get_doc("+447986123456")
+        data: User | None = await user_coll.get_doc("+447986123456")
         assert data.model_dump() == user.model_dump()
         assert data.phone == "+447986123456"
+
+        # result is None
+        assert await user_coll.get_doc("key missing") is None
         #
         # Delete DB.
         Scruby.napalm()
