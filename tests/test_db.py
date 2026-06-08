@@ -580,6 +580,12 @@ class TestPositive:
         )
         assert result_2 is not None
         assert result_2.birthday == datetime(1970, 1, 8, tzinfo=ZoneInfo("UTC"))
+
+        # result is None
+        result_3: User | None = await user_coll.find_one(
+            filter_fn=lambda doc: doc.first_name == "???",
+        )
+        assert result_3 is None
         #
         # Delete DB.
         Scruby.napalm()
@@ -631,6 +637,12 @@ class TestPositive:
         )
         assert result_4 is not None
         assert len(result_4) == 4
+
+        # result is None
+        result_5: list[User] | None = await user_coll.find_many(
+            filter_fn=lambda doc: doc.last_name == "???",
+        )
+        assert result_5 is None
         #
         # Delete DB.
         Scruby.napalm()
