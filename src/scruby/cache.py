@@ -17,7 +17,7 @@ class DocCache:
     """Cache documents to optimize work with the database."""
 
     # Cache structure:
-    # {"CollectionName": {"hash_symbol": {"hash_symbol": ...{"hash_symbol": leaf.json}}}
+    # {"CollectionName": {"hash_symbol": {"hash_symbol": ...{"hash_symbol": {"key_name": doc}}}}
     cache: ClassVar[dict[str, Any]] = {}
 
     @classmethod
