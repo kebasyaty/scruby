@@ -507,18 +507,10 @@ class TestPositive:
 
     async def test_HASH_REDUCE_LEFT(self) -> None:
         """Length of reduction hash."""
+        ScrubyConfig.HASH_REDUCE_LEFT = 6  # 256 branches in collection
         user_coll = await Scruby.collection(User)
         control_path = Path(
             "ScrubyDB/User/d/1/leaf.json",
-        )
-        leaf_path, _ = await user_coll._get_leaf_path("key name")
-        assert leaf_path == control_path
-
-        Scruby.napalm()
-        ScrubyConfig.HASH_REDUCE_LEFT = 2  # 16777216 branches in collection.
-        user_coll = await Scruby.collection(User)
-        control_path = Path(
-            "ScrubyDB/User/a/6/d/2/d/1/leaf.json",
         )
         leaf_path, _ = await user_coll._get_leaf_path("key name")
         assert leaf_path == control_path
@@ -528,15 +520,6 @@ class TestPositive:
         user_coll = await Scruby.collection(User)
         control_path = Path(
             "ScrubyDB/User/d/2/d/1/leaf.json",
-        )
-        leaf_path, _ = await user_coll._get_leaf_path("key name")
-        assert leaf_path == control_path
-
-        Scruby.napalm()
-        ScrubyConfig.HASH_REDUCE_LEFT = 6  # 256 branches in collection
-        user_coll = await Scruby.collection(User)
-        control_path = Path(
-            "ScrubyDB/User/d/1/leaf.json",
         )
         leaf_path, _ = await user_coll._get_leaf_path("key name")
         assert leaf_path == control_path

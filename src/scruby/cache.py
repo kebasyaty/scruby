@@ -22,4 +22,4 @@ class DocCache:
         """Load all documents from the database into the cache."""
         db_root: str = ScrubyConfig.db_root  # noqa: F841
         db_id: str | None = ScrubyConfig.db_id  # noqa: F841
-        HASH_REDUCE_LEFT: Literal[0, 2, 4, 6] = ScrubyConfig.HASH_REDUCE_LEFT  # noqa: F841
+        HASH_REDUCE_LEFT: Literal[4, 6] = ScrubyConfig.HASH_REDUCE_LEFT  # noqa: F841
