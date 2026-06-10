@@ -4,7 +4,7 @@
       <img
         height="80"
         alt="Logo"
-        src="https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/logo.svg">
+        src="https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/logo.svg">
     </a>
   </p>
   <p>
@@ -50,7 +50,7 @@
 
 <br>
 
-<img src="https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/attention.svg" alt="Attention">
+<img src="https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/attention.svg" alt="Attention">
 <p>
 <b>Parameter `ScrubyConfig.HASH_REDUCE_LEFT`:</b>
 <br>
@@ -67,11 +67,11 @@
 <br>
 <br>
 
-[![List of plugins](https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/links/plugins.svg "List of plugins")](https://github.com/kebasyaty/scruby/blob/v1/PLUGINS.md "List of plugins")
+[![List of plugins](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/plugins.svg "List of plugins")](https://github.com/kebasyaty/scruby/blob/v2/PLUGINS.md "List of plugins")
 
-[![Documentation](https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/links/documentation.svg "Documentation")](https://kebasyaty.github.io/scruby/ "Documentation")
+[![Documentation](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/documentation.svg "Documentation")](https://kebasyaty.github.io/scruby/ "Documentation")
 
-[![Requirements](https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/links/requirements.svg "Requirements")](https://github.com/kebasyaty/scruby/blob/v1/REQUIREMENTS.md "Requirements")
+[![Requirements](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/requirements.svg "Requirements")](https://github.com/kebasyaty/scruby/blob/v2/REQUIREMENTS.md "Requirements")
 
 ## Installation
 
@@ -90,7 +90,7 @@ uv run python -OOP main.py
 
 ## Usage
 
-[![Examples](https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/links/examples.svg "Examples")](https://kebasyaty.github.io/scruby/latest/pages/usage/ "Examples")
+[![Examples](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/examples.svg "Examples")](https://kebasyaty.github.io/scruby/latest/pages/usage/ "Examples")
 
 ```python
 """Working with keys."""
@@ -327,8 +327,8 @@ if __name__ == "__main__":
 
 <br>
 
-[![Changelog](https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/links/changelog.svg "Changelog")](https://github.com/kebasyaty/scruby/blob/v1/CHANGELOG.md "Changelog")
+[![Changelog](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/changelog.svg "Changelog")](https://github.com/kebasyaty/scruby/blob/v2/CHANGELOG.md "Changelog")
 
-[![MIT](https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/links/mit.svg "MIT")](https://github.com/kebasyaty/scruby/blob/main/MIT-LICENSE "MIT")
+[![MIT](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/mit.svg "MIT")](https://github.com/kebasyaty/scruby/blob/main/MIT-LICENSE "MIT")
 
-[![GPL-3.0](https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/links/gpl-3.0-or-later.svg "GPL-3.0")](https://github.com/kebasyaty/scruby/blob/main/GPL-3.0-LICENSE "GPL-3.0")
+[![GPL-3.0](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/gpl-3.0-or-later.svg "GPL-3.0")](https://github.com/kebasyaty/scruby/blob/main/GPL-3.0-LICENSE "GPL-3.0")

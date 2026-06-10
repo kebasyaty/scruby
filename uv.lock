@@ -991,7 +991,7 @@ wheels = [
 
 [[package]]
 name = "scruby"
-version = "1.4.4"
+version = "2.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "anyio" },
