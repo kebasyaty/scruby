@@ -56,16 +56,8 @@ class DocCache:
                     ),
                 )
 
-                separated_hash = branch_number_as_hash.split()
-                match HASH_REDUCE_LEFT:
-                    case 6:
-                        cls.cache[collection_name] = {separated_hash[0]: {separated_hash[1]: {}}}
-                    case 4:
-                        cls.cache[collection_name] = {
-                            separated_hash[0]: {separated_hash[1]: {separated_hash[2]: {separated_hash[3]: {}}}},
-                        }
-
                 if leaf_path.exists():
+                    separated_hash = branch_number_as_hash.split()
                     data_json: bytes = leaf_path.read_bytes()
                     data: dict[str, str] = orjson.loads(data_json) or {}
                     for key, val in data.items():
