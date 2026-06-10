@@ -14,3 +14,7 @@ class DocCache:
     # Cache structure:
     # {"CollectionName": {"hash_symbol": {"hash_symbol": ...{"hash_symbol": leaf.json}}}
     cache: ClassVar[dict[str, Any]] = {}
+
+    @classmethod
+    def load_cache(cls) -> None:
+        """Load all documents from the database into the cache."""
