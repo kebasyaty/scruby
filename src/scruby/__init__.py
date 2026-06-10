@@ -16,7 +16,7 @@ The library uses fractal-tree addressing and
 the search for documents based on the effect of a quantum loop.
 
 The database consists of collections.
-The maximum size of the one collection is 16**8=4294967296 branches,
+The maximum size of the one collection is 65536 branches,
 each branch can store one or more keys.
 
 The value of any key in collection can be obtained in 8 steps,
