@@ -48,25 +48,6 @@
 
 ##
 
-<br>
-
-<img src="https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/attention.svg" alt="Attention">
-<p>
-<b>Parameter `ScrubyConfig.HASH_REDUCE_LEFT`:</b>
-<br>
-0 = 4294967296 branches in collection -> It is recommended to work with documents only using keys.
-<br>
-2 = 16777216 branches in collection -> It is recommended to work with documents only using keys.
-<br>
-4 = 65536 branches in collection -> It is recommended to work with documents using keys and the Scruby-GPU plugin.
-<br>
-6 = 256 branches in collection (by default) -> Use all standard tools and plugins.
-</p>
-
-<br>
-<br>
-<br>
-
 [![List of plugins](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/plugins.svg "List of plugins")](https://github.com/kebasyaty/scruby/blob/v2/PLUGINS.md "List of plugins")
 
 [![Documentation](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/documentation.svg "Documentation")](https://kebasyaty.github.io/scruby/ "Documentation")
