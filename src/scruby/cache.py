@@ -4,6 +4,7 @@ from __future__ import annotations
 
 __all__ = ("DocCache",)
 
+import string
 from pathlib import Path
 from typing import Any, ClassVar, Literal, Never, assert_never, final
 
@@ -19,6 +20,14 @@ class DocCache:
     # Cache structure:
     # {"CollectionName": {"hash_symbol": {"hash_symbol": ...{"hash_symbol": {"key_name": doc}}}}
     cache: ClassVar[dict[str, Any]] = {}
+
+    @classmethod
+    def create_structure(cls, collection_name: str) -> None:
+        """Create a cache structure for the collection."""
+        hexdigits = string.hexdigits.lower()
+        cls.cache[collection_name] = {
+            key: {key: {key: {} for key in hexdigits} for key in hexdigits} for key in hexdigits
+        }
 
     @classmethod
     def load_cache(cls) -> None:
