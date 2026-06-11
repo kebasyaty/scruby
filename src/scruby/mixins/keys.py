@@ -139,16 +139,13 @@ class Keys:
         """
         # Get path to cell of collection.
         leaf_path, prepared_key = await self._get_leaf_path(key)
+        is_exists: bool = False
         # Checking whether there is a key.
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            try:
-                data[prepared_key]
-                return True
-            except KeyError:
-                return False
-        return False
+            is_exists = data.get(prepared_key) is not None
+        return is_exists
 
     @final
     async def delete_doc(self, key: str) -> None:
