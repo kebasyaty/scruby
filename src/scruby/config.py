@@ -9,8 +9,7 @@ The settings class contains the following parameters:
 - `db_root` - Path to root directory of database. `By default = "ScrubyDB" (in root of project)`.
 - `db_id` - Database ID.
 - `hash_reduce_left` - The length of the hash reduction on the left side.
-    - `4` - 65536 branches in collection.
-    - `6` - 256 branches in collection (by default).
+    - `3` - 4096 branches in collection (by default).
 - `max_workers` - The maximum number of processes that can be used `By default = None`.
 - `plugins` - For adding plugins.
 """
@@ -39,11 +38,8 @@ class ScrubyConfig:
     db_id: ClassVar[str | None] = None
 
     # The length of the hash reduction on the left side.
-    # 4 = 65536 branches in collection.
-    # 6 = 256 branches in collection (by default).
-    # Number of branches is number of requests to the hard disk during quantum operations.
-    # Quantum operations: find_one, find_many, count_documents, delete_many, run_custom_task.
-    HASH_REDUCE_LEFT: ClassVar[Literal[4, 6]] = 6
+    # 3 = 4096 branches in collection (by default).
+    HASH_REDUCE_LEFT: ClassVar[Literal[3]] = 3
 
     # The maximum number of processes that can be used to execute the given calls.
     # If None, then as many worker processes will be

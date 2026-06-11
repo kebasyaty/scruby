@@ -33,7 +33,7 @@ class DocCache:
     def load_cache(cls) -> None:
         """Load all documents from the database into the cache."""
         db_root: Path = Path(ScrubyConfig.db_root)
-        HASH_REDUCE_LEFT: Literal[4, 6] = ScrubyConfig.HASH_REDUCE_LEFT
+        HASH_REDUCE_LEFT: Literal[3] = ScrubyConfig.HASH_REDUCE_LEFT
         max_number_branch: int = 0
 
         # Get maximum number of branches.

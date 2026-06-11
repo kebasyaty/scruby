@@ -17,7 +17,7 @@ from scruby import Scruby, ScrubyModel, ScrubyConfig
 from pprint import pprint as pp
 
 ScrubyConfig.db_root = "ScrubyDB"  # Default = "ScrubyDB"
-ScrubyConfig.HASH_REDUCE_LEFT = 6  # Default = 6
+ScrubyConfig.HASH_REDUCE_LEFT = 3  # Default = 3
 ScrubyConfig.max_workers = None  # Default = None
 ScrubyConfig.plugins = []  # Default = []
 

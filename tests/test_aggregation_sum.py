@@ -11,7 +11,7 @@ import pytest
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyConfig, ScrubyModel
+from scruby import Scruby, ScrubyModel
 from scruby.aggregation import Sum
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
@@ -74,7 +74,6 @@ async def task_calculate_sum(
 
 async def test_task_calculate_sum() -> None:
     """Test a Sum class in custom task."""
-    ScrubyConfig.hash_reduce_left = 6  # 256 branches in collection
     user_coll = await Scruby.collection(User)
 
     for num in range(1, 10):

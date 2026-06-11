@@ -15,7 +15,7 @@ from pydantic_extra_types.phone_numbers import (
     PhoneNumberValidator,
 )
 
-from scruby import Scruby, ScrubyConfig, ScrubyModel
+from scruby import Scruby, ScrubyModel
 from scruby.aggregation import Average
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
@@ -81,7 +81,6 @@ async def task_calculate_average(
 
 async def test_task_calculate_average() -> None:
     """Test a Average class in custom task."""
-    ScrubyConfig.hash_reduce_left = 6  # 256 branches in collection
     user_coll = await Scruby.collection(User)
 
     for num in range(1, 10):

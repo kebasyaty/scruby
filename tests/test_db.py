@@ -14,7 +14,7 @@ from anyio import Path
 from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyConfig, ScrubyModel
+from scruby import Scruby, ScrubyModel
 from scruby.errors import (
     KeyAlreadyExistsError,
     KeyNotExistsError,
@@ -280,8 +280,6 @@ class TestNegative:
 
     async def test_find_many_page_number_less_than_one(self) -> None:
         """The `page_number` parameter must not be less than one."""
-        ScrubyConfig.HASH_REDUCE_LEFT = 6  # 256 branches in collection
-
         user_coll = await Scruby.collection(User)
 
         for num in range(1, 10):
@@ -507,7 +505,6 @@ class TestPositive:
 
     async def test_HASH_REDUCE_LEFT(self) -> None:
         """Length of reduction hash."""
-        ScrubyConfig.HASH_REDUCE_LEFT = 6  # 256 branches in collection
         user_coll = await Scruby.collection(User)
         control_path = Path(
             "ScrubyDB/User/d/1/leaf.json",
@@ -516,7 +513,6 @@ class TestPositive:
         assert leaf_path == control_path
 
         Scruby.napalm()
-        ScrubyConfig.HASH_REDUCE_LEFT = 4  # 65536 branches in collection.
         user_coll = await Scruby.collection(User)
         control_path = Path(
             "ScrubyDB/User/d/2/d/1/leaf.json",
@@ -529,8 +525,6 @@ class TestPositive:
 
     async def test_find_one(self) -> None:
         """Find a single document."""
-        ScrubyConfig.HASH_REDUCE_LEFT = 6  # 256 branches in collection
-
         user_coll = await Scruby.collection(User)
 
         for num in range(1, 10):
@@ -568,8 +562,6 @@ class TestPositive:
 
     async def test_find_many(self) -> None:
         """Find documents."""
-        ScrubyConfig.HASH_REDUCE_LEFT = 6  # 256 branches in collection
-
         user_coll = await Scruby.collection(User)
 
         for num in range(1, 10):
@@ -634,8 +626,6 @@ class TestPositive:
 
     async def test_count_documents(self) -> None:
         """Test a count_documents method."""
-        ScrubyConfig.HASH_REDUCE_LEFT = 6  # 256 branches in collection
-
         user_coll = await Scruby.collection(User)
 
         for num in range(1, 10):
@@ -659,8 +649,6 @@ class TestPositive:
 
     async def test_delete_many(self) -> None:
         """Test a delete_many method."""
-        ScrubyConfig.HASH_REDUCE_LEFT = 6  # 256 branches in collection
-
         user_coll = await Scruby.collection(User)
 
         for num in range(1, 10):
@@ -689,8 +677,6 @@ class TestPositive:
 
     async def test_run_custom_task(self) -> None:
         """Test a run_custom_task method."""
-        ScrubyConfig.HASH_REDUCE_LEFT = 6  # 256 branches in collection
-
         user_coll = await Scruby.collection(User)
 
         for num in range(1, 10):
@@ -714,8 +700,6 @@ class TestPositive:
 
     async def test_update_many(self) -> None:
         """Test a update_many method."""
-        ScrubyConfig.HASH_REDUCE_LEFT = 6  # 256 branches in collection
-
         user_coll = await Scruby.collection(User)
 
         for num in range(1, 10):
@@ -742,8 +726,6 @@ class TestPositive:
 
     async def test_extra_fields(self) -> None:
         """Test extra fields - `created_att` and `updated_at`."""
-        ScrubyConfig.HASH_REDUCE_LEFT = 6  # 256 branches in collection
-
         user_coll = await Scruby.collection(User)
 
         user = User(
