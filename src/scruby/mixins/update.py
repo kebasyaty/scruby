@@ -61,13 +61,14 @@ class Update:
                     for field_name, value in new_data.items():
                         doc.__dict__[field_name] = value
                     new_state[doc_name] = doc.model_dump_json()
+                    # Save updated documents to cache
+                    DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
+                        branch_number_as_hash[2]
+                    ][doc_name] = doc
+                    # Update counter
                     counter += 1
                 else:
                     new_state[doc_name] = val
-                # Save updated documents to cache
-                DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
-                    branch_number_as_hash[2]
-                ][doc_name] = doc
             # Save updated documents to the database
             await leaf_path.write_bytes(orjson.dumps(new_state))
         return counter
