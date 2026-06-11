@@ -13,6 +13,7 @@ from typing import final
 
 from anyio import Path, to_thread
 
+from scruby.cache import DocCache
 from scruby.config import ScrubyConfig
 
 
@@ -40,7 +41,7 @@ class Collection:
 
     @final
     @staticmethod
-    async def delete_collection(name: str) -> None:
+    async def delete_collection(collection_name: str) -> None:
         """Asynchronous method for deleting a collection by its name.
 
         Args:
@@ -49,6 +50,7 @@ class Collection:
         Returns:
             None.
         """
-        target_directory = f"{ScrubyConfig.db_root}/{name}"
+        target_directory = f"{ScrubyConfig.db_root}/{collection_name}"
         await to_thread.run_sync(rmtree, target_directory)  # pyrefly: ignore [bad-argument-type, incompatible-overload-residual]
+        del DocCache.cache[collection_name]
         return
