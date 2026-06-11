@@ -43,7 +43,7 @@ class ScrubyConfig:
 
     # Maximum number of branches.
     # 16**(8 - HASH_REDUCE_LEFT) = 4096
-    max_number_branch: Literal[4096] = 4096
+    MAX_NUMBER_BRANCH: Literal[4096] = 4096
 
     # The maximum number of processes that can be used to execute the given calls.
     # If None, then as many worker processes will be

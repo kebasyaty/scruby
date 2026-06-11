@@ -60,6 +60,8 @@ class Scruby(
         super().__init__()
         self._meta = _Meta
         self._db_root = ScrubyConfig.db_root
+        self._hash_reduce_left = ScrubyConfig.HASH_REDUCE_LEFT
+        self._max_number_branch = ScrubyConfig.MAX_NUMBER_BRANCH
         self._db_id = ScrubyConfig.db_id
         self._max_workers = ScrubyConfig.max_workers
 
@@ -120,25 +122,17 @@ class Scruby(
         meta_dir_path = Path(*meta_dir_path_tuple)
         if not await meta_dir_path.exists():
             await meta_dir_path.mkdir(parents=True)
-            instance.__dict__["_hash_reduce_left"] = ScrubyConfig.HASH_REDUCE_LEFT
-            instance.__dict__["_max_number_branch"] = ScrubyConfig.max_number_branch
             # Create metadata.
             meta = _Meta(
                 collection_name=class_model.__name__,
-                hash_reduce_left=instance.__dict__["_hash_reduce_left"],
-                max_number_branch=instance.__dict__["_max_number_branch"],
+                hash_reduce_left=ScrubyConfig.HASH_REDUCE_LEFT,
+                max_number_branch=ScrubyConfig.MAX_NUMBER_BRANCH,
                 counter_documents=0,
             )
             # Save metadata to database.
             meta_json = meta.model_dump_json()
             meta_path = Path(*(meta_dir_path, "meta.json"))
             await meta_path.write_text(meta_json, "utf-8")
-        else:
-            # Get metadata if it already exists.
-            meta_json = await instance.__dict__["_meta_path"].read_text()
-            meta: _Meta = instance.__dict__["_meta"].model_validate_json(meta_json)
-            instance.__dict__["_hash_reduce_left"] = meta.hash_reduce_left
-            instance.__dict__["_max_number_branch"] = meta.max_number_branch
         # Plugins connection.
         plugin_list: dict[str, Any] = {}
         for plugin in ScrubyConfig.plugins:

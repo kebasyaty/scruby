@@ -34,8 +34,8 @@ class DocCache:
         """Load all documents from the database into the cache."""
         db_root: Path = Path(ScrubyConfig.db_root)
         HASH_REDUCE_LEFT: Literal[5] = ScrubyConfig.HASH_REDUCE_LEFT
-        max_number_branch: Literal[4096] = 4096
-        branch_numbers: range = range(max_number_branch)
+        MAX_NUMBER_BRANCH: Literal[4096] = 4096
+        branch_numbers: range = range(MAX_NUMBER_BRANCH)
 
         # Leave function if database does not exist
         if not db_root.exists():
