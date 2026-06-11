@@ -23,7 +23,7 @@ def test_db_id() -> None:
 
 def test_hash_reduce_left() -> None:
     """Test a HASH_REDUCE_LEFT parameter."""
-    assert ScrubyConfig.HASH_REDUCE_LEFT == 3
+    assert ScrubyConfig.HASH_REDUCE_LEFT == 5
 
 
 def test_max_workers() -> None:
