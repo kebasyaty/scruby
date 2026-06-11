@@ -26,7 +26,7 @@ class DocCache:
         """Create a cache structure for the collection."""
         hexdigits = string.hexdigits.lower()
         cls.cache[collection_name] = {
-            key: {key: {key: {} for key in hexdigits} for key in hexdigits} for key in hexdigits
+            key0: {key1: {key2: {} for key2 in hexdigits} for key1 in hexdigits} for key0 in hexdigits
         }
 
     @classmethod
