@@ -501,7 +501,7 @@ class TestPositive:
         # Delete DB.
         Scruby.napalm()
 
-    async def test_HASH_REDUCE_LEFT(self) -> None:
+    async def test_hash_reduce_left(self) -> None:
         """Length of reduction hash."""
         user_coll = await Scruby.collection(User)
         control_path = Path("ScrubyDB/User/2/d/1/leaf.json")
