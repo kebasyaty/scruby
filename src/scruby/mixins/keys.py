@@ -104,16 +104,14 @@ class Keys:
             # Update the existing key.
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            try:
-                data[prepared_key]
+            if data.get(prepared_key) is not None:
                 data[prepared_key] = doc_json
                 await leaf_path.write_bytes(orjson.dumps(data))
                 # Update doc to cache
                 collection_name = self._class_model.__name__
                 DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][prepared_key] = doc
-            except KeyError:
-                err = KeyNotExistsError()
-                raise err from None
+            else:
+                raise KeyNotExistsError()
         else:
             msg: str = f"`update_doc` - The key `{doc.key}` is missing!"
             raise KeyError(msg)
