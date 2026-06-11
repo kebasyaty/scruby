@@ -41,6 +41,10 @@ class ScrubyConfig:
     # 3 = 4096 branches in collection (by default).
     HASH_REDUCE_LEFT: ClassVar[Literal[3]] = 3
 
+    # Maximum number of branches.
+    # 16**HASH_REDUCE_LEFT = 4096
+    max_number_branch: Literal[4096] = 4096
+
     # The maximum number of processes that can be used to execute the given calls.
     # If None, then as many worker processes will be
     # created as the machine has processors.

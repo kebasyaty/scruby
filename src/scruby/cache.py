@@ -6,7 +6,7 @@ __all__ = ("DocCache",)
 
 import string
 from pathlib import Path
-from typing import Any, ClassVar, Literal, Never, assert_never, final
+from typing import Any, ClassVar, Literal, final
 
 import orjson
 
@@ -30,29 +30,20 @@ class DocCache:
         }
 
     @classmethod
-    def load_cache(cls) -> None:
+    def load_cache(cls, subclasses: list[Any]) -> None:
         """Load all documents from the database into the cache."""
         db_root: Path = Path(ScrubyConfig.db_root)
         HASH_REDUCE_LEFT: Literal[3] = ScrubyConfig.HASH_REDUCE_LEFT
-        max_number_branch: int = 0
-
-        # Get maximum number of branches.
-        match HASH_REDUCE_LEFT:
-            case 4:
-                max_number_branch = 65536
-            case 6:
-                max_number_branch = 256
-            case _ as unreachable:
-                assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
-
+        max_number_branch: Literal[4096] = 4096
         branch_numbers: range = range(max_number_branch)
+
         # Leave function if database does not exist
         if not db_root.exists():
             return
-        # Get a list of collection names
-        collections = [item.name for item in db_root.iterdir() if item.is_dir()]
 
-        for collection_name in collections:
+        for subclass in subclasses:
+            collection_name = subclass.__name__
+            cls.create_structure(collection_name)
             for branch_number in branch_numbers:
                 branch_number_as_hash: str = f"{branch_number:08x}"[HASH_REDUCE_LEFT:]
                 separated_hash = "/".join(list(branch_number_as_hash))
@@ -70,11 +61,5 @@ class DocCache:
                     data_json: bytes = leaf_path.read_bytes()
                     data: dict[str, str] = orjson.loads(data_json) or {}
                     for key, val in data.items():
-                        doc = orjson.loads(val)
-                        match HASH_REDUCE_LEFT:
-                            case 6:
-                                cls.cache[collection_name][separated_hash[0]][separated_hash[1]][key] = doc
-                            case 4:
-                                cls.cache[collection_name][separated_hash[0]][separated_hash[1]][separated_hash[2]][
-                                    separated_hash[3]
-                                ][key] = doc
+                        doc = subclass.model_validate_json(val)
+                        cls.cache[collection_name][separated_hash[0]][separated_hash[1]][separated_hash[2]][key] = doc
