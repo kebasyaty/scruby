@@ -1,4 +1,4 @@
-"""Testing Settings."""
+"""Testing Config."""
 
 from __future__ import annotations
 
