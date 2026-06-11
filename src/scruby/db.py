@@ -240,6 +240,7 @@ class Scruby(
         Returns:
             None.
         """
+        DocCache.cache = {}
         with contextlib.suppress(FileNotFoundError):
             rmtree(ScrubyConfig.db_root)
         return
