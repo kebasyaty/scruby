@@ -163,9 +163,12 @@ class Keys:
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            del data[prepared_key]
-            await leaf_path.write_bytes(orjson.dumps(data))
-            await self._counter_documents(-1)
-            return
-        msg: str = f"`delete_doc` - The key `{key}` is missing!"
-        raise KeyError(msg)
+            if data.get(prepared_key) is not None:
+                del data[prepared_key]
+                await leaf_path.write_bytes(orjson.dumps(data))
+                await self._counter_documents(-1)
+            else:
+                raise KeyNotExistsError()
+        else:
+            msg: str = f"`delete_doc` - The key `{key}` is missing!"
+            raise KeyError(msg)
