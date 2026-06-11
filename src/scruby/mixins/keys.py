@@ -15,6 +15,7 @@ from zoneinfo import ZoneInfo
 
 import orjson
 
+from scruby.cache import DocCache
 from scruby.errors import (
     KeyAlreadyExistsError,
     KeyNotExistsError,
@@ -43,7 +44,7 @@ class Keys:
             )
             raise TypeError(msg)
         # The path to cell of collection.
-        leaf_path, prepared_key = await self._get_leaf_path(doc.key)
+        leaf_path, prepared_key, key_as_hash = await self._get_leaf_path(doc.key)
         # Init a `created_at` and `updated_at` fields
         tz = ZoneInfo("UTC")
         doc.created_at = datetime.now(tz)
@@ -65,7 +66,11 @@ class Keys:
         else:
             # Add new document to a blank leaf.
             await leaf_path.write_bytes(orjson.dumps({prepared_key: doc_json}))
+        # Update document counter
         await self._counter_documents(1)
+        # Add doc to cache
+        collection_name = self._class_model.__name__
+        DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][prepared_key] = doc
 
     @final
     async def update_doc(self, doc: Any) -> None:

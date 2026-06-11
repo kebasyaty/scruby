@@ -189,7 +189,7 @@ class Scruby(
         meta_json = meta.model_dump_json()
         await meta_path.write_text(meta_json, "utf-8")
 
-    async def _get_leaf_path(self, key: str) -> tuple[Path, str]:
+    async def _get_leaf_path(self, key: str) -> tuple[Path, str, str]:
         """Asynchronous method for getting path to collection cell by key.
 
         This method is for internal use.
@@ -226,7 +226,7 @@ class Scruby(
             await branch_path.mkdir(parents=True)
         # The path to the database cell.
         leaf_path: Path = Path(*(branch_path, "leaf.json"))
-        return (leaf_path, prepared_key)
+        return (leaf_path, prepared_key, key_as_hash)
 
     @staticmethod
     def napalm() -> None:

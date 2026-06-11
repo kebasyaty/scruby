@@ -24,7 +24,7 @@ class DocCache:
     @classmethod
     def create_structure(cls, collection_name: str) -> None:
         """Create a cache structure for the collection."""
-        hexdigits = string.hexdigits.lower()
+        hexdigits = string.hexdigits.lower().split()
         cls.cache[collection_name] = {
             key0: {key1: {key2: {} for key2 in hexdigits} for key1 in hexdigits} for key0 in hexdigits
         }
