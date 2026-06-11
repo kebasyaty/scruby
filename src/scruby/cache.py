@@ -18,7 +18,7 @@ class DocCache:
     """Cache documents to optimize work with the database."""
 
     # Cache structure:
-    # {"CollectionName": {"hash_symbol": {"hash_symbol": ...{"hash_symbol": {"key_name": doc}}}}
+    # {"CollectionName": {"hash_symbol": {"hash_symbol": {"hash_symbol": {"key_name": doc}}}}
     cache: ClassVar[dict[str, Any]] = {}
 
     @classmethod
@@ -33,7 +33,7 @@ class DocCache:
     def load_cache(cls, subclasses: list[Any]) -> None:
         """Load all documents from the database into the cache."""
         db_root: Path = Path(ScrubyConfig.db_root)
-        HASH_REDUCE_LEFT: Literal[3] = ScrubyConfig.HASH_REDUCE_LEFT
+        HASH_REDUCE_LEFT: Literal[5] = ScrubyConfig.HASH_REDUCE_LEFT
         max_number_branch: Literal[4096] = 4096
         branch_numbers: range = range(max_number_branch)
 

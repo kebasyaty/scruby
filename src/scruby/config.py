@@ -38,11 +38,11 @@ class ScrubyConfig:
     db_id: ClassVar[str | None] = None
 
     # The length of the hash reduction on the left side.
-    # 3 = 4096 branches in collection (by default).
-    HASH_REDUCE_LEFT: ClassVar[Literal[3]] = 3
+    # 5 = 4096 branches in collection (by default).
+    HASH_REDUCE_LEFT: ClassVar[Literal[5]] = 5
 
     # Maximum number of branches.
-    # 16**HASH_REDUCE_LEFT = 4096
+    # 16**(8 - HASH_REDUCE_LEFT) = 4096
     max_number_branch: Literal[4096] = 4096
 
     # The maximum number of processes that can be used to execute the given calls.
