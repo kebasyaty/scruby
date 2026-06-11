@@ -9,6 +9,8 @@ from __future__ import annotations
 __all__ = ("Keys",)
 
 
+import re
+import zlib
 from datetime import datetime
 from typing import Any, final
 from zoneinfo import ZoneInfo
@@ -92,7 +94,7 @@ class Keys:
             )
             raise TypeError(msg)
         # The path to cell of collection.
-        leaf_path, prepared_key = await self._get_leaf_path(doc.key)
+        leaf_path, prepared_key, key_as_hash = await self._get_leaf_path(doc.key)
         # Update a `updated_at` field
         doc.updated_at = datetime.now(ZoneInfo("UTC"))
         # Convert doc to json
@@ -106,6 +108,9 @@ class Keys:
                 data[prepared_key]
                 data[prepared_key] = doc_json
                 await leaf_path.write_bytes(orjson.dumps(data))
+                # Update doc to cache
+                collection_name = self._class_model.__name__
+                DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][prepared_key] = doc
             except KeyError:
                 err = KeyNotExistsError()
                 raise err from None
@@ -123,18 +128,20 @@ class Keys:
         Returns:
             Value of key or KeyError.
         """
-        # The path to the database cell.
-        leaf_path, prepared_key = await self._get_leaf_path(key)
-        #
-        doc: Any | None = None
-        # Get value of key.
-        if await leaf_path.exists():
-            data_json: bytes = await leaf_path.read_bytes()
-            data: dict = orjson.loads(data_json) or {}
-            doc_json: str | None = data.get(prepared_key)
-            if doc_json is not None:
-                doc = self._class_model.model_validate_json(doc_json)
-        return doc
+        if not isinstance(key, str):
+            raise KeyError("The key is not a string.")
+        # Prepare key.
+        # Removes spaces at the beginning and end of a string.
+        # Replaces all whitespace characters with a single space.
+        prepared_key = re.sub(r"\s+", " ", key).strip().lower()
+        # Check the key for an empty string.
+        if len(prepared_key) == 0:
+            raise KeyError("The key should not be empty.")
+        # Key to crc32 sum.
+        key_as_hash: str = f"{zlib.crc32(prepared_key.encode('utf-8')):08x}"[self._hash_reduce_left :]
+        # Get value of key from cache
+        collection_name = self._class_model.__name__
+        return DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][prepared_key]
 
     @final
     async def has_key(self, key: str) -> bool:
@@ -146,18 +153,23 @@ class Keys:
         Returns:
             True, if the key is present.
         """
-        # Get path to cell of collection.
-        leaf_path, prepared_key = await self._get_leaf_path(key)
-        # Checking whether there is a key.
-        if await leaf_path.exists():
-            data_json: bytes = await leaf_path.read_bytes()
-            data: dict = orjson.loads(data_json) or {}
-            try:
-                data[prepared_key]
-                return True
-            except KeyError:
-                return False
-        return False
+        if not isinstance(key, str):
+            raise KeyError("The key is not a string.")
+        # Prepare key.
+        # Removes spaces at the beginning and end of a string.
+        # Replaces all whitespace characters with a single space.
+        prepared_key = re.sub(r"\s+", " ", key).strip().lower()
+        # Check the key for an empty string.
+        if len(prepared_key) == 0:
+            raise KeyError("The key should not be empty.")
+        # Key to crc32 sum.
+        key_as_hash: str = f"{zlib.crc32(prepared_key.encode('utf-8')):08x}"[self._hash_reduce_left :]
+        # Get value of key from cache
+        collection_name = self._class_model.__name__
+        return (
+            DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get(prepared_key)
+            is not None
+        )
 
     @final
     async def delete_doc(self, key: str) -> None:
@@ -170,14 +182,18 @@ class Keys:
             None.
         """
         # The path to the database cell.
-        leaf_path, prepared_key = await self._get_leaf_path(key)
+        leaf_path, prepared_key, key_as_hash = await self._get_leaf_path(key)
         # Deleting key.
         if await leaf_path.exists():
+            # Delete a document from the file system
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
             del data[prepared_key]
             await leaf_path.write_bytes(orjson.dumps(data))
             await self._counter_documents(-1)
+            # Delete a document from cache
+            collection_name = self._class_model.__name__
+            del DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][prepared_key]
             return
         msg: str = f"`delete_doc` - The key `{key}` is missing!"
         raise KeyError(msg)
