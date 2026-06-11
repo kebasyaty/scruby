@@ -23,6 +23,7 @@ from pydantic import BaseModel
 from xloft import NamedTuple
 
 from scruby import mixins
+from scruby.cache import DocCache
 from scruby.config import ScrubyConfig
 
 
@@ -133,6 +134,8 @@ class Scruby(
             meta_json = meta.model_dump_json()
             meta_path = Path(*(meta_dir_path, "meta.json"))
             await meta_path.write_text(meta_json, "utf-8")
+            # Create a cache structure for the collection.
+            DocCache.create_structure(class_model.__name__)
         # Plugins connection.
         plugin_list: dict[str, Any] = {}
         for plugin in ScrubyConfig.plugins:
