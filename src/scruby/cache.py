@@ -4,6 +4,7 @@ from __future__ import annotations
 
 __all__ = ("DocCache",)
 
+
 import string
 from pathlib import Path
 from typing import Any, ClassVar, Literal, final
@@ -24,9 +25,9 @@ class DocCache:
     @classmethod
     def create_structure(cls, collection_name: str) -> None:
         """Create a cache structure for the collection."""
-        hexdigits = string.hexdigits.lower().split()
+        hexdigits = string.hexdigits.lower()
         cls.cache[collection_name] = {
-            key0: {key1: {key2: {} for key2 in hexdigits} for key1 in hexdigits} for key0 in hexdigits
+            key: {key: {key: {} for key in hexdigits} for key in hexdigits} for key in hexdigits
         }
 
     @classmethod
@@ -58,9 +59,10 @@ class DocCache:
                 )
 
                 if leaf_path.exists():
-                    separated_hash = branch_number_as_hash.split()
                     data_json: bytes = leaf_path.read_bytes()
                     data: dict[str, str] = orjson.loads(data_json) or {}
                     for key, val in data.items():
                         doc = subclass.model_validate_json(val)
-                        cls.cache[collection_name][separated_hash[0]][separated_hash[1]][separated_hash[2]][key] = doc
+                        cls.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
+                            branch_number_as_hash[2]
+                        ][key] = doc
