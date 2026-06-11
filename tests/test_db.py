@@ -325,14 +325,12 @@ class TestPositive:
         """Create instance of database by default."""
         user_coll = await Scruby.collection(User)
 
-        control_path = Path("ScrubyDB/User/2/d/1/leaf.json")
-
         key_name = "key name"
+        leaf_path, prepared_key, key_as_hash = await user_coll._get_leaf_path(key_name)
 
-        leaf_path, prepared_key = await user_coll._get_leaf_path(key_name)
-
-        assert leaf_path == control_path
+        assert leaf_path == Path("ScrubyDB/User/2/d/1/leaf.json")
         assert prepared_key == key_name
+        assert key_as_hash == "2d1"
         #
         # Delete DB.
         Scruby.napalm()
@@ -437,8 +435,8 @@ class TestPositive:
         # Delete DB.
         Scruby.napalm()
 
-    async def test_get_key(self) -> None:
-        """Testing a get_key method."""
+    async def test_get_doc(self) -> None:
+        """Testing a get_doc method."""
         user_coll = await Scruby.collection(User)
 
         user = User(
@@ -505,13 +503,13 @@ class TestPositive:
         """Length of reduction hash."""
         user_coll = await Scruby.collection(User)
         control_path = Path("ScrubyDB/User/2/d/1/leaf.json")
-        leaf_path, _ = await user_coll._get_leaf_path("key name")
+        leaf_path, _, _ = await user_coll._get_leaf_path("key name")
         assert leaf_path == control_path
 
         Scruby.napalm()
         user_coll = await Scruby.collection(User)
         control_path = Path("ScrubyDB/User/2/d/1/leaf.json")
-        leaf_path, _ = await user_coll._get_leaf_path("key name")
+        leaf_path, _, _ = await user_coll._get_leaf_path("key name")
         assert leaf_path == control_path
         #
         # Delete DB.
