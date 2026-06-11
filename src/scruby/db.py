@@ -16,7 +16,7 @@ import re
 import zlib
 from datetime import datetime
 from shutil import rmtree
-from typing import Any, Literal, Never, assert_never, final
+from typing import Any, Literal, final
 
 from anyio import Path
 from pydantic import BaseModel
@@ -121,18 +121,7 @@ class Scruby(
         if not await meta_dir_path.exists():
             await meta_dir_path.mkdir(parents=True)
             instance.__dict__["_hash_reduce_left"] = ScrubyConfig.HASH_REDUCE_LEFT
-            # Get maximum number of branches.
-            match instance.__dict__["_hash_reduce_left"]:
-                case 0:
-                    instance.__dict__["_max_number_branch"] = 4294967296
-                case 2:
-                    instance.__dict__["_max_number_branch"] = 16777216
-                case 4:
-                    instance.__dict__["_max_number_branch"] = 65536
-                case 6:
-                    instance.__dict__["_max_number_branch"] = 256
-                case _ as unreachable:
-                    assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
+            instance.__dict__["_max_number_branch"] = ScrubyConfig.max_number_branch
             # Create metadata.
             meta = _Meta(
                 collection_name=class_model.__name__,
