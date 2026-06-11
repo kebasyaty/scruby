@@ -55,9 +55,7 @@ class Keys:
             # Add new key.
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            try:
-                data[prepared_key]
-            except KeyError:
+            if data.get(prepared_key) is None:
                 data[prepared_key] = doc_json
                 await leaf_path.write_bytes(orjson.dumps(data))
             else:
@@ -97,13 +95,11 @@ class Keys:
             # Update the existing key.
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            try:
-                data[prepared_key]
+            if data.get(prepared_key) is not None:
                 data[prepared_key] = doc_json
                 await leaf_path.write_bytes(orjson.dumps(data))
-            except KeyError:
-                err = KeyNotExistsError()
-                raise err from None
+            else:
+                raise KeyNotExistsError()
         else:
             msg: str = f"`update_doc` - The key `{doc.key}` is missing!"
             raise KeyError(msg)
@@ -143,16 +139,13 @@ class Keys:
         """
         # Get path to cell of collection.
         leaf_path, prepared_key = await self._get_leaf_path(key)
+        is_exists: bool = False
         # Checking whether there is a key.
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            try:
-                data[prepared_key]
-                return True
-            except KeyError:
-                return False
-        return False
+            is_exists = data.get(prepared_key) is not None
+        return is_exists
 
     @final
     async def delete_doc(self, key: str) -> None:
@@ -170,9 +163,12 @@ class Keys:
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            del data[prepared_key]
-            await leaf_path.write_bytes(orjson.dumps(data))
-            await self._counter_documents(-1)
-            return
-        msg: str = f"`delete_doc` - The key `{key}` is missing!"
-        raise KeyError(msg)
+            if data.get(prepared_key) is not None:
+                del data[prepared_key]
+                await leaf_path.write_bytes(orjson.dumps(data))
+                await self._counter_documents(-1)
+            else:
+                raise KeyNotExistsError()
+        else:
+            msg: str = f"`delete_doc` - The key `{key}` is missing!"
+            raise KeyError(msg)

@@ -52,13 +52,15 @@ class Update:
             data_json: bytes = await leaf_path.read_bytes()
             data: dict[str, str] = orjson.loads(data_json) or {}
             new_state: dict[str, str] = {}
-            for _, val in data.items():
-                doc = class_model.model_validate_json(val)
+            for doc_name, doc_json in data.items():
+                doc = class_model.model_validate_json(doc_json)
                 if filter_fn(doc):
-                    for key, value in new_data.items():
-                        doc.__dict__[key] = value
-                        new_state[key] = doc.model_dump_json()
+                    for field_name, value in new_data.items():
+                        doc.__dict__[field_name] = value
+                    new_state[doc_name] = doc.model_dump_json()
                     counter += 1
+                else:
+                    new_state[doc_name] = doc_json
             await leaf_path.write_bytes(orjson.dumps(new_state))
         return counter
 
