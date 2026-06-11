@@ -54,8 +54,8 @@ async def task_calculate_average(
     Calculate the average value.
     """
     average_age = Average(
-        precision=".00",  # by default = .00
-        rounding=ROUND_HALF_EVEN,  # by default = ROUND_HALF_EVEN
+        precision=".00",  # Default = .00
+        rounding=ROUND_HALF_EVEN,  # Default = ROUND_HALF_EVEN
     )
     # Run quantum loop
     with ThreadPoolExecutor(max_workers) as executor:
