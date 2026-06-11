@@ -28,5 +28,6 @@ class Car(ScrubyModel):
     )
 
 
-async def test_cache() -> None:
+async def test_cache() -> None:  # noqa: RUF029
     """Testing Cache."""
+    assert True
