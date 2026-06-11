@@ -11,7 +11,6 @@ from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, ScrubyModel, ScrubyConfig
 
 ScrubyConfig.db_root = "ScrubyDB"  # Default = "ScrubyDB"
-ScrubyConfig.HASH_REDUCE_LEFT = 5  # Default = 5
 ScrubyConfig.max_workers = None  # Default = None
 ScrubyConfig.plugins = []  # Default = []
 

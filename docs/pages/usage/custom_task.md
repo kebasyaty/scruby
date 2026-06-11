@@ -20,7 +20,6 @@ from scruby import Scruby, ScrubyModel, ScrubyConfig
 from scruby.aggregation import Counter
 
 ScrubyConfig.db_root = "ScrubyDB"  # Default = "ScrubyDB"
-ScrubyConfig.HASH_REDUCE_LEFT = 5  # Default = 5
 ScrubyConfig.max_workers = None  # Default = None
 ScrubyConfig.plugins = []  # Default = []
 
