@@ -26,6 +26,11 @@ def test_hash_reduce_left() -> None:
     assert ScrubyConfig.HASH_REDUCE_LEFT == 5
 
 
+def test_max_number_branch() -> None:
+    """Test a MAX_NUMBER_BRANCH parameter."""
+    assert ScrubyConfig.MAX_NUMBER_BRANCH == 4096
+
+
 def test_max_workers() -> None:
     """Test a MAX_WORKERS parameter."""
     assert ScrubyConfig.max_workers is None
