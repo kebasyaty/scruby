@@ -55,9 +55,7 @@ class Keys:
             # Add new key.
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            try:
-                data[prepared_key]
-            except KeyError:
+            if data.get(prepared_key) is None:
                 data[prepared_key] = doc_json
                 await leaf_path.write_bytes(orjson.dumps(data))
             else:
