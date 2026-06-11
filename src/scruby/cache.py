@@ -44,6 +44,7 @@ class DocCache:
         for subclass in subclasses:
             collection_name = subclass.__name__
             cls.create_structure(collection_name)
+
             for branch_number in branch_numbers:
                 branch_number_as_hash: str = f"{branch_number:08x}"[HASH_REDUCE_LEFT:]
                 separated_hash = "/".join(list(branch_number_as_hash))
