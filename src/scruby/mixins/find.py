@@ -14,6 +14,8 @@ from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from threading import Event
 from typing import Any, final
 
+from anyio import to_thread
+
 from scruby.cache import DocCache
 
 
@@ -22,7 +24,7 @@ class Find:
 
     @final
     @staticmethod
-    def _task_find(
+    async def _task_find(
         branch_number: int,
         filter_fn: Callable,
         hash_reduce_left: int,
@@ -41,9 +43,10 @@ class Find:
         # Variable initialization
         collection_name = class_model.__name__
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
-        docs: dict[str, Any] = DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
-            branch_number_as_hash[2]
-        ]
+        docs: dict[str, Any] = await to_thread.run_sync(
+            DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]].get,
+            branch_number_as_hash[2],
+        )
         result: list[Any] = []
 
         for _, doc in docs.items():
@@ -54,7 +57,7 @@ class Find:
         return result or None
 
     @final
-    def find_one(
+    async def find_one(
         self,
         filter_fn: Callable,
     ) -> Any | None:
@@ -91,7 +94,7 @@ class Find:
                 for branch_number in branch_numbers
             ]
             for future in as_completed(futures):
-                docs = future.result()
+                docs = await future.result()
                 if docs is not None:
                     # Get first document
                     doc = docs[0]
@@ -105,7 +108,7 @@ class Find:
         return doc
 
     @final
-    def find_many(
+    async def find_many(
         self,
         filter_fn: Callable = lambda _: True,
         limit_docs: int = 100,
@@ -166,7 +169,7 @@ class Find:
                 for branch_number in branch_numbers
             ]
             for future in as_completed(futures):
-                docs = future.result()
+                docs = await future.result()
                 if docs is not None:
                     for doc in docs:
                         if number_docs_skippe == 0:

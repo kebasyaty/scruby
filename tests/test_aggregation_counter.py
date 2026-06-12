@@ -35,7 +35,7 @@ class User(ScrubyModel):
     )
 
 
-def task_counter(
+async def task_counter(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
@@ -66,7 +66,7 @@ def task_counter(
             for branch_number in branch_numbers
         ]
         for future in as_completed(futures):
-            docs = future.result()
+            docs = await future.result()
             if docs is not None:
                 for doc in docs:
                     if counter.check():
@@ -97,13 +97,13 @@ async def test_task_counter() -> None:
         )
         await coll_user.add_doc(user)
 
-    result = coll_user.run_custom_task(
+    result = await coll_user.run_custom_task(
         custom_task_fn=task_counter,
         limit_docs=5,  # optional
     )
     assert len(result) == 5
 
-    result = coll_user.run_custom_task(
+    result = await coll_user.run_custom_task(
         custom_task_fn=task_counter,
         filter_fn=lambda doc: doc.first_name == "John",
         limit_docs=5,  # custom parameter

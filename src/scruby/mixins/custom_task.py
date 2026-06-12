@@ -17,7 +17,7 @@ class CustomTask:
     """Quantum methods for running custom tasks."""
 
     @final
-    def run_custom_task(
+    async def run_custom_task(
         self,
         custom_task_fn: Callable,
         filter_fn: Callable = lambda _: True,
@@ -35,7 +35,7 @@ class CustomTask:
         Returns:
             The result of a custom task.
         """
-        return custom_task_fn(
+        return await custom_task_fn(
             search_task_fn=self._task_find,
             filter_fn=filter_fn,
             branch_numbers=range(self._max_number_branch),
