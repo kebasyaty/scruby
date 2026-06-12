@@ -243,11 +243,6 @@ from pydantic import Field
 from scruby import Scruby, ScrubyModel, ScrubyConfig
 from pprint import pprint as pp
 
-ScrubyConfig.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubyConfig.HASH_REDUCE_LEFT = 6  # By default = 6
-ScrubyConfig.max_workers = None  # By default = None
-ScrubyConfig.plugins = []  # By default = []
-
 
 class Car(ScrubyModel):
     """Car model."""
