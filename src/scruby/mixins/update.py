@@ -51,6 +51,7 @@ class Update:
             ),
         )
         counter: int = 0
+
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
             data: dict[str, str] = orjson.loads(data_json) or {}
