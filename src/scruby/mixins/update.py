@@ -39,8 +39,8 @@ class Update:
         Returns:
             The number of updated documents.
         """
-        branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
         collection_name = class_model.__name__
+        branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
         separated_hash: str = "/".join(list(branch_number_as_hash))
         leaf_path = Path(
             *(
