@@ -84,7 +84,7 @@ class Keys:
         Returns:
             None.
         """
-        # Check if the Model matches the collection
+        # Check if the Model matches the collection.
         if not isinstance(doc, self._class_model):
             doc_class_name = doc.__class__.__name__
             collection_name = self._class_model.__name__
@@ -93,21 +93,23 @@ class Keys:
                 f"does not match collection `{collection_name}`!"
             )
             raise TypeError(msg)
-        # The path to cell of collection.
+        # Get the path to the collection cell.
         leaf_path, prepared_key, key_as_hash = await self._get_leaf_path(doc.key)
-        # Update a `updated_at` field
+        # Update a `updated_at` field.
         doc.updated_at = datetime.now(ZoneInfo("UTC"))
-        # Convert doc to json
+        # Convert doc to json.
         doc_json: str = doc.model_dump_json()
-        # Update the existing key.
+        # Check if a collection cell exists.
         if await leaf_path.exists():
-            # Update the existing key.
+            # Get a document from the database.
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
+            # Check if the document key exists.
             if data.get(prepared_key) is not None:
+                # Update a document from database.
                 data[prepared_key] = doc_json
                 await leaf_path.write_bytes(orjson.dumps(data))
-                # Update doc to cache
+                # Update a document from cache.
                 collection_name = self._class_model.__name__
                 DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][prepared_key] = doc
             else:
