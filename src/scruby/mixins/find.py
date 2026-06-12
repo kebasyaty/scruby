@@ -14,8 +14,7 @@ from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from threading import Event
 from typing import Any, final
 
-import orjson
-from anyio import Path
+from scruby.cache import DocCache
 
 
 class Find:
@@ -27,7 +26,6 @@ class Find:
         branch_number: int,
         filter_fn: Callable,
         hash_reduce_left: int,
-        db_root: str,
         class_model: Any,
         stop_event: Event,
     ) -> list[Any] | None:
@@ -41,27 +39,19 @@ class Find:
         # Suppress warning - RuntimeWarning: coroutine 'Find._task_find' was never awaited
         warnings.filterwarnings("ignore", category=RuntimeWarning)
         # Variable initialization
+        collection_name = class_model.__name__
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
-        separated_hash: str = "/".join(list(branch_number_as_hash))
-        leaf_path = Path(
-            *(
-                db_root,
-                class_model.__name__,
-                separated_hash,
-                "leaf.json",
-            ),
-        )
-        docs: list[Any] = []
-        if await leaf_path.exists():
-            data_json: bytes = await leaf_path.read_bytes()
-            data: dict[str, str] = orjson.loads(data_json) or {}
-            for _, val in data.items():
-                if stop_event.is_set():
-                    return None
-                doc = class_model.model_validate_json(val)
-                if filter_fn(doc):
-                    docs.append(doc)
-        return docs or None
+        docs: dict[str, Any] = DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
+            branch_number_as_hash[2]
+        ]
+        result: list[Any] = []
+
+        for _, doc in docs.items():
+            if stop_event.is_set():
+                return None
+            if filter_fn(doc):
+                result.append(doc)
+        return result or None
 
     @final
     async def find_one(
@@ -84,7 +74,6 @@ class Find:
         search_task_fn: Callable = self._task_find
         branch_numbers: range = range(self._max_number_branch)
         hash_reduce_left: int = self._hash_reduce_left
-        db_root: str = self._db_root
         class_model: Any = self._class_model
         stop_signal = Event()
         doc: Any | None = None
@@ -96,7 +85,6 @@ class Find:
                     branch_number,
                     filter_fn,
                     hash_reduce_left,
-                    db_root,
                     class_model,
                     stop_signal,
                 )
@@ -158,7 +146,6 @@ class Find:
         search_task_fn: Callable = self._task_find
         branch_numbers: range = range(self._max_number_branch)
         hash_reduce_left: int = self._hash_reduce_left
-        db_root: str = self._db_root
         class_model: Any = self._class_model
         stop_signal = Event()
         stop_outer_loop: bool = False
@@ -173,7 +160,6 @@ class Find:
                     branch_number,
                     filter_fn,
                     hash_reduce_left,
-                    db_root,
                     class_model,
                     stop_signal,
                 )
