@@ -16,6 +16,7 @@ from typing import Any, final
 from zoneinfo import ZoneInfo
 
 import orjson
+from anyio import to_thread
 
 from scruby.cache import DocCache
 from scruby.errors import (
@@ -119,7 +120,7 @@ class Keys:
             raise KeyError(msg)
 
     @final
-    def get_doc(self, key: str) -> Any | None:
+    async def get_doc(self, key: str) -> Any | None:
         """Asynchronous method for getting document from collection the by key.
 
         Args:
@@ -141,10 +142,13 @@ class Keys:
         key_as_hash: str = f"{zlib.crc32(prepared_key.encode('utf-8')):08x}"[self._hash_reduce_left :]
         # Get value of key from cache
         collection_name = self._class_model.__name__
-        return DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get(prepared_key)
+        return await to_thread.run_sync(
+            DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get,
+            prepared_key,
+        )
 
     @final
-    def has_key(self, key: str) -> bool:
+    async def has_key(self, key: str) -> bool:
         """Asynchronous method for checking presence of key in collection.
 
         Args:
@@ -167,7 +171,10 @@ class Keys:
         # Get value of key from cache
         collection_name = self._class_model.__name__
         return (
-            DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get(prepared_key)
+            await to_thread.run_sync(
+                DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get,
+                prepared_key,
+            )
             is not None
         )
 
