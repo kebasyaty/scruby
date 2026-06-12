@@ -22,7 +22,7 @@ class Find:
 
     @final
     @staticmethod
-    async def _task_find(
+    def _task_find(
         branch_number: int,
         filter_fn: Callable,
         hash_reduce_left: int,
@@ -54,7 +54,7 @@ class Find:
         return result or None
 
     @final
-    async def find_one(
+    def find_one(
         self,
         filter_fn: Callable,
     ) -> Any | None:
@@ -91,7 +91,7 @@ class Find:
                 for branch_number in branch_numbers
             ]
             for future in as_completed(futures):
-                docs = await future.result()
+                docs = future.result()
                 if docs is not None:
                     # Get first document
                     doc = docs[0]
@@ -105,7 +105,7 @@ class Find:
         return doc
 
     @final
-    async def find_many(
+    def find_many(
         self,
         filter_fn: Callable = lambda _: True,
         limit_docs: int = 100,
@@ -166,7 +166,7 @@ class Find:
                 for branch_number in branch_numbers
             ]
             for future in as_completed(futures):
-                docs = await future.result()
+                docs = future.result()
                 if docs is not None:
                     for doc in docs:
                         if number_docs_skippe == 0:
