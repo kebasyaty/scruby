@@ -33,9 +33,6 @@ __all__ = (
     "ScrubyConfig",
 )
 
-from scruby.cache import DocCache
+
 from scruby.config import ScrubyConfig
 from scruby.db import Scruby, ScrubyModel
-
-ScrubyConfig.init_params()  # noqa: RUF067
-DocCache.load_cache(ScrubyModel.__subclasses__())  # noqa: RUF067
