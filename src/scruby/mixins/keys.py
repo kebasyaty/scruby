@@ -45,7 +45,7 @@ class Keys:
                 f"(add_doc) Parameter `doc` => Model `{doc_class_name}` does not match collection `{collection_name}`!"
             )
             raise TypeError(msg)
-        # The path to cell of collection.
+        # Get the path to the collection cell.
         leaf_path, prepared_key, key_as_hash = await self._get_leaf_path(doc.key)
         # Init a `created_at` and `updated_at` fields
         tz = ZoneInfo("UTC")
@@ -53,14 +53,14 @@ class Keys:
         doc.updated_at = datetime.now(tz)
         # Convert doc to json
         doc_json: str = doc.model_dump_json()
-        # Write key-value to collection.
+        # Check if a collection cell exists.
         if await leaf_path.exists():
-            # Add new key.
+            # Get a document from the database.
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            try:
-                data[prepared_key]
-            except KeyError:
+            # Check to see if the document key is missing.
+            if data.get(prepared_key) is None:
+                # Add a new document to the database.
                 data[prepared_key] = doc_json
                 await leaf_path.write_bytes(orjson.dumps(data))
             else:
@@ -70,7 +70,7 @@ class Keys:
             await leaf_path.write_bytes(orjson.dumps({prepared_key: doc_json}))
         # Update document counter
         await self._counter_documents(1)
-        # Add doc to cache
+        # Add new document to cache
         collection_name = self._class_model.__name__
         DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][prepared_key] = doc
 
