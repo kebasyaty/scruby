@@ -15,6 +15,8 @@ from typing import Any, final
 import orjson
 from anyio import Path
 
+from scruby.cache import DocCache
+
 
 class Delete:
     """Methods for deleting documents."""
@@ -35,12 +37,13 @@ class Delete:
         Returns:
             The number of deleted documents.
         """
+        collection_name = class_model.__name__
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
         separated_hash: str = "/".join(list(branch_number_as_hash))
         leaf_path = Path(
             *(
                 db_root,
-                class_model.__name__,
+                collection_name,
                 separated_hash,
                 "leaf.json",
             ),
@@ -50,12 +53,15 @@ class Delete:
             data_json: bytes = await leaf_path.read_bytes()
             data: dict[str, str] = orjson.loads(data_json) or {}
             new_state: dict[str, str] = {}
-            for key, val in data.items():
-                doc = class_model.model_validate_json(val)
+            for doc_name, doc_json in data.items():
+                doc = class_model.model_validate_json(doc_json)
                 if filter_fn(doc):
                     counter -= 1
+                    del DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
+                        branch_number_as_hash[2]
+                    ][doc_name]
                 else:
-                    new_state[key] = val
+                    new_state[doc_name] = doc_json
             await leaf_path.write_bytes(orjson.dumps(new_state))
         return counter
 
