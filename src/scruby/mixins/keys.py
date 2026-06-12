@@ -16,7 +16,6 @@ from typing import Any, final
 from zoneinfo import ZoneInfo
 
 import orjson
-from anyio import to_thread
 
 from scruby.cache import DocCache
 from scruby.errors import (
@@ -142,10 +141,7 @@ class Keys:
         key_as_hash: str = f"{zlib.crc32(prepared_key.encode('utf-8')):08x}"[self._hash_reduce_left :]
         # Get value of key from cache
         collection_name = self._class_model.__name__
-        return await to_thread.run_sync(
-            DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get,
-            prepared_key,
-        )
+        return DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get(prepared_key)
 
     @final
     async def has_key(self, key: str) -> bool:
@@ -171,10 +167,7 @@ class Keys:
         # Get value of key from cache
         collection_name = self._class_model.__name__
         return (
-            await to_thread.run_sync(
-                DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get,
-                prepared_key,
-            )
+            DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get(prepared_key)
             is not None
         )
 
