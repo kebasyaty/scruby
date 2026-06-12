@@ -42,7 +42,7 @@ class Keys:
                 f"(add_doc) Parameter `doc` => Model `{doc_class_name}` does not match collection `{collection_name}`!"
             )
             raise TypeError(msg)
-        # The path to cell of collection.
+        # Get the path to the collection cell.
         leaf_path, prepared_key = await self._get_leaf_path(doc.key)
         # Init a `created_at` and `updated_at` fields
         tz = ZoneInfo("UTC")
@@ -50,12 +50,14 @@ class Keys:
         doc.updated_at = datetime.now(tz)
         # Convert doc to json
         doc_json: str = doc.model_dump_json()
-        # Write key-value to collection.
+        # Check if a collection cell exists.
         if await leaf_path.exists():
-            # Add new key.
+            # Get a document from the database.
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
+            # Check to see if the document key is missing.
             if data.get(prepared_key) is None:
+                # Add a new document to the database.
                 data[prepared_key] = doc_json
                 await leaf_path.write_bytes(orjson.dumps(data))
             else:
@@ -84,18 +86,20 @@ class Keys:
                 f"does not match collection `{collection_name}`!"
             )
             raise TypeError(msg)
-        # The path to cell of collection.
+        # Get the path to the collection cell.
         leaf_path, prepared_key = await self._get_leaf_path(doc.key)
-        # Update a `updated_at` field
+        # Update a `updated_at` field.
         doc.updated_at = datetime.now(ZoneInfo("UTC"))
-        # Convert doc to json
+        # Convert doc to json.
         doc_json: str = doc.model_dump_json()
-        # Update the existing key.
+        # Check if a collection cell exists.
         if await leaf_path.exists():
-            # Update the existing key.
+            # Get a document from the database.
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
+            # Check if the document key exists.
             if data.get(prepared_key) is not None:
+                # Update a document from database.
                 data[prepared_key] = doc_json
                 await leaf_path.write_bytes(orjson.dumps(data))
             else:
@@ -164,6 +168,7 @@ class Keys:
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
             if data.get(prepared_key) is not None:
+                # Delete a document from database
                 del data[prepared_key]
                 await leaf_path.write_bytes(orjson.dumps(data))
                 await self._counter_documents(-1)
