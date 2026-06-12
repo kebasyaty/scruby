@@ -30,7 +30,7 @@ class Count:
         return meta.counter_documents
 
     @final
-    async def count_documents(
+    def count_documents(
         self,
         filter_fn: Callable,
     ) -> int:
@@ -69,7 +69,7 @@ class Count:
                 for branch_number in branch_numbers
             ]
             for future in as_completed(futures):
-                docs = await future.result()
+                docs = future.result()
                 if docs is not None:
                     counter += len(docs)
         return counter

@@ -88,7 +88,7 @@ class User5(ScrubyModel):
     username: str = Field(strict=True)
 
 
-async def custom_task(
+def custom_task(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
@@ -116,7 +116,7 @@ async def custom_task(
             for branch_number in branch_numbers
         ]
         for future in as_completed(futures):
-            docs = await future.result()
+            docs = future.result()
             if docs is not None:
                 for _ in docs:
                     counter += 1
@@ -295,7 +295,7 @@ class TestNegative:
             AssertionError,
             match=r"`find_many` => The `page_number` parameter must not be less than one.",
         ):
-            await user_coll.find_many(
+            user_coll.find_many(
                 filter_fn=lambda doc: doc.last_name == "Smith",
                 limit_docs=5,
                 page_number=0,
@@ -306,7 +306,7 @@ class TestNegative:
             AssertionError,
             match=r"`find_many` => The `page_number` parameter must not be less than one.",
         ):
-            await user_coll.find_many(
+            user_coll.find_many(
                 filter_fn=lambda doc: doc.last_name == "Smith",
                 limit_docs=5,
                 page_number=-1,
@@ -528,21 +528,21 @@ class TestPositive:
             await user_coll.add_doc(user)
 
         # by email
-        result: User | None = await user_coll.find_one(
+        result: User | None = user_coll.find_one(
             filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com",
         )
         assert result is not None
         assert result.email == "John_Smith_5@gmail.com"
 
         # by birthday
-        result_2: User | None = await user_coll.find_one(
+        result_2: User | None = user_coll.find_one(
             filter_fn=lambda doc: doc.birthday == datetime(1970, 1, 8, tzinfo=ZoneInfo("UTC")),
         )
         assert result_2 is not None
         assert result_2.birthday == datetime(1970, 1, 8, tzinfo=ZoneInfo("UTC"))
 
         # result is None
-        result_3: User | None = await user_coll.find_one(
+        result_3: User | None = user_coll.find_one(
             filter_fn=lambda doc: doc.first_name == "???",
         )
         assert result_3 is None
@@ -565,12 +565,12 @@ class TestPositive:
             await user_coll.add_doc(user)
 
         # all arguments by default
-        result_1: list[User] | None = await user_coll.find_many()
+        result_1: list[User] | None = user_coll.find_many()
         assert result_1 is not None
         assert len(result_1) == 9
 
         # all args by default
-        result_2: list[User] | None = await user_coll.find_many(
+        result_2: list[User] | None = user_coll.find_many(
             filter_fn=lambda doc: doc.email == "John_Smith_1@gmail.com" or doc.email == "John_Smith_9@gmail.com",
         )
         assert result_2 is not None
@@ -579,7 +579,7 @@ class TestPositive:
         assert result_2[1].email in ["John_Smith_1@gmail.com", "John_Smith_9@gmail.com"]
 
         # limit docs = 5, page number = 1
-        result_3: list[User] | None = await user_coll.find_many(
+        result_3: list[User] | None = user_coll.find_many(
             filter_fn=lambda doc: doc.last_name == "Smith",
             limit_docs=5,
             page_number=1,
@@ -588,7 +588,7 @@ class TestPositive:
         assert len(result_3) == 5
 
         # limit docs = 5, page number = 2
-        result_4: list[User] | None = await user_coll.find_many(
+        result_4: list[User] | None = user_coll.find_many(
             filter_fn=lambda doc: doc.last_name == "Smith",
             limit_docs=5,
             page_number=2,
@@ -597,7 +597,7 @@ class TestPositive:
         assert len(result_4) == 4
 
         # result is None
-        result_5: list[User] | None = await user_coll.find_many(
+        result_5: list[User] | None = user_coll.find_many(
             filter_fn=lambda doc: doc.last_name == "???",
         )
         assert result_5 is None
@@ -629,7 +629,7 @@ class TestPositive:
             await user_coll.add_doc(user)
 
         assert await user_coll.estimated_document_count() == 9
-        result: int = await user_coll.count_documents(
+        result: int = user_coll.count_documents(
             filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
         )
         assert result == 2
@@ -657,7 +657,7 @@ class TestPositive:
         )
         assert result == 2
         assert await user_coll.estimated_document_count() == 7
-        result = await user_coll.count_documents(
+        result = user_coll.count_documents(
             filter_fn=lambda _: True,
         )
         assert result == 7
@@ -679,7 +679,7 @@ class TestPositive:
             )
             await user_coll.add_doc(user)
 
-        result = await user_coll.run_custom_task(
+        result = user_coll.run_custom_task(
             custom_task_fn=custom_task,
             filter_fn=lambda doc: doc.first_name == "John",
         )
@@ -706,7 +706,7 @@ class TestPositive:
         assert number_updated_users == 9
         #
         # by email
-        users: list[User] | None = await user_coll.find_many()
+        users: list[User] | None = user_coll.find_many()
         assert users is not None
         for user in users:
             assert user.first_name == "Georg"

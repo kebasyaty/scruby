@@ -18,7 +18,7 @@ from datetime import datetime
 from shutil import rmtree
 from typing import Any, Literal, final
 
-from anyio import Path, to_thread
+from anyio import Path
 from pydantic import BaseModel
 from xloft import NamedTuple
 
@@ -135,7 +135,7 @@ class Scruby(
             meta_path = Path(*(meta_dir_path, "meta.json"))
             await meta_path.write_text(meta_json, "utf-8")
             # Create a cache structure for the collection.
-            await to_thread.run_sync(DocCache.create_structure, class_model.__name__)
+            DocCache.create_structure(class_model.__name__)
         # Plugins connection.
         plugin_list: dict[str, Any] = {}
         for plugin in ScrubyConfig.plugins:

@@ -39,7 +39,7 @@ class User(ScrubyModel):
     )
 
 
-async def task_calculate_average(
+def task_calculate_average(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
@@ -70,7 +70,7 @@ async def task_calculate_average(
             for branch_number in branch_numbers
         ]
         for future in as_completed(futures):
-            docs = await future.result()
+            docs = future.result()
             if docs is not None:
                 for doc in docs:
                     average_age.set(doc.age)
@@ -90,7 +90,7 @@ async def test_task_calculate_average() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(task_calculate_average)
+    result = user_coll.run_custom_task(task_calculate_average)
     assert result == 50.0  # noqa: RUF069
     #
     # Delete DB.
