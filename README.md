@@ -58,7 +58,7 @@
 <br>
 2 = 16777216 branches in collection -> It is recommended to work with documents only using keys.
 <br>
-4 = 65536 branches in collection -> It is recommended to work with documents using keys and the Scruby-GPU plugin.
+4 = 65536 branches in collection -> It is recommended to work with documents only using keys.
 <br>
 6 = 256 branches in collection (by default) -> Use all standard tools and plugins.
 </p>
@@ -242,11 +242,6 @@ from typing import Annotated
 from pydantic import Field
 from scruby import Scruby, ScrubyModel, ScrubyConfig
 from pprint import pprint as pp
-
-ScrubyConfig.db_root = "ScrubyDB"  # By default = "ScrubyDB"
-ScrubyConfig.HASH_REDUCE_LEFT = 6  # By default = 6
-ScrubyConfig.max_workers = None  # By default = None
-ScrubyConfig.plugins = []  # By default = []
 
 
 class Car(ScrubyModel):
