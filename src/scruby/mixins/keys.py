@@ -186,12 +186,16 @@ class Keys:
             # Delete a document from the file system
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
-            del data[prepared_key]
-            await leaf_path.write_bytes(orjson.dumps(data))
-            await self._counter_documents(-1)
-            # Delete a document from cache
-            collection_name = self._class_model.__name__
-            del DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][prepared_key]
-            return
-        msg: str = f"`delete_doc` - The key `{key}` is missing!"
-        raise KeyError(msg)
+            if data.get(prepared_key) is not None:
+                # Delete a document from database
+                del data[prepared_key]
+                await leaf_path.write_bytes(orjson.dumps(data))
+                await self._counter_documents(-1)
+                # Delete a document from cache
+                collection_name = self._class_model.__name__
+                del DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][prepared_key]
+            else:
+                raise KeyNotExistsError()
+        else:
+            msg: str = f"`delete_doc` - The key `{key}` is missing!"
+            raise KeyError(msg)
