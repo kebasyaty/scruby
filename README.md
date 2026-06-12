@@ -25,23 +25,20 @@
       <a href="https://github.com/kebasyaty/scruby/blob/main/GPL-3.0-LICENSE" alt="License: GPL v3"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
     </p>
     <p align="center">
-        The library uses fractal-tree addressing and
-        <br>
-        the search for documents based on the effect of a quantum loop.
-        <br>
-        The database consists of collections.
-        <br>
-        The maximum size of the one collection is <b>16**8=4294967296</b> branches,
-        <br>
-        each branch can store one or more keys.
-        <br>
-        The value of any key in collection can be obtained maximum in <b>8</b> steps,
-        <br>
-        thereby achieving high performance.
-        <br>
-        The effectiveness of the search for documents based on a quantum loop,
-        <br>
-        requires a large number of processor threads.
+      The library uses fractal-tree addressing and<br>
+      the search for documents based on the effect of a quantum loop.
+      <br>
+      <br>
+      The size of each collection is 4096 branches,<br>
+      each branch can store one or more keys.
+      <br>
+      <br>
+      The value of any key in collection can be obtained in 3 steps,<br>
+      thereby achieving high performance.
+      <br>
+      <br>
+      The effectiveness of the search for documents based on a quantum loop,<br>
+      requires a large number of processor threads.
     </p>
   </p>
 </div>
