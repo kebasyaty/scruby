@@ -238,7 +238,7 @@ class Scruby(
         # If the branch does not exist, need to create it.
         if not await branch_path.exists():
             await branch_path.mkdir(parents=True)
-        # The path to the database cell.
+        # Get the path to the collection cell.
         leaf_path: Path = Path(*(branch_path, "leaf.json"))
         return (leaf_path, prepared_key)
 

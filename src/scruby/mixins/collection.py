@@ -32,9 +32,9 @@ class Collection:
     @staticmethod
     async def collection_list() -> list[str]:
         """Asynchronous method for getting collection list."""
-        target_directory = Path(ScrubyConfig.db_root)
+        db_directory = Path(ScrubyConfig.db_root)
         # Get all entries in the directory
-        all_entries = Path.iterdir(target_directory)
+        all_entries = Path.iterdir(db_directory)
         directory_names: list[str] = [entry.name async for entry in all_entries]
         return directory_names
 
