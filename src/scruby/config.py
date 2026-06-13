@@ -32,8 +32,8 @@ from scruby.utils import add_to_env, get_from_env
 class ScrubyConfig:
     """Database settings."""
 
-    # Path to root directory of database
-    # By default = "ScrubyDB" (in root of project).
+    # Path to root directory of database.
+    # Default = "ScrubyDB" (in root of project).
     db_root: ClassVar[str] = "ScrubyDB"
 
     # Database ID
@@ -54,7 +54,7 @@ class ScrubyConfig:
     # created as the machine has processors.
     max_workers: ClassVar[int | None] = None
 
-    # For adding plugins.
+    # To connect plugins.
     plugins: ClassVar[list[Any] | None] = None
 
     # Information about the operating system.
