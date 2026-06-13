@@ -73,6 +73,7 @@ async def test_user() -> None:
     user_coll = await Scruby.collection(User)
 
     assert user_coll.collection_name() == "User"
+    assert await Scruby.collection_list() == ["User", "Phone", "Car"]
     assert await user_coll.estimated_document_count() == 9
     assert user_coll.count_documents(filter_fn=lambda doc: doc.first_name == "John") == 9
 
@@ -83,6 +84,7 @@ async def test_phone() -> None:
     phone_coll = await Scruby.collection(Phone)
 
     assert phone_coll.collection_name() == "Phone"
+    assert await Scruby.collection_list() == ["User", "Phone", "Car"]
     assert await phone_coll.estimated_document_count() == 9
     assert phone_coll.count_documents(filter_fn=lambda doc: doc.brand == "Samsung") == 9
 
@@ -93,5 +95,6 @@ async def test_car() -> None:
     car_coll = await Scruby.collection(Car)
 
     assert car_coll.collection_name() == "Car"
+    assert await Scruby.collection_list() == ["User", "Phone", "Car"]
     assert await car_coll.estimated_document_count() == 9
     assert car_coll.count_documents(filter_fn=lambda doc: doc.brand == "Mazda") == 9
