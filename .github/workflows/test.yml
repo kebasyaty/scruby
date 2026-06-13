@@ -40,4 +40,14 @@ jobs:
       - uses: pre-commit/action@v3.0.1
 
       - name: Run tests
-        run: uv run pytest -v tests/
+        run: |
+          uv run pytest -v tests/test_config.py
+          uv run pytest -v tests/test_db.py
+          uv run pytest -v tests/test_many_models.py
+          uv run pytest -v tests/test_aggregation_classes.py
+          uv run pytest -v tests/test_aggregation_average.py
+          uv run pytest -v tests/test_aggregation_counter.py
+          uv run pytest -v tests/test_aggregation_max.py
+          uv run pytest -v tests/test_aggregation_min.py
+          uv run pytest -v tests/test_aggregation_sum.py
+          uv run pytest -v tests/test_cache.py
