@@ -35,7 +35,7 @@ class Collection:
         db_directory = Path(ScrubyConfig.db_root)
         # Get all entries in the directory
         all_entries = Path.iterdir(db_directory)
-        directory_names: list[str] = [entry.name async for entry in all_entries]
+        directory_names: list[str] = [entry.name async for entry in all_entries if entry.name != ".env.meta"]
         return directory_names
 
     @final

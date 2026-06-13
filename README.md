@@ -125,7 +125,7 @@ async def main() -> None:
     # Activate database.
     Scruby.run()
 
-    # Create/get the `User` collection.
+    # Get/Create a User collection
     user_coll = await Scruby.collection(User)
 
     # Create user
@@ -137,7 +137,7 @@ async def main() -> None:
         phone="+447986123456",
     )
 
-    # Add data of user to collection.
+    # Add user to collection
     await user_coll.add_doc(user)
 
     # Update user data in a collection
@@ -154,8 +154,8 @@ async def main() -> None:
     # Delete a document by key
     await user_coll.delete_doc("+447986123456")
 
-    # Full database deletion.
-    # Hint: The main purpose is tests.
+    # Full database deletion
+    # Hint: The main purpose is tests
     Scruby.napalm()
 
 
@@ -195,10 +195,10 @@ async def main() -> None:
     # Activate database.
     Scruby.run()
 
-    # Create/Get collection `Phone`.
+    # Get/Create a Phone collection
     phone_coll = await Scruby.collection(Phone)
 
-    # Create phone.
+    # Create phone
     phone = Phone(
         brand="Samsung",
         model="Galaxy A26",
@@ -206,10 +206,10 @@ async def main() -> None:
         matrix_type="Super AMOLED",
     )
 
-    # Add phone to collection.
+    # Add phone to collection
     await phone_coll.add_doc(phone)
 
-    # Find phone by brand.
+    # Find phone by brand
     phone_details: Phone | None = await phone_coll.find_one(
         filter_fn=lambda doc: doc.brand == "Samsung",
     )
@@ -218,7 +218,7 @@ async def main() -> None:
     else:
         print("No Phone!")
 
-    # Find phone by model.
+    # Find phone by model
     phone_details: Phone | None = await phone_coll.find_one(
         filter_fn=lambda doc: doc.model == "Galaxy A26",
     )
@@ -227,8 +227,8 @@ async def main() -> None:
     else:
         print("No Phone!")
 
-    # Full database deletion.
-    # Hint: The main purpose is tests.
+    # Full database deletion
+    # Hint: The main purpose is tests
     Scruby.napalm()
 
 
@@ -269,10 +269,10 @@ async def main() -> None:
     # Activate database.
     Scruby.run()
 
-    # Get collection `Car`.
+    # Get/Create a Car collection
     car_coll = await Scruby.collection(Car)
 
-    # Create cars.
+    # Create cars
     for num in range(1, 10):
         car = Car(
             brand="Mazda",
@@ -282,14 +282,14 @@ async def main() -> None:
         )
         await car_coll.add_doc(car)
 
-    # Find all cars.
+    # Find all cars
     car_list: list[Car] | None = await car_coll.find_many()
     if car_list is not None:
         pp(car_list)
     else:
         print("No cars!")
 
-    # Find cars by brand and year.
+    # Find cars by brand and year
     car_list: list[Car] | None = await car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda" and doc.year == 2025,
     )
@@ -320,8 +320,8 @@ async def main() -> None:
     else:
         print("No cars!")
 
-    # Full database deletion.
-    # Hint: The main purpose is tests.
+    # Full database deletion
+    # Hint: The main purpose is tests
     Scruby.napalm()
 
 
