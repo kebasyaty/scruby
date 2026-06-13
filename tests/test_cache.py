@@ -126,14 +126,15 @@ async def test_user() -> None:
     # count_documents
     assert user_coll.count_documents(filter_fn=lambda doc: doc.first_name == "John") == 9
 
+    #
     # delete_collection
     await Scruby.delete_collection("User")
     assert DocCache.cache.get("User") is None
     for coll_name in await Scruby.collection_list():
         assert coll_name in ["Phone", "Car"]
+    user_coll = await Scruby.collection(User)
     assert await user_coll.estimated_document_count() == 0
     assert user_coll.count_documents(filter_fn=lambda doc: doc.first_name == "John") == 0
-    user_coll = await Scruby.collection(User)
     assert DocCache.cache.get("User") is not None
     for coll_name in await Scruby.collection_list():
         assert coll_name in ["User", "Phone", "Car"]
@@ -156,6 +157,7 @@ async def test_phone() -> None:
     # count_documents
     assert phone_coll.count_documents(filter_fn=lambda doc: doc.brand == "Samsung") == 9
 
+    #
     # delete_collection
     await Scruby.delete_collection("Phone")
     assert DocCache.cache.get("Phone") is None
@@ -186,6 +188,7 @@ async def test_car() -> None:
     # count_documents
     assert car_coll.count_documents(filter_fn=lambda doc: doc.brand == "Mazda") == 9
 
+    #
     # delete_collection
     await Scruby.delete_collection("Car")
     assert DocCache.cache.get("Car") is None
