@@ -36,5 +36,3 @@ __all__ = (
 
 from scruby.config import ScrubyConfig
 from scruby.db import Scruby, ScrubyModel
-
-ScrubyConfig.init_params()  # noqa: RUF067

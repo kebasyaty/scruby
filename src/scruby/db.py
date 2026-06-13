@@ -152,10 +152,11 @@ class Scruby(
             instance.__dict__["_max_number_branch"] = meta.max_number_branch
         # Plugins connection.
         plugin_list: dict[str, Any] = {}
-        for plugin in ScrubyConfig.plugins:
-            name = plugin.__name__
-            name = name[0].lower() + name[1:]
-            plugin_list[name] = plugin(scruby_self=instance)
+        if ScrubyConfig.plugins is not None:
+            for plugin in ScrubyConfig.plugins:
+                name = plugin.__name__
+                name = name[0].lower() + name[1:]
+                plugin_list[name] = plugin(scruby_self=instance)
         instance.__dict__["plugins"] = NamedTuple(**plugin_list)
         return instance
 
@@ -257,3 +258,17 @@ class Scruby(
         with contextlib.suppress(FileNotFoundError):
             rmtree(ScrubyConfig.db_root)
         return
+
+    @staticmethod
+    def run(
+        db_root: str = "ScrubyDB",
+        HASH_REDUCE_LEFT: Literal[0, 2, 4, 6] = 6,
+        max_workers: int | None = None,
+        plugins: list[Any] | None = None,
+    ) -> None:
+        """Activate database."""
+        ScrubyConfig.db_root = db_root
+        ScrubyConfig.HASH_REDUCE_LEFT = HASH_REDUCE_LEFT
+        ScrubyConfig.max_workers = max_workers
+        ScrubyConfig.plugins = plugins
+        ScrubyConfig.init_params()

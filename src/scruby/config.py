@@ -55,7 +55,7 @@ class ScrubyConfig:
     max_workers: ClassVar[int | None] = None
 
     # For adding plugins.
-    plugins: ClassVar[list[Any]] = []
+    plugins: ClassVar[list[Any] | None] = None
 
     # Information about the operating system.
     sys_platform: ClassVar[str] = sys.platform  # "linux", "win32", "cygwin", "darwin", "os2", "os2emx"
