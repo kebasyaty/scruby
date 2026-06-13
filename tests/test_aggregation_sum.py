@@ -19,6 +19,9 @@ pytestmark = pytest.mark.asyncio(loop_scope="module")
 # Delete DB.
 Scruby.napalm()
 
+# Activate database.
+Scruby.run()
+
 
 class User(ScrubyModel):
     """User model."""
