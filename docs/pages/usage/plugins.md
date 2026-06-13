@@ -38,12 +38,6 @@ class CollectionMeta(ScrubyPlugin):
         return await scruby.get_meta()
 
 
-# Plugins connection.
-settings.PLUGINS = [
-    CollectionMeta,
-]
-
-
 class Car(ScrubyModel):
     """Car model."""
     brand: str = Field(strict=True, frozen=True)
@@ -59,6 +53,15 @@ class Car(ScrubyModel):
 
 
 async def main() -> None:
+    """Example."""
+    # Activate database.
+    Scruby.run(
+        db_root = "ScrubyDB",  # Default = "ScrubyDB"
+        HASH_REDUCE_LEFT = 6,  # Default = 6
+        max_workers = None,  # Default = None
+        plugins = [CollectionMeta],  # Default = None
+    )
+
     # Get collection `Car`.
     car_coll = await Scruby.collection(Car)
     # Get metadata of collection
