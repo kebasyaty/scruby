@@ -16,11 +16,6 @@ from pydantic import Field
 from scruby import Scruby, ScrubyModel, ScrubyConfig
 from pprint import pprint as pp
 
-ScrubyConfig.db_root = "ScrubyDB"  # Default = "ScrubyDB"
-ScrubyConfig.HASH_REDUCE_LEFT = 6  # Default = 6
-ScrubyConfig.max_workers = None  # Default = None
-ScrubyConfig.plugins = []  # Default = []
-
 
 class Car(ScrubyModel):
     """Car model."""
@@ -38,6 +33,14 @@ class Car(ScrubyModel):
 
 async def main() -> None:
     """Example."""
+    # Activate database.
+    Scruby.run(
+        db_root = "ScrubyDB",  # Default = "ScrubyDB"
+        HASH_REDUCE_LEFT = 6,  # Default = 6
+        max_workers = None,  # Default = None
+        plugins = None,  # Default = None
+    )
+
     # Get collection `Car`.
     car_coll = await Scruby.collection(Car)
 

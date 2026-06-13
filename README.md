@@ -122,6 +122,9 @@ class User(ScrubyModel):
 
 async def main() -> None:
     """Example."""
+    # Activate database.
+    Scruby.run()
+
     # Create/get the `User` collection.
     user_coll = await Scruby.collection(User)
 
@@ -189,6 +192,9 @@ class Phone(ScrubyModel):
 
 async def main() -> None:
     """Example."""
+    # Activate database.
+    Scruby.run()
+
     # Create/Get collection `Phone`.
     phone_coll = await Scruby.collection(Phone)
 
@@ -260,6 +266,9 @@ class Car(ScrubyModel):
 
 async def main() -> None:
     """Example."""
+    # Activate database.
+    Scruby.run()
+
     # Get collection `Car`.
     car_coll = await Scruby.collection(Car)
 

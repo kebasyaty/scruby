@@ -10,11 +10,6 @@ from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, ScrubyModel, ScrubyConfig
 
-ScrubyConfig.db_root = "ScrubyDB"  # Default = "ScrubyDB"
-ScrubyConfig.HASH_REDUCE_LEFT = 6  # Default = 6
-ScrubyConfig.max_workers = None  # Default = None
-ScrubyConfig.plugins = []  # Default = []
-
 
 class User(ScrubyModel):
     """User model."""
@@ -33,6 +28,14 @@ class User(ScrubyModel):
 
 async def main() -> None:
     """Example."""
+    # Activate database.
+    Scruby.run(
+        db_root = "ScrubyDB",  # Default = "ScrubyDB"
+        HASH_REDUCE_LEFT = 6,  # Default = 6
+        max_workers = None,  # Default = None
+        plugins = None,  # Default = None
+    )
+
     # Get collection `User`.
     user_coll = await Scruby.collection(User)
 

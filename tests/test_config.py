@@ -33,5 +33,5 @@ def test_max_workers() -> None:
 
 def test_plugins() -> None:
     """Test a PLUGINS parameter."""
-    assert isinstance(ScrubyConfig.plugins, list)
-    assert len(ScrubyConfig.plugins) == 0
+    assert isinstance(ScrubyConfig.plugins, (list, type(None)))
+    assert ScrubyConfig.plugins is None
