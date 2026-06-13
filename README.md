@@ -112,7 +112,7 @@ async def main() -> None:
         phone="+447986123456",
     )
 
-    # Add data of user to collection.
+    # Add user to collection.
     await user_coll.add_doc(user)
 
     # Update user data in a collection
@@ -249,6 +249,7 @@ async def main() -> None:
             year=2025,
             power_reserve=600,
         )
+        # Add car to collection.
         await car_coll.add_doc(car)
 
     # Find all cars.
