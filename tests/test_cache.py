@@ -10,12 +10,14 @@ import pytest
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyModel
+from scruby import Scruby, ScrubyConfig, ScrubyModel
 from scruby.cache import DocCache
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
 # Delete DB.
+Scruby.napalm()
+ScrubyConfig.db_root = "TestScrubyDB"
 Scruby.napalm()
 
 
