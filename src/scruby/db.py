@@ -267,7 +267,7 @@ class Scruby(
         """
         if __debug__ and plugins is not None:
             for plugin in plugins:
-                if plugin.version != 2:
+                if plugin.scruby_version != 2:
                     msg = f"Plugin {plugin.__name__} does not apply to version 2."
                     raise AssertionError(msg)
 
