@@ -119,7 +119,7 @@ class Keys:
             raise KeyError(msg)
 
     @final
-    async def get_doc(self, key: str) -> Any | None:
+    def get_doc(self, key: str) -> Any | None:
         """Asynchronous method for getting document from collection the by key.
 
         Args:

@@ -138,6 +138,19 @@ async def test_user() -> None:
     assert await user_coll.estimated_document_count() == 10
     assert user_coll.count_documents(filter_fn=lambda doc: doc.first_name == "John") == 10
 
+    # update_doc and get_doc
+    user = User(
+        first_name="John",
+        last_name="Smith",
+        birthday=datetime(1972, 11, 7, tzinfo=ZoneInfo("UTC")),
+        email="John_Smith@gmail.com",
+        phone="+447986123459",
+    )
+    await user_coll.update_doc(user)
+    user: User | None = user_coll.get_doc("+447986123459")
+    assert user is not None
+    assert user.birthday == datetime(1972, 11, 7, tzinfo=ZoneInfo("UTC"))
+
     #
     # delete_collection
     await Scruby.delete_collection("User")
@@ -180,6 +193,18 @@ async def test_phone() -> None:
     assert await phone_coll.estimated_document_count() == 10
     assert phone_coll.count_documents(filter_fn=lambda doc: doc.brand == "Samsung") == 10
 
+    # update_doc and get_doc
+    phone = Phone(
+        brand="Samsung",
+        model="Galaxy A26 9",
+        screen_diagonal=10.2,
+        matrix_type="Super AMOLED",
+    )
+    await phone_coll.update_doc(phone)
+    phone = phone_coll.get_doc("Samsung:Galaxy A26 9")
+    assert phone is not None
+    assert phone.screen_diagonal == pytest.approx(10.2)
+
     #
     # delete_collection
     await Scruby.delete_collection("Phone")
@@ -221,6 +246,18 @@ async def test_car() -> None:
     await car_coll.add_doc(car)
     assert await car_coll.estimated_document_count() == 10
     assert car_coll.count_documents(filter_fn=lambda doc: doc.brand == "Mazda") == 10
+
+    # update_doc and get_doc
+    car = Car(
+        brand="Mazda",
+        model="EZ-6 9",
+        year=2025,
+        power_reserve=800,
+    )
+    await car_coll.update_doc(car)
+    car = car_coll.get_doc("Mazda:EZ-6 9")
+    assert car is not None
+    assert car.power_reserve == 800
 
     #
     # delete_collection
