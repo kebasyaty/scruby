@@ -77,6 +77,10 @@ def task_calculate_average(
     return float(average_age.get())
 
 
+# Activate database.
+Scruby.run()
+
+
 async def test_task_calculate_average() -> None:
     """Test a Average class in custom task."""
     user_coll = await Scruby.collection(User)

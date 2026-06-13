@@ -64,6 +64,10 @@ class CarTest(ScrubyModel):
     )
 
 
+# Activate database.
+Scruby.run()
+
+
 async def test_user() -> None:
     """Test User 1."""
     # Get collection `User`.

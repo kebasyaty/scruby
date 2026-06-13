@@ -64,8 +64,17 @@
       "type": "shell",
       "command": [
         "uv run python pyhelpers/remove_pycache.py;",
-        "uv run pytest -v tests/;",
-        "uv run python pyhelpers/remove_pycache.py;"
+        "uv run pytest -v tests/test_config.py;",
+        "uv run pytest -v tests/test_db.py;",
+        "uv run pytest -v tests/test_many_models.py;",
+        "uv run pytest -v tests/test_aggregation_classes.py;",
+        "uv run pytest -v tests/test_aggregation_average.py;",
+        "uv run pytest -v tests/test_aggregation_counter.py;",
+        "uv run pytest -v tests/test_aggregation_max.py;",
+        "uv run pytest -v tests/test_aggregation_min.py;",
+        "uv run pytest -v tests/test_aggregation_sum.py;",
+        "uv run pytest -v tests/test_cache.py;",
+        "uv run python pyhelpers/remove_pycache.py"
       ],
       "problemMatcher": []
     },

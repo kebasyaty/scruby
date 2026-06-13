@@ -70,6 +70,10 @@ def task_calculate_max(
     return max_age.get()
 
 
+# Activate database.
+Scruby.run()
+
+
 async def test_task_calculate_max() -> None:
     """Test a Max class in custom task."""
     user_coll = await Scruby.collection(User)

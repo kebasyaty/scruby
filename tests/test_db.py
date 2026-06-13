@@ -123,6 +123,10 @@ def custom_task(
     return counter
 
 
+# Activate database.
+Scruby.run()
+
+
 class TestNegative:
     """Negative tests."""
 

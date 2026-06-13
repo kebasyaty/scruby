@@ -70,6 +70,10 @@ def task_calculate_sum(
     return int(sum_age.get())
 
 
+# Activate database.
+Scruby.run()
+
+
 async def test_task_calculate_sum() -> None:
     """Test a Sum class in custom task."""
     user_coll = await Scruby.collection(User)

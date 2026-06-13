@@ -9,10 +9,12 @@ import pytest
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyConfig, ScrubyModel
-from scruby.cache import DocCache
+from scruby import Scruby, ScrubyModel
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
+
+# Delete DB.
+Scruby.napalm()
 
 
 class User(ScrubyModel):
@@ -61,9 +63,8 @@ class Car(ScrubyModel):
     )
 
 
-ScrubyConfig.db_root = "TestScrubyDB"
-ScrubyConfig.init_params()
-DocCache.load_cache(ScrubyModel.__subclasses__())
+# Activate database.
+Scruby.run(db_root="TestScrubyDB")
 
 
 async def test_user() -> None:

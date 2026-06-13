@@ -70,6 +70,10 @@ def task_calculate_min(
     return min_age.get()
 
 
+# Activate database.
+Scruby.run()
+
+
 async def test_task_calculate_min() -> None:
     """Test a Min class in custom task."""
     user_coll = await Scruby.collection(User)

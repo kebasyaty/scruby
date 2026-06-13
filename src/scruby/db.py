@@ -138,10 +138,11 @@ class Scruby(
             DocCache.create_structure(class_model.__name__)
         # Plugins connection.
         plugin_list: dict[str, Any] = {}
-        for plugin in ScrubyConfig.plugins:
-            name = plugin.__name__
-            name = name[0].lower() + name[1:]
-            plugin_list[name] = plugin(scruby_self=instance)
+        if ScrubyConfig.plugins is not None:
+            for plugin in ScrubyConfig.plugins:
+                name = plugin.__name__
+                name = name[0].lower() + name[1:]
+                plugin_list[name] = plugin(scruby_self=instance)
         instance.__dict__["plugins"] = NamedTuple(**plugin_list)
         return instance
 
@@ -244,3 +245,34 @@ class Scruby(
         with contextlib.suppress(FileNotFoundError):
             rmtree(ScrubyConfig.db_root)
         return
+
+    @staticmethod
+    def run(
+        db_root: str = "ScrubyDB",
+        max_workers: int | None = None,
+        plugins: list[Any] | None = None,
+    ) -> None:
+        """Activate database.
+
+        Args:
+            db_root (str): Path to root directory of database.
+                           Default = "ScrubyDB" (in root of project).
+            max_workers (int | None ): The maximum number of processes that can be used to execute the given calls.
+                                       If None, then as many worker processes will be
+                                       created as the machine has processors.
+            plugins (list[Any] | None): To connect plugins.
+
+        Returns:
+            None.
+        """
+        if __debug__ and plugins is not None:
+            for plugin in plugins:
+                if plugin.version != 2:
+                    msg = f"Plugin {plugin.__name__} does not apply to version 2."
+                    raise AssertionError(msg)
+
+        ScrubyConfig.db_root = db_root
+        ScrubyConfig.max_workers = max_workers
+        ScrubyConfig.plugins = plugins
+        ScrubyConfig.init_params()
+        DocCache.load_cache(ScrubyModel.__subclasses__())

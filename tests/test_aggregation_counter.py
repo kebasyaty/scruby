@@ -84,6 +84,10 @@ def task_counter(
     return users
 
 
+# Activate database.
+Scruby.run()
+
+
 async def test_task_counter() -> None:
     """Test a Counter class in custom task."""
     coll_user = await Scruby.collection(User)
