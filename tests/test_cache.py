@@ -154,6 +154,12 @@ async def test_user() -> None:
     # has_key
     assert user_coll.has_key("+447986123459")
 
+    # delete_doc
+    await user_coll.delete_doc("+447986123459")
+    assert not user_coll.has_key("+447986123459")
+    assert await user_coll.estimated_document_count() == 9
+    assert user_coll.count_documents(filter_fn=lambda doc: doc.first_name == "John") == 9
+
     #
     # delete_collection
     await Scruby.delete_collection("User")
@@ -211,6 +217,12 @@ async def test_phone() -> None:
     # has_key
     assert phone_coll.has_key("Samsung:Galaxy A26 9")
 
+    # delete_doc
+    await phone_coll.delete_doc("Samsung:Galaxy A26 9")
+    assert not phone_coll.has_key("Samsung:Galaxy A26 9")
+    assert await phone_coll.estimated_document_count() == 9
+    assert phone_coll.count_documents(filter_fn=lambda doc: doc.brand == "Samsung") == 9
+
     #
     # delete_collection
     await Scruby.delete_collection("Phone")
@@ -267,6 +279,12 @@ async def test_car() -> None:
 
     # has_key
     assert car_coll.has_key("Mazda:EZ-6 9")
+
+    # delete_doc
+    await car_coll.delete_doc("Mazda:EZ-6 9")
+    assert not car_coll.has_key("Mazda:EZ-6 9")
+    assert await car_coll.estimated_document_count() == 9
+    assert car_coll.count_documents(filter_fn=lambda doc: doc.brand == "Mazda") == 9
 
     #
     # delete_collection
