@@ -73,7 +73,7 @@ async def test_create_db() -> None:
     """Create a test database."""
     # Create users
     user_coll = await Scruby.collection(User)
-    for num in range(1, 10):
+    for num in range(9):
         user = User(
             first_name="John",
             last_name="Smith",
@@ -86,7 +86,7 @@ async def test_create_db() -> None:
 
     # Create phones
     phone_coll = await Scruby.collection(Phone)
-    for num in range(1, 10):
+    for num in range(9):
         phone = Phone(
             brand="Samsung",
             model=f"Galaxy A26 {num}",
@@ -98,7 +98,7 @@ async def test_create_db() -> None:
 
     # Create cars
     car_coll = await Scruby.collection(Car)
-    for num in range(1, 10):
+    for num in range(9):
         car = Car(
             brand="Mazda",
             model=f"EZ-6 {num}",
@@ -125,6 +125,18 @@ async def test_user() -> None:
     assert await user_coll.estimated_document_count() == 9
     # count_documents
     assert user_coll.count_documents(filter_fn=lambda doc: doc.first_name == "John") == 9
+
+    # add_doc
+    user = User(
+        first_name="John",
+        last_name="Smith",
+        birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
+        email="John_Smith@gmail.com",
+        phone="+447986123459",
+    )
+    await user_coll.add_doc(user)
+    assert await user_coll.estimated_document_count() == 10
+    assert user_coll.count_documents(filter_fn=lambda doc: doc.first_name == "John") == 10
 
     #
     # delete_collection
@@ -157,6 +169,17 @@ async def test_phone() -> None:
     # count_documents
     assert phone_coll.count_documents(filter_fn=lambda doc: doc.brand == "Samsung") == 9
 
+    # add_doc
+    phone = Phone(
+        brand="Samsung",
+        model="Galaxy A26 9",
+        screen_diagonal=6.7,
+        matrix_type="Super AMOLED",
+    )
+    await phone_coll.add_doc(phone)
+    assert await phone_coll.estimated_document_count() == 10
+    assert phone_coll.count_documents(filter_fn=lambda doc: doc.brand == "Samsung") == 10
+
     #
     # delete_collection
     await Scruby.delete_collection("Phone")
@@ -187,6 +210,17 @@ async def test_car() -> None:
     assert await car_coll.estimated_document_count() == 9
     # count_documents
     assert car_coll.count_documents(filter_fn=lambda doc: doc.brand == "Mazda") == 9
+
+    # add_doc
+    car = Car(
+        brand="Mazda",
+        model="EZ-6 9",
+        year=2025,
+        power_reserve=600,
+    )
+    await car_coll.add_doc(car)
+    assert await car_coll.estimated_document_count() == 10
+    assert car_coll.count_documents(filter_fn=lambda doc: doc.brand == "Mazda") == 10
 
     #
     # delete_collection
