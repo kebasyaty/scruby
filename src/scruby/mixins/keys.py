@@ -144,7 +144,7 @@ class Keys:
         return DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get(prepared_key)
 
     @final
-    async def has_key(self, key: str) -> bool:
+    def has_key(self, key: str) -> bool:
         """Asynchronous method for checking presence of key in collection.
 
         Args:

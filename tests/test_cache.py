@@ -151,6 +151,9 @@ async def test_user() -> None:
     assert user is not None
     assert user.birthday == datetime(1972, 11, 7, tzinfo=ZoneInfo("UTC"))
 
+    # has_key
+    assert user_coll.has_key("+447986123459")
+
     #
     # delete_collection
     await Scruby.delete_collection("User")
@@ -205,6 +208,9 @@ async def test_phone() -> None:
     assert phone is not None
     assert phone.screen_diagonal == pytest.approx(10.2)
 
+    # has_key
+    assert phone_coll.has_key("Samsung:Galaxy A26 9")
+
     #
     # delete_collection
     await Scruby.delete_collection("Phone")
@@ -258,6 +264,9 @@ async def test_car() -> None:
     car = car_coll.get_doc("Mazda:EZ-6 9")
     assert car is not None
     assert car.power_reserve == 800
+
+    # has_key
+    assert car_coll.has_key("Mazda:EZ-6 9")
 
     #
     # delete_collection
