@@ -162,6 +162,13 @@ async def test_user() -> None:
     assert await user_coll.estimated_document_count() == 9
     assert user_coll.count_documents(filter_fn=lambda doc: doc.first_name == "John") == 9
 
+    # find_one
+    user = user_coll.find_one(filter_fn=lambda doc: doc.phone == "+447986123459")
+    assert user is None
+    user = user_coll.find_one(filter_fn=lambda doc: doc.phone == "+447986123457")
+    assert user is not None
+    assert user.phone == "+447986123457"
+
     #
     # delete_collection
     await Scruby.delete_collection("User")
@@ -225,6 +232,13 @@ async def test_phone() -> None:
     assert await phone_coll.estimated_document_count() == 9
     assert phone_coll.count_documents(filter_fn=lambda doc: doc.brand == "Samsung") == 9
 
+    # find_one
+    phone = phone_coll.find_one(filter_fn=lambda doc: doc.model == "Galaxy A26 9")
+    assert phone is None
+    phone = phone_coll.find_one(filter_fn=lambda doc: doc.model == "Galaxy A26 7")
+    assert phone is not None
+    assert phone.model == "Galaxy A26 7"
+
     #
     # delete_collection
     await Scruby.delete_collection("Phone")
@@ -287,6 +301,13 @@ async def test_car() -> None:
     assert not car_coll.has_key("Mazda:EZ-6 9")
     assert await car_coll.estimated_document_count() == 9
     assert car_coll.count_documents(filter_fn=lambda doc: doc.brand == "Mazda") == 9
+
+    # find_one
+    car = car_coll.find_one(filter_fn=lambda doc: doc.model == "EZ-6 9")
+    assert car is None
+    car = car_coll.find_one(filter_fn=lambda doc: doc.model == "EZ-6 7")
+    assert car is not None
+    assert car.model == "EZ-6 7"
 
     #
     # delete_collection
