@@ -330,9 +330,9 @@ class TestPositive:
         key_name = "key name"
         leaf_path, prepared_key, key_as_hash = await user_coll._get_leaf_path(key_name)
 
-        assert leaf_path == Path("ScrubyDB/User/2/d/1/leaf.json")
+        assert leaf_path == Path("ScrubyDB/User/d/1/leaf.json")
         assert prepared_key == key_name
-        assert key_as_hash == "2d1"
+        assert key_as_hash == "d1"
         #
         # Delete DB.
         Scruby.napalm()
@@ -383,8 +383,8 @@ class TestPositive:
 
         meta = await user_coll.get_meta()
         assert meta.collection_name == "User"
-        assert meta.hash_reduce_left == 5
-        assert meta.max_number_branch == 4096
+        assert meta.hash_reduce_left == 6
+        assert meta.max_number_branch == 256
         assert meta.counter_documents == 0
 
         meta.counter_documents = 1
@@ -392,8 +392,8 @@ class TestPositive:
 
         meta_2 = await user_coll.get_meta()
         assert meta_2.collection_name == "User"
-        assert meta_2.hash_reduce_left == 5
-        assert meta_2.max_number_branch == 4096
+        assert meta_2.hash_reduce_left == 6
+        assert meta_2.max_number_branch == 256
         assert meta_2.counter_documents == 1
         #
         # Delete DB.
@@ -506,13 +506,13 @@ class TestPositive:
     async def test_hash_reduce_left(self) -> None:
         """Length of reduction hash."""
         user_coll = await Scruby.collection(User)
-        control_path = Path("ScrubyDB/User/2/d/1/leaf.json")
+        control_path = Path("ScrubyDB/User/d/1/leaf.json")
         leaf_path, _, _ = await user_coll._get_leaf_path("key name")
         assert leaf_path == control_path
 
         Scruby.napalm()
         user_coll = await Scruby.collection(User)
-        control_path = Path("ScrubyDB/User/2/d/1/leaf.json")
+        control_path = Path("ScrubyDB/User/d/1/leaf.json")
         leaf_path, _, _ = await user_coll._get_leaf_path("key name")
         assert leaf_path == control_path
         #

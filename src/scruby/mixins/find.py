@@ -56,10 +56,18 @@ class Find:
         # Variable initialization
         collection_name = class_model.__name__
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
-        docs: dict[str, Any] = DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
-            branch_number_as_hash[2]
-        ]
+        docs: dict[str, Any] = {}
         result: list[Any] = []
+
+        match hash_reduce_left:
+            case 7:
+                docs = DocCache.cache[collection_name][branch_number_as_hash[0]]
+            case 6:
+                docs = DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]]
+            case 5:
+                docs = DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
+                    branch_number_as_hash[2]
+                ]
 
         for _, doc in docs.items():
             if stop_event.is_set():

@@ -72,7 +72,13 @@ class Keys:
         await self._counter_documents(1)
         # Add new document to cache
         collection_name = self._class_model.__name__
-        DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][prepared_key] = doc
+        match self._hash_reduce_left:
+            case 7:
+                DocCache.cache[collection_name][key_as_hash[0]][prepared_key] = doc
+            case 6:
+                DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][prepared_key] = doc
+            case 5:
+                DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][prepared_key] = doc
 
     @final
     async def update_doc(self, doc: Any) -> None:
@@ -111,7 +117,15 @@ class Keys:
                 await leaf_path.write_bytes(orjson.dumps(data))
                 # Update a document from cache.
                 collection_name = self._class_model.__name__
-                DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][prepared_key] = doc
+                match self._hash_reduce_left:
+                    case 7:
+                        DocCache.cache[collection_name][key_as_hash[0]][prepared_key] = doc
+                    case 6:
+                        DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][prepared_key] = doc
+                    case 5:
+                        DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][
+                            prepared_key
+                        ] = doc
             else:
                 raise KeyNotExistsError()
         else:
@@ -141,7 +155,13 @@ class Keys:
         key_as_hash: str = f"{zlib.crc32(prepared_key.encode('utf-8')):08x}"[self._hash_reduce_left :]
         # Get value of key from cache
         collection_name = self._class_model.__name__
-        return DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get(prepared_key)
+        match self._hash_reduce_left:
+            case 7:
+                return DocCache.cache[collection_name][key_as_hash[0]].get(prepared_key)
+            case 6:
+                return DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]].get(prepared_key)
+            case 5:
+                return DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get(prepared_key)
 
     @final
     def has_key(self, key: str) -> bool:
@@ -166,10 +186,20 @@ class Keys:
         key_as_hash: str = f"{zlib.crc32(prepared_key.encode('utf-8')):08x}"[self._hash_reduce_left :]
         # Get value of key from cache
         collection_name = self._class_model.__name__
-        return (
-            DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get(prepared_key)
-            is not None
-        )
+        is_exists: bool = False
+        match self._hash_reduce_left:
+            case 7:
+                is_exists = DocCache.cache[collection_name][key_as_hash[0]].get(prepared_key) is not None
+            case 6:
+                is_exists = (
+                    DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]].get(prepared_key) is not None
+                )
+            case 5:
+                is_exists = (
+                    DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get(prepared_key)
+                    is not None
+                )
+        return is_exists
 
     @final
     async def delete_doc(self, key: str) -> None:
@@ -195,7 +225,15 @@ class Keys:
                 await self._counter_documents(-1)
                 # Delete a document from cache
                 collection_name = self._class_model.__name__
-                del DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][prepared_key]
+                match self._hash_reduce_left:
+                    case 7:
+                        del DocCache.cache[collection_name][key_as_hash[0]][prepared_key]
+                    case 6:
+                        del DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][prepared_key]
+                    case 5:
+                        del DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][
+                            prepared_key
+                        ]
             else:
                 raise KeyNotExistsError()
         else:

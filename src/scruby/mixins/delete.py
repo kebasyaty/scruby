@@ -57,9 +57,17 @@ class Delete:
                 doc = class_model.model_validate_json(doc_json)
                 if filter_fn(doc):
                     counter -= 1
-                    del DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
-                        branch_number_as_hash[2]
-                    ][doc_name]
+                    match hash_reduce_left:
+                        case 7:
+                            del DocCache.cache[collection_name][branch_number_as_hash[0]][doc_name]
+                        case 6:
+                            del DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
+                                doc_name
+                            ]
+                        case 5:
+                            del DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
+                                branch_number_as_hash[2]
+                            ][doc_name]
                 else:
                     new_state[doc_name] = doc_json
             await leaf_path.write_bytes(orjson.dumps(new_state))
