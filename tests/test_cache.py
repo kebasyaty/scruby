@@ -203,6 +203,17 @@ async def test_user() -> None:
         assert user.last_name == "Smith"
 
     # delete_many
+    count_deleted = await user_coll.delete_many(filter_fn=lambda doc: doc.phone == "???")
+    assert count_deleted == 0
+    count_deleted = await user_coll.delete_many(
+        filter_fn=lambda doc: doc.phone == "+447986123455" or doc.phone == "+447986123453",
+    )
+    assert count_deleted == 2
+    users = user_coll.find_many()
+    assert len(users) == 7
+    for user in users:
+        assert user.phone != "+447986123455"
+        assert user.phone != "+447986123453"
 
     #
     # delete_collection
@@ -306,6 +317,17 @@ async def test_phone() -> None:
         assert phone.brand == "Samsung"
 
     # delete_many
+    count_deleted = await phone_coll.delete_many(filter_fn=lambda doc: doc.model == "???")
+    assert count_deleted == 0
+    count_deleted = await phone_coll.delete_many(
+        filter_fn=lambda doc: doc.model == "Galaxy A26 5" or doc.model == "Galaxy A26 3",
+    )
+    assert count_deleted == 2
+    phones = phone_coll.find_many()
+    assert len(phones) == 7
+    for phone in phones:
+        assert phone.model != "Galaxy A26 5"
+        assert phone.model != "Galaxy A26 3"
 
     #
     # delete_collection
@@ -409,6 +431,15 @@ async def test_car() -> None:
         assert car.brand == "Mazda"
 
     # delete_many
+    count_deleted = await car_coll.delete_many(filter_fn=lambda doc: doc.model == "???")
+    assert count_deleted == 0
+    count_deleted = await car_coll.delete_many(filter_fn=lambda doc: doc.model == "EZ-6 5" or doc.model == "EZ-6 3")
+    assert count_deleted == 2
+    cars = car_coll.find_many()
+    assert len(cars) == 7
+    for car in cars:
+        assert car.model != "EZ-6 5"
+        assert car.model != "EZ-6 3"
 
     #
     # delete_collection
