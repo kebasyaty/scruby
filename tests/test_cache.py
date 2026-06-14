@@ -297,13 +297,17 @@ async def test_phone() -> None:
     assert phone_coll.count_documents(filter_fn=lambda doc: doc.brand == "Samsung") == 9
 
     # find_one
+    # ReturnType MODEL
     phone = phone_coll.find_one(filter_fn=lambda doc: doc.model == "Galaxy A26 9")
     assert phone is None
     phone = phone_coll.find_one(filter_fn=lambda doc: doc.model == "Galaxy A26 7")
     assert phone is not None
     assert phone.model == "Galaxy A26 7"
+    # ReturnType JSON
+    # ReturnType DICT
 
     # find_many
+    # ReturnType MODEL
     phones = phone_coll.find_many(filter_fn=lambda doc: doc.matrix_type == "???")
     assert phones is None
     phones = phone_coll.find_many()
@@ -312,6 +316,8 @@ async def test_phone() -> None:
     phones = phone_coll.find_many(filter_fn=lambda doc: doc.matrix_type == "Super AMOLED")
     assert phones is not None
     assert len(phones) == 9
+    # ReturnType JSON
+    # ReturnType DICT
 
     # update_many
     count_updated = await phone_coll.update_many(
@@ -411,13 +417,17 @@ async def test_car() -> None:
     assert car_coll.count_documents(filter_fn=lambda doc: doc.brand == "Mazda") == 9
 
     # find_one
+    # ReturnType MODEL
     car = car_coll.find_one(filter_fn=lambda doc: doc.model == "EZ-6 9")
     assert car is None
     car = car_coll.find_one(filter_fn=lambda doc: doc.model == "EZ-6 7")
     assert car is not None
     assert car.model == "EZ-6 7"
+    # ReturnType JSON
+    # ReturnType DICT
 
     # find_many
+    # ReturnType MODEL
     cars = car_coll.find_many(filter_fn=lambda doc: doc.power_reserve == 800)
     assert cars is None
     cars = car_coll.find_many()
@@ -426,6 +436,8 @@ async def test_car() -> None:
     cars = car_coll.find_many(filter_fn=lambda doc: doc.power_reserve == 600)
     assert cars is not None
     assert len(cars) == 9
+    # ReturnType JSON
+    # ReturnType DICT
 
     # update_many
     count_updated = await car_coll.update_many(
