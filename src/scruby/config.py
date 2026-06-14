@@ -6,14 +6,15 @@
 
 The settings class contains the following parameters:
 
-- `db_root` - Path to root directory of database. `By default = "ScrubyDB" (in root of project)`.
+- `db_root` - Path to root directory of database. `Default = "ScrubyDB" (in root of project)`.
 - `db_id` - Database ID.
-- `hash_reduce_left` - The length of the hash reduction on the left side.
+- `HASH_REDUCE_LEFT` - The length of the hash reduction on the left side.
     - `0` - 4294967296 branches in collection.
     - `2` - 16777216 branches in collection.
     - `4` - 65536 branches in collection.
-    - `6` - 256 branches in collection (by default).
-- `max_workers` - The maximum number of processes that can be used `By default = None`.
+    - `6` - 256 branches in collection (is default).
+- `MAX_NUMBER_BRANCH` - Maximum number of branches in a collection (default = 256).
+- `max_workers` - The maximum number of processes that can be used (default = None).
 - `plugins` - For adding plugins.
 """
 
@@ -22,7 +23,7 @@ from __future__ import annotations
 __all__ = ("ScrubyConfig",)
 
 import sys
-from typing import Any, ClassVar, Literal, final
+from typing import Any, ClassVar, Literal, Never, assert_never, final
 from uuid import uuid4
 
 from scruby.utils import add_to_env, get_from_env
@@ -44,10 +45,14 @@ class ScrubyConfig:
     # 0 = 4294967296 branches in collection.
     # 2 = 16777216 branches in collection.
     # 4 = 65536 branches in collection.
-    # 6 = 256 branches in collection (by default).
+    # 6 = 256 branches in collection (is default).
     # Number of branches is number of requests to the hard disk during quantum operations.
     # Quantum operations: find_one, find_many, count_documents, delete_many, run_custom_task.
     HASH_REDUCE_LEFT: ClassVar[Literal[0, 2, 4, 6]] = 6
+
+    # Maximum number of branches in a collection.
+    # 16**(8 - HASH_REDUCE_LEFT) = 256 | 65536 | 16777216 | 4294967296
+    MAX_NUMBER_BRANCH: ClassVar[Literal[256, 65536, 16777216, 4294967296]] = 256
 
     # The maximum number of processes that can be used to execute the given calls.
     # If None, then as many worker processes will be
@@ -64,6 +69,7 @@ class ScrubyConfig:
     def init_params(cls) -> None:
         """Method for general initialization of parameters."""
         cls.init_db_id()
+        cls.init_max_number_branch()
 
     @classmethod
     def init_db_id(cls) -> None:
@@ -85,3 +91,21 @@ class ScrubyConfig:
             raise ValueError("ScrubyConfig.get_db_id() => Failed to get database ID.")
 
         cls.db_id = db_id
+
+    @classmethod
+    def init_max_number_branch(cls) -> None:
+        """Initialize the `MAX_NUMBER_BRANCH` parameter.
+
+        Get maximum number of branches.
+        """
+        match cls.HASH_REDUCE_LEFT:
+            case 0:
+                cls.MAX_NUMBER_BRANCH = 4294967296
+            case 2:
+                cls.MAX_NUMBER_BRANCH = 16777216
+            case 4:
+                cls.MAX_NUMBER_BRANCH = 65536
+            case 6:
+                cls.MAX_NUMBER_BRANCH = 256
+            case _ as unreachable:
+                assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
