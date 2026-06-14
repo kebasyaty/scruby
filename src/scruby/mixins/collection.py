@@ -45,7 +45,7 @@ class Collection:
         """Asynchronous method for deleting a collection by its name.
 
         Args:
-            name (str): Collection name.
+            collection_name (str): Collection name.
 
         Returns:
             None.

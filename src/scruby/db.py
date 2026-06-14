@@ -255,6 +255,7 @@ class Scruby(
     @staticmethod
     def run(
         db_root: str = "ScrubyDB",
+        hash_reduce_left: Literal[7, 6, 5] = 7,
         max_workers: int | None = None,
         plugins: list[Any] | None = None,
     ) -> None:
@@ -278,6 +279,7 @@ class Scruby(
                     raise AssertionError(msg)
 
         ScrubyConfig.db_root = db_root
+        ScrubyConfig.HASH_REDUCE_LEFT = hash_reduce_left
         ScrubyConfig.max_workers = max_workers
         ScrubyConfig.plugins = plugins
         ScrubyConfig.init_params()
