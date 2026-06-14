@@ -177,6 +177,8 @@ async def test_user() -> None:
     )
     assert user is not None
     assert isinstance(user, str)
+    user = User.model_validate_json(user)
+    assert user.phone == "+447986123457"
     # ReturnType DICT
     user = user_coll.find_one(
         filter_fn=lambda doc: doc.phone == "+447986123457",
@@ -184,8 +186,11 @@ async def test_user() -> None:
     )
     assert user is not None
     assert isinstance(user, dict)
+    user = User.model_validate(user)
+    assert user.phone == "+447986123457"
 
     # find_many
+    # ReturnType MODEL
     users = user_coll.find_many(filter_fn=lambda doc: doc.first_name == "???")
     assert users is None
     users = user_coll.find_many()
@@ -304,7 +309,23 @@ async def test_phone() -> None:
     assert phone is not None
     assert phone.model == "Galaxy A26 7"
     # ReturnType JSON
+    phone = phone_coll.find_one(
+        filter_fn=lambda doc: doc.model == "Galaxy A26 7",
+        return_type=ReturnType.JSON,
+    )
+    assert phone is not None
+    assert isinstance(phone, str)
+    phone = Phone.model_validate_json(phone)
+    assert phone.model == "Galaxy A26 7"
     # ReturnType DICT
+    phone = phone_coll.find_one(
+        filter_fn=lambda doc: doc.model == "Galaxy A26 7",
+        return_type=ReturnType.DICT,
+    )
+    assert phone is not None
+    assert isinstance(phone, dict)
+    phone = Phone.model_validate(phone)
+    assert phone.model == "Galaxy A26 7"
 
     # find_many
     # ReturnType MODEL
@@ -424,7 +445,23 @@ async def test_car() -> None:
     assert car is not None
     assert car.model == "EZ-6 7"
     # ReturnType JSON
+    car = car_coll.find_one(
+        filter_fn=lambda doc: doc.model == "EZ-6 7",
+        return_type=ReturnType.JSON,
+    )
+    assert car is not None
+    assert isinstance(car, str)
+    car = Car.model_validate_json(car)
+    assert car.model == "EZ-6 7"
     # ReturnType DICT
+    car = car_coll.find_one(
+        filter_fn=lambda doc: doc.model == "EZ-6 7",
+        return_type=ReturnType.DICT,
+    )
+    assert car is not None
+    assert isinstance(car, dict)
+    car = Car.model_validate(car)
+    assert car.model == "EZ-6 7"
 
     # find_many
     # ReturnType MODEL
