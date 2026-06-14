@@ -525,6 +525,14 @@ async def test_car() -> None:
     assert isinstance(cars[0], Car)
     assert len(cars) == 9
     # ReturnType DICT
+    cars = car_coll.find_many(return_type=ReturnType.DICT)
+    assert cars is not None
+    assert isinstance(cars, list)
+    assert isinstance(cars[0], dict)
+    cars = [Car.model_validate(car) for car in cars]
+    assert isinstance(cars, list)
+    assert isinstance(cars[0], Car)
+    assert len(cars) == 9
 
     # update_many
     count_updated = await car_coll.update_many(
