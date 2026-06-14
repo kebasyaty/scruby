@@ -6,6 +6,7 @@ from datetime import datetime
 from typing import Annotated
 from zoneinfo import ZoneInfo
 
+import orjson
 import pytest
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
@@ -200,6 +201,17 @@ async def test_user() -> None:
     assert users is not None
     assert len(users) == 9
     # ReturnType JSON
+    users = user_coll.find_many(return_type=ReturnType.JSON)
+    assert users is not None
+    assert isinstance(users, str)
+    users = orjson.loads(users)
+    users = [orjson.dumps(user) for user in users]
+    assert isinstance(users, list)
+    assert isinstance(users[0], bytes)
+    users = [User.model_validate_json(user) for user in users]
+    assert isinstance(users, list)
+    assert isinstance(users[0], User)
+    assert len(users) == 9
     # ReturnType DICT
 
     # update_many
