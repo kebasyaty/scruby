@@ -172,9 +172,19 @@ async def test_user() -> None:
     # find_many
     users = user_coll.find_many(filter_fn=lambda doc: doc.first_name == "???")
     assert users is None
+    users = user_coll.find_many()
+    assert users is not None
+    assert len(users) == 9
     users = user_coll.find_many(filter_fn=lambda doc: doc.first_name == "John")
     assert users is not None
     assert len(users) == 9
+
+    # update_many
+    count_update = user_coll.update_many(
+        new_data={},
+        filter_fn=lambda doc: doc.first_name == "John",
+    )
+    assert count_update == 9
 
     #
     # delete_collection
@@ -249,9 +259,14 @@ async def test_phone() -> None:
     # find_many
     phones = phone_coll.find_many(filter_fn=lambda doc: doc.matrix_type == "???")
     assert phones is None
+    phones = phone_coll.find_many()
+    assert phones is not None
+    assert len(phones) == 9
     phones = phone_coll.find_many(filter_fn=lambda doc: doc.matrix_type == "Super AMOLED")
     assert phones is not None
     assert len(phones) == 9
+
+    # update_many
 
     #
     # delete_collection
@@ -326,9 +341,14 @@ async def test_car() -> None:
     # find_many
     cars = car_coll.find_many(filter_fn=lambda doc: doc.power_reserve == 800)
     assert cars is None
+    cars = car_coll.find_many()
+    assert cars is not None
+    assert len(cars) == 9
     cars = car_coll.find_many(filter_fn=lambda doc: doc.power_reserve == 600)
     assert cars is not None
     assert len(cars) == 9
+
+    # update_many
 
     #
     # delete_collection
