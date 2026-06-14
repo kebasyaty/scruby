@@ -181,6 +181,11 @@ async def test_user() -> None:
 
     # update_many
     count_updated = await user_coll.update_many(
+        new_data={"first_name": "???", "last_name": "???"},
+        filter_fn=lambda doc: doc.first_name == "???" or doc.last_name == "???",
+    )
+    assert count_updated == 0
+    count_updated = await user_coll.update_many(
         new_data={"first_name": "Gene", "last_name": "Kost"},
         filter_fn=lambda doc: doc.first_name == "John" or doc.last_name == "Smith",
     )
@@ -279,6 +284,11 @@ async def test_phone() -> None:
 
     # update_many
     count_updated = await phone_coll.update_many(
+        new_data={"brand": "???"},
+        filter_fn=lambda doc: doc.brand == "???",
+    )
+    assert count_updated == 0
+    count_updated = await phone_coll.update_many(
         new_data={"brand": "SONY"},
         filter_fn=lambda doc: doc.brand == "Samsung",
     )
@@ -374,6 +384,11 @@ async def test_car() -> None:
     assert len(cars) == 9
 
     # update_many
+    count_updated = await car_coll.update_many(
+        new_data={"brand": "???"},
+        filter_fn=lambda doc: doc.brand == "???",
+    )
+    assert count_updated == 0
     count_updated = await car_coll.update_many(
         new_data={"brand": "BMW"},
         filter_fn=lambda doc: doc.brand == "Mazda",
