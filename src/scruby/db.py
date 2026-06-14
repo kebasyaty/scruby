@@ -61,8 +61,6 @@ class Scruby(
         super().__init__()
         self._meta = _Meta
         self._db_root = ScrubyConfig.db_root
-        self._hash_reduce_left = ScrubyConfig.HASH_REDUCE_LEFT
-        self._max_number_branch = ScrubyConfig.MAX_NUMBER_BRANCH
         self._db_id = ScrubyConfig.db_id
         self._max_workers = ScrubyConfig.max_workers
 
@@ -121,9 +119,17 @@ class Scruby(
         )
         # Create metadata for collection, if missing.
         meta_dir_path = Path(*meta_dir_path_tuple)
-        if not await meta_dir_path.exists():
-            await meta_dir_path.mkdir(parents=True)
+        if await meta_dir_path.exists():
+            # Get metadata if it already exists.
+            meta_json = await instance.__dict__["_meta_path"].read_text()
+            meta: _Meta = instance.__dict__["_meta"].model_validate_json(meta_json)
+            instance.__dict__["_hash_reduce_left"] = meta.hash_reduce_left
+            instance.__dict__["_max_number_branch"] = meta.max_number_branch
+        else:
+            instance.__dict__["_hash_reduce_left"] = ScrubyConfig.HASH_REDUCE_LEFT
+            instance.__dict__["_max_number_branch"] = ScrubyConfig.MAX_NUMBER_BRANCH
             # Create metadata.
+            await meta_dir_path.mkdir(parents=True)
             meta = _Meta(
                 collection_name=class_model.__name__,
                 hash_reduce_left=ScrubyConfig.HASH_REDUCE_LEFT,
