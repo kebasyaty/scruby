@@ -11,11 +11,25 @@ __all__ = ("Find",)
 import warnings
 from collections.abc import Callable
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed
+from enum import Enum
 from threading import Event
-from typing import Any, final
+from typing import Any, Never, assert_never, final
 
-import orjson
-from anyio import Path
+from scruby.cache import DocCache
+
+
+class ReturnType(Enum):
+    """Return type.
+
+    Members:
+        - `MODEL:` ScrubyModel type.
+        - `JSON:` JSON-string type.
+        - `DICT:` Dictionary type.
+    """
+
+    MODEL = 1
+    JSON = 2
+    DICT = 3
 
 
 class Find:
@@ -23,11 +37,10 @@ class Find:
 
     @final
     @staticmethod
-    async def _task_find(
+    def _task_find(
         branch_number: int,
         filter_fn: Callable,
         hash_reduce_left: int,
-        db_root: str,
         class_model: Any,
         stop_event: Event,
     ) -> list[Any] | None:
@@ -41,32 +54,33 @@ class Find:
         # Suppress warning - RuntimeWarning: coroutine 'Find._task_find' was never awaited
         warnings.filterwarnings("ignore", category=RuntimeWarning)
         # Variable initialization
+        collection_name = class_model.__name__
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
-        separated_hash: str = "/".join(list(branch_number_as_hash))
-        leaf_path = Path(
-            *(
-                db_root,
-                class_model.__name__,
-                separated_hash,
-                "leaf.json",
-            ),
-        )
-        docs: list[Any] = []
-        if await leaf_path.exists():
-            data_json: bytes = await leaf_path.read_bytes()
-            data: dict[str, str] = orjson.loads(data_json) or {}
-            for _, val in data.items():
-                if stop_event.is_set():
-                    return None
-                doc = class_model.model_validate_json(val)
-                if filter_fn(doc):
-                    docs.append(doc)
-        return docs or None
+        docs: dict[str, Any] = {}
+        result: list[Any] = []
+
+        match hash_reduce_left:
+            case 7:
+                docs = DocCache.cache[collection_name][branch_number_as_hash[0]]
+            case 6:
+                docs = DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]]
+            case 5:
+                docs = DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
+                    branch_number_as_hash[2]
+                ]
+
+        for _, doc in docs.items():
+            if stop_event.is_set():
+                return None
+            if filter_fn(doc):
+                result.append(doc)
+        return result or None
 
     @final
-    async def find_one(
+    def find_one(
         self,
         filter_fn: Callable,
+        return_type: ReturnType = ReturnType.MODEL,
     ) -> Any | None:
         """Asynchronous method for find one document matching the filter.
 
@@ -84,7 +98,6 @@ class Find:
         search_task_fn: Callable = self._task_find
         branch_numbers: range = range(self._max_number_branch)
         hash_reduce_left: int = self._hash_reduce_left
-        db_root: str = self._db_root
         class_model: Any = self._class_model
         stop_signal = Event()
         doc: Any | None = None
@@ -96,14 +109,13 @@ class Find:
                     branch_number,
                     filter_fn,
                     hash_reduce_left,
-                    db_root,
                     class_model,
                     stop_signal,
                 )
                 for branch_number in branch_numbers
             ]
             for future in as_completed(futures):
-                docs = await future.result()
+                docs = future.result()
                 if docs is not None:
                     # Get first document
                     doc = docs[0]
@@ -114,17 +126,26 @@ class Find:
                     # Stop loop
                     break
         # Return document
-        return doc
+        match return_type.value:
+            case 1:
+                return doc
+            case 2:
+                return doc.model_dump_json() if doc is not None else None
+            case 3:
+                return doc.model_dump() if doc is not None else None
+            case _ as unreachable:
+                assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
     @final
-    async def find_many(
+    def find_many(
         self,
         filter_fn: Callable = lambda _: True,
         limit_docs: int = 100,
         page_number: int = 1,
         sort_fn: Callable | None = lambda doc: doc.created_at,
         sort_reverse: bool = True,
-    ) -> list[Any] | None:
+        return_type: ReturnType = ReturnType.MODEL,
+    ) -> list[Any] | str | None:
         """Asynchronous method for find many documents matching the filter.
 
         Attention:
@@ -158,7 +179,6 @@ class Find:
         search_task_fn: Callable = self._task_find
         branch_numbers: range = range(self._max_number_branch)
         hash_reduce_left: int = self._hash_reduce_left
-        db_root: str = self._db_root
         class_model: Any = self._class_model
         stop_signal = Event()
         stop_outer_loop: bool = False
@@ -173,14 +193,13 @@ class Find:
                     branch_number,
                     filter_fn,
                     hash_reduce_left,
-                    db_root,
                     class_model,
                     stop_signal,
                 )
                 for branch_number in branch_numbers
             ]
             for future in as_completed(futures):
-                docs = await future.result()
+                docs = future.result()
                 if docs is not None:
                     for doc in docs:
                         if number_docs_skippe == 0:
@@ -202,4 +221,12 @@ class Find:
         if sort_fn is not None:
             result.sort(key=sort_fn, reverse=sort_reverse)
         # Return a document list
-        return result or None
+        match return_type.value:
+            case 1:
+                return result or None
+            case 2:
+                return f"[{','.join([doc.model_dump_json() for doc in result])}]" if result is not None else None
+            case 3:
+                return [doc.model_dump() for doc in result] if result is not None else None
+            case _ as unreachable:
+                assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]

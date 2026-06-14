@@ -29,12 +29,7 @@ class User(ScrubyModel):
 async def main() -> None:
     """Example."""
     # Activate database.
-    Scruby.run(
-        db_root = "ScrubyDB",  # Default = "ScrubyDB"
-        HASH_REDUCE_LEFT = 6,  # Default = 6
-        max_workers = None,  # Default = None
-        plugins = None,  # Default = None
-    )
+    Scruby.run()
 
     # Get collection `User`.
     user_coll = await Scruby.collection(User)
@@ -45,7 +40,7 @@ async def main() -> None:
     await Scruby.delete_collection("User")
 
     collection_list = await Scruby.collection_list()
-    print(ucollection_list)  # []
+    print(ucollection_list)  # None
 
     # Full database deletion.
     # Hint: The main purpose is tests.

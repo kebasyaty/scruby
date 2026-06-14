@@ -16,6 +16,8 @@ from typing import Any, final
 import orjson
 from anyio import Path
 
+from scruby.cache import DocCache
+
 
 class Update:
     """Methods for updating documents."""
@@ -37,30 +39,46 @@ class Update:
         Returns:
             The number of updated documents.
         """
+        collection_name = class_model.__name__
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
         separated_hash: str = "/".join(list(branch_number_as_hash))
         leaf_path = Path(
             *(
                 db_root,
-                class_model.__name__,
+                collection_name,
                 separated_hash,
                 "leaf.json",
             ),
         )
         counter: int = 0
+
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
             data: dict[str, str] = orjson.loads(data_json) or {}
             new_state: dict[str, str] = {}
-            for doc_name, doc_json in data.items():
-                doc = class_model.model_validate_json(doc_json)
+            for doc_name, val in data.items():
+                doc = class_model.model_validate_json(val)
                 if filter_fn(doc):
                     for field_name, value in new_data.items():
                         doc.__dict__[field_name] = value
                     new_state[doc_name] = doc.model_dump_json()
+                    # Save updated documents to cache
+                    match hash_reduce_left:
+                        case 7:
+                            DocCache.cache[collection_name][branch_number_as_hash[0]][doc_name] = doc
+                        case 6:
+                            DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
+                                doc_name
+                            ] = doc
+                        case 5:
+                            DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
+                                branch_number_as_hash[2]
+                            ][doc_name] = doc
+                    # Update counter
                     counter += 1
                 else:
-                    new_state[doc_name] = doc_json
+                    new_state[doc_name] = val
+            # Save updated documents to the database
             await leaf_path.write_bytes(orjson.dumps(new_state))
         return counter
 

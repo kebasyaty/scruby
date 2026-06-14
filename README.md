@@ -4,7 +4,7 @@
       <img
         height="80"
         alt="Logo"
-        src="https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/logo.svg">
+        src="https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/logo.svg">
     </a>
   </p>
   <p>
@@ -25,23 +25,20 @@
       <a href="https://github.com/kebasyaty/scruby/blob/main/GPL-3.0-LICENSE" alt="License: GPL v3"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
     </p>
     <p align="center">
-        The library uses fractal-tree addressing and
-        <br>
-        the search for documents based on the effect of a quantum loop.
-        <br>
-        The database consists of collections.
-        <br>
-        The maximum size of the one collection is <b>16**8=4294967296</b> branches,
-        <br>
-        each branch can store one or more keys.
-        <br>
-        The value of any key in collection can be obtained maximum in <b>8</b> steps,
-        <br>
-        thereby achieving high performance.
-        <br>
-        The effectiveness of the search for documents based on a quantum loop,
-        <br>
-        requires a large number of processor threads.
+      The library uses fractal-tree addressing and<br>
+      the search for documents based on the effect of a quantum loop.
+      <br>
+      <br>
+      The size of each collection is 16|256|4096 branches,<br>
+      each branch can store one or more keys.
+      <br>
+      <br>
+      The value of any key in collection can be obtained in 1-3 steps,<br>
+      thereby achieving high performance.
+      <br>
+      <br>
+      The effectiveness of the search for documents based on a quantum loop,<br>
+      requires a large number of processor threads.
     </p>
   </p>
 </div>
@@ -50,28 +47,26 @@
 
 <br>
 
-<img src="https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/attention.svg" alt="Attention">
+<img src="https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/attention.svg" alt="Attention">
 <p>
 <b>Parameter `ScrubyConfig.HASH_REDUCE_LEFT`:</b>
 <br>
-0 = 4294967296 branches in collection -> It is recommended to work with documents only using keys.
+6 = 16 branches in collection (is default) -> ~16000+ docs (for development).
 <br>
-2 = 16777216 branches in collection -> It is recommended to work with documents only using keys.
+6 = 256 branches in collection -> ~256000+ docs (for small projects).
 <br>
-4 = 65536 branches in collection -> It is recommended to work with documents only using keys.
-<br>
-6 = 256 branches in collection (is default) -> Use all standard tools and plugins.
+6 = 4096 branches in collection -> ~4096000+ (for large projects).
 </p>
 
 <br>
 <br>
 <br>
 
-[![List of plugins](https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/links/plugins.svg "List of plugins")](https://github.com/kebasyaty/scruby/blob/v1/PLUGINS.md "List of plugins")
+[![List of plugins](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/plugins.svg "List of plugins")](https://github.com/kebasyaty/scruby/blob/v2/PLUGINS.md "List of plugins")
 
-[![Documentation](https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/links/documentation.svg "Documentation")](https://kebasyaty.github.io/scruby/ "Documentation")
+[![Documentation](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/documentation.svg "Documentation")](https://kebasyaty.github.io/scruby/ "Documentation")
 
-[![Requirements](https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/links/requirements.svg "Requirements")](https://github.com/kebasyaty/scruby/blob/v1/REQUIREMENTS.md "Requirements")
+[![Requirements](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/requirements.svg "Requirements")](https://github.com/kebasyaty/scruby/blob/v2/REQUIREMENTS.md "Requirements")
 
 ## Installation
 
@@ -90,7 +85,7 @@ uv run python -OOP main.py
 
 ## Usage
 
-[![Examples](https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/links/examples.svg "Examples")](https://kebasyaty.github.io/scruby/latest/pages/usage/ "Examples")
+[![Examples](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/examples.svg "Examples")](https://kebasyaty.github.io/scruby/latest/pages/usage/ "Examples")
 
 ```python
 """Working with keys."""
@@ -144,12 +139,12 @@ async def main() -> None:
     await user_coll.update_doc(user)
 
     # Get user details
-    user = await user_coll.get_doc("+447986123456")
+    user = user_coll.get_doc("+447986123456")
     pp(user)
-    await user_coll.get_doc("key missing")  # => None
+    user_coll.get_doc("key missing")  # => None
 
     # Check for the presence of a key in the collection
-    await user_coll.has_key("+447986123456")  # => True
+    user_coll.has_key("+447986123456")  # => True
 
     # Delete a document by key
     await user_coll.delete_doc("+447986123456")
@@ -210,7 +205,7 @@ async def main() -> None:
     await phone_coll.add_doc(phone)
 
     # Find phone by brand
-    phone_details: Phone | None = await phone_coll.find_one(
+    phone_details: Phone | None = phone_coll.find_one(
         filter_fn=lambda doc: doc.brand == "Samsung",
     )
     if phone_details is not None:
@@ -219,7 +214,7 @@ async def main() -> None:
         print("No Phone!")
 
     # Find phone by model
-    phone_details: Phone | None = await phone_coll.find_one(
+    phone_details: Phone | None = phone_coll.find_one(
         filter_fn=lambda doc: doc.model == "Galaxy A26",
     )
     if phone_details is not None:
@@ -283,14 +278,14 @@ async def main() -> None:
         await car_coll.add_doc(car)
 
     # Find all cars
-    car_list: list[Car] | None = await car_coll.find_many()
+    car_list: list[Car] | None = car_coll.find_many()
     if car_list is not None:
         pp(car_list)
     else:
         print("No cars!")
 
     # Find cars by brand and year
-    car_list: list[Car] | None = await car_coll.find_many(
+    car_list: list[Car] | None = car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda" and doc.year == 2025,
     )
     if car_list is not None:
@@ -299,7 +294,7 @@ async def main() -> None:
         print("No cars!")
 
     # Pagination
-    car_list: list[Car] | None = await car_coll.find_many(
+    car_list: list[Car] | None = car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
         limit_docs=5,
         page_number=2,
@@ -310,7 +305,7 @@ async def main() -> None:
         print("No cars!")
 
     # Sorting
-    car_list: list[Car] | None = await car_coll.find_many(
+    car_list: list[Car] | None = car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
         sort_fn=lambda doc: (doc.brand, doc.updated_at),
         sort_reverse=True,
@@ -331,8 +326,8 @@ if __name__ == "__main__":
 
 <br>
 
-[![Changelog](https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/links/changelog.svg "Changelog")](https://github.com/kebasyaty/scruby/blob/v1/CHANGELOG.md "Changelog")
+[![Changelog](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/changelog.svg "Changelog")](https://github.com/kebasyaty/scruby/blob/v2/CHANGELOG.md "Changelog")
 
-[![MIT](https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/links/mit.svg "MIT")](https://github.com/kebasyaty/scruby/blob/main/MIT-LICENSE "MIT")
+[![MIT](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/mit.svg "MIT")](https://github.com/kebasyaty/scruby/blob/main/MIT-LICENSE "MIT")
 
-[![GPL-3.0](https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/links/gpl-3.0-or-later.svg "GPL-3.0")](https://github.com/kebasyaty/scruby/blob/main/GPL-3.0-LICENSE "GPL-3.0")
+[![GPL-3.0](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/gpl-3.0-or-later.svg "GPL-3.0")](https://github.com/kebasyaty/scruby/blob/main/GPL-3.0-LICENSE "GPL-3.0")

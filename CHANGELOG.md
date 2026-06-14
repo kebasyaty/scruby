@@ -1,13 +1,5 @@
 ### CHANGELOG
 
-#### v1.6.0 2026-06-13
-
-- Added a `Scruby.run()` method. See README.md and documentation.
-- Upgraded dependencies.
-- Updated tests.
-- Updated documentation.
-- Updated README.md
-
 #### v1.1.1 2026-06-05
 
 - Fixed a `find_many` method.

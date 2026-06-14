@@ -17,9 +17,6 @@ pytestmark = pytest.mark.asyncio(loop_scope="module")
 # Delete DB.
 Scruby.napalm()
 
-# Activate database.
-Scruby.run()
-
 
 class UserTest(ScrubyModel):
     """User model."""
@@ -65,6 +62,10 @@ class CarTest(ScrubyModel):
         frozen=True,
         default_factory=lambda data: f"{data['brand']}:{data['model']}",
     )
+
+
+# Activate database.
+Scruby.run()
 
 
 async def test_user() -> None:

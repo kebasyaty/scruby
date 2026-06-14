@@ -35,7 +35,7 @@ class User(ScrubyModel):
     )
 
 
-async def task_counter(
+def task_counter(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
@@ -68,7 +68,7 @@ async def task_counter(
             for branch_number in branch_numbers
         ]
         for future in as_completed(futures):
-            docs = await future.result()
+            docs = future.result()
             if docs is not None:
                 for doc in docs:
                     if counter.check():
@@ -89,12 +89,7 @@ async def task_counter(
 async def main() -> None:
     """Example."""
     # Activate database.
-    Scruby.run(
-        db_root = "ScrubyDB",  # Default = "ScrubyDB"
-        HASH_REDUCE_LEFT = 6,  # Default = 6
-        max_workers = None,  # Default = None
-        plugins = None,  # Default = None
-    )
+    Scruby.run()
 
     # Get collection `User`.
     user_coll = await Scruby.collection(User)
@@ -110,7 +105,7 @@ async def main() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(
+    result = user_coll.run_custom_task(
         custom_task_fn=task_counter,
         filter_fn=lambda doc: doc.first_name == "John",
         limit_docs=5,  # custom parameter

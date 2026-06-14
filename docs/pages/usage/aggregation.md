@@ -16,6 +16,10 @@ from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, ScrubyModel, ScrubyConfig
 from scruby.aggregation import Average
 
+ScrubyConfig.db_root = "ScrubyDB"  # Default = "ScrubyDB"
+ScrubyConfig.max_workers = None  # Default = None
+ScrubyConfig.plugins = []  # Default = []
+
 
 class User(ScrubyModel):
     """User model."""
@@ -31,7 +35,7 @@ class User(ScrubyModel):
     )
 
 
-async def task_calculate_average(
+def task_calculate_average(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
@@ -64,7 +68,7 @@ async def task_calculate_average(
             for branch_number in branch_numbers
         ]
         for future in as_completed(futures):
-            docs = await future.result()
+            docs = future.result()
             if docs is not None:
                 for doc in docs:
                     average_age.set(doc.age)
@@ -74,12 +78,7 @@ async def task_calculate_average(
 async def main() -> None:
     """Example."""
     # Activate database.
-    Scruby.run(
-        db_root = "ScrubyDB",  # Default = "ScrubyDB"
-        HASH_REDUCE_LEFT = 6,  # Default = 6
-        max_workers = None,  # Default = None
-        plugins = None,  # Default = None
-    )
+    Scruby.run()
 
     # Get collection `User`.
     user_coll = await Scruby.collection(User)
@@ -94,7 +93,7 @@ async def main() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(task_calculate_average)
+    result = user_coll.run_custom_task(task_calculate_average)
     print(result)  # => 50.0
 
     # Full database deletion.
@@ -138,7 +137,7 @@ class User(BaseModel):
     )
 
 
-async def task_counter(
+def task_counter(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
@@ -170,7 +169,7 @@ async def task_counter(
             for branch_number in branch_numbers
         ]
         for future in as_completed(futures):
-            docs = await future.result()
+            docs = future.result()
             if docs is not None:
                 for doc in docs:
                     if counter.check():
@@ -191,12 +190,7 @@ async def task_counter(
 async def main() -> None:
     """Example."""
     # Activate database.
-    Scruby.run(
-        db_root = "ScrubyDB",  # Default = "ScrubyDB"
-        HASH_REDUCE_LEFT = 6,  # Default = 6
-        max_workers = None,  # Default = None
-        plugins = None,  # Default = None
-    )
+    Scruby.run()
 
     # Get collection `User`.
     user_coll = await Scruby.collection(User)
@@ -211,7 +205,7 @@ async def main() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(
+    result = user_coll.run_custom_task(
         custom_task_fn=task_counter,
         limit_docs=5,  # custom parameter
     )
@@ -258,7 +252,7 @@ class User(ScrubyModel):
     )
 
 
-async def task_calculate_max(
+def task_calculate_max(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
@@ -288,7 +282,7 @@ async def task_calculate_max(
             for branch_number in branch_numbers
         ]
         for future in as_completed(futures):
-            docs = await future.result()
+            docs = future.result()
             if docs is not None:
                 for doc in docs:
                     max_age.set(doc.age)
@@ -298,12 +292,7 @@ async def task_calculate_max(
 async def main() -> None:
     """Example."""
     # Activate database.
-    Scruby.run(
-        db_root = "ScrubyDB",  # Default = "ScrubyDB"
-        HASH_REDUCE_LEFT = 6,  # Default = 6
-        max_workers = None,  # Default = None
-        plugins = None,  # Default = None
-    )
+    Scruby.run()
 
     # Get collection `User`.
     user_coll = await Scruby.collection(User)
@@ -318,7 +307,7 @@ async def main() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(task_calculate_max)
+    result = user_coll.run_custom_task(task_calculate_max)
     print(result)  # => 90.0
 
     # Full database deletion.
@@ -362,7 +351,7 @@ class User(ScrubyModel):
     )
 
 
-async def task_calculate_min(
+def task_calculate_min(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
@@ -392,7 +381,7 @@ async def task_calculate_min(
             for branch_number in branch_numbers
         ]
         for future in as_completed(futures):
-            docs = await future.result()
+            docs = future.result()
             if docs is not None:
                 for doc in docs:
                     min_age.set(doc.age)
@@ -402,12 +391,7 @@ async def task_calculate_min(
 async def main() -> None:
     """Example."""
     # Activate database.
-    Scruby.run(
-        db_root = "ScrubyDB",  # Default = "ScrubyDB"
-        HASH_REDUCE_LEFT = 6,  # Default = 6
-        max_workers = None,  # Default = None
-        plugins = None,  # Default = None
-    )
+    Scruby.run()
 
     # Get collection `User`.
     user_coll = await Scruby.collection(User)
@@ -422,7 +406,7 @@ async def main() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(task_calculate_min)
+    result = user_coll.run_custom_task(task_calculate_min)
     print(result)  # => 10.0
 
     # Full database deletion.
@@ -466,7 +450,7 @@ class User(ScrubyModel):
     )
 
 
-async def task_calculate_sum(
+def task_calculate_sum(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
@@ -496,7 +480,7 @@ async def task_calculate_sum(
             for branch_number in branch_numbers
         ]
         for future in as_completed(futures):
-            docs = await future.result()
+            docs = future.result()
             if docs is not None:
                 for doc in docs:
                     sum_age.set(doc.age)
@@ -506,12 +490,7 @@ async def task_calculate_sum(
 async def main() -> None:
     """Example."""
     # Activate database.
-    Scruby.run(
-        db_root = "ScrubyDB",  # Default = "ScrubyDB"
-        HASH_REDUCE_LEFT = 6,  # Default = 6
-        max_workers = None,  # Default = None
-        plugins = None,  # Default = None
-    )
+    Scruby.run()
 
     # Get collection `User`.
     user_coll = await Scruby.collection(User)
@@ -526,7 +505,7 @@ async def main() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(task_calculate_sum)
+    result = user_coll.run_custom_task(task_calculate_sum)
     print(result)  # => 450.0
 
     # Full database deletion.

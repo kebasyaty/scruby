@@ -34,12 +34,7 @@ class User(ScrubyModel):
 async def main() -> None:
     """Example."""
     # Activate database.
-    Scruby.run(
-        db_root = "ScrubyDB",  # Default = "ScrubyDB"
-        HASH_REDUCE_LEFT = 6,  # Default = 6
-        max_workers = None,  # Default = None
-        plugins = None,  # Default = None
-    )
+    Scruby.run()
 
     # Get collection `User`.
     user_coll = await Scruby.collection(User)
@@ -60,7 +55,7 @@ async def main() -> None:
     )
     print(number_updated_users)  # => 9
 
-    users: list[User] | None = await user_coll.find_many()
+    users: list[User] | None = user_coll.find_many()
     for user in users:
         print(user.first_name)  # => Georg
 

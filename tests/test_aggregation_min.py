@@ -11,16 +11,13 @@ import pytest
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyConfig, ScrubyModel
+from scruby import Scruby, ScrubyModel
 from scruby.aggregation import Min
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
 # Delete DB.
 Scruby.napalm()
-
-# Activate database.
-Scruby.run()
 
 
 class User(ScrubyModel):
@@ -38,12 +35,11 @@ class User(ScrubyModel):
     )
 
 
-async def task_calculate_min(
+def task_calculate_min(
     search_task_fn: Callable,
     filter_fn: Callable,
     branch_numbers: range,
     hash_reduce_left: int,
-    db_root: str,
     class_model: Any,
     max_workers: int | None,
     stop_signal: Event,
@@ -61,23 +57,25 @@ async def task_calculate_min(
                 branch_number,
                 filter_fn,
                 hash_reduce_left,
-                db_root,
                 class_model,
                 stop_signal,
             )
             for branch_number in branch_numbers
         ]
         for future in as_completed(futures):
-            docs = await future.result()
+            docs = future.result()
             if docs is not None:
                 for doc in docs:
                     min_age.set(doc.age)
     return min_age.get()
 
 
+# Activate database.
+Scruby.run()
+
+
 async def test_task_calculate_min() -> None:
     """Test a Min class in custom task."""
-    ScrubyConfig.hash_reduce_left = 6  # 256 branches in collection
     user_coll = await Scruby.collection(User)
 
     for num in range(1, 10):
@@ -89,7 +87,7 @@ async def test_task_calculate_min() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(task_calculate_min)
+    result = user_coll.run_custom_task(task_calculate_min)
     assert result == 10.0  # noqa: RUF069
     #
     # Delete DB.

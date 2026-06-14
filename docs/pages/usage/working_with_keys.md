@@ -31,12 +31,7 @@ class User(ScrubyModel):
 async def main() -> None:
     """Example."""
     # Activate database.
-    Scruby.run(
-        db_root = "ScrubyDB",  # Default = "ScrubyDB"
-        HASH_REDUCE_LEFT = 6,  # Default = 6
-        max_workers = None,  # Default = None
-        plugins = None,  # Default = None
-    )
+    Scruby.run()
 
     # Create/get the `User` collection.
     user_coll = await Scruby.collection(User)
@@ -56,12 +51,12 @@ async def main() -> None:
     await user_coll.update_doc(user)
 
     # Get user details
-    user = await user_coll.get_doc("+447986123456")
+    user = user_coll.get_doc("+447986123456")
     pp(user)
-    await user_coll.get_doc("key missing")  # => None
+    user_coll.get_doc("key missing")  # => None
 
-    await user_coll.has_key("+447986123456")  # => True
-    await user_coll.has_key("key missing")  # => False
+    user_coll.has_key("+447986123456")  # => True
+    user_coll.has_key("key missing")  # => False
 
     await user_coll.delete_doc("+447986123456")
     await user_coll.delete_doc("+447986123456")  # => KeyError

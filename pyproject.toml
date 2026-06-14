@@ -1,6 +1,6 @@
 [project]
 name = "scruby"
-version = "1.7.0"
+version = "2.0.0"
 description = "Asynchronous library for building and managing a hybrid database, by scheme of key-value."
 readme = "README.md"
 requires-python = ">=3.12,<4.0"
@@ -38,7 +38,7 @@ dependencies = [
 
 [project.urls]
 "Bug Tracker" = "https://github.com/kebasyaty/scruby/issues"
-Changelog = "https://github.com/kebasyaty/scruby/blob/v1/CHANGELOG.md"
+Changelog = "https://github.com/kebasyaty/scruby/blob/v2/CHANGELOG.md"
 Homepage = "https://kebasyaty.github.io/scruby/"
 Repository = "https://github.com/kebasyaty/scruby"
 Source = "https://github.com/kebasyaty/scruby"

@@ -4,7 +4,7 @@
       <img
         id="logo"
         alt="Logo"
-        src="https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/logo.svg">
+        src="https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/logo.svg">
     </a>
   </p>
   <p>
@@ -29,51 +29,43 @@
 <hr>
 
 <p>
-  The library uses fractal-tree addressing and
-  <br>
+  The library uses fractal-tree addressing and<br>
   the search for documents based on the effect of a quantum loop.
   <br>
   <br>
-  The database consists of collections.
-  <br>
-  The maximum size of the one collection is <b>16**8=4294967296</b> branches,
-  <br>
+  The size of each collection is 4096 branches,<br>
   each branch can store one or more keys.
   <br>
   <br>
-  The value of any key in collection can be obtained maximum in <b>8</b> steps,
-  <br>
+  The value of any key in collection can be obtained in 3 steps,<br>
   thereby achieving high performance.
   <br>
   <br>
-  The effectiveness of the search for documents based on a quantum loop,
-  <br>
+  The effectiveness of the search for documents based on a quantum loop,<br>
   requires a large number of processor threads.
 </p>
 
 <hr>
 
-<img src="https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/attention.svg" alt="Attention">
+<img src="https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/attention.svg" alt="Attention">
 <p>
 <b>Parameter `ScrubyConfig.HASH_REDUCE_LEFT`:</b>
 <br>
-0 = 4294967296 branches in collection -> It is recommended to work with documents only using keys.
+6 = 16 branches in collection (is default) -> ~16000+ docs (for development).
 <br>
-2 = 16777216 branches in collection -> It is recommended to work with documents only using keys.
+6 = 256 branches in collection -> ~256000+ docs (for small projects).
 <br>
-4 = 65536 branches in collection -> It is recommended to work with documents only using keys.
-<br>
-6 = 256 branches in collection (is default) -> Use all standard tools and plugins.
+6 = 4096 branches in collection -> ~4096000+ (for large projects).
 </p>
 
 <hr>
 
-[![List of plugins](https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/links/plugins.svg "List of plugins")](https://github.com/kebasyaty/scruby/blob/v1/PLUGINS.md "List of plugins")
+[![List of plugins](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/plugins.svg "List of plugins")](https://github.com/kebasyaty/scruby/blob/v2/PLUGINS.md "List of plugins")
 
-[![Requirements](https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/links/requirements.svg "Requirements")](https://github.com/kebasyaty/scruby/blob/v1/REQUIREMENTS.md "Requirements")
+[![Requirements](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/requirements.svg "Requirements")](https://github.com/kebasyaty/scruby/blob/v2/REQUIREMENTS.md "Requirements")
 
-[![Changelog](https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/links/changelog.svg "Changelog")](https://github.com/kebasyaty/scruby/blob/v1/CHANGELOG.md "Changelog")
+[![Changelog](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/changelog.svg "Changelog")](https://github.com/kebasyaty/scruby/blob/v2/CHANGELOG.md "Changelog")
 
-[![MIT](https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/links/mit.svg "MIT")](https://github.com/kebasyaty/scruby/blob/main/MIT-LICENSE "MIT")
+[![MIT](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/mit.svg "MIT")](https://github.com/kebasyaty/scruby/blob/main/MIT-LICENSE "MIT")
 
-[![GPL-3.0](https://raw.githubusercontent.com/kebasyaty/scruby/v1/assets/links/gpl-3.0-or-later.svg "GPL-3.0")](https://github.com/kebasyaty/scruby/blob/main/GPL-3.0-LICENSE "GPL-3.0")
+[![GPL-3.0](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/gpl-3.0-or-later.svg "GPL-3.0")](https://github.com/kebasyaty/scruby/blob/main/GPL-3.0-LICENSE "GPL-3.0")

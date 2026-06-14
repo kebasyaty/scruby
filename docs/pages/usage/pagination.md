@@ -34,12 +34,7 @@ class Car(ScrubyModel):
 async def main() -> None:
     """Example."""
     # Activate database.
-    Scruby.run(
-        db_root = "ScrubyDB",  # Default = "ScrubyDB"
-        HASH_REDUCE_LEFT = 6,  # Default = 6
-        max_workers = None,  # Default = None
-        plugins = None,  # Default = None
-    )
+    Scruby.run()
 
     # Get collection `Car`.
     car_coll = await Scruby.collection(Car)
@@ -55,7 +50,7 @@ async def main() -> None:
         await car_coll.add_doc(car)
 
     # Pagination.
-    car_list: list[Car] | None = await car_coll.find_many(
+    car_list: list[Car] | None = car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
         limit_docs=5,
         page_number=2,
