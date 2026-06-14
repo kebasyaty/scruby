@@ -122,12 +122,12 @@ async def main() -> None:
     await user_coll.update_doc(user)
 
     # Get user details
-    user = await user_coll.get_doc("+447986123456")
+    user = user_coll.get_doc("+447986123456")
     pp(user)
-    await user_coll.get_doc("key missing")  # => None
+    user_coll.get_doc("key missing")  # => None
 
     # Check for the presence of a key in the collection
-    await user_coll.has_key("+447986123456")  # => True
+    user_coll.has_key("+447986123456")  # => True
 
     # Delete a document by key
     await user_coll.delete_doc("+447986123456")
@@ -188,7 +188,7 @@ async def main() -> None:
     await phone_coll.add_doc(phone)
 
     # Find phone by brand
-    phone_details: Phone | None = await phone_coll.find_one(
+    phone_details: Phone | None = phone_coll.find_one(
         filter_fn=lambda doc: doc.brand == "Samsung",
     )
     if phone_details is not None:
@@ -197,7 +197,7 @@ async def main() -> None:
         print("No Phone!")
 
     # Find phone by model
-    phone_details: Phone | None = await phone_coll.find_one(
+    phone_details: Phone | None = phone_coll.find_one(
         filter_fn=lambda doc: doc.model == "Galaxy A26",
     )
     if phone_details is not None:
@@ -261,14 +261,14 @@ async def main() -> None:
         await car_coll.add_doc(car)
 
     # Find all cars
-    car_list: list[Car] | None = await car_coll.find_many()
+    car_list: list[Car] | None = car_coll.find_many()
     if car_list is not None:
         pp(car_list)
     else:
         print("No cars!")
 
     # Find cars by brand and year
-    car_list: list[Car] | None = await car_coll.find_many(
+    car_list: list[Car] | None = car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda" and doc.year == 2025,
     )
     if car_list is not None:
@@ -277,7 +277,7 @@ async def main() -> None:
         print("No cars!")
 
     # Pagination
-    car_list: list[Car] | None = await car_coll.find_many(
+    car_list: list[Car] | None = car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
         limit_docs=5,
         page_number=2,
@@ -288,7 +288,7 @@ async def main() -> None:
         print("No cars!")
 
     # Sorting
-    car_list: list[Car] | None = await car_coll.find_many(
+    car_list: list[Car] | None = car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
         sort_fn=lambda doc: (doc.brand, doc.updated_at),
         sort_reverse=True,
