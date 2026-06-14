@@ -55,7 +55,7 @@
 <br>
 6 = 256 branches in collection -> ~256000+ docs (for small projects).
 <br>
-5 = 4096 branches in collection -> ~4096000+ (for large projects).
+5 = 4096 branches in collection -> ~4096000+ docs (for large projects).
 </p>
 
 <br>
