@@ -10,7 +10,7 @@ The search effectiveness depends on the number of processor threads.
 import anyio
 from typing import Annotated
 from pydantic import Field
-from scruby import Scruby, ScrubyModel, ScrubyConfig
+from scruby import ReturnType, Scruby, ScrubyConfig, ScrubyModel
 from pprint import pprint as pp
 
 
@@ -64,6 +64,18 @@ async def main() -> None:
         pp(phone_details)
     else:
         print("No Phone!")
+
+    # Return phone in JSON format
+    phone_details: str | None = phone_coll.find_one(
+        filter_fn=lambda doc: doc.model == "Galaxy A26",
+        return_type=ReturnType.JSON,
+    )
+
+    # Return phone in Dict format
+    phone_details: dict | None = phone_coll.find_one(
+        filter_fn=lambda doc: doc.model == "Galaxy A26",
+        return_type=ReturnType.DICT,
+    )
 
     # Full database deletion.
     # Hint: The main purpose is tests.

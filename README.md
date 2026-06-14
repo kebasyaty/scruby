@@ -55,7 +55,7 @@
 <br>
 6 = 256 branches in collection -> ~256000+ docs (for small projects).
 <br>
-5 = 4096 branches in collection -> ~4096000+ (for large projects).
+5 = 4096 branches in collection -> ~4096000+ docs (for large projects).
 </p>
 
 <br>
@@ -167,7 +167,7 @@ The search effectiveness depends on the number of processor threads.
 
 import anyio
 from pydantic import Field
-from scruby import Scruby, ScrubyModel, ScrubyConfig
+from scruby import ReturnType, Scruby, ScrubyConfig, ScrubyModel
 from pprint import pprint as pp
 
 
@@ -222,6 +222,18 @@ async def main() -> None:
     else:
         print("No Phone!")
 
+    # Return phone in JSON format
+    phone_details: str | None = phone_coll.find_one(
+        filter_fn=lambda doc: doc.model == "Galaxy A26",
+        return_type=ReturnType.JSON,
+    )
+
+    # Return phone in Dict format
+    phone_details: dict | None = phone_coll.find_one(
+        filter_fn=lambda doc: doc.model == "Galaxy A26",
+        return_type=ReturnType.DICT,
+    )
+
     # Full database deletion
     # Hint: The main purpose is tests
     Scruby.napalm()
@@ -241,7 +253,7 @@ The search effectiveness depends on the number of processor threads.
 import anyio
 from typing import Annotated
 from pydantic import Field
-from scruby import Scruby, ScrubyModel, ScrubyConfig
+from scruby import ReturnType, Scruby, ScrubyConfig, ScrubyModel
 from pprint import pprint as pp
 
 
@@ -314,6 +326,18 @@ async def main() -> None:
         pp(car_list)
     else:
         print("No cars!")
+
+    # Return cars in JSON format
+    car_list: str | None = car_coll.find_many(
+        filter_fn=lambda doc: doc.brand == "Mazda",
+        return_type=ReturnType.JSON,
+    )
+
+    # Return cars in Dict format
+    car_list: list[dict] | None = car_coll.find_many(
+        filter_fn=lambda doc: doc.brand == "Mazda",
+        return_type=ReturnType.DICT,
+    )
 
     # Full database deletion
     # Hint: The main purpose is tests
