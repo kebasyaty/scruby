@@ -169,6 +169,13 @@ async def test_user() -> None:
     assert user is not None
     assert user.phone == "+447986123457"
 
+    # find_many
+    users = user_coll.find_many(filter_fn=lambda doc: doc.first_name == "???")
+    assert users is None
+    users = user_coll.find_many(filter_fn=lambda doc: doc.first_name == "John")
+    assert users is not None
+    assert len(users) == 9
+
     #
     # delete_collection
     await Scruby.delete_collection("User")
@@ -239,6 +246,13 @@ async def test_phone() -> None:
     assert phone is not None
     assert phone.model == "Galaxy A26 7"
 
+    # find_many
+    phones = phone_coll.find_many(filter_fn=lambda doc: doc.matrix_type == "???")
+    assert phones is None
+    phones = phone_coll.find_many(filter_fn=lambda doc: doc.matrix_type == "Super AMOLED")
+    assert phones is not None
+    assert len(phones) == 9
+
     #
     # delete_collection
     await Scruby.delete_collection("Phone")
@@ -308,6 +322,13 @@ async def test_car() -> None:
     car = car_coll.find_one(filter_fn=lambda doc: doc.model == "EZ-6 7")
     assert car is not None
     assert car.model == "EZ-6 7"
+
+    # find_many
+    cars = car_coll.find_many(filter_fn=lambda doc: doc.power_reserve == 800)
+    assert cars is None
+    cars = car_coll.find_many(filter_fn=lambda doc: doc.power_reserve == 600)
+    assert cars is not None
+    assert len(cars) == 9
 
     #
     # delete_collection
