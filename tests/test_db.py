@@ -450,12 +450,12 @@ class TestPositive:
         )
 
         await user_coll.add_doc(user)
-        data: User | None = await user_coll.get_doc("+447986123456")
+        data: User | None = user_coll.get_doc("+447986123456")
         assert data.model_dump() == user.model_dump()
         assert data.phone == "+447986123456"
 
         # result is None
-        assert await user_coll.get_doc("key missing") is None
+        assert user_coll.get_doc("key missing") is None
         #
         # Delete DB.
         Scruby.napalm()
@@ -473,8 +473,8 @@ class TestPositive:
         )
 
         await user_coll.add_doc(user)
-        assert await user_coll.has_key("+447986123456")
-        assert not await user_coll.has_key("key missing")
+        assert user_coll.has_key("+447986123456")
+        assert not user_coll.has_key("key missing")
         #
         # Delete DB.
         Scruby.napalm()
@@ -496,7 +496,7 @@ class TestPositive:
         assert await user_coll.estimated_document_count() == 1
         assert await user_coll.delete_doc("+447986123456") is None
         assert await user_coll.estimated_document_count() == 0
-        assert not await user_coll.has_key("key missing")
+        assert not user_coll.has_key("key missing")
         #
         # Delete DB.
         Scruby.napalm()
@@ -731,7 +731,7 @@ class TestPositive:
         )
         await user_coll.add_doc(user)
         key = "+447986123450"
-        result = await user_coll.get_doc(key)
+        result = user_coll.get_doc(key)
 
         assert isinstance(result.created_at, datetime)
         assert isinstance(result.updated_at, datetime)
