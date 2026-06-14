@@ -31,13 +31,13 @@ class Collection:
 
     @final
     @staticmethod
-    async def collection_list() -> list[str]:
+    async def collection_list() -> list[str] | None:
         """Asynchronous method for getting collection list."""
         db_directory = Path(ScrubyConfig.db_root)
         # Get all entries in the directory
         all_entries = Path.iterdir(db_directory)
         directory_names: list[str] = [entry.name async for entry in all_entries if entry.name != ".env.meta"]
-        return directory_names
+        return directory_names or None
 
     @final
     @staticmethod
