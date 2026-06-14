@@ -16,7 +16,7 @@ import re
 import zlib
 from datetime import datetime
 from shutil import rmtree
-from typing import Any, Literal, Never, assert_never, final
+from typing import Any, Literal, final
 
 from anyio import Path
 from pydantic import BaseModel
@@ -118,38 +118,27 @@ class Scruby(
         )
         # Create metadata for collection, if missing.
         meta_dir_path = Path(*meta_dir_path_tuple)
-        if not await meta_dir_path.exists():
-            await meta_dir_path.mkdir(parents=True)
+        if await meta_dir_path.exists():
+            # Get metadata if it already exists.
+            meta_json = await instance.__dict__["_meta_path"].read_text()
+            meta: _Meta = instance.__dict__["_meta"].model_validate_json(meta_json)
+            instance.__dict__["_hash_reduce_left"] = meta.hash_reduce_left
+            instance.__dict__["_max_number_branch"] = meta.max_number_branch
+        else:
             instance.__dict__["_hash_reduce_left"] = ScrubyConfig.HASH_REDUCE_LEFT
-            # Get maximum number of branches.
-            match instance.__dict__["_hash_reduce_left"]:
-                case 0:
-                    instance.__dict__["_max_number_branch"] = 4294967296
-                case 2:
-                    instance.__dict__["_max_number_branch"] = 16777216
-                case 4:
-                    instance.__dict__["_max_number_branch"] = 65536
-                case 6:
-                    instance.__dict__["_max_number_branch"] = 256
-                case _ as unreachable:
-                    assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
+            instance.__dict__["_max_number_branch"] = ScrubyConfig.MAX_NUMBER_BRANCH
             # Create metadata.
+            await meta_dir_path.mkdir(parents=True)
             meta = _Meta(
                 collection_name=class_model.__name__,
-                hash_reduce_left=instance.__dict__["_hash_reduce_left"],
-                max_number_branch=instance.__dict__["_max_number_branch"],
+                hash_reduce_left=ScrubyConfig.HASH_REDUCE_LEFT,
+                max_number_branch=ScrubyConfig.MAX_NUMBER_BRANCH,
                 counter_documents=0,
             )
             # Save metadata to database.
             meta_json = meta.model_dump_json()
             meta_path = Path(*(meta_dir_path, "meta.json"))
             await meta_path.write_text(meta_json, "utf-8")
-        else:
-            # Get metadata if it already exists.
-            meta_json = await instance.__dict__["_meta_path"].read_text()
-            meta: _Meta = instance.__dict__["_meta"].model_validate_json(meta_json)
-            instance.__dict__["_hash_reduce_left"] = meta.hash_reduce_left
-            instance.__dict__["_max_number_branch"] = meta.max_number_branch
         # Plugins connection.
         plugin_list: dict[str, Any] = {}
         if ScrubyConfig.plugins is not None:
