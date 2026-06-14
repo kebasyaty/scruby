@@ -350,6 +350,17 @@ async def test_phone() -> None:
     assert phones is not None
     assert len(phones) == 9
     # ReturnType JSON
+    phones = phone_coll.find_many(return_type=ReturnType.JSON)
+    assert phones is not None
+    assert isinstance(phones, str)
+    phones = orjson.loads(phones)
+    phones = [orjson.dumps(phone) for phone in phones]
+    assert isinstance(phones, list)
+    assert isinstance(phones[0], bytes)
+    phones = [Phone.model_validate_json(phone) for phone in phones]
+    assert isinstance(phones, list)
+    assert isinstance(phones[0], Phone)
+    assert len(phones) == 9
     # ReturnType DICT
 
     # update_many
