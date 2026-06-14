@@ -11,10 +11,25 @@ __all__ = ("Find",)
 import warnings
 from collections.abc import Callable
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed
+from enum import Enum
 from threading import Event
-from typing import Any, final
+from typing import Any, Never, assert_never, final
 
 from scruby.cache import DocCache
+
+
+class ReturnType(Enum):
+    """Return type.
+
+    Members:
+        - `MODEL:` ScrubyModel type.
+        - `JSON:` JSON-string type.
+        - `DICT:` Dictionary type.
+    """
+
+    MODEL = 1
+    JSON = 2
+    DICT = 3
 
 
 class Find:
@@ -57,6 +72,7 @@ class Find:
     def find_one(
         self,
         filter_fn: Callable,
+        return_type: ReturnType = ReturnType.MODEL,
     ) -> Any | None:
         """Asynchronous method for find one document matching the filter.
 
@@ -102,7 +118,15 @@ class Find:
                     # Stop loop
                     break
         # Return document
-        return doc
+        match return_type.value:
+            case 1:
+                return doc
+            case 2:
+                return doc.model_dump_json() if doc is not None else None
+            case 3:
+                return doc.model_dump() if doc is not None else None
+            case _ as unreachable:
+                assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
     @final
     def find_many(
@@ -112,7 +136,8 @@ class Find:
         page_number: int = 1,
         sort_fn: Callable | None = lambda doc: doc.created_at,
         sort_reverse: bool = True,
-    ) -> list[Any] | None:
+        return_type: ReturnType = ReturnType.MODEL,
+    ) -> list[Any] | str | None:
         """Asynchronous method for find many documents matching the filter.
 
         Attention:
@@ -188,4 +213,12 @@ class Find:
         if sort_fn is not None:
             result.sort(key=sort_fn, reverse=sort_reverse)
         # Return a document list
-        return result or None
+        match return_type.value:
+            case 1:
+                return result or None
+            case 2:
+                return f"[{','.join([doc.model_dump_json() for doc in result])}]" if result is not None else None
+            case 3:
+                return [doc.model_dump() for doc in result] if result is not None else None
+            case _ as unreachable:
+                assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]

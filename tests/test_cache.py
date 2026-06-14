@@ -10,7 +10,7 @@ import pytest
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyConfig, ScrubyModel
+from scruby import ReturnType, Scruby, ScrubyConfig, ScrubyModel
 from scruby.cache import DocCache
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
@@ -163,11 +163,27 @@ async def test_user() -> None:
     assert user_coll.count_documents(filter_fn=lambda doc: doc.first_name == "John") == 9
 
     # find_one
+    # ReturnType MODEL
     user = user_coll.find_one(filter_fn=lambda doc: doc.phone == "+447986123459")
     assert user is None
     user = user_coll.find_one(filter_fn=lambda doc: doc.phone == "+447986123457")
     assert user is not None
+    assert isinstance(user, User)
     assert user.phone == "+447986123457"
+    # ReturnType JSON
+    user = user_coll.find_one(
+        filter_fn=lambda doc: doc.phone == "+447986123457",
+        return_type=ReturnType.JSON,
+    )
+    assert user is not None
+    assert isinstance(user, str)
+    # ReturnType DICT
+    user = user_coll.find_one(
+        filter_fn=lambda doc: doc.phone == "+447986123457",
+        return_type=ReturnType.DICT,
+    )
+    assert user is not None
+    assert isinstance(user, dict)
 
     # find_many
     users = user_coll.find_many(filter_fn=lambda doc: doc.first_name == "???")
@@ -178,6 +194,8 @@ async def test_user() -> None:
     users = user_coll.find_many(filter_fn=lambda doc: doc.first_name == "John")
     assert users is not None
     assert len(users) == 9
+    # ReturnType JSON
+    # ReturnType DICT
 
     # update_many
     count_updated = await user_coll.update_many(
