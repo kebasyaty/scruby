@@ -47,6 +47,19 @@
 
 <hr>
 
+<img src="https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/attention.svg" alt="Attention">
+<p>
+<b>Parameter `ScrubyConfig.HASH_REDUCE_LEFT`:</b>
+<br>
+6 = 16 branches in collection (is default) -> ~16000+ docs (for development).
+<br>
+6 = 256 branches in collection -> ~256000+ docs (for small projects).
+<br>
+6 = 4096 branches in collection -> ~4096000+ (for large projects).
+</p>
+
+<hr>
+
 [![List of plugins](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/plugins.svg "List of plugins")](https://github.com/kebasyaty/scruby/blob/v2/PLUGINS.md "List of plugins")
 
 [![Requirements](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/requirements.svg "Requirements")](https://github.com/kebasyaty/scruby/blob/v2/REQUIREMENTS.md "Requirements")

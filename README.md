@@ -29,11 +29,11 @@
       the search for documents based on the effect of a quantum loop.
       <br>
       <br>
-      The size of each collection is 4096 branches,<br>
+      The size of each collection is 16|256|4096 branches,<br>
       each branch can store one or more keys.
       <br>
       <br>
-      The value of any key in collection can be obtained in 3 steps,<br>
+      The value of any key in collection can be obtained in 1-3 steps,<br>
       thereby achieving high performance.
       <br>
       <br>
@@ -44,6 +44,23 @@
 </div>
 
 ##
+
+<br>
+
+<img src="https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/attention.svg" alt="Attention">
+<p>
+<b>Parameter `ScrubyConfig.HASH_REDUCE_LEFT`:</b>
+<br>
+6 = 16 branches in collection (is default) -> ~16000+ docs (for development).
+<br>
+6 = 256 branches in collection -> ~256000+ docs (for small projects).
+<br>
+6 = 4096 branches in collection -> ~4096000+ (for large projects).
+</p>
+
+<br>
+<br>
+<br>
 
 [![List of plugins](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/plugins.svg "List of plugins")](https://github.com/kebasyaty/scruby/blob/v2/PLUGINS.md "List of plugins")
 
