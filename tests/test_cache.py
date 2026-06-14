@@ -433,7 +433,9 @@ async def test_car() -> None:
     # delete_many
     count_deleted = await car_coll.delete_many(filter_fn=lambda doc: doc.model == "???")
     assert count_deleted == 0
-    count_deleted = await car_coll.delete_many(filter_fn=lambda doc: doc.model == "EZ-6 5" or doc.model == "EZ-6 3")
+    count_deleted = await car_coll.delete_many(
+        filter_fn=lambda doc: doc.model == "EZ-6 5" or doc.model == "EZ-6 3",
+    )
     assert count_deleted == 2
     cars = car_coll.find_many()
     assert len(cars) == 7
