@@ -49,13 +49,13 @@
 
 <img src="https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/attention.svg" alt="Attention">
 <p>
-<b>Parameter `ScrubyConfig.HASH_REDUCE_LEFT`:</b>
+<b>Parameter `ScrubyConfig.HASH_REDUCE_LEFT - Scruby.run(hash_reduce_left = 7)`:</b>
 <br>
-6 = 16 branches in collection (is default) -> ~16000+ docs (for development).
+7 = 16 branches in collection (is default) -> ~16000+ docs (for development).
 <br>
 6 = 256 branches in collection -> ~256000+ docs (for small projects).
 <br>
-6 = 4096 branches in collection -> ~4096000+ (for large projects).
+5 = 4096 branches in collection -> ~4096000+ (for large projects).
 </p>
 
 <hr>
