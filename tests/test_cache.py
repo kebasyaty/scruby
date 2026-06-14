@@ -213,6 +213,14 @@ async def test_user() -> None:
     assert isinstance(users[0], User)
     assert len(users) == 9
     # ReturnType DICT
+    users = user_coll.find_many(return_type=ReturnType.DICT)
+    assert users is not None
+    assert isinstance(users, list)
+    assert isinstance(users[0], dict)
+    users = [User.model_validate(user) for user in users]
+    assert isinstance(users, list)
+    assert isinstance(users[0], User)
+    assert len(users) == 9
 
     # update_many
     count_updated = await user_coll.update_many(
