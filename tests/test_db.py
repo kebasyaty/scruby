@@ -366,16 +366,13 @@ class TestPositive:
         assert "User2" in collection_list
 
         await Scruby.delete_collection("User")
-
         collection_list = await Scruby.collection_list()
         assert collection_list is not None
         assert "User2" in collection_list
 
         await Scruby.delete_collection("User2")
-
         collection_list = await Scruby.collection_list()
-        assert collection_list is not None
-        assert len(collection_list) == 0
+        assert collection_list is None
         #
         # Delete DB.
         Scruby.napalm()
