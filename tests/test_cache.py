@@ -497,6 +497,17 @@ async def test_car() -> None:
     assert cars is not None
     assert len(cars) == 9
     # ReturnType JSON
+    cars = car_coll.find_many(return_type=ReturnType.JSON)
+    assert cars is not None
+    assert isinstance(cars, str)
+    cars = orjson.loads(cars)
+    cars = [orjson.dumps(car) for car in cars]
+    assert isinstance(cars, list)
+    assert isinstance(cars[0], bytes)
+    cars = [Car.model_validate_json(car) for car in cars]
+    assert isinstance(cars, list)
+    assert isinstance(cars[0], Car)
+    assert len(cars) == 9
     # ReturnType DICT
 
     # update_many
