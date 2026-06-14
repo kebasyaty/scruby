@@ -202,6 +202,8 @@ async def test_user() -> None:
         assert user.first_name == "John"
         assert user.last_name == "Smith"
 
+    # delete_many
+
     #
     # delete_collection
     await Scruby.delete_collection("User")
@@ -303,6 +305,8 @@ async def test_phone() -> None:
     for phone in phone_coll.find_many():
         assert phone.brand == "Samsung"
 
+    # delete_many
+
     #
     # delete_collection
     await Scruby.delete_collection("Phone")
@@ -403,6 +407,8 @@ async def test_car() -> None:
     assert count_updated == 9
     for car in car_coll.find_many():
         assert car.brand == "Mazda"
+
+    # delete_many
 
     #
     # delete_collection
