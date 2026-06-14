@@ -13,10 +13,6 @@ from pydantic import Field
 from scruby import Scruby, ScrubyModel, ScrubyConfig
 from pprint import pprint as pp
 
-ScrubyConfig.db_root = "ScrubyDB"  # Default = "ScrubyDB"
-ScrubyConfig.max_workers = None  # Default = None
-ScrubyConfig.plugins = []  # Default = []
-
 
 class Car(ScrubyModel):
     """Car model."""
@@ -34,6 +30,9 @@ class Car(ScrubyModel):
 
 async def main() -> None:
     """Example."""
+    # Activate database.
+    Scruby.run()
+
     # Get collection `Car`.
     car_coll = await Scruby.collection(Car)
 
@@ -48,14 +47,14 @@ async def main() -> None:
         await car_coll.add_doc(car)
 
     # Find all cars.
-    car_list: list[Car] | None = await car_coll.find_many()
+    car_list: list[Car] | None = car_coll.find_many()
     if car_list is not None:
         pp(car_list)
     else:
         print("No cars!")
 
     # Find cars by brand and year.
-    car_list: list[Car] | None = await car_coll.find_many(
+    car_list: list[Car] | None = car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda" and doc.year == 2025,
     )
     if car_list is not None:
@@ -64,7 +63,7 @@ async def main() -> None:
         print("No cars!")
 
     # Pagination
-    car_list: list[Car] | None = await car_coll.find_many(
+    car_list: list[Car] | None = car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
         limit_docs=5,
         page_number=2,
@@ -75,7 +74,7 @@ async def main() -> None:
         print("No cars!")
 
     # Sorting
-    car_list: list[Car] | None = await car_coll.find_many(
+    car_list: list[Car] | None = car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
         sort_fn=lambda doc: (doc.brand, doc.updated_at),
         sort_reverse=True,

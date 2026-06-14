@@ -16,10 +16,6 @@ from pydantic import Field
 from scruby import Scruby, ScrubyModel, ScrubyConfig
 from pprint import pprint as pp
 
-ScrubyConfig.db_root = "ScrubyDB"  # Default = "ScrubyDB"
-ScrubyConfig.max_workers = None  # Default = None
-ScrubyConfig.plugins = []  # Default = []
-
 
 class Car(ScrubyModel):
     """Car model."""
@@ -37,6 +33,9 @@ class Car(ScrubyModel):
 
 async def main() -> None:
     """Example."""
+    # Activate database.
+    Scruby.run()
+
     # Get collection `Car`.
     car_coll = await Scruby.collection(Car)
 
@@ -51,7 +50,7 @@ async def main() -> None:
         await car_coll.add_doc(car)
 
     # Pagination.
-    car_list: list[Car] | None = await car_coll.find_many(
+    car_list: list[Car] | None = car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
         limit_docs=5,
         page_number=2,

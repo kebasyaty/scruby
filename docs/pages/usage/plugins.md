@@ -59,6 +59,10 @@ class Car(ScrubyModel):
 
 
 async def main() -> None:
+    """Example."""
+    # Activate database.
+    Scruby.run(plugins=[CollectionMeta])
+
     # Get collection `Car`.
     car_coll = await Scruby.collection(Car)
     # Get metadata of collection

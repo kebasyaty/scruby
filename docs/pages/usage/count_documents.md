@@ -11,10 +11,6 @@ from pydantic import EmailStr
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, ScrubyModel, ScrubyConfig
 
-ScrubyConfig.db_root = "ScrubyDB"  # Default = "ScrubyDB"
-ScrubyConfig.max_workers = None  # Default = None
-ScrubyConfig.plugins = []  # Default = []
-
 
 class User(ScrubyModel):
     """Model of User."""
@@ -33,6 +29,9 @@ class User(ScrubyModel):
 
 async def main() -> None:
     """Example."""
+    # Activate database.
+    Scruby.run()
+
     # Get collection `User`.
     user_coll = await Scruby.collection(User)
 
@@ -77,10 +76,6 @@ from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, ScrubyModel, ScrubyConfig
 
-ScrubyConfig.db_root = "ScrubyDB"  # Default = "ScrubyDB"
-ScrubyConfig.max_workers = None  # Default = None
-ScrubyConfig.plugins = []  # Default = []t = []
-
 
 class User(ScrubyModel):
     """User model."""
@@ -99,6 +94,9 @@ class User(ScrubyModel):
 
 async def main() -> None:
     """Example."""
+    # Activate database.
+    Scruby.run()
+
     # Get collection `User`.
     user_coll = await Scruby.collection(User)
 
@@ -113,7 +111,7 @@ async def main() -> None:
         )
         await db.set_key(user.key, user)
 
-    result: int = await user_coll.count_documents(
+    result: int = user_coll.count_documents(
         filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
     )
     print(result:)  # => 2
