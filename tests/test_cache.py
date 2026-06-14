@@ -370,6 +370,14 @@ async def test_phone() -> None:
     assert isinstance(phones[0], Phone)
     assert len(phones) == 9
     # ReturnType DICT
+    phones = phone_coll.find_many(return_type=ReturnType.DICT)
+    assert phones is not None
+    assert isinstance(phones, list)
+    assert isinstance(phones[0], dict)
+    phones = [Phone.model_validate(phone) for phone in phones]
+    assert isinstance(phones, list)
+    assert isinstance(phones[0], Phone)
+    assert len(phones) == 9
 
     # update_many
     count_updated = await phone_coll.update_many(
