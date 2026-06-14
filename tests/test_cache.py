@@ -180,11 +180,22 @@ async def test_user() -> None:
     assert len(users) == 9
 
     # update_many
-    count_update = user_coll.update_many(
-        new_data={},
-        filter_fn=lambda doc: doc.first_name == "John",
+    count_updated = await user_coll.update_many(
+        new_data={"first_name": "Gene", "last_name": "Kost"},
+        filter_fn=lambda doc: doc.first_name == "John" or doc.last_name == "Smith",
     )
-    assert count_update == 9
+    assert count_updated == 9
+    for user in user_coll.find_many():
+        assert user.first_name == "Gene"
+        assert user.last_name == "Kost"
+    count_updated = await user_coll.update_many(
+        new_data={"first_name": "John", "last_name": "Smith"},
+        filter_fn=lambda doc: doc.first_name == "Gene" or doc.last_name == "Kost",
+    )
+    assert count_updated == 9
+    for user in user_coll.find_many():
+        assert user.first_name == "John"
+        assert user.last_name == "Smith"
 
     #
     # delete_collection
