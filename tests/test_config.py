@@ -23,12 +23,12 @@ def test_db_id() -> None:
 
 def test_hash_reduce_left() -> None:
     """Test a HASH_REDUCE_LEFT parameter."""
-    assert ScrubyConfig.HASH_REDUCE_LEFT == 6
+    assert ScrubyConfig.HASH_REDUCE_LEFT == 7
 
 
 def test_max_number_branch() -> None:
     """Test a MAX_NUMBER_BRANCH parameter."""
-    assert ScrubyConfig.MAX_NUMBER_BRANCH == 256
+    assert ScrubyConfig.MAX_NUMBER_BRANCH == 16
 
 
 def test_max_workers() -> None:
