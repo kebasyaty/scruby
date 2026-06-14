@@ -278,6 +278,20 @@ async def test_phone() -> None:
     assert len(phones) == 9
 
     # update_many
+    count_updated = await phone_coll.update_many(
+        new_data={"brand": "SONY"},
+        filter_fn=lambda doc: doc.brand == "Samsung",
+    )
+    assert count_updated == 9
+    for phone in phone_coll.find_many():
+        assert phone.brand == "SONY"
+    count_updated = await phone_coll.update_many(
+        new_data={"brand": "Samsung"},
+        filter_fn=lambda doc: doc.brand == "SONY",
+    )
+    assert count_updated == 9
+    for phone in phone_coll.find_many():
+        assert phone.brand == "Samsung"
 
     #
     # delete_collection
@@ -360,6 +374,20 @@ async def test_car() -> None:
     assert len(cars) == 9
 
     # update_many
+    count_updated = await car_coll.update_many(
+        new_data={"brand": "BMW"},
+        filter_fn=lambda doc: doc.brand == "Mazda",
+    )
+    assert count_updated == 9
+    for car in car_coll.find_many():
+        assert car.brand == "BMW"
+    count_updated = await car_coll.update_many(
+        new_data={"brand": "Mazda"},
+        filter_fn=lambda doc: doc.brand == "BMW",
+    )
+    assert count_updated == 9
+    for car in car_coll.find_many():
+        assert car.brand == "Mazda"
 
     #
     # delete_collection
