@@ -63,7 +63,7 @@
 <br>
 4 = 65536 branches in collection -> It is recommended to work with documents only using keys.
 <br>
-6 = 256 branches in collection (by default) -> Use all standard tools and plugins.
+6 = 256 branches in collection (is default) -> Use all standard tools and plugins.
 </p>
 
 <hr>
