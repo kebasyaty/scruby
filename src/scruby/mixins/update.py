@@ -74,6 +74,9 @@ class Update:
                             DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
                                 branch_number_as_hash[2]
                             ][doc_name] = doc
+                        case _:
+                            msg = "Scruby.run() > Parameter: `hash_reduce_left` -> Valid values are Literal[7, 6, 5]."
+                            raise AssertionError(msg)
                     # Update counter
                     counter += 1
                 else:
@@ -88,7 +91,7 @@ class Update:
         new_data: dict[str, Any],
         filter_fn: Callable = lambda _: True,
     ) -> int:
-        """Asynchronous method for updates many documents matching the filter.
+        """Asynchronous method for updates one or more documents matching the filter.
 
         Attention:
             - For a complex case, a custom task may be needed.

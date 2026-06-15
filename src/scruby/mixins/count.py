@@ -34,7 +34,7 @@ class Count:
         self,
         filter_fn: Callable,
     ) -> int:
-        """Asynchronous method.
+        """Synchronous method.
 
         Count the number of documents a matching the filter in this collection.
 
