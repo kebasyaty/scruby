@@ -97,7 +97,6 @@ from typing import Annotated
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, ScrubyModel, ScrubyConfig
-from pprint import pprint as pp
 
 
 class User(ScrubyModel):
@@ -140,7 +139,6 @@ async def main() -> None:
 
     # Get user details
     user = user_coll.get_doc("+447986123456")
-    pp(user)
     user_coll.get_doc("key missing")  # => None
 
     # Check for the presence of a key in the collection
@@ -148,6 +146,21 @@ async def main() -> None:
 
     # Delete a document by key
     await user_coll.delete_doc("+447986123456")
+
+    # Get collection name
+    user_coll.collection_name()  # => User
+
+    # Get collection list
+    coll_list = await Scruby.collection_list()  # => ["User"]
+
+    # Get the number of documents in the collection from metadata
+    await user_coll.estimated_document_count()  # => 1
+
+    # Get the number of documents comparable to the filter
+    user_coll.count_documents(filter_fn=lambda doc: doc.first_name == "John") == 1
+
+    # Delete collection
+    await Scruby.delete_collection("User")
 
     # Full database deletion
     # Hint: The main purpose is tests
@@ -168,7 +181,6 @@ The search effectiveness depends on the number of processor threads.
 import anyio
 from pydantic import Field
 from scruby import ReturnType, Scruby, ScrubyConfig, ScrubyModel
-from pprint import pprint as pp
 
 
 class Phone(ScrubyModel):
@@ -208,19 +220,11 @@ async def main() -> None:
     phone_details: Phone | None = phone_coll.find_one(
         filter_fn=lambda doc: doc.brand == "Samsung",
     )
-    if phone_details is not None:
-        pp(phone_details)
-    else:
-        print("No Phone!")
 
     # Find phone by model
     phone_details: Phone | None = phone_coll.find_one(
         filter_fn=lambda doc: doc.model == "Galaxy A26",
     )
-    if phone_details is not None:
-        pp(phone_details)
-    else:
-        print("No Phone!")
 
     # Return phone in JSON format
     phone_details: str | None = phone_coll.find_one(
@@ -228,7 +232,7 @@ async def main() -> None:
         return_type=ReturnType.JSON,
     )
 
-    # Return phone in Dict format
+    # Return phone in Dictionary format
     phone_details: dict | None = phone_coll.find_one(
         filter_fn=lambda doc: doc.model == "Galaxy A26",
         return_type=ReturnType.DICT,
@@ -254,7 +258,6 @@ import anyio
 from typing import Annotated
 from pydantic import Field
 from scruby import ReturnType, Scruby, ScrubyConfig, ScrubyModel
-from pprint import pprint as pp
 
 
 class Car(ScrubyModel):
@@ -291,19 +294,11 @@ async def main() -> None:
 
     # Find all cars
     car_list: list[Car] | None = car_coll.find_many()
-    if car_list is not None:
-        pp(car_list)
-    else:
-        print("No cars!")
 
     # Find cars by brand and year
     car_list: list[Car] | None = car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda" and doc.year == 2025,
     )
-    if car_list is not None:
-        pp(car_list)
-    else:
-        print("No cars!")
 
     # Pagination
     car_list: list[Car] | None = car_coll.find_many(
@@ -311,10 +306,6 @@ async def main() -> None:
         limit_docs=5,
         page_number=2,
     )
-    if car_list is not None:
-        pp(car_list)
-    else:
-        print("No cars!")
 
     # Sorting
     car_list: list[Car] | None = car_coll.find_many(
@@ -322,10 +313,6 @@ async def main() -> None:
         sort_fn=lambda doc: (doc.brand, doc.updated_at),
         sort_reverse=True,
     )
-    if car_list is not None:
-        pp(car_list)
-    else:
-        print("No cars!")
 
     # Return cars in JSON format
     car_list: str | None = car_coll.find_many(
@@ -333,10 +320,21 @@ async def main() -> None:
         return_type=ReturnType.JSON,
     )
 
-    # Return cars in Dict format
+    # Return cars in Dictionary format
     car_list: list[dict] | None = car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
         return_type=ReturnType.DICT,
+    )
+
+    # Update one or more documents matching the filter
+    count_updated = await car_coll.update_many(
+        new_data={"brand": "BMW"},
+        filter_fn=lambda doc: doc.brand == "Mazda",
+    )
+
+    # Delete one or more documents matching the filter
+    count_deleted = await car_coll.delete_many(
+        filter_fn=lambda doc: doc.brand == "BMW",
     )
 
     # Full database deletion
