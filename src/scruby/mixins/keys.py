@@ -79,6 +79,9 @@ class Keys:
                 DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][prepared_key] = doc
             case 5:
                 DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][prepared_key] = doc
+            case _:
+                msg = "Scruby.run() > Parameter: `hash_reduce_left` -> Valid values are Literal[7, 6, 5]."
+                raise AssertionError(msg)
 
     @final
     async def update_doc(self, doc: Any) -> None:
@@ -126,6 +129,9 @@ class Keys:
                         DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][
                             prepared_key
                         ] = doc
+                    case _:
+                        msg = "Scruby.run() > Parameter: `hash_reduce_left` -> Valid values are Literal[7, 6, 5]."
+                        raise AssertionError(msg)
             else:
                 raise KeyNotExistsError()
         else:
@@ -162,6 +168,9 @@ class Keys:
                 return DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]].get(prepared_key)
             case 5:
                 return DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get(prepared_key)
+            case _:
+                msg = "Scruby.run() > Parameter: `hash_reduce_left` -> Valid values are Literal[7, 6, 5]."
+                raise AssertionError(msg)
 
     @final
     def has_key(self, key: str) -> bool:
@@ -199,6 +208,9 @@ class Keys:
                     DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get(prepared_key)
                     is not None
                 )
+            case _:
+                msg = "Scruby.run() > Parameter: `hash_reduce_left` -> Valid values are Literal[7, 6, 5]."
+                raise AssertionError(msg)
         return is_exists
 
     @final
@@ -234,6 +246,9 @@ class Keys:
                         del DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][
                             prepared_key
                         ]
+                    case _:
+                        msg = "Scruby.run() > Parameter: `hash_reduce_left` -> Valid values are Literal[7, 6, 5]."
+                        raise AssertionError(msg)
             else:
                 raise KeyNotExistsError()
         else:
