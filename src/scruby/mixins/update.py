@@ -91,7 +91,7 @@ class Update:
         new_data: dict[str, Any],
         filter_fn: Callable = lambda _: True,
     ) -> int:
-        """Asynchronous method for updates many documents matching the filter.
+        """Asynchronous method for updates one or more documents matching the filter.
 
         Attention:
             - For a complex case, a custom task may be needed.
