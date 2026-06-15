@@ -56,6 +56,10 @@
 6 = 256 branches in collection -> ~256000+ docs (for small projects).
 <br>
 5 = 4096 branches in collection -> ~4096000+ docs (for large projects).
+<br>
+<br>
+<b>If you notice the production server slowing down,</b><br>
+<b>you will need to add RAM and CPU.</b>
 </p>
 
 <br>
