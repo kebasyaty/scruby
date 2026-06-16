@@ -9,7 +9,6 @@ from __future__ import annotations
 __all__ = ("Keys",)
 
 
-import re
 import zlib
 from datetime import datetime
 from typing import Any, Never, assert_never, final
@@ -178,7 +177,7 @@ class Keys:
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
     @final
-    def has_key(self, key: str) -> bool:
+    async def has_key(self, key: str) -> bool:
         """Asynchronous method for checking presence of key in collection.
 
         Args:
@@ -189,10 +188,10 @@ class Keys:
         """
         if not isinstance(key, str):
             raise KeyError("The key is not a string.")
-        # Prepare key.
-        # Removes spaces at the beginning and end of a string.
-        # Replaces all whitespace characters with a single space.
-        prepared_key = re.sub(r"\s+", " ", key).strip().lower()
+
+        # Get the path to the collection cell.
+        leaf_path, prepared_key, key_as_hash = await self._get_leaf_path(key)
+
         # Check the key for an empty string.
         if len(prepared_key) == 0:
             raise KeyError("The key should not be empty.")
@@ -214,7 +213,11 @@ class Keys:
                     is not None
                 )
             case 0:
-                pass
+                if await leaf_path.exists():
+                    data_json: bytes = await leaf_path.read_bytes()
+                    data: dict = orjson.loads(data_json) or {}
+                    is_exists = data.get(prepared_key) is not None
+                return is_exists
             case _ as unreachable:
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
         return is_exists
