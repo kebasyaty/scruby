@@ -52,5 +52,6 @@ class Collection:
         """
         target_directory = f"{ScrubyConfig.db_root}/{collection_name}"
         await to_thread.run_sync(rmtree, target_directory)  # pyrefly: ignore [bad-argument-type, incompatible-overload-residual]
-        del DocCache.cache[collection_name]
+        if ScrubyConfig.HASH_REDUCE_LEFT != 0:
+            del DocCache.cache[collection_name]
         return
