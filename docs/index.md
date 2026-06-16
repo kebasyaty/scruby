@@ -51,11 +51,13 @@
 <p>
 <b>Parameter `ScrubyConfig.HASH_REDUCE_LEFT - Scruby.run(hash_reduce_left = 7)`:</b>
 <br>
-7 = 16 branches in collection (is default) -> ~16000+ docs (for development).
+7 = 16 branches in collection (is default) -> ~16000+ docs, RAM ~2G+ (for development).
 <br>
-6 = 256 branches in collection -> ~256000+ docs (for small projects).
+6 = 256 branches in collection -> ~256000+ docs, RAM ~4G+ (for small projects).
 <br>
-5 = 4096 branches in collection -> ~4096000+ docs (for large projects).
+5 = 4096 branches in collection -> ~4096000+ docs, RAM ~6G+ (for large projects).
+<br>
+0 = 4294967296 branches in collection -> ~4,294967296×10¹²+ docs, RAM ~2G+ (access only by keys).
 <br>
 <br>
 <b>If you notice the production server slowing down,</b><br>
