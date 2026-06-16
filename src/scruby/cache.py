@@ -25,6 +25,9 @@ class DocCache:
     @classmethod
     def create_structure(cls, collection_name: str) -> None:
         """Create a cache structure for the collection."""
+        if ScrubyConfig.HASH_REDUCE_LEFT == 0:
+            return
+
         hexdigits = string.hexdigits.lower()
         match ScrubyConfig.HASH_REDUCE_LEFT:
             case 7:
