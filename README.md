@@ -51,11 +51,13 @@
 <p>
 <b>Parameter `ScrubyConfig.HASH_REDUCE_LEFT - Scruby.run(hash_reduce_left = 7)`:</b>
 <br>
-7 = 16 branches in collection (is default) -> ~16000+ docs (for development).
+7 = 16 branches in collection (is default) -> ~16000+ docs, RAM ~2G+ (for development).
 <br>
-6 = 256 branches in collection -> ~256000+ docs (for small projects).
+6 = 256 branches in collection -> ~256000+ docs, RAM ~4G+ (for small projects).
 <br>
-5 = 4096 branches in collection -> ~4096000+ docs (for large projects).
+5 = 4096 branches in collection -> ~4096000+ docs, RAM ~6G+ (for large projects).
+<br>
+0 = 4294967296 branches in collection -> ~4,294967296×10¹²+ docs, RAM ~2G+ (access only by keys).
 <br>
 <br>
 <b>If you notice the production server slowing down,</b><br>
@@ -142,11 +144,11 @@ async def main() -> None:
     await user_coll.update_doc(user)
 
     # Get user details
-    user = user_coll.get_doc("+447986123456")
-    user_coll.get_doc("key missing")  # => None
+    await user = user_coll.get_doc("+447986123456")
+    await user_coll.get_doc("key missing")  # => None
 
     # Check for the presence of a key in the collection
-    user_coll.has_key("+447986123456")  # => True
+    await user_coll.has_key("+447986123456")  # => True
 
     # Delete a document by key
     await user_coll.delete_doc("+447986123456")

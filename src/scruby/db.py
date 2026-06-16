@@ -66,7 +66,7 @@ class Scruby(
 
     @classmethod
     async def collection(cls, class_model: Any) -> Any:
-        """Get an object to access a collection.
+        """Asynchronous method for creating a new collection and accessing an existing collection.
 
         Args:
             class_model (Any): Class of Model (ScrubyModel).
@@ -255,7 +255,7 @@ class Scruby(
     @staticmethod
     def run(
         db_root: str = "ScrubyDB",
-        hash_reduce_left: Literal[7, 6, 5] = 7,
+        hash_reduce_left: Literal[7, 6, 5, 0] = 7,
         max_workers: int | None = None,
         plugins: list[Any] | None = None,
     ) -> None:

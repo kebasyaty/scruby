@@ -68,9 +68,8 @@ class Find:
                 docs = DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
                     branch_number_as_hash[2]
                 ]
-            case _:
-                msg = "Scruby.run() > Parameter: `hash_reduce_left` -> Valid values are Literal[7, 6, 5]."
-                raise AssertionError(msg)
+            case _ as unreachable:
+                assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
         for _, doc in docs.items():
             if stop_event.is_set():
@@ -85,7 +84,7 @@ class Find:
         filter_fn: Callable,
         return_type: ReturnType = ReturnType.MODEL,
     ) -> Any | None:
-        """Asynchronous method for find one document matching the filter.
+        """Synchronous method for find one document matching the filter.
 
         Attention:
             - The search is based on the effect of a quantum loop.
@@ -93,17 +92,21 @@ class Find:
 
         Args:
             filter_fn (Callable): A function that execute the conditions of filtering.
+            return_type (ReturnType): ScrubyModel, JSON-string or Dictionary.
 
         Returns:
             Document or None.
         """
         # Variable initialization
+        hash_reduce_left: int = self._hash_reduce_left
+        assert hash_reduce_left != 0, "Scruby.run(hash_reduce_left = 0) - Not valid for `find_one` method."
+
         search_task_fn: Callable = self._task_find
         branch_numbers: range = range(self._max_number_branch)
-        hash_reduce_left: int = self._hash_reduce_left
         class_model: Any = self._class_model
         stop_signal = Event()
         doc: Any | None = None
+
         # Run quantum loop
         with ThreadPoolExecutor(self._max_workers) as executor:
             futures: list[Future] = [
@@ -149,7 +152,7 @@ class Find:
         sort_reverse: bool = True,
         return_type: ReturnType = ReturnType.MODEL,
     ) -> list[Any] | str | None:
-        """Asynchronous method for find many documents matching the filter.
+        """Synchronous method for find many documents matching the filter.
 
         Attention:
             - The search is based on the effect of a quantum loop.
@@ -167,6 +170,7 @@ class Find:
                                        By default, documents are sorted by creation date.
             sort_reverse: (bool): Sorting direction.
                                   By default, sort descending (newest to oldest).
+            return_type (ReturnType): ScrubyModel, JSON-string or Dictionary.
 
         Returns:
             Document list or None.
@@ -179,15 +183,18 @@ class Find:
                 msg = "`find_many` => The `page_number` parameter must not be less than one."
                 raise AssertionError(msg)
         # Variable initialization
+        hash_reduce_left: int = self._hash_reduce_left
+        assert hash_reduce_left != 0, "Scruby.run(hash_reduce_left = 0) - Not valid for `find_many` method."
+
         search_task_fn: Callable = self._task_find
         branch_numbers: range = range(self._max_number_branch)
-        hash_reduce_left: int = self._hash_reduce_left
         class_model: Any = self._class_model
         stop_signal = Event()
         stop_outer_loop: bool = False
         counter: int = 0
         number_docs_skippe: int = limit_docs * (page_number - 1) if page_number > 1 else 0
         result: list[Any] = []
+
         # Run quantum loop
         with ThreadPoolExecutor(self._max_workers) as executor:
             futures: list[Future] = [

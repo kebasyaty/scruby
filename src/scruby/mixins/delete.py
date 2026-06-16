@@ -10,7 +10,7 @@ __all__ = ("Delete",)
 
 from collections.abc import Callable
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed
-from typing import Any, final
+from typing import Any, Never, assert_never, final
 
 import orjson
 from anyio import Path
@@ -68,9 +68,8 @@ class Delete:
                             del DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
                                 branch_number_as_hash[2]
                             ][doc_name]
-                        case _:
-                            msg = "Scruby.run() > Parameter: `hash_reduce_left` -> Valid values are Literal[7, 6, 5]."
-                            raise AssertionError(msg)
+                        case _ as unreachable:
+                            assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
                 else:
                     new_state[doc_name] = doc_json
             await leaf_path.write_bytes(orjson.dumps(new_state))
@@ -94,12 +93,15 @@ class Delete:
             The number of deleted documents.
         """
         # Variable initialization
+        hash_reduce_left: int = self._hash_reduce_left
+        assert hash_reduce_left != 0, "Scruby.run(hash_reduce_left = 0) - Not valid for `delete_many` method."
+
         search_task_fn: Callable = self._task_delete
         branch_numbers: range = range(self._max_number_branch)
-        hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
         class_model: Any = self._class_model
         counter: int = 0
+
         # Run quantum loop
         with ThreadPoolExecutor(self._max_workers) as executor:
             futures: list[Future] = [

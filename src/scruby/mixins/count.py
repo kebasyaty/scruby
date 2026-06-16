@@ -49,6 +49,9 @@ class Count:
             The number of documents.
         """
         # Variable initialization
+        hash_reduce_left: int = self._hash_reduce_left
+        assert hash_reduce_left != 0, "Scruby.run(hash_reduce_left = 0) - Not valid for `count_documents` method."
+
         search_task_fn: Callable = self._task_find
         branch_numbers: range = range(self._max_number_branch)
         hash_reduce_left: int = self._hash_reduce_left

@@ -9,10 +9,9 @@ from __future__ import annotations
 __all__ = ("Keys",)
 
 
-import re
 import zlib
 from datetime import datetime
-from typing import Any, final
+from typing import Any, Never, assert_never, final
 from zoneinfo import ZoneInfo
 
 import orjson
@@ -79,9 +78,10 @@ class Keys:
                 DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][prepared_key] = doc
             case 5:
                 DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][prepared_key] = doc
-            case _:
-                msg = "Scruby.run() > Parameter: `hash_reduce_left` -> Valid values are Literal[7, 6, 5]."
-                raise AssertionError(msg)
+            case 0:
+                pass
+            case _ as unreachable:
+                assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
     @final
     async def update_doc(self, doc: Any) -> None:
@@ -129,9 +129,10 @@ class Keys:
                         DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][
                             prepared_key
                         ] = doc
-                    case _:
-                        msg = "Scruby.run() > Parameter: `hash_reduce_left` -> Valid values are Literal[7, 6, 5]."
-                        raise AssertionError(msg)
+                    case 0:
+                        pass
+                    case _ as unreachable:
+                        assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
             else:
                 raise KeyNotExistsError()
         else:
@@ -139,7 +140,7 @@ class Keys:
             raise KeyError(msg)
 
     @final
-    def get_doc(self, key: str) -> Any | None:
+    async def get_doc(self, key: str) -> Any | None:
         """Asynchronous method for getting document from collection the by key.
 
         Args:
@@ -150,15 +151,10 @@ class Keys:
         """
         if not isinstance(key, str):
             raise KeyError("The key is not a string.")
-        # Prepare key.
-        # Removes spaces at the beginning and end of a string.
-        # Replaces all whitespace characters with a single space.
-        prepared_key = re.sub(r"\s+", " ", key).strip().lower()
-        # Check the key for an empty string.
-        if len(prepared_key) == 0:
-            raise KeyError("The key should not be empty.")
-        # Key to crc32 sum.
-        key_as_hash: str = f"{zlib.crc32(prepared_key.encode('utf-8')):08x}"[self._hash_reduce_left :]
+
+        # Get the path to the collection cell.
+        leaf_path, prepared_key, key_as_hash = await self._get_leaf_path(key)
+
         # Get value of key from cache
         collection_name = self._class_model.__name__
         match self._hash_reduce_left:
@@ -168,12 +164,20 @@ class Keys:
                 return DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]].get(prepared_key)
             case 5:
                 return DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get(prepared_key)
-            case _:
-                msg = "Scruby.run() > Parameter: `hash_reduce_left` -> Valid values are Literal[7, 6, 5]."
-                raise AssertionError(msg)
+            case 0:
+                doc: Any | None = None
+                if await leaf_path.exists():
+                    data_json: bytes = await leaf_path.read_bytes()
+                    data: dict = orjson.loads(data_json) or {}
+                    doc_json: str | None = data.get(prepared_key)
+                    if doc_json is not None:
+                        doc = self._class_model.model_validate_json(doc_json)
+                return doc
+            case _ as unreachable:
+                assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
     @final
-    def has_key(self, key: str) -> bool:
+    async def has_key(self, key: str) -> bool:
         """Asynchronous method for checking presence of key in collection.
 
         Args:
@@ -184,10 +188,10 @@ class Keys:
         """
         if not isinstance(key, str):
             raise KeyError("The key is not a string.")
-        # Prepare key.
-        # Removes spaces at the beginning and end of a string.
-        # Replaces all whitespace characters with a single space.
-        prepared_key = re.sub(r"\s+", " ", key).strip().lower()
+
+        # Get the path to the collection cell.
+        leaf_path, prepared_key, key_as_hash = await self._get_leaf_path(key)
+
         # Check the key for an empty string.
         if len(prepared_key) == 0:
             raise KeyError("The key should not be empty.")
@@ -208,9 +212,14 @@ class Keys:
                     DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get(prepared_key)
                     is not None
                 )
-            case _:
-                msg = "Scruby.run() > Parameter: `hash_reduce_left` -> Valid values are Literal[7, 6, 5]."
-                raise AssertionError(msg)
+            case 0:
+                if await leaf_path.exists():
+                    data_json: bytes = await leaf_path.read_bytes()
+                    data: dict = orjson.loads(data_json) or {}
+                    is_exists = data.get(prepared_key) is not None
+                return is_exists
+            case _ as unreachable:
+                assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
         return is_exists
 
     @final
@@ -225,6 +234,7 @@ class Keys:
         """
         # The path to the database cell.
         leaf_path, prepared_key, key_as_hash = await self._get_leaf_path(key)
+
         # Deleting key.
         if await leaf_path.exists():
             # Delete a document from the file system
@@ -246,9 +256,10 @@ class Keys:
                         del DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][
                             prepared_key
                         ]
-                    case _:
-                        msg = "Scruby.run() > Parameter: `hash_reduce_left` -> Valid values are Literal[7, 6, 5]."
-                        raise AssertionError(msg)
+                    case 0:
+                        pass
+                    case _ as unreachable:
+                        assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
             else:
                 raise KeyNotExistsError()
         else:
