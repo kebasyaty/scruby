@@ -255,7 +255,7 @@ class Scruby(
     @staticmethod
     def run(
         db_root: str = "ScrubyDB",
-        hash_reduce_left: Literal[7, 6, 5] = 7,
+        hash_reduce_left: Literal[7, 6, 5, 0] = 7,
         max_workers: int | None = None,
         plugins: list[Any] | None = None,
     ) -> None:

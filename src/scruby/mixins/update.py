@@ -106,12 +106,16 @@ class Update:
             The number of updated documents.
         """
         # Variable initialization
+        hash_reduce_left: int = self._hash_reduce_left
+        assert hash_reduce_left != 0, "Scruby.run(hash_reduce_left = 0) - Not valid for `update_many` method"
+
         update_task_fn: Callable = self._task_update
         branch_numbers: range = range(self._max_number_branch)
         hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
         class_model: Any = self._class_model
         counter: int = 0
+
         # Run quantum loop
         with ThreadPoolExecutor(self._max_workers) as executor:
             futures: list[Future] = [

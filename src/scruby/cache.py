@@ -35,15 +35,20 @@ class DocCache:
                 cls.cache[collection_name] = {
                     key: {key: {key: {} for key in hexdigits} for key in hexdigits} for key in hexdigits
                 }
+            case 0:
+                pass
             case _ as unreachable:
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
     @classmethod
     def load_cache(cls, subclasses: list[Any]) -> None:
         """Load all documents from the database into the cache."""
+        if ScrubyConfig.HASH_REDUCE_LEFT == 0:
+            return
+
         db_root: Path = Path(ScrubyConfig.db_root)
-        HASH_REDUCE_LEFT: Literal[7, 6, 5] = ScrubyConfig.HASH_REDUCE_LEFT
-        MAX_NUMBER_BRANCH: Literal[16, 256, 4096] = ScrubyConfig.MAX_NUMBER_BRANCH
+        HASH_REDUCE_LEFT: Literal[7, 6, 5, 0] = ScrubyConfig.HASH_REDUCE_LEFT
+        MAX_NUMBER_BRANCH: Literal[16, 256, 4096, 4294967296] = ScrubyConfig.MAX_NUMBER_BRANCH
         branch_numbers: range = range(MAX_NUMBER_BRANCH)
 
         # Leave function if database does not exist
@@ -82,3 +87,7 @@ class DocCache:
                                 cls.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
                                     branch_number_as_hash[2]
                                 ][key] = doc
+                            case 0:
+                                pass
+                            case _ as unreachable:
+                                assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]

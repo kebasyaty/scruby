@@ -79,6 +79,8 @@ class Keys:
                 DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][prepared_key] = doc
             case 5:
                 DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][prepared_key] = doc
+            case 0:
+                pass
             case _ as unreachable:
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
@@ -128,6 +130,8 @@ class Keys:
                         DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][
                             prepared_key
                         ] = doc
+                    case 0:
+                        pass
                     case _ as unreachable:
                         assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
             else:
@@ -166,6 +170,8 @@ class Keys:
                 return DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]].get(prepared_key)
             case 5:
                 return DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get(prepared_key)
+            case 0:
+                return None
             case _ as unreachable:
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
@@ -205,6 +211,8 @@ class Keys:
                     DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get(prepared_key)
                     is not None
                 )
+            case 0:
+                pass
             case _ as unreachable:
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
         return is_exists
@@ -242,6 +250,8 @@ class Keys:
                         del DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][
                             prepared_key
                         ]
+                    case 0:
+                        pass
                     case _ as unreachable:
                         assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
             else:
