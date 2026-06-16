@@ -85,7 +85,7 @@ class Find:
         filter_fn: Callable,
         return_type: ReturnType = ReturnType.MODEL,
     ) -> Any | None:
-        """Asynchronous method for find one document matching the filter.
+        """Synchronous method for find one document matching the filter.
 
         Attention:
             - The search is based on the effect of a quantum loop.
@@ -150,7 +150,7 @@ class Find:
         sort_reverse: bool = True,
         return_type: ReturnType = ReturnType.MODEL,
     ) -> list[Any] | str | None:
-        """Asynchronous method for find many documents matching the filter.
+        """Synchronous method for find many documents matching the filter.
 
         Attention:
             - The search is based on the effect of a quantum loop.

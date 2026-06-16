@@ -66,7 +66,7 @@ class Scruby(
 
     @classmethod
     async def collection(cls, class_model: Any) -> Any:
-        """Get an object to access a collection.
+        """Asynchronous method for creating a new collection and accessing an existing collection.
 
         Args:
             class_model (Any): Class of Model (ScrubyModel).

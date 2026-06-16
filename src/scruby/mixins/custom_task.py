@@ -14,7 +14,7 @@ from typing import Any, final
 
 
 class CustomTask:
-    """Quantum methods for running custom tasks."""
+    """For running custom tasks."""
 
     @final
     def run_custom_task(
@@ -23,7 +23,7 @@ class CustomTask:
         filter_fn: Callable = lambda _: True,
         **kwargs,
     ) -> Any:
-        """For run an asynchronous custom task.
+        """For run a custom task.
 
         Attention:
             - The search is based on the effect of a quantum loop.
