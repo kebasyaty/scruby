@@ -234,6 +234,7 @@ class Keys:
         """
         # The path to the database cell.
         leaf_path, prepared_key, key_as_hash = await self._get_leaf_path(key)
+
         # Deleting key.
         if await leaf_path.exists():
             # Delete a document from the file system
