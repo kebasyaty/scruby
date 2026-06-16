@@ -7,7 +7,7 @@ __all__ = ("DocCache",)
 
 import string
 from pathlib import Path
-from typing import Any, ClassVar, Literal, final
+from typing import Any, ClassVar, Literal, Never, assert_never, final
 
 import orjson
 
@@ -35,9 +35,8 @@ class DocCache:
                 cls.cache[collection_name] = {
                     key: {key: {key: {} for key in hexdigits} for key in hexdigits} for key in hexdigits
                 }
-            case _:
-                msg = "Scruby.run() > Parameter: `hash_reduce_left` -> Valid values are Literal[7, 6, 5]."
-                raise AssertionError(msg)
+            case _ as unreachable:
+                assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
     @classmethod
     def load_cache(cls, subclasses: list[Any]) -> None:

@@ -68,9 +68,8 @@ class Find:
                 docs = DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
                     branch_number_as_hash[2]
                 ]
-            case _:
-                msg = "Scruby.run() > Parameter: `hash_reduce_left` -> Valid values are Literal[7, 6, 5]."
-                raise AssertionError(msg)
+            case _ as unreachable:
+                assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
         for _, doc in docs.items():
             if stop_event.is_set():
