@@ -38,12 +38,6 @@ class CollectionMeta(ScrubyPlugin):
         return await scruby.get_meta()
 
 
-# Plugins connection.
-settings.PLUGINS = [
-    CollectionMeta,
-]
-
-
 class Car(ScrubyModel):
     """Car model."""
     brand: str = Field(strict=True, frozen=True)
