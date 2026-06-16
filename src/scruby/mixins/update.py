@@ -107,7 +107,7 @@ class Update:
         """
         # Variable initialization
         hash_reduce_left: int = self._hash_reduce_left
-        assert hash_reduce_left != 0, "Scruby.run(hash_reduce_left = 0) - Not valid for `update_many` method"
+        assert hash_reduce_left != 0, "Scruby.run(hash_reduce_left = 0) - Not valid for `update_many` method."
 
         update_task_fn: Callable = self._task_update
         branch_numbers: range = range(self._max_number_branch)

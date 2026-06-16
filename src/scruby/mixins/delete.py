@@ -94,7 +94,7 @@ class Delete:
         """
         # Variable initialization
         hash_reduce_left: int = self._hash_reduce_left
-        assert hash_reduce_left != 0, "Scruby.run(hash_reduce_left = 0) - Not valid for `delete_many` method"
+        assert hash_reduce_left != 0, "Scruby.run(hash_reduce_left = 0) - Not valid for `delete_many` method."
 
         search_task_fn: Callable = self._task_delete
         branch_numbers: range = range(self._max_number_branch)

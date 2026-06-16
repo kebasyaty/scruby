@@ -99,7 +99,7 @@ class Find:
         """
         # Variable initialization
         hash_reduce_left: int = self._hash_reduce_left
-        assert hash_reduce_left != 0, "Scruby.run(hash_reduce_left = 0) - Not valid for `find_one` method"
+        assert hash_reduce_left != 0, "Scruby.run(hash_reduce_left = 0) - Not valid for `find_one` method."
 
         search_task_fn: Callable = self._task_find
         branch_numbers: range = range(self._max_number_branch)
@@ -184,7 +184,7 @@ class Find:
                 raise AssertionError(msg)
         # Variable initialization
         hash_reduce_left: int = self._hash_reduce_left
-        assert hash_reduce_left != 0, "Scruby.run(hash_reduce_left = 0) - Not valid for `find_many` method"
+        assert hash_reduce_left != 0, "Scruby.run(hash_reduce_left = 0) - Not valid for `find_many` method."
 
         search_task_fn: Callable = self._task_find
         branch_numbers: range = range(self._max_number_branch)
