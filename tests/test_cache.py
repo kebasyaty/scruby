@@ -152,7 +152,7 @@ async def test_user() -> None:
         phone="+447986123459",
     )
     await user_coll.update_doc(user)
-    user: User | None = user_coll.get_doc("+447986123459")
+    user: User | None = await user_coll.get_doc("+447986123459")
     assert user is not None
     assert user.birthday == datetime(1972, 11, 7, tzinfo=ZoneInfo("UTC"))
 
@@ -316,7 +316,7 @@ async def test_phone() -> None:
         matrix_type="Super AMOLED",
     )
     await phone_coll.update_doc(phone)
-    phone = phone_coll.get_doc("Samsung:Galaxy A26 9")
+    phone = await phone_coll.get_doc("Samsung:Galaxy A26 9")
     assert phone is not None
     assert phone.screen_diagonal == pytest.approx(10.2)
 
@@ -477,7 +477,7 @@ async def test_car() -> None:
         power_reserve=800,
     )
     await car_coll.update_doc(car)
-    car = car_coll.get_doc("Mazda:EZ-6 9")
+    car = await car_coll.get_doc("Mazda:EZ-6 9")
     assert car is not None
     assert car.power_reserve == 800
 

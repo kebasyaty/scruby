@@ -144,8 +144,8 @@ async def main() -> None:
     await user_coll.update_doc(user)
 
     # Get user details
-    user = user_coll.get_doc("+447986123456")
-    user_coll.get_doc("key missing")  # => None
+    await user = user_coll.get_doc("+447986123456")
+    await user_coll.get_doc("key missing")  # => None
 
     # Check for the presence of a key in the collection
     await user_coll.has_key("+447986123456")  # => True
