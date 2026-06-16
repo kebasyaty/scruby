@@ -35,11 +35,14 @@ class CustomTask:
         Returns:
             The result of a custom task.
         """
+        hash_reduce_left: int = self._hash_reduce_left
+        assert hash_reduce_left != 0, "Scruby.run(hash_reduce_left = 0) - Not valid for `run_custom_task` method."
+
         return custom_task_fn(
             search_task_fn=self._task_find,
             filter_fn=filter_fn,
             branch_numbers=range(self._max_number_branch),
-            hash_reduce_left=self._hash_reduce_left,
+            hash_reduce_left=hash_reduce_left,
             class_model=self._class_model,
             max_workers=self._max_workers,
             stop_signal=Event(),
