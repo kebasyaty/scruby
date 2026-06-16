@@ -157,11 +157,11 @@ async def test_user() -> None:
     assert user.birthday == datetime(1972, 11, 7, tzinfo=ZoneInfo("UTC"))
 
     # has_key
-    assert user_coll.has_key("+447986123459")
+    assert await user_coll.has_key("+447986123459")
 
     # delete_doc
     await user_coll.delete_doc("+447986123459")
-    assert not user_coll.has_key("+447986123459")
+    assert not await user_coll.has_key("+447986123459")
     assert await user_coll.estimated_document_count() == 9
     assert user_coll.count_documents(filter_fn=lambda doc: doc.first_name == "John") == 9
 
@@ -321,11 +321,11 @@ async def test_phone() -> None:
     assert phone.screen_diagonal == pytest.approx(10.2)
 
     # has_key
-    assert phone_coll.has_key("Samsung:Galaxy A26 9")
+    assert await phone_coll.has_key("Samsung:Galaxy A26 9")
 
     # delete_doc
     await phone_coll.delete_doc("Samsung:Galaxy A26 9")
-    assert not phone_coll.has_key("Samsung:Galaxy A26 9")
+    assert not await phone_coll.has_key("Samsung:Galaxy A26 9")
     assert await phone_coll.estimated_document_count() == 9
     assert phone_coll.count_documents(filter_fn=lambda doc: doc.brand == "Samsung") == 9
 
@@ -482,11 +482,11 @@ async def test_car() -> None:
     assert car.power_reserve == 800
 
     # has_key
-    assert car_coll.has_key("Mazda:EZ-6 9")
+    assert await car_coll.has_key("Mazda:EZ-6 9")
 
     # delete_doc
     await car_coll.delete_doc("Mazda:EZ-6 9")
-    assert not car_coll.has_key("Mazda:EZ-6 9")
+    assert not await car_coll.has_key("Mazda:EZ-6 9")
     assert await car_coll.estimated_document_count() == 9
     assert car_coll.count_documents(filter_fn=lambda doc: doc.brand == "Mazda") == 9
 

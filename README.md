@@ -148,7 +148,7 @@ async def main() -> None:
     user_coll.get_doc("key missing")  # => None
 
     # Check for the presence of a key in the collection
-    user_coll.has_key("+447986123456")  # => True
+    await user_coll.has_key("+447986123456")  # => True
 
     # Delete a document by key
     await user_coll.delete_doc("+447986123456")

@@ -55,8 +55,8 @@ async def main() -> None:
     pp(user)
     user_coll.get_doc("key missing")  # => None
 
-    user_coll.has_key("+447986123456")  # => True
-    user_coll.has_key("key missing")  # => False
+    await user_coll.has_key("+447986123456")  # => True
+    await user_coll.has_key("key missing")  # => False
 
     await user_coll.delete_doc("+447986123456")
     await user_coll.delete_doc("+447986123456")  # => KeyError

@@ -475,8 +475,8 @@ class TestPositive:
         )
 
         await user_coll.add_doc(user)
-        assert user_coll.has_key("+447986123456")
-        assert not user_coll.has_key("key missing")
+        assert await user_coll.has_key("+447986123456")
+        assert not await user_coll.has_key("key missing")
         #
         # Delete DB.
         Scruby.napalm()
@@ -498,7 +498,7 @@ class TestPositive:
         assert await user_coll.estimated_document_count() == 1
         assert await user_coll.delete_doc("+447986123456") is None
         assert await user_coll.estimated_document_count() == 0
-        assert not user_coll.has_key("key missing")
+        assert not await user_coll.has_key("key missing")
         #
         # Delete DB.
         Scruby.napalm()
