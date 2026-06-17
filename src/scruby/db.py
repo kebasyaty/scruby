@@ -62,6 +62,8 @@ class Scruby(
         self._meta = _Meta
         self._db_root = ScrubyConfig.db_root
         self._db_id = ScrubyConfig.db_id
+        self._hash_reduce_left = ScrubyConfig.HASH_REDUCE_LEFT
+        self._max_number_branch = ScrubyConfig.MAX_NUMBER_BRANCH
         self._max_workers = ScrubyConfig.max_workers
 
     @classmethod
@@ -119,15 +121,7 @@ class Scruby(
         )
         # Create metadata for collection, if missing.
         meta_dir_path = Path(*meta_dir_path_tuple)
-        if await meta_dir_path.exists():
-            # Get metadata if it already exists.
-            meta_json = await instance.__dict__["_meta_path"].read_text()
-            meta: _Meta = instance.__dict__["_meta"].model_validate_json(meta_json)
-            instance.__dict__["_hash_reduce_left"] = meta.hash_reduce_left
-            instance.__dict__["_max_number_branch"] = meta.max_number_branch
-        else:
-            instance.__dict__["_hash_reduce_left"] = ScrubyConfig.HASH_REDUCE_LEFT
-            instance.__dict__["_max_number_branch"] = ScrubyConfig.MAX_NUMBER_BRANCH
+        if not await meta_dir_path.exists():
             # Create metadata.
             await meta_dir_path.mkdir(parents=True)
             meta = _Meta(
@@ -136,12 +130,13 @@ class Scruby(
                 max_number_branch=ScrubyConfig.MAX_NUMBER_BRANCH,
                 counter_documents=0,
             )
-            # Save metadata to database.
+            # Save metadata of collection.
             meta_json = meta.model_dump_json()
             meta_path = Path(*(meta_dir_path, "meta.json"))
             await meta_path.write_text(meta_json, "utf-8")
             # Create a cache structure for the collection.
-            DocCache.create_structure(class_model.__name__)
+            if instance.__dict__["_hash_reduce_left"] != 0:
+                DocCache.create_structure(class_model.__name__)
         # Plugins connection.
         plugin_list: dict[str, Any] = {}
         if ScrubyConfig.plugins is not None:
@@ -283,4 +278,5 @@ class Scruby(
         ScrubyConfig.max_workers = max_workers
         ScrubyConfig.plugins = plugins
         ScrubyConfig.init_params()
+        ScrubyConfig.check_hash_reduce_left()
         DocCache.load_cache(ScrubyModel.__subclasses__())
