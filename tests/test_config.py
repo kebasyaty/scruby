@@ -35,7 +35,6 @@ class TestConfigParams:
 
     def test_plugins(self) -> None:
         """Test a PLUGINS parameter."""
-        assert isinstance(ScrubyConfig.plugins, (list, type(None)))
         assert ScrubyConfig.plugins is None
 
 
@@ -50,6 +49,9 @@ class TestConfigMethods:
         delimiter: str = "/" if ScrubyConfig.sys_platform != "win32" else ""
         db_id = get_from_env(key="db_id", dotenv_path=f"{ScrubyConfig.db_root}{delimiter}.env.meta")
         assert db_id == ScrubyConfig.db_id
+        #
+        # Delete DB.
+        Scruby.napalm()
 
     def test_init_max_number_branch(self) -> None:
         """Test a init_max_number_branch method."""
@@ -69,8 +71,9 @@ class TestConfigMethods:
         ScrubyConfig.HASH_REDUCE_LEFT = 0
         ScrubyConfig.init_max_number_branch()
         assert ScrubyConfig.MAX_NUMBER_BRANCH == 4294967296
-        # restore default state
-        ScrubyConfig.HASH_REDUCE_LEFT = 7
+        #
+        # Delete DB.
+        Scruby.napalm()
 
     def test_check_hash_reduce_left(self) -> None:
         """Test a check_hash_reduce_left method."""

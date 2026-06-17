@@ -134,3 +134,14 @@ class ScrubyConfig:
                 + f"is not equal to the primary value {hash_reduce_left}."
             )
             raise ValueError(msg)
+
+    @classmethod
+    def restore(cls) -> None:
+        """Restore default parameter values."""
+        cls.db_id = None
+        cls.db_root = "ScrubyDB"
+        cls.HASH_REDUCE_LEFT = 7
+        cls.MAX_NUMBER_BRANCH = 16
+        cls.max_workers = None
+        cls.plugins = None
+        cls.sys_platform = sys.platform
