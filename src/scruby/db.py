@@ -60,8 +60,8 @@ class Scruby(
     ) -> None:
         super().__init__()
         self._meta = _Meta
-        self._db_root = ScrubyConfig.db_root
         self._db_id = ScrubyConfig.db_id
+        self._db_root = ScrubyConfig.db_root
         self._hash_reduce_left = ScrubyConfig.HASH_REDUCE_LEFT
         self._max_number_branch = ScrubyConfig.MAX_NUMBER_BRANCH
         self._max_workers = ScrubyConfig.max_workers
