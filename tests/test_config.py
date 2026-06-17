@@ -17,7 +17,7 @@ def test_db_id() -> None:
     assert ScrubyConfig.db_id is not None
     assert len(ScrubyConfig.db_id) == 8
     delimiter: str = "/" if ScrubyConfig.sys_platform != "win32" else ""
-    db_id = get_from_env(key="id", dotenv_path=f"{ScrubyConfig.db_root}{delimiter}.env.meta")
+    db_id = get_from_env(key="db_id", dotenv_path=f"{ScrubyConfig.db_root}{delimiter}.env.meta")
     assert db_id == ScrubyConfig.db_id
 
 
