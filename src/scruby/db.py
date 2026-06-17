@@ -126,8 +126,8 @@ class Scruby(
             await meta_dir_path.mkdir(parents=True)
             meta = _Meta(
                 collection_name=class_model.__name__,
-                hash_reduce_left=ScrubyConfig.HASH_REDUCE_LEFT,
-                max_number_branch=ScrubyConfig.MAX_NUMBER_BRANCH,
+                hash_reduce_left=instance.__dict__["_hash_reduce_left"],
+                max_number_branch=instance.__dict__["_max_number_branch"],
                 counter_documents=0,
             )
             # Save metadata of collection.
