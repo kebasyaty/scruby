@@ -167,6 +167,21 @@ async def test_hash_reduce_left_0() -> None:
     await user_coll.delete_doc("+447986123459")
     assert not await user_coll.has_key("+447986123459")
     assert await user_coll.estimated_document_count() == 9
+
+    # find_one
+    with pytest.raises(
+        AssertionError,
+        match=r"Scruby.run\(hash_reduce_left = 0\) - Not valid for `find_one` method.",
+    ):
+        assert user_coll.find_one(filter_fn=lambda doc: doc.phone == "+447986123457") is not None
+
+    # find_many
+    with pytest.raises(
+        AssertionError,
+        match=r"Scruby.run\(hash_reduce_left = 0\) - Not valid for `find_many` method.",
+    ):
+        assert user_coll.find_many() is not None
+
     #
     # delete_collection
     await Scruby.delete_collection("User")
