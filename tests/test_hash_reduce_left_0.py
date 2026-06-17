@@ -10,7 +10,7 @@ import pytest
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyModel
+from scruby import Scruby, ScrubyConfig, ScrubyModel
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
@@ -66,7 +66,7 @@ class Car(ScrubyModel):
 
 
 # Activate database.
-Scruby.run()
+Scruby.run(hash_reduce_left=0)
 
 
 async def test_create_db() -> None:
@@ -111,6 +111,10 @@ async def test_create_db() -> None:
 
 async def test_hash_reduce_left_0() -> None:
     """Testing the parameter hash_reduce_left = 0."""
+    # Check Config
+    assert ScrubyConfig.HASH_REDUCE_LEFT == 0
+    assert ScrubyConfig.MAX_NUMBER_BRANCH == 4294967296
+
     # Get collection `User`.
     user_coll = await Scruby.collection(User)
 
