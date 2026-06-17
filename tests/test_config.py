@@ -31,6 +31,28 @@ def test_max_number_branch() -> None:
     assert ScrubyConfig.MAX_NUMBER_BRANCH == 16
 
 
+def test_init_max_number_branch() -> None:
+    """Test a init_max_number_branch method."""
+    # 7
+    ScrubyConfig.HASH_REDUCE_LEFT = 7
+    ScrubyConfig.init_max_number_branch()
+    assert ScrubyConfig.MAX_NUMBER_BRANCH == 16
+    # 6
+    ScrubyConfig.HASH_REDUCE_LEFT = 6
+    ScrubyConfig.init_max_number_branch()
+    assert ScrubyConfig.MAX_NUMBER_BRANCH == 256
+    # 5
+    ScrubyConfig.HASH_REDUCE_LEFT = 5
+    ScrubyConfig.init_max_number_branch()
+    assert ScrubyConfig.MAX_NUMBER_BRANCH == 4096
+    # 0
+    ScrubyConfig.HASH_REDUCE_LEFT = 0
+    ScrubyConfig.init_max_number_branch()
+    assert ScrubyConfig.MAX_NUMBER_BRANCH == 4294967296
+    # restore default state
+    ScrubyConfig.HASH_REDUCE_LEFT = 7
+
+
 def test_max_workers() -> None:
     """Test a MAX_WORKERS parameter."""
     assert ScrubyConfig.max_workers is None
