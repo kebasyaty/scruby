@@ -6,11 +6,6 @@ from scruby import ScrubyConfig
 from scruby.utils import get_from_env
 
 
-def test_db_root() -> None:
-    """Test a DB_ROOT parameter."""
-    assert ScrubyConfig.db_root == "ScrubyDB"
-
-
 def test_db_id() -> None:
     """ScrubyConfig.db_id."""
     ScrubyConfig.init_params()
@@ -19,6 +14,11 @@ def test_db_id() -> None:
     delimiter: str = "/" if ScrubyConfig.sys_platform != "win32" else ""
     db_id = get_from_env(key="db_id", dotenv_path=f"{ScrubyConfig.db_root}{delimiter}.env.meta")
     assert db_id == ScrubyConfig.db_id
+
+
+def test_db_root() -> None:
+    """Test a DB_ROOT parameter."""
+    assert ScrubyConfig.db_root == "ScrubyDB"
 
 
 def test_hash_reduce_left() -> None:
