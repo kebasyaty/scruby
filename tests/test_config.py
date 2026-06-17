@@ -11,12 +11,7 @@ class TestConfigParams:
 
     def test_db_id(self) -> None:
         """ScrubyConfig.db_id."""
-        ScrubyConfig.init_params()
-        assert ScrubyConfig.db_id is not None
-        assert len(ScrubyConfig.db_id) == 8
-        delimiter: str = "/" if ScrubyConfig.sys_platform != "win32" else ""
-        db_id = get_from_env(key="db_id", dotenv_path=f"{ScrubyConfig.db_root}{delimiter}.env.meta")
-        assert db_id == ScrubyConfig.db_id
+        assert ScrubyConfig.db_id is None
 
     def test_db_root(self) -> None:
         """Test a DB_ROOT parameter."""
@@ -42,6 +37,15 @@ class TestConfigParams:
 
 class TestConfigMethods:
     """Testing configuration methods."""
+
+    def test_init_db_id(self) -> None:
+        """Test a init_db_id method."""
+        ScrubyConfig.init_db_id()
+        assert ScrubyConfig.db_id is not None
+        assert len(ScrubyConfig.db_id) == 8
+        delimiter: str = "/" if ScrubyConfig.sys_platform != "win32" else ""
+        db_id = get_from_env(key="db_id", dotenv_path=f"{ScrubyConfig.db_root}{delimiter}.env.meta")
+        assert db_id == ScrubyConfig.db_id
 
     def test_init_max_number_branch(self) -> None:
         """Test a init_max_number_branch method."""
