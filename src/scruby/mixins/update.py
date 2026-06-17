@@ -25,10 +25,10 @@ class Update:
     @final
     @staticmethod
     async def _task_update(
-        branch_number: int,
         filter_fn: Callable,
-        hash_reduce_left: int,
         db_root: str,
+        hash_reduce_left: int,
+        branch_number: int,
         class_model: Any,
         new_data: dict[str, Any],
     ) -> int:
@@ -121,10 +121,10 @@ class Update:
             futures: list[Future] = [
                 executor.submit(
                     update_task_fn,
-                    branch_number,
                     filter_fn,
-                    hash_reduce_left,
                     db_root,
+                    hash_reduce_left,
+                    branch_number,
                     class_model,
                     copy.deepcopy(new_data),
                 )

@@ -41,8 +41,8 @@ class CustomTask:
         return custom_task_fn(
             search_task_fn=self._task_find,
             filter_fn=filter_fn,
-            branch_numbers=range(self._max_number_branch),
             hash_reduce_left=hash_reduce_left,
+            branch_numbers=range(self._max_number_branch),
             class_model=self._class_model,
             max_workers=self._max_workers,
             stop_signal=Event(),

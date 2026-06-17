@@ -38,8 +38,8 @@ class User(ScrubyModel):
 def task_counter(
     search_task_fn: Callable,
     filter_fn: Callable,
-    branch_numbers: range,
     hash_reduce_left: int,
+    branch_numbers: range,
     class_model: Any,
     max_workers: int | None,
     stop_signal: Event,
@@ -57,9 +57,9 @@ def task_counter(
         futures: list[Future] = [
             executor.submit(
                 search_task_fn,
-                branch_number,
                 filter_fn,
                 hash_reduce_left,
+                branch_number,
                 class_model,
                 stop_signal,
             )

@@ -63,9 +63,9 @@ class Count:
             futures: list[Future] = [
                 executor.submit(
                     search_task_fn,
-                    branch_number,
                     filter_fn,
                     hash_reduce_left,
+                    branch_number,
                     class_model,
                     stop_signal,
                 )
