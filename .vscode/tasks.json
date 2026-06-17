@@ -74,6 +74,7 @@
         "uv run pytest -v tests/test_aggregation_min.py;",
         "uv run pytest -v tests/test_aggregation_sum.py;",
         "uv run pytest -v tests/test_cache.py;",
+        "uv run pytest -v tests/test_hash_reduce_left_0.py;",
         "uv run python pyhelpers/remove_pycache.py"
       ],
       "problemMatcher": []
