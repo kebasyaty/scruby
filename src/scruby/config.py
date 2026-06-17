@@ -16,6 +16,7 @@ The settings class contains the following parameters:
 - `MAX_NUMBER_BRANCH` - Maximum number of branches in a collection.
 - `max_workers` - The maximum number of processes that can be used (default = None).
 - `plugins` - For adding plugins.
+- `sys_platform` - Information about the operating system.
 """
 
 from __future__ import annotations
