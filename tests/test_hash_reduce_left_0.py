@@ -182,6 +182,25 @@ async def test_hash_reduce_left_0() -> None:
     ):
         assert user_coll.find_many() is not None
 
+    # update_many
+    with pytest.raises(
+        AssertionError,
+        match=r"Scruby.run\(hash_reduce_left = 0\) - Not valid for `update_many` method.",
+    ):
+        await user_coll.update_many(
+            new_data={"first_name": "Gene", "last_name": "Kost"},
+            filter_fn=lambda doc: doc.first_name == "John" or doc.last_name == "Smith",
+        )
+
+    # delete_many
+    with pytest.raises(
+        AssertionError,
+        match=r"Scruby.run\(hash_reduce_left = 0\) - Not valid for `delete_many` method.",
+    ):
+        await user_coll.delete_many(
+            filter_fn=lambda doc: doc.phone == "+447986123455" or doc.phone == "+447986123453",
+        )
+
     #
     # delete_collection
     await Scruby.delete_collection("User")
