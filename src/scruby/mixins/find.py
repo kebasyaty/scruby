@@ -38,9 +38,9 @@ class Find:
     @final
     @staticmethod
     def _task_find(
-        branch_number: int,
         filter_fn: Callable,
         hash_reduce_left: int,
+        branch_number: int,
         class_model: Any,
         stop_event: Event,
     ) -> list[Any] | None:
@@ -112,9 +112,9 @@ class Find:
             futures: list[Future] = [
                 executor.submit(
                     search_task_fn,
-                    branch_number,
                     filter_fn,
                     hash_reduce_left,
+                    branch_number,
                     class_model,
                     stop_signal,
                 )
@@ -200,9 +200,9 @@ class Find:
             futures: list[Future] = [
                 executor.submit(
                     search_task_fn,
-                    branch_number,
                     filter_fn,
                     hash_reduce_left,
+                    branch_number,
                     class_model,
                     stop_signal,
                 )

@@ -24,10 +24,10 @@ class Delete:
     @final
     @staticmethod
     async def _task_delete(
-        branch_number: int,
         filter_fn: Callable,
-        hash_reduce_left: int,
         db_root: str,
+        hash_reduce_left: int,
+        branch_number: int,
         class_model: Any,
     ) -> int:
         """Asynchronous task for find and delete documents.
@@ -107,10 +107,10 @@ class Delete:
             futures: list[Future] = [
                 executor.submit(
                     search_task_fn,
-                    branch_number,
                     filter_fn,
-                    hash_reduce_left,
                     db_root,
+                    hash_reduce_left,
+                    branch_number,
                     class_model,
                 )
                 for branch_number in branch_numbers
