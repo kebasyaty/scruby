@@ -6,8 +6,8 @@
 
 The settings class contains the following parameters:
 
-- `db_root` - Path to root directory of database. `Default = "ScrubyDB" (in root of project)`.
 - `db_id` - Database ID.
+- `db_root` - Path to root directory of database. `Default = "ScrubyDB" (in root of project)`.
 - `HASH_REDUCE_LEFT` - The length of the hash reduction on the left side.
     - `7` - 16 branches in collection (is default).
     - `6` - 256 branches in collection.
@@ -34,13 +34,13 @@ from scruby.utils import add_to_env, get_from_env
 class ScrubyConfig:
     """Database settings."""
 
-    # Path to root directory of database
-    # By default = "ScrubyDB" (in root of project).
-    db_root: ClassVar[str] = "ScrubyDB"
-
     # Database ID
     # Will be automatically assigned.
     db_id: ClassVar[str | None] = None
+
+    # Path to root directory of database
+    # By default = "ScrubyDB" (in root of project).
+    db_root: ClassVar[str] = "ScrubyDB"
 
     # The length of the hash reduction on the left side.
     # 7 = 16 branches in collection.
