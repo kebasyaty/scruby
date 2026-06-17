@@ -38,9 +38,8 @@ class User(ScrubyModel):
 def task_calculate_average(
     search_task_fn: Callable,
     filter_fn: Callable,
+    hash_reduce_left: int,
     branch_numbers: range,
-    HASH_REDUCE_LEFT: int,
-    db_root: str,
     class_model: Any,
     max_workers: int | None,
     stop_signal: Event,
@@ -58,10 +57,9 @@ def task_calculate_average(
         futures: list[Future] = [
             executor.submit(
                 search_task_fn,
-                branch_number,
                 filter_fn,
                 hash_reduce_left,
-                db_root,
+                branch_number,
                 class_model,
                 stop_signal,
             )
@@ -140,9 +138,8 @@ class User(BaseModel):
 def task_counter(
     search_task_fn: Callable,
     filter_fn: Callable,
+    hash_reduce_left: int,
     branch_numbers: range,
-    HASH_REDUCE_LEFT: int,
-    db_root: str,
     class_model: Any,
     max_workers: int | None,
     stop_signal: Event,
@@ -159,10 +156,9 @@ def task_counter(
         futures: list[Future] = [
             executor.submit(
                 search_task_fn,
-                branch_number,
                 filter_fn,
                 hash_reduce_left,
-                db_root,
+                branch_number,
                 class_model,
                 stop_signal,
             )
@@ -255,9 +251,8 @@ class User(ScrubyModel):
 def task_calculate_max(
     search_task_fn: Callable,
     filter_fn: Callable,
+    hash_reduce_left: int,
     branch_numbers: range,
-    HASH_REDUCE_LEFT: int,
-    db_root: str,
     class_model: Any,
     max_workers: int | None,
     stop_signal: Event,
@@ -272,10 +267,9 @@ def task_calculate_max(
         futures: list[Future] = [
             executor.submit(
                 search_task_fn,
-                branch_number,
                 filter_fn,
                 hash_reduce_left,
-                db_root,
+                branch_number,
                 class_model,
                 stop_signal,
             )
@@ -354,9 +348,8 @@ class User(ScrubyModel):
 def task_calculate_min(
     search_task_fn: Callable,
     filter_fn: Callable,
+    hash_reduce_left: int,
     branch_numbers: range,
-    HASH_REDUCE_LEFT: int,
-    db_root: str,
     class_model: Any,
     max_workers: int | None,
     stop_signal: Event,
@@ -371,10 +364,9 @@ def task_calculate_min(
         futures: list[Future] = [
             executor.submit(
                 search_task_fn,
-                branch_number,
                 filter_fn,
                 hash_reduce_left,
-                db_root,
+                branch_number,
                 class_model,
                 stop_signal,
             )
@@ -453,9 +445,8 @@ class User(ScrubyModel):
 def task_calculate_sum(
     search_task_fn: Callable,
     filter_fn: Callable,
+    hash_reduce_left: int,
     branch_numbers: range,
-    HASH_REDUCE_LEFT: int,
-    db_root: str,
     class_model: Any,
     max_workers: int | None,
     stop_signal: Event,
@@ -470,10 +461,9 @@ def task_calculate_sum(
         futures: list[Future] = [
             executor.submit(
                 search_task_fn,
-                branch_number,
                 filter_fn,
                 hash_reduce_left,
-                db_root,
+                branch_number,
                 class_model,
                 stop_signal,
             )
