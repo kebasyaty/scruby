@@ -1,6 +1,6 @@
 [project]
 name = "scruby"
-version = "2.2.1"
+version = "2.2.2"
 description = "Asynchronous library for building and managing a hybrid database, by scheme of key-value."
 readme = "README.md"
 requires-python = ">=3.12,<4.0"
@@ -12,7 +12,7 @@ classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
   "Operating System :: MacOS :: MacOS X",
-  "Operating System :: Microsoft :: Windows",
+  # "Operating System :: Microsoft :: Windows",
   "Operating System :: POSIX",
   "Operating System :: POSIX :: Linux",
   "Programming Language :: Python :: 3",
