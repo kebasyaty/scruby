@@ -78,12 +78,25 @@ class TestConfigMethods:
     def test_check_hash_reduce_left(self) -> None:
         """Test a check_hash_reduce_left method."""
         # 7
-        ScrubyConfig.HASH_REDUCE_LEFT = 7
+        test_num = 7
+        ScrubyConfig.HASH_REDUCE_LEFT = test_num
         ScrubyConfig.check_hash_reduce_left()
         delimiter: str = "/" if ScrubyConfig.sys_platform != "win32" else ""
         hash_reduce_left = get_from_env(
             key="hash_reduce_left",
             dotenv_path=f"{ScrubyConfig.db_root}{delimiter}.env.meta",
         )
-        assert hash_reduce_left == ScrubyConfig.HASH_REDUCE_LEFT
-        assert ScrubyConfig.HASH_REDUCE_LEFT == 7
+        assert hash_reduce_left is not None
+        assert int(hash_reduce_left) == test_num
+        # repeat
+        ScrubyConfig.check_hash_reduce_left()
+        delimiter: str = "/" if ScrubyConfig.sys_platform != "win32" else ""
+        hash_reduce_left = get_from_env(
+            key="hash_reduce_left",
+            dotenv_path=f"{ScrubyConfig.db_root}{delimiter}.env.meta",
+        )
+        assert hash_reduce_left is not None
+        assert int(hash_reduce_left) == test_num
+        #
+        # Delete DB.
+        Scruby.napalm()
