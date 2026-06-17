@@ -17,6 +17,7 @@ from scruby.cache import DocCache
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
 # Delete DB.
+# Hint: If the previous test failed and the database remains.
 Scruby.napalm()
 ScrubyConfig.db_root = "TestScrubyDB"
 Scruby.napalm()

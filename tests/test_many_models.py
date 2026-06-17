@@ -15,6 +15,7 @@ from scruby import Scruby, ScrubyModel
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
 # Delete DB.
+# Hint: If the previous test failed and the database remains.
 Scruby.napalm()
 
 

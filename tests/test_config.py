@@ -2,8 +2,12 @@
 
 from __future__ import annotations
 
-from scruby import ScrubyConfig
+from scruby import Scruby, ScrubyConfig
 from scruby.utils import get_from_env
+
+# Delete DB.
+# Hint: If the previous test failed and the database remains.
+Scruby.napalm()
 
 
 class TestConfigParams:
@@ -67,3 +71,16 @@ class TestConfigMethods:
         assert ScrubyConfig.MAX_NUMBER_BRANCH == 4294967296
         # restore default state
         ScrubyConfig.HASH_REDUCE_LEFT = 7
+
+    def test_check_hash_reduce_left(self) -> None:
+        """Test a check_hash_reduce_left method."""
+        # 7
+        ScrubyConfig.HASH_REDUCE_LEFT = 7
+        ScrubyConfig.check_hash_reduce_left()
+        delimiter: str = "/" if ScrubyConfig.sys_platform != "win32" else ""
+        hash_reduce_left = get_from_env(
+            key="hash_reduce_left",
+            dotenv_path=f"{ScrubyConfig.db_root}{delimiter}.env.meta",
+        )
+        assert hash_reduce_left == ScrubyConfig.HASH_REDUCE_LEFT
+        assert ScrubyConfig.HASH_REDUCE_LEFT == 7
