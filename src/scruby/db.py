@@ -60,8 +60,8 @@ class Scruby(
     ) -> None:
         super().__init__()
         self._meta = _Meta
-        self._db_root = ScrubyConfig.db_root
         self._db_id = ScrubyConfig.db_id
+        self._db_root = ScrubyConfig.db_root
         self._hash_reduce_left = ScrubyConfig.HASH_REDUCE_LEFT
         self._max_number_branch = ScrubyConfig.MAX_NUMBER_BRANCH
         self._max_workers = ScrubyConfig.max_workers
@@ -126,8 +126,8 @@ class Scruby(
             await meta_dir_path.mkdir(parents=True)
             meta = _Meta(
                 collection_name=class_model.__name__,
-                hash_reduce_left=ScrubyConfig.HASH_REDUCE_LEFT,
-                max_number_branch=ScrubyConfig.MAX_NUMBER_BRANCH,
+                hash_reduce_left=instance.__dict__["_hash_reduce_left"],
+                max_number_branch=instance.__dict__["_max_number_branch"],
                 counter_documents=0,
             )
             # Save metadata of collection.
@@ -245,6 +245,7 @@ class Scruby(
         DocCache.cache = {}
         with contextlib.suppress(FileNotFoundError):
             rmtree(ScrubyConfig.db_root)
+        ScrubyConfig.restore()
         return
 
     @staticmethod
