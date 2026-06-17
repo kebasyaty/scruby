@@ -129,6 +129,12 @@ async def test_hash_reduce_left_0() -> None:
 
     # estimated_document_count
     assert await user_coll.estimated_document_count() == 9
+    # count_documents
+    with pytest.raises(
+        AssertionError,
+        match=r"Scruby.run\(hash_reduce_left = 0\) - Not valid for `count_documents` method.",
+    ):
+        assert user_coll.count_documents(filter_fn=lambda doc: doc.first_name == "John") == 9
 
     # add_doc
     user = User(
