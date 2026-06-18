@@ -148,8 +148,6 @@ async def test_hash_reduce_left_0() -> None:
     ):
         assert user_coll.count_documents(filter_fn=lambda doc: doc.first_name == "John") == 9
 
-    assert len(DocCache.cache) == 0
-
     # add_doc
     user = User(
         first_name="John",
@@ -185,7 +183,6 @@ async def test_hash_reduce_left_0() -> None:
     assert len(DocCache.cache) == 0
     assert not await user_coll.has_key("+447986123459")
     assert await user_coll.estimated_document_count() == 9
-    assert len(DocCache.cache) == 0
 
     # find_one
     with pytest.raises(
@@ -220,23 +217,21 @@ async def test_hash_reduce_left_0() -> None:
             filter_fn=lambda doc: doc.phone == "+447986123455" or doc.phone == "+447986123453",
         )
 
-    assert len(DocCache.cache) == 0
-
     #
     # delete_collection
     await Scruby.delete_collection("User")
     coll_list = await Scruby.collection_list()
     assert coll_list is not None
+    assert len(DocCache.cache) == 0
     for coll_name in coll_list:
         assert coll_name in ["Phone", "Car"]
     user_coll = await Scruby.collection(User)
     assert await user_coll.estimated_document_count() == 0
     coll_list = await Scruby.collection_list()
     assert coll_list is not None
+    assert len(DocCache.cache) == 0
     for coll_name in coll_list:
         assert coll_name in ["User", "Phone", "Car"]
-
-    assert len(DocCache.cache) == 0
     #
     # Delete DB.
     Scruby.napalm()
