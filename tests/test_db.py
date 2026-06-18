@@ -33,7 +33,6 @@ class User(ScrubyModel):
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
     birthday: datetime = Field(strict=True)
-    # pyrefly: ignore [not-a-type]
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
     # key is always at bottom
@@ -50,7 +49,6 @@ class User2(ScrubyModel):
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
     birthday: datetime = Field(strict=True)
-    # pyrefly: ignore [not-a-type]
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
     # key is always at bottom
