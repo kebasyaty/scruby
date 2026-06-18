@@ -56,9 +56,16 @@ class DocCache:
         if not db_root.exists():
             return
 
+        # Get a list of created directories for collections
+        db_directory = Path(db_root)
+        all_entries = Path.iterdir(db_directory)
+        directory_names: list[str] = [entry.name for entry in all_entries if entry.name != ".env.meta"]
+
         for subclass in subclasses:
             collection_name = subclass.__name__
-            cls.create_structure(collection_name)
+
+            if collection_name in directory_names:
+                cls.create_structure(collection_name)
 
             for branch_number in branch_numbers:
                 branch_number_as_hash: str = f"{branch_number:08x}"[HASH_REDUCE_LEFT:]
