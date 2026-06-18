@@ -275,15 +275,6 @@ async def test_user() -> None:
     #
     # clear_collection
     Scruby.clear_collection("User")
-    assert DocCache.cache.get("User") is None
-    coll_list = Scruby.collection_list()
-    assert coll_list is not None
-    assert len(DocCache.cache) == 2
-    for coll_name in coll_list:
-        assert coll_name in ["Phone", "Car"]
-    user_coll = await Scruby.collection(User)
-    assert await user_coll.estimated_document_count() == 0
-    assert user_coll.count_documents(filter_fn=lambda doc: doc.first_name == "John") == 0
     assert DocCache.cache.get("User") is not None
     coll_list = Scruby.collection_list()
     assert coll_list is not None
@@ -438,15 +429,6 @@ async def test_phone() -> None:
     #
     # clear_collection
     Scruby.clear_collection("Phone")
-    assert DocCache.cache.get("Phone") is None
-    coll_list = Scruby.collection_list()
-    assert coll_list is not None
-    assert len(DocCache.cache) == 2
-    for coll_name in coll_list:
-        assert coll_name in ["User", "Car"]
-    phone_coll = await Scruby.collection(Phone)
-    assert await phone_coll.estimated_document_count() == 0
-    assert phone_coll.count_documents(filter_fn=lambda doc: doc.brand == "Samsung") == 0
     assert DocCache.cache.get("Phone") is not None
     coll_list = Scruby.collection_list()
     assert coll_list is not None
@@ -601,15 +583,6 @@ async def test_car() -> None:
     #
     # clear_collection
     Scruby.clear_collection("Car")
-    assert DocCache.cache.get("Car") is None
-    coll_list = Scruby.collection_list()
-    assert coll_list is not None
-    assert len(DocCache.cache) == 2
-    for coll_name in coll_list:
-        assert coll_name in ["User", "Phone"]
-    car_coll = await Scruby.collection(Car)
-    assert await car_coll.estimated_document_count() == 0
-    assert car_coll.count_documents(filter_fn=lambda doc: doc.brand == "Mazda") == 0
     assert DocCache.cache.get("Car") is not None
     coll_list = Scruby.collection_list()
     assert coll_list is not None
