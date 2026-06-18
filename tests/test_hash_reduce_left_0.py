@@ -11,6 +11,7 @@ from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
 from scruby import Scruby, ScrubyConfig, ScrubyModel
+from scruby.cache import DocCache
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
@@ -71,6 +72,12 @@ Scruby.run(hash_reduce_left=0)
 
 async def test_create_db() -> None:
     """Create a test database."""
+    # Check Config
+    assert ScrubyConfig.HASH_REDUCE_LEFT == 0
+    assert ScrubyConfig.MAX_NUMBER_BRANCH == 4294967296
+
+    assert len(DocCache.cache) == 0
+
     # Create users
     user_coll = await Scruby.collection(User)
     for num in range(9):
@@ -108,6 +115,8 @@ async def test_create_db() -> None:
         # Add car to collection
         await car_coll.add_doc(car)
 
+    assert len(DocCache.cache) == 0
+
 
 async def test_hash_reduce_left_0() -> None:
     """Testing the parameter hash_reduce_left = 0."""
@@ -115,8 +124,11 @@ async def test_hash_reduce_left_0() -> None:
     assert ScrubyConfig.HASH_REDUCE_LEFT == 0
     assert ScrubyConfig.MAX_NUMBER_BRANCH == 4294967296
 
+    assert len(DocCache.cache) == 0
+
     # Get collection `User`.
     user_coll = await Scruby.collection(User)
+    assert len(DocCache.cache) == 0
 
     # collection_name
     assert user_coll.collection_name() == "User"
@@ -146,6 +158,7 @@ async def test_hash_reduce_left_0() -> None:
     )
     await user_coll.add_doc(user)
     assert await user_coll.estimated_document_count() == 10
+    assert len(DocCache.cache) == 0
 
     # update_doc and get_doc
     user = User(
@@ -159,12 +172,15 @@ async def test_hash_reduce_left_0() -> None:
     user: User | None = await user_coll.get_doc("+447986123459")
     assert user is not None
     assert user.birthday == datetime(1972, 11, 7, tzinfo=ZoneInfo("UTC"))
+    assert len(DocCache.cache) == 0
 
     # has_key
     assert await user_coll.has_key("+447986123459")
+    assert len(DocCache.cache) == 0
 
     # delete_doc
     await user_coll.delete_doc("+447986123459")
+    assert len(DocCache.cache) == 0
     assert not await user_coll.has_key("+447986123459")
     assert await user_coll.estimated_document_count() == 9
 
@@ -206,12 +222,14 @@ async def test_hash_reduce_left_0() -> None:
     await Scruby.delete_collection("User")
     coll_list = await Scruby.collection_list()
     assert coll_list is not None
+    assert len(DocCache.cache) == 0
     for coll_name in coll_list:
         assert coll_name in ["Phone", "Car"]
     user_coll = await Scruby.collection(User)
     assert await user_coll.estimated_document_count() == 0
     coll_list = await Scruby.collection_list()
     assert coll_list is not None
+    assert len(DocCache.cache) == 0
     for coll_name in coll_list:
         assert coll_name in ["User", "Phone", "Car"]
     #

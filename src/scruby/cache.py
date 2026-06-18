@@ -38,8 +38,6 @@ class DocCache:
                 cls.cache[collection_name] = {
                     key: {key: {key: {} for key in hexdigits} for key in hexdigits} for key in hexdigits
                 }
-            case 0:
-                pass
             case _ as unreachable:
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
@@ -58,9 +56,16 @@ class DocCache:
         if not db_root.exists():
             return
 
+        # Get a list of created directories for collections
+        db_directory = Path(db_root)
+        all_entries = Path.iterdir(db_directory)
+        directory_names: list[str] = [entry.name for entry in all_entries if entry.name != ".env.meta"]
+
         for subclass in subclasses:
             collection_name = subclass.__name__
-            cls.create_structure(collection_name)
+
+            if collection_name in directory_names:
+                cls.create_structure(collection_name)
 
             for branch_number in branch_numbers:
                 branch_number_as_hash: str = f"{branch_number:08x}"[HASH_REDUCE_LEFT:]
@@ -90,7 +95,5 @@ class DocCache:
                                 cls.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
                                     branch_number_as_hash[2]
                                 ][key] = doc
-                            case 0:
-                                pass
                             case _ as unreachable:
                                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
