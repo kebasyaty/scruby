@@ -108,6 +108,7 @@ async def test_create_db() -> None:
         await phone_coll.add_doc(phone)
 
     assert DocCache.cache.get("Phone") is not None
+    assert await phone_coll.estimated_document_count() == 9
 
     # Create cars
     car_coll = await Scruby.collection(Car)
@@ -123,6 +124,7 @@ async def test_create_db() -> None:
         await car_coll.add_doc(car)
 
     assert DocCache.cache.get("Car") is not None
+    assert await car_coll.estimated_document_count() == 9
 
 
 async def test_user() -> None:
