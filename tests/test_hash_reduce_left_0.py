@@ -219,7 +219,7 @@ async def test_hash_reduce_left_0() -> None:
         )
 
     #
-    # delete_collection
+    # clear_collection
     Scruby.clear_collection("User")
     coll_list = Scruby.collection_list()
     assert coll_list is not None

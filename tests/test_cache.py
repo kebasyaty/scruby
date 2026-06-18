@@ -75,11 +75,10 @@ Scruby.run(db_root="TestScrubyDB")
 
 async def test_create_db() -> None:
     """Create a test database."""
-    assert len(DocCache.cache) == 0
+    assert len(DocCache.cache) == 3
 
     # Create users
     user_coll = await Scruby.collection(User)
-    assert len(DocCache.cache) == 1
     for num in range(9):
         user = User(
             first_name="John",
@@ -96,7 +95,6 @@ async def test_create_db() -> None:
 
     # Create phones
     phone_coll = await Scruby.collection(Phone)
-    assert len(DocCache.cache) == 2
     for num in range(9):
         phone = Phone(
             brand="Samsung",
@@ -112,7 +110,6 @@ async def test_create_db() -> None:
 
     # Create cars
     car_coll = await Scruby.collection(Car)
-    assert len(DocCache.cache) == 3
     for num in range(9):
         car = Car(
             brand="Mazda",
@@ -276,7 +273,7 @@ async def test_user() -> None:
         assert user.phone != "+447986123453"
 
     #
-    # delete_collection
+    # clear_collection
     Scruby.clear_collection("User")
     assert DocCache.cache.get("User") is None
     coll_list = Scruby.collection_list()
@@ -439,7 +436,7 @@ async def test_phone() -> None:
         assert phone.model != "Galaxy A26 3"
 
     #
-    # delete_collection
+    # clear_collection
     Scruby.clear_collection("Phone")
     assert DocCache.cache.get("Phone") is None
     coll_list = Scruby.collection_list()
@@ -602,7 +599,7 @@ async def test_car() -> None:
         assert car.model != "EZ-6 3"
 
     #
-    # delete_collection
+    # clear_collection
     Scruby.clear_collection("Car")
     assert DocCache.cache.get("Car") is None
     coll_list = Scruby.collection_list()
