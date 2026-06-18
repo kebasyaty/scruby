@@ -110,34 +110,13 @@ class Scruby(
         instance = cls()
         # Add model class to Scruby
         instance.__dict__["_class_model"] = class_model
-        # Create a path for metadata.
-        meta_dir_path_tuple = (
+        # Add the metadata path.
+        instance.__dict__["_meta_path"] = Path(
             ScrubyConfig.db_root,
             class_model.__name__,
             "meta",
-        )
-        instance.__dict__["_meta_path"] = Path(
-            *meta_dir_path_tuple,
             "meta.json",
         )
-        # Create metadata for collection, if missing.
-        meta_dir_path = Path(*meta_dir_path_tuple)
-        if not await meta_dir_path.exists():
-            # Create metadata.
-            await meta_dir_path.mkdir(parents=True)
-            meta = _Meta(
-                collection_name=class_model.__name__,
-                hash_reduce_left=instance.__dict__["_hash_reduce_left"],
-                max_number_branch=instance.__dict__["_max_number_branch"],
-                counter_documents=0,
-            )
-            # Save metadata of collection.
-            meta_json = meta.model_dump_json()
-            meta_path = Path(*(meta_dir_path, "meta.json"))
-            await meta_path.write_text(meta_json, "utf-8")
-            # Create a cache structure for the collection.
-            if instance.__dict__["_hash_reduce_left"] != 0:
-                DocCache.create_structure(class_model.__name__)
         # Plugins connection.
         plugin_list: dict[str, Any] = {}
         if ScrubyConfig.plugins is not None:
