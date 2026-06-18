@@ -75,10 +75,11 @@ Scruby.run(db_root="TestScrubyDB")
 
 async def test_create_db() -> None:
     """Create a test database."""
-    assert len(DocCache.cache) == 3
+    assert len(DocCache.cache) == 0
 
     # Create users
     user_coll = await Scruby.collection(User)
+    assert len(DocCache.cache) == 1
     for num in range(9):
         user = User(
             first_name="John",
@@ -91,9 +92,11 @@ async def test_create_db() -> None:
         await user_coll.add_doc(user)
 
     assert DocCache.cache.get("User") is not None
+    assert await user_coll.estimated_document_count() == 9
 
     # Create phones
     phone_coll = await Scruby.collection(Phone)
+    assert len(DocCache.cache) == 2
     for num in range(9):
         phone = Phone(
             brand="Samsung",
@@ -108,6 +111,7 @@ async def test_create_db() -> None:
 
     # Create cars
     car_coll = await Scruby.collection(Car)
+    assert len(DocCache.cache) == 3
     for num in range(9):
         car = Car(
             brand="Mazda",
@@ -275,6 +279,7 @@ async def test_user() -> None:
     assert DocCache.cache.get("User") is None
     coll_list = await Scruby.collection_list()
     assert coll_list is not None
+    assert len(DocCache.cache) == 2
     for coll_name in coll_list:
         assert coll_name in ["Phone", "Car"]
     user_coll = await Scruby.collection(User)
@@ -283,6 +288,7 @@ async def test_user() -> None:
     assert DocCache.cache.get("User") is not None
     coll_list = await Scruby.collection_list()
     assert coll_list is not None
+    assert len(DocCache.cache) == 3
     for coll_name in coll_list:
         assert coll_name in ["User", "Phone", "Car"]
 
@@ -436,6 +442,7 @@ async def test_phone() -> None:
     assert DocCache.cache.get("Phone") is None
     coll_list = await Scruby.collection_list()
     assert coll_list is not None
+    assert len(DocCache.cache) == 2
     for coll_name in coll_list:
         assert coll_name in ["User", "Car"]
     phone_coll = await Scruby.collection(Phone)
@@ -444,6 +451,7 @@ async def test_phone() -> None:
     assert DocCache.cache.get("Phone") is not None
     coll_list = await Scruby.collection_list()
     assert coll_list is not None
+    assert len(DocCache.cache) == 3
     for coll_name in coll_list:
         assert coll_name in ["User", "Phone", "Car"]
 
@@ -597,6 +605,7 @@ async def test_car() -> None:
     assert DocCache.cache.get("Car") is None
     coll_list = await Scruby.collection_list()
     assert coll_list is not None
+    assert len(DocCache.cache) == 2
     for coll_name in coll_list:
         assert coll_name in ["User", "Phone"]
     car_coll = await Scruby.collection(Car)
@@ -605,6 +614,7 @@ async def test_car() -> None:
     assert DocCache.cache.get("Car") is not None
     coll_list = await Scruby.collection_list()
     assert coll_list is not None
+    assert len(DocCache.cache) == 3
     for coll_name in coll_list:
         assert coll_name in ["User", "Phone", "Car"]
     #
