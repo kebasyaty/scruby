@@ -38,8 +38,6 @@ class DocCache:
                 cls.cache[collection_name] = {
                     key: {key: {key: {} for key in hexdigits} for key in hexdigits} for key in hexdigits
                 }
-            case 0:
-                pass
             case _ as unreachable:
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
@@ -90,7 +88,5 @@ class DocCache:
                                 cls.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
                                     branch_number_as_hash[2]
                                 ][key] = doc
-                            case 0:
-                                pass
                             case _ as unreachable:
                                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]

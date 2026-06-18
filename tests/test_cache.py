@@ -75,6 +75,8 @@ Scruby.run(db_root="TestScrubyDB")
 
 async def test_create_db() -> None:
     """Create a test database."""
+    assert len(DocCache.cache) == 3
+
     # Create users
     user_coll = await Scruby.collection(User)
     for num in range(9):
@@ -88,6 +90,8 @@ async def test_create_db() -> None:
         # Add user to collection.
         await user_coll.add_doc(user)
 
+    assert DocCache.cache.get("User") is not None
+
     # Create phones
     phone_coll = await Scruby.collection(Phone)
     for num in range(9):
@@ -100,6 +104,8 @@ async def test_create_db() -> None:
         # Add phone to collection.
         await phone_coll.add_doc(phone)
 
+    assert DocCache.cache.get("Phone") is not None
+
     # Create cars
     car_coll = await Scruby.collection(Car)
     for num in range(9):
@@ -111,6 +117,8 @@ async def test_create_db() -> None:
         )
         # Add car to collection
         await car_coll.add_doc(car)
+
+    assert DocCache.cache.get("Car") is not None
 
 
 async def test_user() -> None:
