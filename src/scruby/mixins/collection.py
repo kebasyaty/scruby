@@ -15,6 +15,7 @@ from anyio import Path, to_thread
 
 from scruby.cache import DocCache
 from scruby.config import ScrubyConfig
+from scruby.db import _Meta
 
 
 class Collection:
@@ -41,8 +42,8 @@ class Collection:
 
     @final
     @staticmethod
-    async def delete_collection(collection_name: str) -> None:
-        """Asynchronous method for deleting a collection by its name.
+    async def clear_collection(collection_name: str) -> None:
+        """Asynchronous method to remove all documents from a collection.
 
         Args:
             collection_name (str): Collection name.
@@ -50,8 +51,29 @@ class Collection:
         Returns:
             None.
         """
+        # Clear collection on file system
         target_directory = f"{ScrubyConfig.db_root}/{collection_name}"
         await to_thread.run_sync(rmtree, target_directory)  # pyrefly: ignore [bad-argument-type, incompatible-overload-residual]
+
+        # Create metadata for collection
+        meta_dir_path = Path(
+            ScrubyConfig.db_root,
+            collection_name,
+            "meta",
+        )
+        await meta_dir_path.mkdir(parents=True)
+        meta = _Meta(
+            collection_name=collection_name,
+            hash_reduce_left=ScrubyConfig.HASH_REDUCE_LEFT,
+            max_number_branch=ScrubyConfig.MAX_NUMBER_BRANCH,
+            counter_documents=0,
+        )
+        meta_json = meta.model_dump_json()
+        meta_path = Path(meta_dir_path, "meta.json")
+        await meta_path.write_text(meta_json, "utf-8")
+
+        # Clear collection in cache
         if ScrubyConfig.HASH_REDUCE_LEFT != 0:
             del DocCache.cache[collection_name]
+            DocCache.create_structure(collection_name)
         return

@@ -9,6 +9,7 @@ from __future__ import annotations
 __all__ = (
     "Scruby",
     "ScrubyModel",
+    "_Meta",
 )
 
 import contextlib
