@@ -369,12 +369,12 @@ class TestPositive:
         assert "User" in collection_list
         assert "User2" in collection_list
 
-        await Scruby.delete_collection("User")
+        Scruby.clear_collection("User")
         collection_list = Scruby.collection_list()
         assert collection_list is not None
         assert "User2" in collection_list
 
-        await Scruby.delete_collection("User2")
+        Scruby.clear_collection("User2")
         collection_list = Scruby.collection_list()
         assert collection_list is None
         #

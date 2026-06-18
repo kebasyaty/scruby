@@ -277,7 +277,7 @@ async def test_user() -> None:
 
     #
     # delete_collection
-    await Scruby.delete_collection("User")
+    Scruby.clear_collection("User")
     assert DocCache.cache.get("User") is None
     coll_list = Scruby.collection_list()
     assert coll_list is not None
@@ -440,7 +440,7 @@ async def test_phone() -> None:
 
     #
     # delete_collection
-    await Scruby.delete_collection("Phone")
+    Scruby.clear_collection("Phone")
     assert DocCache.cache.get("Phone") is None
     coll_list = Scruby.collection_list()
     assert coll_list is not None
@@ -603,7 +603,7 @@ async def test_car() -> None:
 
     #
     # delete_collection
-    await Scruby.delete_collection("Car")
+    Scruby.clear_collection("Car")
     assert DocCache.cache.get("Car") is None
     coll_list = Scruby.collection_list()
     assert coll_list is not None

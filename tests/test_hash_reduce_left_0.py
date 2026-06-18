@@ -220,7 +220,7 @@ async def test_hash_reduce_left_0() -> None:
 
     #
     # delete_collection
-    await Scruby.delete_collection("User")
+    Scruby.clear_collection("User")
     coll_list = Scruby.collection_list()
     assert coll_list is not None
     assert len(DocCache.cache) == 0

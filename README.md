@@ -165,8 +165,8 @@ async def main() -> None:
     # Get the number of documents comparable to the filter
     user_coll.count_documents(filter_fn=lambda doc: doc.first_name == "John") == 1
 
-    # Delete collection
-    await Scruby.delete_collection("User")
+    # Clear collection
+    Scruby.clear_collection("User")
 
     # Full database deletion
     # Hint: The main purpose is tests
