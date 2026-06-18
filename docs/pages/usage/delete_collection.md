@@ -34,12 +34,12 @@ async def main() -> None:
     # Get collection `User`.
     user_coll = await Scruby.collection(User)
 
-    collection_list = await Scruby.collection_list()
+    collection_list = Scruby.collection_list()
     print(ucollection_list)  # ["User"]
 
     await Scruby.delete_collection("User")
 
-    collection_list = await Scruby.collection_list()
+    collection_list = Scruby.collection_list()
     print(ucollection_list)  # None
 
     # Full database deletion.

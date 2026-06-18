@@ -33,6 +33,7 @@ class User(ScrubyModel):
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
     birthday: datetime = Field(strict=True)
+    # pyrefly: ignore [not-a-type]
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
     # key is always at bottom
@@ -49,6 +50,7 @@ class User2(ScrubyModel):
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
     birthday: datetime = Field(strict=True)
+    # pyrefly: ignore [not-a-type]
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
     # key is always at bottom
@@ -71,6 +73,7 @@ class User3(ScrubyModel):
     )
 
 
+# pyrefly: ignore [invalid-inheritance, not-a-type]
 class User4(BaseModel):
     """Invalid model type."""
 
@@ -342,13 +345,13 @@ class TestPositive:
         """Testing a `collection_list` methopd."""
         await Scruby.collection(User)
 
-        collection_list = await Scruby.collection_list()
+        collection_list = Scruby.collection_list()
         assert collection_list is not None
         assert "User" in collection_list
 
         await Scruby.collection(User2)
 
-        collection_list = await Scruby.collection_list()
+        collection_list = Scruby.collection_list()
         assert collection_list is not None
         assert "User" in collection_list
         assert "User2" in collection_list
@@ -361,18 +364,18 @@ class TestPositive:
         await Scruby.collection(User)
         await Scruby.collection(User2)
 
-        collection_list = await Scruby.collection_list()
+        collection_list = Scruby.collection_list()
         assert collection_list is not None
         assert "User" in collection_list
         assert "User2" in collection_list
 
         await Scruby.delete_collection("User")
-        collection_list = await Scruby.collection_list()
+        collection_list = Scruby.collection_list()
         assert collection_list is not None
         assert "User2" in collection_list
 
         await Scruby.delete_collection("User2")
-        collection_list = await Scruby.collection_list()
+        collection_list = Scruby.collection_list()
         assert collection_list is None
         #
         # Delete DB.

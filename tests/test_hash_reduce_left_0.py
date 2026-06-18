@@ -26,6 +26,7 @@ class User(ScrubyModel):
     first_name: str = Field(strict=True)
     last_name: str = Field(strict=True)
     birthday: datetime = Field(strict=True)
+    # pyrefly: ignore [not-a-type]
     email: EmailStr = Field(strict=True)
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
     # key is always at bottom
@@ -134,7 +135,7 @@ async def test_hash_reduce_left_0() -> None:
     assert user_coll.collection_name() == "User"
 
     # collection_list
-    coll_list = await Scruby.collection_list()
+    coll_list = Scruby.collection_list()
     assert coll_list is not None
     for coll_name in coll_list:
         assert coll_name in ["User", "Phone", "Car"]
@@ -220,14 +221,14 @@ async def test_hash_reduce_left_0() -> None:
     #
     # delete_collection
     await Scruby.delete_collection("User")
-    coll_list = await Scruby.collection_list()
+    coll_list = Scruby.collection_list()
     assert coll_list is not None
     assert len(DocCache.cache) == 0
     for coll_name in coll_list:
         assert coll_name in ["Phone", "Car"]
     user_coll = await Scruby.collection(User)
     assert await user_coll.estimated_document_count() == 0
-    coll_list = await Scruby.collection_list()
+    coll_list = Scruby.collection_list()
     assert coll_list is not None
     assert len(DocCache.cache) == 0
     for coll_name in coll_list:

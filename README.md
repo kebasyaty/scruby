@@ -157,7 +157,7 @@ async def main() -> None:
     user_coll.collection_name()  # => User
 
     # Get collection list
-    coll_list = await Scruby.collection_list()  # => ["User"]
+    coll_list = Scruby.collection_list()  # => ["User"]
 
     # Get the number of documents in the collection from metadata
     await user_coll.estimated_document_count()  # => 1
