@@ -12,7 +12,7 @@ from typing import Any, ClassVar, Literal, Never, assert_never, final
 import orjson
 
 from scruby.config import ScrubyConfig
-from scruby.db import _Meta
+from scruby.meta import Meta
 
 
 @final
@@ -47,7 +47,7 @@ class DocCache:
         )
         if not meta_dir_path.exists():
             meta_dir_path.mkdir(parents=True)
-            meta = _Meta(
+            meta = Meta(
                 collection_name=collection_name,
                 hash_reduce_left=ScrubyConfig.HASH_REDUCE_LEFT,
                 max_number_branch=ScrubyConfig.MAX_NUMBER_BRANCH,

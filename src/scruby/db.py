@@ -6,42 +6,22 @@
 
 from __future__ import annotations
 
-__all__ = (
-    "Scruby",
-    "ScrubyModel",
-    "_Meta",
-)
+__all__ = ("Scruby",)
 
 import contextlib
 import re
 import zlib
-from datetime import datetime
 from shutil import rmtree
 from typing import Any, Literal, final
 
 from anyio import Path
-from pydantic import BaseModel
 from xloft import NamedTuple
 
 from scruby import mixins
 from scruby.cache import DocCache
 from scruby.config import ScrubyConfig
-
-
-class _Meta(BaseModel):
-    """Metadata of Collection."""
-
-    collection_name: str
-    hash_reduce_left: int
-    max_number_branch: int
-    counter_documents: int
-
-
-class ScrubyModel(BaseModel):
-    """Additional fields for models."""
-
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
+from scruby.meta import Meta
+from scruby.model import ScrubyModel
 
 
 @final
@@ -60,7 +40,7 @@ class Scruby(
         self,
     ) -> None:
         super().__init__()
-        self._meta = _Meta
+        self._meta = Meta
         self._db_id = ScrubyConfig.db_id
         self._db_root = ScrubyConfig.db_root
         self._hash_reduce_left = ScrubyConfig.HASH_REDUCE_LEFT
@@ -127,7 +107,7 @@ class Scruby(
         instance.__dict__["plugins"] = NamedTuple(**plugin_list)
         return instance
 
-    async def get_meta(self) -> _Meta:
+    async def get_meta(self) -> Meta:
         """Asynchronous method for getting metadata of collection.
 
         This method is for internal use.
@@ -136,10 +116,10 @@ class Scruby(
             Metadata object.
         """
         meta_json = await self._meta_path.read_text()
-        meta: _Meta = self._meta.model_validate_json(meta_json)
+        meta: Meta = self._meta.model_validate_json(meta_json)
         return meta
 
-    async def _set_meta(self, meta: _Meta) -> None:
+    async def _set_meta(self, meta: Meta) -> None:
         """Asynchronous method for updating metadata of collection.
 
         This method is for internal use.
@@ -166,7 +146,7 @@ class Scruby(
         """
         meta_path = self._meta_path
         meta_json = await meta_path.read_text("utf-8")
-        meta: _Meta = self._meta.model_validate_json(meta_json)
+        meta: Meta = self._meta.model_validate_json(meta_json)
         meta.counter_documents += step
         meta_json = meta.model_dump_json()
         await meta_path.write_text(meta_json, "utf-8")

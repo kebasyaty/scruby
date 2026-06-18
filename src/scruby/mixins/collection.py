@@ -13,7 +13,7 @@ from typing import final
 
 from scruby.cache import DocCache
 from scruby.config import ScrubyConfig
-from scruby.db import ScrubyModel
+from scruby.model import ScrubyModel
 
 
 class Collection:
