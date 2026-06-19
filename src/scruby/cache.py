@@ -86,19 +86,24 @@ class DocCache:
     @classmethod
     def load_cache(cls, subclasses: list[Any]) -> None:
         """Load all documents from the database into the cache."""
-        if ScrubyConfig.HASH_REDUCE_LEFT == 0:
-            return
-
         db_root: Path = Path(ScrubyConfig.db_root)
         HASH_REDUCE_LEFT: Literal[7, 6, 5, 0] = ScrubyConfig.HASH_REDUCE_LEFT
         MAX_NUMBER_BRANCH: Literal[16, 256, 4096, 4294967296] = ScrubyConfig.MAX_NUMBER_BRANCH
         branch_numbers: range = range(MAX_NUMBER_BRANCH)
 
         for subclass in subclasses:
-            collection_name = subclass.__name__
+            collection_name: str = subclass.__name__
+
+            # Create metadata for collection
             cls.create_metadata(collection_name)
+
+            if HASH_REDUCE_LEFT == 0:
+                continue
+
+            # Create a cache structure for the collection
             cls.create_structure(collection_name)
 
+            # Get data from database and add to cache for collection
             for branch_number in branch_numbers:
                 branch_number_as_hash: str = f"{branch_number:08x}"[HASH_REDUCE_LEFT:]
                 separated_hash = "/".join(list(branch_number_as_hash))
