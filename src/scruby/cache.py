@@ -59,7 +59,7 @@ class DocCache:
 
     @classmethod
     def create_structure(cls, collection_name: str) -> None:
-        """Create a cache structure for the collection.
+        """Create structure of empty cache for collection.
 
         Args:
             collection_name (str): Collection name.
