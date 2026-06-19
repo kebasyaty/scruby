@@ -6,41 +6,22 @@
 
 from __future__ import annotations
 
-__all__ = (
-    "Scruby",
-    "ScrubyModel",
-)
+__all__ = ("Scruby",)
 
 import contextlib
 import re
 import zlib
-from datetime import datetime
 from shutil import rmtree
 from typing import Any, Literal, final
 
 from anyio import Path
-from pydantic import BaseModel
 from xloft import NamedTuple
 
 from scruby import mixins
 from scruby.cache import DocCache
 from scruby.config import ScrubyConfig
-
-
-class _Meta(BaseModel):
-    """Metadata of Collection."""
-
-    collection_name: str
-    hash_reduce_left: int
-    max_number_branch: int
-    counter_documents: int
-
-
-class ScrubyModel(BaseModel):
-    """Additional fields for models."""
-
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
+from scruby.meta import Meta
+from scruby.model import ScrubyModel
 
 
 @final
@@ -57,97 +38,39 @@ class Scruby(
 
     def __init__(  # noqa: D107
         self,
+        class_model: Any,
     ) -> None:
+        assert ScrubyModel in class_model.__bases__, (
+            "Scruby => Argument `class_model` does not contain the base class `ScrubyModel`."
+        )
+        assert "key" in list(class_model.model_fields.keys()), (
+            f"Model: {class_model.__name__} => The `key` field is missing."
+        )
+
         super().__init__()
-        self._meta = _Meta
+        self._class_model = class_model
         self._db_id = ScrubyConfig.db_id
         self._db_root = ScrubyConfig.db_root
         self._hash_reduce_left = ScrubyConfig.HASH_REDUCE_LEFT
         self._max_number_branch = ScrubyConfig.MAX_NUMBER_BRANCH
         self._max_workers = ScrubyConfig.max_workers
-
-    @classmethod
-    async def collection(cls, class_model: Any) -> Any:
-        """Asynchronous method for creating a new collection and accessing an existing collection.
-
-        Args:
-            class_model (Any): Class of Model (ScrubyModel).
-
-        Returns:
-            Instance of Scruby for access a collection.
-        """
-        if __debug__:
-            # Check if the object belongs to the class `ScrubyModel`
-            if ScrubyModel not in class_model.__bases__:
-                msg = (
-                    "Method: `collection` => argument `class_model` " + "does not contain the base class `ScrubyModel`!"
-                )
-                raise AssertionError(msg)
-            # Checking the model for the presence of a key.
-            model_fields = list(class_model.model_fields.keys())
-            if "key" not in model_fields:
-                msg = f"Model: {class_model.__name__} => The `key` field is missing!"
-                raise AssertionError(msg)
-            if "created_at" not in model_fields:
-                msg = f"Model: {class_model.__name__} => The `created_at` field is missing!"
-                raise AssertionError(msg)
-            if "updated_at" not in model_fields:
-                msg = f"Model: {class_model.__name__} => The `updated_at` field is missing!"
-                raise AssertionError(msg)
-            # Check the length of the collection name for an acceptable size.
-            len_db_root_absolut_path = len(str(await Path(ScrubyConfig.db_root).resolve()).encode("utf-8"))
-            len_model_name = len(class_model.__name__)
-            len_full_path_leaf = len_db_root_absolut_path + len_model_name + 26
-            if len_full_path_leaf > 255:
-                excess = len_full_path_leaf - 255
-                msg = (
-                    f"Model: {class_model.__name__} => The collection name is too long, "
-                    + f"it exceeds the limit of {excess} characters!"
-                )
-                raise AssertionError(msg)
-        # Create instance of Scruby
-        instance = cls()
-        # Add model class to Scruby
-        instance.__dict__["_class_model"] = class_model
-        # Create a path for metadata.
-        meta_dir_path_tuple = (
+        self._meta = Meta
+        self._meta_path = Path(
             ScrubyConfig.db_root,
             class_model.__name__,
             "meta",
-        )
-        instance.__dict__["_meta_path"] = Path(
-            *meta_dir_path_tuple,
             "meta.json",
         )
-        # Create metadata for collection, if missing.
-        meta_dir_path = Path(*meta_dir_path_tuple)
-        if not await meta_dir_path.exists():
-            # Create metadata.
-            await meta_dir_path.mkdir(parents=True)
-            meta = _Meta(
-                collection_name=class_model.__name__,
-                hash_reduce_left=instance.__dict__["_hash_reduce_left"],
-                max_number_branch=instance.__dict__["_max_number_branch"],
-                counter_documents=0,
-            )
-            # Save metadata of collection.
-            meta_json = meta.model_dump_json()
-            meta_path = Path(*(meta_dir_path, "meta.json"))
-            await meta_path.write_text(meta_json, "utf-8")
-            # Create a cache structure for the collection.
-            if instance.__dict__["_hash_reduce_left"] != 0:
-                DocCache.create_structure(class_model.__name__)
         # Plugins connection.
         plugin_list: dict[str, Any] = {}
         if ScrubyConfig.plugins is not None:
             for plugin in ScrubyConfig.plugins:
                 name = plugin.__name__
                 name = name[0].lower() + name[1:]
-                plugin_list[name] = plugin(scruby_self=instance)
-        instance.__dict__["plugins"] = NamedTuple(**plugin_list)
-        return instance
+                plugin_list[name] = plugin(scruby_self=self)
+        self.plugins = NamedTuple(**plugin_list)
 
-    async def get_meta(self) -> _Meta:
+    async def get_meta(self) -> Meta:
         """Asynchronous method for getting metadata of collection.
 
         This method is for internal use.
@@ -156,10 +79,10 @@ class Scruby(
             Metadata object.
         """
         meta_json = await self._meta_path.read_text()
-        meta: _Meta = self._meta.model_validate_json(meta_json)
+        meta: Meta = self._meta.model_validate_json(meta_json)
         return meta
 
-    async def _set_meta(self, meta: _Meta) -> None:
+    async def _set_meta(self, meta: Meta) -> None:
         """Asynchronous method for updating metadata of collection.
 
         This method is for internal use.
@@ -186,7 +109,7 @@ class Scruby(
         """
         meta_path = self._meta_path
         meta_json = await meta_path.read_text("utf-8")
-        meta: _Meta = self._meta.model_validate_json(meta_json)
+        meta: Meta = self._meta.model_validate_json(meta_json)
         meta.counter_documents += step
         meta_json = meta.model_dump_json()
         await meta_path.write_text(meta_json, "utf-8")

@@ -11,10 +11,10 @@ __all__ = ("Collection",)
 from shutil import rmtree
 from typing import final
 
-from anyio import Path, to_thread
-
 from scruby.cache import DocCache
 from scruby.config import ScrubyConfig
+from scruby.meta import Metadata
+from scruby.model import ScrubyModel
 
 
 class Collection:
@@ -31,18 +31,15 @@ class Collection:
 
     @final
     @staticmethod
-    async def collection_list() -> list[str] | None:
-        """Asynchronous method for getting collection list."""
-        db_directory = Path(ScrubyConfig.db_root)
-        # Get all entries in the directory
-        all_entries = Path.iterdir(db_directory)
-        directory_names: list[str] = [entry.name async for entry in all_entries if entry.name != ".env.meta"]
-        return directory_names or None
+    def collection_list() -> list[str] | None:
+        """Synchronous method for getting collection list."""
+        collections = [item.__name__ for item in ScrubyModel.__subclasses__()]
+        return collections or None
 
     @final
     @staticmethod
-    async def delete_collection(collection_name: str) -> None:
-        """Asynchronous method for deleting a collection by its name.
+    def clear_collection(collection_name: str) -> None:
+        """Synchronous method to remove all documents from a collection.
 
         Args:
             collection_name (str): Collection name.
@@ -50,8 +47,14 @@ class Collection:
         Returns:
             None.
         """
+        # Clear collection on file system
         target_directory = f"{ScrubyConfig.db_root}/{collection_name}"
-        await to_thread.run_sync(rmtree, target_directory)  # pyrefly: ignore [bad-argument-type, incompatible-overload-residual]
+        rmtree(target_directory)
+        # Create metadata for collection
+        Metadata.create(collection_name)
+
+        # Clear collection in cache
         if ScrubyConfig.HASH_REDUCE_LEFT != 0:
             del DocCache.cache[collection_name]
+            DocCache.create_structure(collection_name)
         return

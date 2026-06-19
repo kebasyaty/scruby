@@ -34,7 +34,7 @@ async def main() -> None:
     Scruby.run()
 
     # Get collection `Phone`.
-    phone_coll = await Scruby.collection(Phone)
+    phone_coll = Scruby(Phone)
 
     # Create phone.
     phone = Phone(

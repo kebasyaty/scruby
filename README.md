@@ -126,7 +126,7 @@ async def main() -> None:
     Scruby.run()
 
     # Get/Create a User collection
-    user_coll = await Scruby.collection(User)
+    user_coll = Scruby(User)
 
     # Create user
     user = User(
@@ -157,7 +157,7 @@ async def main() -> None:
     user_coll.collection_name()  # => User
 
     # Get collection list
-    coll_list = await Scruby.collection_list()  # => ["User"]
+    coll_list = Scruby.collection_list()  # => ["User"]
 
     # Get the number of documents in the collection from metadata
     await user_coll.estimated_document_count()  # => 1
@@ -165,8 +165,8 @@ async def main() -> None:
     # Get the number of documents comparable to the filter
     user_coll.count_documents(filter_fn=lambda doc: doc.first_name == "John") == 1
 
-    # Delete collection
-    await Scruby.delete_collection("User")
+    # Clear collection
+    Scruby.clear_collection("User")
 
     # Full database deletion
     # Hint: The main purpose is tests
@@ -209,7 +209,7 @@ async def main() -> None:
     Scruby.run()
 
     # Get/Create a Phone collection
-    phone_coll = await Scruby.collection(Phone)
+    phone_coll = Scruby(Phone)
 
     # Create phone
     phone = Phone(
@@ -286,7 +286,7 @@ async def main() -> None:
     Scruby.run()
 
     # Get/Create a Car collection
-    car_coll = await Scruby.collection(Car)
+    car_coll = Scruby(Car)
 
     # Create cars
     for num in range(1, 10):

@@ -75,11 +75,10 @@ Scruby.run(db_root="TestScrubyDB")
 
 async def test_create_db() -> None:
     """Create a test database."""
-    assert len(DocCache.cache) == 0
+    assert len(DocCache.cache) == 3
 
     # Create users
-    user_coll = await Scruby.collection(User)
-    assert len(DocCache.cache) == 1
+    user_coll = Scruby(User)
     for num in range(9):
         user = User(
             first_name="John",
@@ -95,8 +94,7 @@ async def test_create_db() -> None:
     assert await user_coll.estimated_document_count() == 9
 
     # Create phones
-    phone_coll = await Scruby.collection(Phone)
-    assert len(DocCache.cache) == 2
+    phone_coll = Scruby(Phone)
     for num in range(9):
         phone = Phone(
             brand="Samsung",
@@ -111,8 +109,7 @@ async def test_create_db() -> None:
     assert await phone_coll.estimated_document_count() == 9
 
     # Create cars
-    car_coll = await Scruby.collection(Car)
-    assert len(DocCache.cache) == 3
+    car_coll = Scruby(Car)
     for num in range(9):
         car = Car(
             brand="Mazda",
@@ -130,13 +127,13 @@ async def test_create_db() -> None:
 async def test_user() -> None:
     """Test User."""
     # Get collection `User`.
-    user_coll = await Scruby.collection(User)
+    user_coll = Scruby(User)
 
     # collection_name
     assert user_coll.collection_name() == "User"
 
     # collection_list
-    coll_list = await Scruby.collection_list()
+    coll_list = Scruby.collection_list()
     assert coll_list is not None
     for coll_name in coll_list:
         assert coll_name in ["User", "Phone", "Car"]
@@ -250,7 +247,10 @@ async def test_user() -> None:
         filter_fn=lambda doc: doc.first_name == "John" or doc.last_name == "Smith",
     )
     assert count_updated == 9
-    for user in user_coll.find_many():
+    users = user_coll.find_many()
+    assert users is not None
+    assert isinstance(users, list)
+    for user in users:
         assert user.first_name == "Gene"
         assert user.last_name == "Kost"
     count_updated = await user_coll.update_many(
@@ -258,7 +258,10 @@ async def test_user() -> None:
         filter_fn=lambda doc: doc.first_name == "Gene" or doc.last_name == "Kost",
     )
     assert count_updated == 9
-    for user in user_coll.find_many():
+    users = user_coll.find_many()
+    assert users is not None
+    assert isinstance(users, list)
+    for user in users:
         assert user.first_name == "John"
         assert user.last_name == "Smith"
 
@@ -270,25 +273,18 @@ async def test_user() -> None:
     )
     assert count_deleted == 2
     users = user_coll.find_many()
+    assert users is not None
+    assert isinstance(users, list)
     assert len(users) == 7
     for user in users:
         assert user.phone != "+447986123455"
         assert user.phone != "+447986123453"
 
     #
-    # delete_collection
-    await Scruby.delete_collection("User")
-    assert DocCache.cache.get("User") is None
-    coll_list = await Scruby.collection_list()
-    assert coll_list is not None
-    assert len(DocCache.cache) == 2
-    for coll_name in coll_list:
-        assert coll_name in ["Phone", "Car"]
-    user_coll = await Scruby.collection(User)
-    assert await user_coll.estimated_document_count() == 0
-    assert user_coll.count_documents(filter_fn=lambda doc: doc.first_name == "John") == 0
+    # clear_collection
+    Scruby.clear_collection("User")
     assert DocCache.cache.get("User") is not None
-    coll_list = await Scruby.collection_list()
+    coll_list = Scruby.collection_list()
     assert coll_list is not None
     assert len(DocCache.cache) == 3
     for coll_name in coll_list:
@@ -298,13 +294,13 @@ async def test_user() -> None:
 async def test_phone() -> None:
     """Test Phone."""
     # Get collection `Phone`.
-    phone_coll = await Scruby.collection(Phone)
+    phone_coll = Scruby(Phone)
 
     # collection_name
     assert phone_coll.collection_name() == "Phone"
 
     # collection_list
-    coll_list = await Scruby.collection_list()
+    coll_list = Scruby.collection_list()
     assert coll_list is not None
     for coll_name in coll_list:
         assert coll_name in ["User", "Phone", "Car"]
@@ -415,14 +411,20 @@ async def test_phone() -> None:
         filter_fn=lambda doc: doc.brand == "Samsung",
     )
     assert count_updated == 9
-    for phone in phone_coll.find_many():
+    phones = phone_coll.find_many()
+    assert phones is not None
+    assert isinstance(phones, list)
+    for phone in phones:
         assert phone.brand == "SONY"
     count_updated = await phone_coll.update_many(
         new_data={"brand": "Samsung"},
         filter_fn=lambda doc: doc.brand == "SONY",
     )
     assert count_updated == 9
-    for phone in phone_coll.find_many():
+    phones = phone_coll.find_many()
+    assert phones is not None
+    assert isinstance(phones, list)
+    for phone in phones:
         assert phone.brand == "Samsung"
 
     # delete_many
@@ -433,25 +435,18 @@ async def test_phone() -> None:
     )
     assert count_deleted == 2
     phones = phone_coll.find_many()
+    assert phones is not None
+    assert isinstance(phones, list)
     assert len(phones) == 7
     for phone in phones:
         assert phone.model != "Galaxy A26 5"
         assert phone.model != "Galaxy A26 3"
 
     #
-    # delete_collection
-    await Scruby.delete_collection("Phone")
-    assert DocCache.cache.get("Phone") is None
-    coll_list = await Scruby.collection_list()
-    assert coll_list is not None
-    assert len(DocCache.cache) == 2
-    for coll_name in coll_list:
-        assert coll_name in ["User", "Car"]
-    phone_coll = await Scruby.collection(Phone)
-    assert await phone_coll.estimated_document_count() == 0
-    assert phone_coll.count_documents(filter_fn=lambda doc: doc.brand == "Samsung") == 0
+    # clear_collection
+    Scruby.clear_collection("Phone")
     assert DocCache.cache.get("Phone") is not None
-    coll_list = await Scruby.collection_list()
+    coll_list = Scruby.collection_list()
     assert coll_list is not None
     assert len(DocCache.cache) == 3
     for coll_name in coll_list:
@@ -461,13 +456,13 @@ async def test_phone() -> None:
 async def test_car() -> None:
     """Test Car."""
     # Get collection `Car`.
-    car_coll = await Scruby.collection(Car)
+    car_coll = Scruby(Car)
 
     # collection_name
     assert car_coll.collection_name() == "Car"
 
     # collection_list
-    coll_list = await Scruby.collection_list()
+    coll_list = Scruby.collection_list()
     assert coll_list is not None
     for coll_name in coll_list:
         assert coll_name in ["User", "Phone", "Car"]
@@ -578,14 +573,20 @@ async def test_car() -> None:
         filter_fn=lambda doc: doc.brand == "Mazda",
     )
     assert count_updated == 9
-    for car in car_coll.find_many():
+    cars = car_coll.find_many()
+    assert cars is not None
+    assert isinstance(cars, list)
+    for car in cars:
         assert car.brand == "BMW"
     count_updated = await car_coll.update_many(
         new_data={"brand": "Mazda"},
         filter_fn=lambda doc: doc.brand == "BMW",
     )
     assert count_updated == 9
-    for car in car_coll.find_many():
+    cars = car_coll.find_many()
+    assert cars is not None
+    assert isinstance(cars, list)
+    for car in cars:
         assert car.brand == "Mazda"
 
     # delete_many
@@ -596,25 +597,18 @@ async def test_car() -> None:
     )
     assert count_deleted == 2
     cars = car_coll.find_many()
+    assert cars is not None
+    assert isinstance(cars, list)
     assert len(cars) == 7
     for car in cars:
         assert car.model != "EZ-6 5"
         assert car.model != "EZ-6 3"
 
     #
-    # delete_collection
-    await Scruby.delete_collection("Car")
-    assert DocCache.cache.get("Car") is None
-    coll_list = await Scruby.collection_list()
-    assert coll_list is not None
-    assert len(DocCache.cache) == 2
-    for coll_name in coll_list:
-        assert coll_name in ["User", "Phone"]
-    car_coll = await Scruby.collection(Car)
-    assert await car_coll.estimated_document_count() == 0
-    assert car_coll.count_documents(filter_fn=lambda doc: doc.brand == "Mazda") == 0
+    # clear_collection
+    Scruby.clear_collection("Car")
     assert DocCache.cache.get("Car") is not None
-    coll_list = await Scruby.collection_list()
+    coll_list = Scruby.collection_list()
     assert coll_list is not None
     assert len(DocCache.cache) == 3
     for coll_name in coll_list:

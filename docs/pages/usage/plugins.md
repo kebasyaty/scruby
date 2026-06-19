@@ -58,7 +58,7 @@ async def main() -> None:
     Scruby.run(plugins=[CollectionMeta])
 
     # Get collection `Car`.
-    car_coll = await Scruby.collection(Car)
+    car_coll = Scruby(Car)
     # Get metadata of collection
     meta = await car_coll.plugins.collectionMeta.get()
     # Print to console

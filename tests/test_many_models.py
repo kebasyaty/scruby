@@ -72,7 +72,7 @@ Scruby.run()
 async def test_user() -> None:
     """Test User 1."""
     # Get collection `User`.
-    user_coll = await Scruby.collection(UserTest)
+    user_coll = Scruby(UserTest)
 
     # Create user.
     user = UserTest(
@@ -89,7 +89,7 @@ async def test_user() -> None:
 async def test_user_2() -> None:
     """Test User 2."""
     # Get collection `User`.
-    user_coll = await Scruby.collection(UserTest)
+    user_coll = Scruby(UserTest)
 
     # Create user.
     user = UserTest(
@@ -106,7 +106,7 @@ async def test_user_2() -> None:
 async def test_phone() -> None:
     """Test Phone."""
     # Get collection `Phone`.
-    phone_coll = await Scruby.collection(PhoneTest)
+    phone_coll = Scruby(PhoneTest)
 
     # Create phone.
     phone = PhoneTest(
@@ -123,7 +123,7 @@ async def test_phone() -> None:
 async def test_car() -> None:
     """Test Car."""
     # Get collection `Car`.
-    car_coll = await Scruby.collection(CarTest)
+    car_coll = Scruby(CarTest)
 
     # Create car.
     car = CarTest(

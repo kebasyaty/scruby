@@ -90,7 +90,7 @@ async def main() -> None:
     Scruby.run()
 
     # Get collection `User`.
-    user_coll = await Scruby.collection(User)
+    user_coll = Scruby(User)
 
     # Create users.
     for num in range(1, 10):

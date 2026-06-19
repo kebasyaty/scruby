@@ -36,5 +36,6 @@ __all__ = (
 
 
 from scruby.config import ScrubyConfig
-from scruby.db import Scruby, ScrubyModel
+from scruby.db import Scruby
 from scruby.mixins.find import ReturnType
+from scruby.model import ScrubyModel

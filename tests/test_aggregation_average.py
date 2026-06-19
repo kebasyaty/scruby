@@ -84,7 +84,7 @@ Scruby.run()
 
 async def test_task_calculate_average() -> None:
     """Test a Average class in custom task."""
-    user_coll = await Scruby.collection(User)
+    user_coll = Scruby(User)
 
     for num in range(1, 10):
         user = User(
