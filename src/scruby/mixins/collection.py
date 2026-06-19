@@ -13,6 +13,7 @@ from typing import final
 
 from scruby.cache import DocCache
 from scruby.config import ScrubyConfig
+from scruby.meta import Metadata
 from scruby.model import ScrubyModel
 
 
@@ -50,7 +51,7 @@ class Collection:
         target_directory = f"{ScrubyConfig.db_root}/{collection_name}"
         rmtree(target_directory)
         # Create metadata for collection
-        DocCache.create_metadata(collection_name)
+        Metadata.create(collection_name)
 
         # Clear collection in cache
         if ScrubyConfig.HASH_REDUCE_LEFT != 0:

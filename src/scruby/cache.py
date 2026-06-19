@@ -12,7 +12,7 @@ from typing import Any, ClassVar, Literal, Never, assert_never, final
 import orjson
 
 from scruby.config import ScrubyConfig
-from scruby.meta import Meta
+from scruby.meta import Metadata
 
 
 @final
@@ -29,33 +29,6 @@ class DocCache:
     # Cache structure:
     # {"CollectionName": {"hash_symbol": {"hash_symbol": {"hash_symbol": {"key_name": doc}}}}
     cache: ClassVar[dict[str, Any]] = {}
-
-    @staticmethod
-    def create_metadata(collection_name: str) -> None:
-        """Create metadata for collection.
-
-        Args:
-            collection_name (str): Collection name.
-
-        Returns:
-            None.
-        """
-        meta_dir_path = Path(
-            ScrubyConfig.db_root,
-            collection_name,
-            "meta",
-        )
-        if not meta_dir_path.exists():
-            meta_dir_path.mkdir(parents=True)
-            meta = Meta(
-                collection_name=collection_name,
-                hash_reduce_left=ScrubyConfig.HASH_REDUCE_LEFT,
-                max_number_branch=ScrubyConfig.MAX_NUMBER_BRANCH,
-                counter_documents=0,
-            )
-            meta_json = meta.model_dump_json()
-            meta_path = Path(meta_dir_path, "meta.json")
-            meta_path.write_text(meta_json, "utf-8")
 
     @classmethod
     def create_structure(cls, collection_name: str) -> None:
@@ -95,7 +68,7 @@ class DocCache:
             collection_name: str = subclass.__name__
 
             # Create metadata for collection
-            cls.create_metadata(collection_name)
+            Metadata.create(collection_name)
 
             if HASH_REDUCE_LEFT == 0:
                 continue
