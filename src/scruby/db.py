@@ -38,60 +38,24 @@ class Scruby(
 
     def __init__(  # noqa: D107
         self,
+        class_model: Any,
     ) -> None:
+        assert ScrubyModel in class_model.__bases__, (
+            "Scruby - argument `class_model` does not contain the base class `ScrubyModel`."
+        )
+        assert "key" in list(class_model.model_fields.keys()), (
+            f"Model: {class_model.__name__} => The `key` field is missing."
+        )
+
         super().__init__()
-        self._meta = Meta
+        self._class_model = class_model
         self._db_id = ScrubyConfig.db_id
         self._db_root = ScrubyConfig.db_root
         self._hash_reduce_left = ScrubyConfig.HASH_REDUCE_LEFT
         self._max_number_branch = ScrubyConfig.MAX_NUMBER_BRANCH
         self._max_workers = ScrubyConfig.max_workers
-
-    @classmethod
-    async def collection(cls, class_model: Any) -> Any:
-        """Asynchronous method for creating a new collection and accessing an existing collection.
-
-        Args:
-            class_model (Any): Class of Model (ScrubyModel).
-
-        Returns:
-            Instance of Scruby for access a collection.
-        """
-        if __debug__:
-            # Check if the object belongs to the class `ScrubyModel`
-            if ScrubyModel not in class_model.__bases__:
-                msg = (
-                    "Method: `collection` => argument `class_model` " + "does not contain the base class `ScrubyModel`!"
-                )
-                raise AssertionError(msg)
-            # Checking the model for the presence of a key.
-            model_fields = list(class_model.model_fields.keys())
-            if "key" not in model_fields:
-                msg = f"Model: {class_model.__name__} => The `key` field is missing!"
-                raise AssertionError(msg)
-            if "created_at" not in model_fields:
-                msg = f"Model: {class_model.__name__} => The `created_at` field is missing!"
-                raise AssertionError(msg)
-            if "updated_at" not in model_fields:
-                msg = f"Model: {class_model.__name__} => The `updated_at` field is missing!"
-                raise AssertionError(msg)
-            # Check the length of the collection name for an acceptable size.
-            len_db_root_absolut_path = len(str(await Path(ScrubyConfig.db_root).resolve()).encode("utf-8"))
-            len_model_name = len(class_model.__name__)
-            len_full_path_leaf = len_db_root_absolut_path + len_model_name + 26
-            if len_full_path_leaf > 255:
-                excess = len_full_path_leaf - 255
-                msg = (
-                    f"Model: {class_model.__name__} => The collection name is too long, "
-                    + f"it exceeds the limit of {excess} characters!"
-                )
-                raise AssertionError(msg)
-        # Create instance of Scruby
-        instance = cls()
-        # Add model class to Scruby
-        instance.__dict__["_class_model"] = class_model
-        # Add the metadata path.
-        instance.__dict__["_meta_path"] = Path(
+        self._meta = Meta
+        self._meta_path = Path(
             ScrubyConfig.db_root,
             class_model.__name__,
             "meta",
@@ -103,9 +67,8 @@ class Scruby(
             for plugin in ScrubyConfig.plugins:
                 name = plugin.__name__
                 name = name[0].lower() + name[1:]
-                plugin_list[name] = plugin(scruby_self=instance)
-        instance.__dict__["plugins"] = NamedTuple(**plugin_list)
-        return instance
+                plugin_list[name] = plugin(scruby_self=self)
+        self.plugins = NamedTuple(**plugin_list)
 
     async def get_meta(self) -> Meta:
         """Asynchronous method for getting metadata of collection.

@@ -80,7 +80,7 @@ async def test_create_db() -> None:
     assert len(DocCache.cache) == 0
 
     # Create users
-    user_coll = await Scruby.collection(User)
+    user_coll = Scruby(User)
     for num in range(9):
         user = User(
             first_name="John",
@@ -93,7 +93,7 @@ async def test_create_db() -> None:
         await user_coll.add_doc(user)
 
     # Create phones
-    phone_coll = await Scruby.collection(Phone)
+    phone_coll = Scruby(Phone)
     for num in range(9):
         phone = Phone(
             brand="Samsung",
@@ -105,7 +105,7 @@ async def test_create_db() -> None:
         await phone_coll.add_doc(phone)
 
     # Create cars
-    car_coll = await Scruby.collection(Car)
+    car_coll = Scruby(Car)
     for num in range(9):
         car = Car(
             brand="Mazda",
@@ -128,7 +128,7 @@ async def test_hash_reduce_left_0() -> None:
     assert len(DocCache.cache) == 0
 
     # Get collection `User`.
-    user_coll = await Scruby.collection(User)
+    user_coll = Scruby(User)
     assert len(DocCache.cache) == 0
 
     # collection_name

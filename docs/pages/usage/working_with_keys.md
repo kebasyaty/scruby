@@ -34,7 +34,7 @@ async def main() -> None:
     Scruby.run()
 
     # Create/get the `User` collection.
-    user_coll = await Scruby.collection(User)
+    user_coll = Scruby(User)
 
     # Create user.
     user = User(

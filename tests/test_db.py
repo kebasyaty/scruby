@@ -135,9 +135,9 @@ class TestNegative:
 
         with pytest.raises(
             AssertionError,
-            match=r"Method: `collection` => argument `class_model` does not contain the base class `ScrubyModel`!",
+            match=r"Scruby - argument `class_model` does not contain the base class `ScrubyModel`.",
         ):
-            await Scruby.collection(User4)
+            Scruby(User4)
         #
         # Delete DB.
         Scruby.napalm()
@@ -149,9 +149,9 @@ class TestNegative:
 
         with pytest.raises(
             AssertionError,
-            match=r"Model: User5 => The `key` field is missing!",
+            match=r"Model: User5 => The `key` field is missing.",
         ):
-            await Scruby.collection(User5)
+            Scruby(User5)
         #
         # Delete DB.
         Scruby.napalm()
@@ -169,7 +169,7 @@ class TestNegative:
             phone="+447986123456",
         )
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
 
         with pytest.raises(
             TypeError,
@@ -201,7 +201,7 @@ class TestNegative:
             phone="+447986123456",
         )
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
         await user_coll.add_doc(user)
 
         with pytest.raises(
@@ -218,7 +218,7 @@ class TestNegative:
         # Activate database.
         Scruby.run()
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
 
         with pytest.raises(KeyError):
             await user_coll.delete_doc("key missing")
@@ -231,7 +231,7 @@ class TestNegative:
         # Activate database.
         Scruby.run()
 
-        user_coll = await Scruby.collection(User3)
+        user_coll = Scruby(User3)
 
         user = User3(username="")
         with pytest.raises(KeyError, match=r"The key should not be empty."):
@@ -257,7 +257,7 @@ class TestNegative:
         # Activate database.
         Scruby.run()
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
 
         user = User(
             first_name="John",
@@ -280,7 +280,7 @@ class TestNegative:
         # Activate database.
         Scruby.run()
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
 
         user = User(
             first_name="John",
@@ -307,7 +307,7 @@ class TestNegative:
         # Activate database.
         Scruby.run()
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
 
         for num in range(1, 10):
             user = User(
@@ -353,7 +353,7 @@ class TestPositive:
         # Activate database.
         Scruby.run()
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
 
         key_name = "key name"
         leaf_path, prepared_key, key_as_hash = await user_coll._get_leaf_path(key_name)
@@ -370,13 +370,13 @@ class TestPositive:
         # Activate database.
         Scruby.run()
 
-        await Scruby.collection(User)
+        Scruby(User)
 
         collection_list = Scruby.collection_list()
         assert collection_list is not None
         assert "User" in collection_list
 
-        await Scruby.collection(User2)
+        Scruby(User2)
 
         collection_list = Scruby.collection_list()
         assert collection_list is not None
@@ -418,7 +418,7 @@ class TestPositive:
         # Activate database.
         Scruby.run()
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
 
         meta = await user_coll.get_meta()
         assert meta.collection_name == "User"
@@ -443,7 +443,7 @@ class TestPositive:
         # Activate database.
         Scruby.run()
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
 
         user = User(
             first_name="John",
@@ -465,7 +465,7 @@ class TestPositive:
         # Activate database.
         Scruby.run()
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
 
         user = User(
             first_name="John",
@@ -489,7 +489,7 @@ class TestPositive:
         # Activate database.
         Scruby.run()
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
 
         user = User(
             first_name="John",
@@ -515,7 +515,7 @@ class TestPositive:
         # Activate database.
         Scruby.run()
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
 
         user = User(
             first_name="John",
@@ -537,7 +537,7 @@ class TestPositive:
         # Activate database.
         Scruby.run()
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
 
         user = User(
             first_name="John",
@@ -562,13 +562,13 @@ class TestPositive:
         # Activate database.
         Scruby.run()
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
         control_path = Path("ScrubyDB/User/1/leaf.json")
         leaf_path, _, _ = await user_coll._get_leaf_path("key name")
         assert leaf_path == control_path
 
         Scruby.napalm()
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
         control_path = Path("ScrubyDB/User/1/leaf.json")
         leaf_path, _, _ = await user_coll._get_leaf_path("key name")
         assert leaf_path == control_path
@@ -581,7 +581,7 @@ class TestPositive:
         # Activate database.
         Scruby.run()
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
 
         for num in range(1, 10):
             user = User(
@@ -621,7 +621,7 @@ class TestPositive:
         # Activate database.
         Scruby.run()
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
 
         for num in range(1, 10):
             user = User(
@@ -634,12 +634,12 @@ class TestPositive:
             await user_coll.add_doc(user)
 
         # all arguments by default
-        result_1: list[User] | None = user_coll.find_many()
+        result_1: list[User] | str | None = user_coll.find_many()
         assert result_1 is not None
         assert len(result_1) == 9
 
         # all args by default
-        result_2: list[User] | None = user_coll.find_many(
+        result_2: list[User] | str | None = user_coll.find_many(
             filter_fn=lambda doc: doc.email == "John_Smith_1@gmail.com" or doc.email == "John_Smith_9@gmail.com",
         )
         assert result_2 is not None
@@ -648,7 +648,7 @@ class TestPositive:
         assert result_2[1].email in ["John_Smith_1@gmail.com", "John_Smith_9@gmail.com"]
 
         # limit docs = 5, page number = 1
-        result_3: list[User] | None = user_coll.find_many(
+        result_3: list[User] | str | None = user_coll.find_many(
             filter_fn=lambda doc: doc.last_name == "Smith",
             limit_docs=5,
             page_number=1,
@@ -657,7 +657,7 @@ class TestPositive:
         assert len(result_3) == 5
 
         # limit docs = 5, page number = 2
-        result_4: list[User] | None = user_coll.find_many(
+        result_4: list[User] | str | None = user_coll.find_many(
             filter_fn=lambda doc: doc.last_name == "Smith",
             limit_docs=5,
             page_number=2,
@@ -666,7 +666,7 @@ class TestPositive:
         assert len(result_4) == 4
 
         # result is None
-        result_5: list[User] | None = user_coll.find_many(
+        result_5: list[User] | str | None = user_coll.find_many(
             filter_fn=lambda doc: doc.last_name == "???",
         )
         assert result_5 is None
@@ -679,7 +679,7 @@ class TestPositive:
         # Activate database.
         Scruby.run()
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
 
         assert user_coll.collection_name() == "User"
         #
@@ -691,7 +691,7 @@ class TestPositive:
         # Activate database.
         Scruby.run()
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
 
         for num in range(1, 10):
             user = User(
@@ -717,7 +717,7 @@ class TestPositive:
         # Activate database.
         Scruby.run()
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
 
         for num in range(1, 10):
             user = User(
@@ -748,7 +748,7 @@ class TestPositive:
         # Activate database.
         Scruby.run()
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
 
         for num in range(1, 10):
             user = User(
@@ -774,7 +774,7 @@ class TestPositive:
         # Activate database.
         Scruby.run()
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
 
         for num in range(1, 10):
             user = User(
@@ -790,7 +790,7 @@ class TestPositive:
         assert number_updated_users == 9
         #
         # by email
-        users: list[User] | None = user_coll.find_many()
+        users: list[User] | str | None = user_coll.find_many()
         assert users is not None
         for user in users:
             assert user.first_name == "Georg"
@@ -803,7 +803,7 @@ class TestPositive:
         # Activate database.
         Scruby.run()
 
-        user_coll = await Scruby.collection(User)
+        user_coll = Scruby(User)
 
         user = User(
             first_name="John",

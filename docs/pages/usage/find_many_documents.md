@@ -34,7 +34,7 @@ async def main() -> None:
     Scruby.run()
 
     # Get collection `Car`.
-    car_coll = await Scruby.collection(Car)
+    car_coll = Scruby(Car)
 
     # Create cars.
     for num in range(1, 10):

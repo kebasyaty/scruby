@@ -32,7 +32,7 @@ async def main() -> None:
     Scruby.run()
 
     # Get collection `User`.
-    user_coll = await Scruby.collection(User)
+    user_coll = Scruby(User)
 
     collection_list = Scruby.collection_list()
     print(collection_list)  # ["User"]
