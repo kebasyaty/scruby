@@ -5,6 +5,7 @@ from __future__ import annotations
 __all__ = (
     "get_from_env",
     "add_to_env",
+    "db_collection_list",
 )
 
 
@@ -17,11 +18,7 @@ def get_from_env(
     key: str,
     dotenv_path: Path | str = ".env",
 ) -> str | None:
-    """Get value by key from .env file.
-
-    Returns:
-        None
-    """
+    """Get value by key from .env file."""
     assert len(key) > 0, "`get_from_env` => `key` must not be the empty string."
 
     value: str | None = None
@@ -41,11 +38,7 @@ def add_to_env(
     value: str,
     dotenv_path: Path | str = ".env",
 ) -> str | None:
-    """Add key-value to .env file.
-
-    Returns:
-        `value` or None
-    """
+    """Add key-value to .env file."""
     assert len(key) > 0, "`add_to_env` => `key` must not be the empty string."
     assert len(value) > 0, "`add_to_env` => `value` must not be the empty string."
 
@@ -69,3 +62,11 @@ def add_to_env(
         dotenv_path.write_text(data=content, encoding="utf-8")
 
     return value
+
+
+def db_collection_list(db_root: str) -> list[str] | None:
+    """Get a list of collections from the database."""
+    db_directory = Path(db_root)
+    all_entries = Path.iterdir(db_directory)
+    directory_names: list[str] = [entry.name for entry in all_entries if entry.name != ".env.meta"]
+    return directory_names or None
