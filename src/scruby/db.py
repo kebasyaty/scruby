@@ -41,7 +41,7 @@ class Scruby(
         class_model: Any,
     ) -> None:
         assert ScrubyModel in class_model.__bases__, (
-            "Scruby - argument `class_model` does not contain the base class `ScrubyModel`."
+            "Scruby => Argument `class_model` does not contain the base class `ScrubyModel`."
         )
         assert "key" in list(class_model.model_fields.keys()), (
             f"Model: {class_model.__name__} => The `key` field is missing."

@@ -135,7 +135,7 @@ class TestNegative:
 
         with pytest.raises(
             AssertionError,
-            match=r"Scruby - argument `class_model` does not contain the base class `ScrubyModel`.",
+            match=r"Scruby => Argument `class_model` does not contain the base class `ScrubyModel`.",
         ):
             Scruby(User4)
         #
