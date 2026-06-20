@@ -13,7 +13,6 @@ import orjson
 
 from scruby.config import ScrubyConfig
 from scruby.meta import Metadata
-from scruby.utils import Utils
 
 
 @final
@@ -64,7 +63,6 @@ class DocCache:
         HASH_REDUCE_LEFT: Literal[7, 6, 5, 0] = ScrubyConfig.HASH_REDUCE_LEFT
         MAX_NUMBER_BRANCH: Literal[16, 256, 4096, 4294967296] = ScrubyConfig.MAX_NUMBER_BRANCH
         branch_numbers: range = range(MAX_NUMBER_BRANCH)
-        db_collection_list: list[str] | None = Utils.db_collection_list(db_root)  # noqa: F841
 
         for subclass in subclasses:
             collection_name: str = subclass.__name__

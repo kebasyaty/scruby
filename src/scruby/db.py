@@ -191,11 +191,15 @@ class Scruby(
         Returns:
             None.
         """
-        if __debug__ and plugins is not None:
-            for plugin in plugins:
-                if plugin.SCRUBY_VERSION != 2:
-                    msg = f"Plugin {plugin.__name__} does not apply to version 2."
-                    raise AssertionError(msg)
+        subclasses: list[Any] = ScrubyModel.__subclasses__()
+        if __debug__:
+            if len(subclasses) == 0:
+                raise AssertionError("Create least one model of document for your project.")
+            if plugins is not None:
+                for plugin in plugins:
+                    if plugin.SCRUBY_VERSION != 2:
+                        msg = f"Plugin {plugin.__name__} does not apply to version 2."
+                        raise AssertionError(msg)
 
         ScrubyConfig.db_root = db_root
         ScrubyConfig.HASH_REDUCE_LEFT = hash_reduce_left
@@ -203,4 +207,4 @@ class Scruby(
         ScrubyConfig.plugins = plugins
         ScrubyConfig.init_params()
         ScrubyConfig.check_hash_reduce_left()
-        DocCache.load_cache(ScrubyModel.__subclasses__())
+        DocCache.load_cache(subclasses)
