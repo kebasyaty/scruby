@@ -27,7 +27,7 @@ import sys
 from typing import Any, ClassVar, Literal, Never, assert_never, final
 from uuid import uuid4
 
-from scruby.utils import add_to_env, get_from_env
+from scruby.utils import Utils
 
 
 @final
@@ -77,10 +77,10 @@ class ScrubyConfig:
         delimiter: str = "/" if cls.sys_platform != "win32" else ""
         dotenv_path: str = f"{cls.db_root}{delimiter}.env.meta"
 
-        db_id: str | None = get_from_env(
+        db_id: str | None = Utils.get_from_env(
             key=key,
             dotenv_path=dotenv_path,
-        ) or add_to_env(
+        ) or Utils.add_to_env(
             key=key,
             value=str(uuid4())[:8],
             dotenv_path=dotenv_path,
@@ -116,10 +116,10 @@ class ScrubyConfig:
         delimiter: str = "/" if cls.sys_platform != "win32" else ""
         dotenv_path: str = f"{cls.db_root}{delimiter}.env.meta"
 
-        hash_reduce_left: str | None = get_from_env(
+        hash_reduce_left: str | None = Utils.get_from_env(
             key=key,
             dotenv_path=dotenv_path,
-        ) or add_to_env(
+        ) or Utils.add_to_env(
             key=key,
             value=str(cls.HASH_REDUCE_LEFT),
             dotenv_path=dotenv_path,

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from scruby import Scruby, ScrubyConfig
-from scruby.utils import get_from_env
+from scruby.utils import Utils
 
 # Delete DB.
 # Hint: If the previous test failed and the database remains.
@@ -47,7 +47,7 @@ class TestConfigMethods:
         assert ScrubyConfig.db_id is not None
         assert len(ScrubyConfig.db_id) == 8
         delimiter: str = "/" if ScrubyConfig.sys_platform != "win32" else ""
-        db_id = get_from_env(key="db_id", dotenv_path=f"{ScrubyConfig.db_root}{delimiter}.env.meta")
+        db_id = Utils.get_from_env(key="db_id", dotenv_path=f"{ScrubyConfig.db_root}{delimiter}.env.meta")
         assert db_id == ScrubyConfig.db_id
         #
         # Delete DB.
@@ -82,7 +82,7 @@ class TestConfigMethods:
         ScrubyConfig.HASH_REDUCE_LEFT = test_num
         ScrubyConfig.check_hash_reduce_left()
         delimiter: str = "/" if ScrubyConfig.sys_platform != "win32" else ""
-        hash_reduce_left = get_from_env(
+        hash_reduce_left = Utils.get_from_env(
             key="hash_reduce_left",
             dotenv_path=f"{ScrubyConfig.db_root}{delimiter}.env.meta",
         )
@@ -91,7 +91,7 @@ class TestConfigMethods:
         # repeat
         ScrubyConfig.check_hash_reduce_left()
         delimiter: str = "/" if ScrubyConfig.sys_platform != "win32" else ""
-        hash_reduce_left = get_from_env(
+        hash_reduce_left = Utils.get_from_env(
             key="hash_reduce_left",
             dotenv_path=f"{ScrubyConfig.db_root}{delimiter}.env.meta",
         )
@@ -106,7 +106,7 @@ class TestConfigMethods:
         ScrubyConfig.HASH_REDUCE_LEFT = test_num
         ScrubyConfig.check_hash_reduce_left()
         delimiter: str = "/" if ScrubyConfig.sys_platform != "win32" else ""
-        hash_reduce_left = get_from_env(
+        hash_reduce_left = Utils.get_from_env(
             key="hash_reduce_left",
             dotenv_path=f"{ScrubyConfig.db_root}{delimiter}.env.meta",
         )
@@ -115,7 +115,7 @@ class TestConfigMethods:
         # repeat
         ScrubyConfig.check_hash_reduce_left()
         delimiter: str = "/" if ScrubyConfig.sys_platform != "win32" else ""
-        hash_reduce_left = get_from_env(
+        hash_reduce_left = Utils.get_from_env(
             key="hash_reduce_left",
             dotenv_path=f"{ScrubyConfig.db_root}{delimiter}.env.meta",
         )
@@ -130,7 +130,7 @@ class TestConfigMethods:
         ScrubyConfig.HASH_REDUCE_LEFT = test_num
         ScrubyConfig.check_hash_reduce_left()
         delimiter: str = "/" if ScrubyConfig.sys_platform != "win32" else ""
-        hash_reduce_left = get_from_env(
+        hash_reduce_left = Utils.get_from_env(
             key="hash_reduce_left",
             dotenv_path=f"{ScrubyConfig.db_root}{delimiter}.env.meta",
         )
@@ -139,7 +139,7 @@ class TestConfigMethods:
         # repeat
         ScrubyConfig.check_hash_reduce_left()
         delimiter: str = "/" if ScrubyConfig.sys_platform != "win32" else ""
-        hash_reduce_left = get_from_env(
+        hash_reduce_left = Utils.get_from_env(
             key="hash_reduce_left",
             dotenv_path=f"{ScrubyConfig.db_root}{delimiter}.env.meta",
         )
@@ -154,7 +154,7 @@ class TestConfigMethods:
         ScrubyConfig.HASH_REDUCE_LEFT = test_num
         ScrubyConfig.check_hash_reduce_left()
         delimiter: str = "/" if ScrubyConfig.sys_platform != "win32" else ""
-        hash_reduce_left = get_from_env(
+        hash_reduce_left = Utils.get_from_env(
             key="hash_reduce_left",
             dotenv_path=f"{ScrubyConfig.db_root}{delimiter}.env.meta",
         )
@@ -163,7 +163,7 @@ class TestConfigMethods:
         # repeat
         ScrubyConfig.check_hash_reduce_left()
         delimiter: str = "/" if ScrubyConfig.sys_platform != "win32" else ""
-        hash_reduce_left = get_from_env(
+        hash_reduce_left = Utils.get_from_env(
             key="hash_reduce_left",
             dotenv_path=f"{ScrubyConfig.db_root}{delimiter}.env.meta",
         )
