@@ -67,7 +67,7 @@ class DocCache:
         for subclass in subclasses:
             collection_name: str = subclass.__name__
 
-            # Create metadata for collection
+            # Create metadata for the collection if it is missing
             Metadata.create(collection_name)
 
             if HASH_REDUCE_LEFT == 0:
