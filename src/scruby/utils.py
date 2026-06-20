@@ -66,7 +66,9 @@ def add_to_env(
 
 def db_collection_list(db_root: str) -> list[str] | None:
     """Get a list of collections from the database."""
+    directory_names: list[str] | None = None
     db_directory = Path(db_root)
-    all_entries = Path.iterdir(db_directory)
-    directory_names: list[str] = [entry.name for entry in all_entries if entry.name != ".env.meta"]
-    return directory_names or None
+    if db_directory.exists():
+        all_entries = Path.iterdir(db_directory)
+        directory_names = [entry.name for entry in all_entries if entry.name != ".env.meta"]
+    return directory_names
