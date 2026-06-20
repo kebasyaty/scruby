@@ -70,5 +70,5 @@ def db_collection_list(db_root: str) -> list[str] | None:
     db_directory = Path(db_root)
     if db_directory.exists():
         all_entries = Path.iterdir(db_directory)
-        directory_names = [entry.name for entry in all_entries if entry.name != ".env.meta"]
+        directory_names = [entry.name for entry in all_entries if entry.name != ".env.meta"] or None
     return directory_names
