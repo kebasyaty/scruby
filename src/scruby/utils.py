@@ -65,7 +65,7 @@ def add_to_env(
 
 
 def db_collection_list(db_root: str) -> list[str] | None:
-    """Get a list of collections from the database."""
+    """Get a list of collections from a database directory."""
     directory_names: list[str] | None = None
     db_directory = Path(db_root)
     if db_directory.exists():
