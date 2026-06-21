@@ -42,6 +42,7 @@ jobs:
       - name: Run tests
         run: |
           uv run pytest -v tests/test_config.py
+          uv run pytest -v tests/test_without_models.py
           uv run pytest -v tests/test_db.py
           uv run pytest -v tests/test_many_models.py
           uv run pytest -v tests/test_aggregation_classes.py
