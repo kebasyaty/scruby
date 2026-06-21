@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__all__ = ("Migration",)
+
 from pathlib import Path
 from shutil import rmtree
 from typing import Any

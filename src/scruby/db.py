@@ -21,6 +21,7 @@ from scruby import mixins
 from scruby.cache import DocCache
 from scruby.config import ScrubyConfig
 from scruby.meta import Meta
+from scruby.migration import Migration
 from scruby.model import ScrubyModel
 
 
@@ -208,4 +209,5 @@ class Scruby(
         ScrubyConfig.plugins = plugins
         ScrubyConfig.init_params()
         ScrubyConfig.check_hash_reduce_left()
+        Migration.run(db_root, subclasses)
         DocCache.load_cache(subclasses)
