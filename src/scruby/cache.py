@@ -7,12 +7,14 @@ __all__ = ("DocCache",)
 
 import string
 from pathlib import Path
+from shutil import rmtree
 from typing import Any, ClassVar, Literal, Never, assert_never, final
 
 import orjson
 
 from scruby.config import ScrubyConfig
 from scruby.meta import Metadata
+from scruby.utils import Utils
 
 
 @final
@@ -63,6 +65,15 @@ class DocCache:
         HASH_REDUCE_LEFT: Literal[7, 6, 5, 0] = ScrubyConfig.HASH_REDUCE_LEFT
         MAX_NUMBER_BRANCH: Literal[16, 256, 4096, 4294967296] = ScrubyConfig.MAX_NUMBER_BRANCH
         branch_numbers: range = range(MAX_NUMBER_BRANCH)
+        model_collection_list: list[str] = [subclass.__name__ for subclass in subclasses]
+        db_collection_list: list[str] | None = Utils.db_collection_list(db_root)
+
+        # Delete collections whose models have been deleted
+        if db_collection_list is not None:
+            for collection_name in db_collection_list:
+                if collection_name not in model_collection_list:
+                    target_directory = Path(db_root, collection_name)
+                    rmtree(target_directory)
 
         for subclass in subclasses:
             collection_name: str = subclass.__name__
