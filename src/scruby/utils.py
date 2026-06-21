@@ -19,12 +19,10 @@ class Utils:
         dotenv_path: Path | str = ".env",
     ) -> str | None:
         """Get value by key from .env file."""
-        assert len(key) > 0, "`get_from_env` => `key` must not be the empty string."
+        assert len(key) > 0, "Utils - `get_from_env` => `key` must not be the empty string."
 
         value: str | None = None
-
-        if isinstance(dotenv_path, str):
-            dotenv_path = Path(dotenv_path)
+        dotenv_path = Path(dotenv_path)
 
         if dotenv_path.exists():
             env_dict: dict[str, str | None] = dotenv_values(dotenv_path)
@@ -39,12 +37,10 @@ class Utils:
         dotenv_path: Path | str = ".env",
     ) -> str | None:
         """Add key-value to .env file."""
-        assert len(key) > 0, "`add_to_env` => `key` must not be the empty string."
-        assert len(value) > 0, "`add_to_env` => `value` must not be the empty string."
+        assert len(key) > 0, "Utils - `add_to_env` => `key` must not be the empty string."
+        assert len(value) > 0, "Utils - `add_to_env` => `value` must not be the empty string."
 
-        if isinstance(dotenv_path, str):
-            assert len(dotenv_path) > 0, "`add_to_env` => `dotenv_path` must not be the empty string."
-            dotenv_path = Path(dotenv_path)
+        dotenv_path = Path(dotenv_path)
 
         if dotenv_path.exists():
             env_dict: dict[str, str | None] = dotenv_values(dotenv_path)
@@ -67,11 +63,11 @@ class Utils:
     def db_collection_list(db_root: Path | str) -> list[str] | None:
         """Get a list of collections from a database directory."""
         if isinstance(db_root, str):
-            assert len(db_root) > 0, "`add_to_env` => `dotenv_path` must not be the empty string."
-            db_root = Path(db_root)
+            assert len(db_root) > 0, "Utils - `db_collection_list` => `db_root` must not be the empty string."
 
+        db_dir_path = Path(db_root)
         directory_names: list[str] | None = None
-        if db_root.exists():
-            all_entries = Path.iterdir(db_root)
+        if db_dir_path.exists():
+            all_entries = Path.iterdir(db_dir_path)
             directory_names = [entry.name for entry in all_entries if entry.name != ".env.meta"] or None
         return directory_names
