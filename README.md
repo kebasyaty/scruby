@@ -125,7 +125,7 @@ async def main() -> None:
     # Activate database.
     Scruby.run()
 
-    # Get/Create a User collection
+    # Get access to the collection
     user_coll = Scruby(User)
 
     # Create user
@@ -208,7 +208,7 @@ async def main() -> None:
     # Activate database.
     Scruby.run()
 
-    # Get/Create a Phone collection
+    # Get access to the collection
     phone_coll = Scruby(Phone)
 
     # Create phone
@@ -285,7 +285,7 @@ async def main() -> None:
     # Activate database.
     Scruby.run()
 
-    # Get/Create a Car collection
+    # Get access to the collection
     car_coll = Scruby(Car)
 
     # Create cars
