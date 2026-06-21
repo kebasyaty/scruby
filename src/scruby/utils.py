@@ -22,9 +22,7 @@ class Utils:
         assert len(key) > 0, "`get_from_env` => `key` must not be the empty string."
 
         value: str | None = None
-
-        if isinstance(dotenv_path, str):
-            dotenv_path = Path(dotenv_path)
+        dotenv_path = Path(dotenv_path)
 
         if dotenv_path.exists():
             env_dict: dict[str, str | None] = dotenv_values(dotenv_path)
@@ -42,9 +40,7 @@ class Utils:
         assert len(key) > 0, "`add_to_env` => `key` must not be the empty string."
         assert len(value) > 0, "`add_to_env` => `value` must not be the empty string."
 
-        if isinstance(dotenv_path, str):
-            assert len(dotenv_path) > 0, "`add_to_env` => `dotenv_path` must not be the empty string."
-            dotenv_path = Path(dotenv_path)
+        dotenv_path = Path(dotenv_path)
 
         if dotenv_path.exists():
             env_dict: dict[str, str | None] = dotenv_values(dotenv_path)
@@ -64,11 +60,8 @@ class Utils:
         return value
 
     @staticmethod
-    def db_collection_list(db_root: Path | str) -> list[str] | None:
+    def db_collection_list(db_root: Path) -> list[str] | None:
         """Get a list of collections from a database directory."""
-        if isinstance(db_root, str):
-            assert len(db_root) > 0, "`add_to_env` => `dotenv_path` must not be the empty string."
-
         db_dir_path = Path(db_root)
         directory_names: list[str] | None = None
         if db_dir_path.exists():
