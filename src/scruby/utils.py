@@ -68,10 +68,10 @@ class Utils:
         """Get a list of collections from a database directory."""
         if isinstance(db_root, str):
             assert len(db_root) > 0, "`add_to_env` => `dotenv_path` must not be the empty string."
-            db_root = Path(db_root)
 
+        db_dir = Path(db_root)
         directory_names: list[str] | None = None
-        if db_root.exists():
-            all_entries = Path.iterdir(db_root)
+        if db_dir.exists():
+            all_entries = Path.iterdir(db_dir)
             directory_names = [entry.name for entry in all_entries if entry.name != ".env.meta"] or None
         return directory_names
