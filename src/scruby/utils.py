@@ -19,7 +19,7 @@ class Utils:
         dotenv_path: Path | str = ".env",
     ) -> str | None:
         """Get value by key from .env file."""
-        assert len(key) > 0, "`get_from_env` => `key` must not be the empty string."
+        assert len(key) > 0, "Utils - `get_from_env` => `key` must not be the empty string."
 
         value: str | None = None
         dotenv_path = Path(dotenv_path)
@@ -37,8 +37,8 @@ class Utils:
         dotenv_path: Path | str = ".env",
     ) -> str | None:
         """Add key-value to .env file."""
-        assert len(key) > 0, "`add_to_env` => `key` must not be the empty string."
-        assert len(value) > 0, "`add_to_env` => `value` must not be the empty string."
+        assert len(key) > 0, "Utils - `add_to_env` => `key` must not be the empty string."
+        assert len(value) > 0, "Utils - `add_to_env` => `value` must not be the empty string."
 
         dotenv_path = Path(dotenv_path)
 
@@ -60,8 +60,11 @@ class Utils:
         return value
 
     @staticmethod
-    def db_collection_list(db_root: Path) -> list[str] | None:
+    def db_collection_list(db_root: Path | str) -> list[str] | None:
         """Get a list of collections from a database directory."""
+        if isinstance(db_root, str):
+            assert len(db_root) > 0, "Utils - `db_collection_list` => `db_root` must not be the empty string."
+
         db_dir_path = Path(db_root)
         directory_names: list[str] | None = None
         if db_dir_path.exists():

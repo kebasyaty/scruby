@@ -15,9 +15,9 @@ Scruby.napalm()
 
 def test_a_run_method() -> None:
     """Test a `run` method."""
-    # Activate database.
     with pytest.raises(
         AssertionError,
         match=r"Create least one model of document for your project.",
     ):
+        # Activate database.
         Scruby.run()
