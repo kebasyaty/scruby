@@ -9,10 +9,7 @@ import pytest
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyConfig, ScrubyModel
-from scruby.utils import Utils
-
-pytestmark = pytest.mark.asyncio(loop_scope="module")
+from scruby import Scruby, ScrubyConfig, ScrubyModel, Utils
 
 # Delete DB.
 # Hint: If the previous test failed and the database remains.
