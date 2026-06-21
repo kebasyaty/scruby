@@ -12,7 +12,6 @@ from typing import Any, ClassVar, Literal, Never, assert_never, final
 import orjson
 
 from scruby.config import ScrubyConfig
-from scruby.meta import Metadata
 
 
 @final
@@ -59,19 +58,17 @@ class DocCache:
     @classmethod
     def load_cache(cls, subclasses: list[Any]) -> None:
         """Load all documents from the database into the cache."""
-        db_root: Path = Path(ScrubyConfig.db_root)
         HASH_REDUCE_LEFT: Literal[7, 6, 5, 0] = ScrubyConfig.HASH_REDUCE_LEFT
+
+        if HASH_REDUCE_LEFT == 0:
+            return
+
+        db_root: Path = Path(ScrubyConfig.db_root)
         MAX_NUMBER_BRANCH: Literal[16, 256, 4096, 4294967296] = ScrubyConfig.MAX_NUMBER_BRANCH
         branch_numbers: range = range(MAX_NUMBER_BRANCH)
 
         for subclass in subclasses:
             collection_name: str = subclass.__name__
-
-            # Create metadata for the collection if it is missing
-            Metadata.create(collection_name)
-
-            if HASH_REDUCE_LEFT == 0:
-                continue
 
             # Create a cache structure for the collection
             cls.create_structure(collection_name)
