@@ -20,7 +20,7 @@ from xloft import NamedTuple
 from scruby import mixins
 from scruby.cache import DocCache
 from scruby.config import ScrubyConfig
-from scruby.meta import Meta
+from scruby.meta import Meta, Metadata
 from scruby.migration import Migration
 from scruby.model import ScrubyModel
 
@@ -210,4 +210,10 @@ class Scruby(
         ScrubyConfig.init_params()
         ScrubyConfig.check_hash_reduce_left()
         Migration.run(db_root, subclasses)
+        Metadata.create(
+            db_root,
+            hash_reduce_left,
+            ScrubyConfig.MAX_NUMBER_BRANCH,
+            subclasses,
+        )
         DocCache.load_cache(subclasses)
