@@ -1794,7 +1794,17 @@
 <span class="normal"><a href="#__codelineno-0-210">210</a></span>
 <span class="normal"><a href="#__codelineno-0-211">211</a></span>
 <span class="normal"><a href="#__codelineno-0-212">212</a></span>
-<span class="normal"><a href="#__codelineno-0-213">213</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="nd">@final</span>
+<span class="normal"><a href="#__codelineno-0-213">213</a></span>
+<span class="normal"><a href="#__codelineno-0-214">214</a></span>
+<span class="normal"><a href="#__codelineno-0-215">215</a></span>
+<span class="normal"><a href="#__codelineno-0-216">216</a></span>
+<span class="normal"><a href="#__codelineno-0-217">217</a></span>
+<span class="normal"><a href="#__codelineno-0-218">218</a></span>
+<span class="normal"><a href="#__codelineno-0-219">219</a></span>
+<span class="normal"><a href="#__codelineno-0-220">220</a></span>
+<span class="normal"><a href="#__codelineno-0-221">221</a></span>
+<span class="normal"><a href="#__codelineno-0-222">222</a></span>
+<span class="normal"><a href="#__codelineno-0-223">223</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="nd">@final</span>
 </span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29"></a><span class="k">class</span><span class="w"> </span><span class="nc">Scruby</span><span class="p">(</span>
 </span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="n">mixins</span><span class="o">.</span><span class="n">Keys</span><span class="p">,</span>
 </span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31"></a>    <span class="n">mixins</span><span class="o">.</span><span class="n">Find</span><span class="p">,</span>
@@ -1979,7 +1989,17 @@
 </span><span id="__span-0-210"><a id="__codelineno-0-210" name="__codelineno-0-210"></a>        <span class="n">ScrubyConfig</span><span class="o">.</span><span class="n">init_params</span><span class="p">()</span>
 </span><span id="__span-0-211"><a id="__codelineno-0-211" name="__codelineno-0-211"></a>        <span class="n">ScrubyConfig</span><span class="o">.</span><span class="n">check_hash_reduce_left</span><span class="p">()</span>
 </span><span id="__span-0-212"><a id="__codelineno-0-212" name="__codelineno-0-212"></a>        <span class="n">Migration</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">db_root</span><span class="p">,</span> <span class="n">subclasses</span><span class="p">)</span>
-</span><span id="__span-0-213"><a id="__codelineno-0-213" name="__codelineno-0-213"></a>        <span class="n">DocCache</span><span class="o">.</span><span class="n">load_cache</span><span class="p">(</span><span class="n">subclasses</span><span class="p">)</span>
+</span><span id="__span-0-213"><a id="__codelineno-0-213" name="__codelineno-0-213"></a>
+</span><span id="__span-0-214"><a id="__codelineno-0-214" name="__codelineno-0-214"></a>        <span class="n">max_number_branch</span> <span class="o">=</span> <span class="n">ScrubyConfig</span><span class="o">.</span><span class="n">MAX_NUMBER_BRANCH</span>
+</span><span id="__span-0-215"><a id="__codelineno-0-215" name="__codelineno-0-215"></a>        <span class="k">for</span> <span class="n">subclass</span> <span class="ow">in</span> <span class="n">subclasses</span><span class="p">:</span>
+</span><span id="__span-0-216"><a id="__codelineno-0-216" name="__codelineno-0-216"></a>            <span class="n">Metadata</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span id="__span-0-217"><a id="__codelineno-0-217" name="__codelineno-0-217"></a>                <span class="n">db_root</span><span class="p">,</span>
+</span><span id="__span-0-218"><a id="__codelineno-0-218" name="__codelineno-0-218"></a>                <span class="n">hash_reduce_left</span><span class="p">,</span>
+</span><span id="__span-0-219"><a id="__codelineno-0-219" name="__codelineno-0-219"></a>                <span class="n">max_number_branch</span><span class="p">,</span>
+</span><span id="__span-0-220"><a id="__codelineno-0-220" name="__codelineno-0-220"></a>                <span class="n">subclass</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+</span><span id="__span-0-221"><a id="__codelineno-0-221" name="__codelineno-0-221"></a>            <span class="p">)</span>
+</span><span id="__span-0-222"><a id="__codelineno-0-222" name="__codelineno-0-222"></a>
+</span><span id="__span-0-223"><a id="__codelineno-0-223" name="__codelineno-0-223"></a>        <span class="n">DocCache</span><span class="o">.</span><span class="n">load_cache</span><span class="p">(</span><span class="n">subclasses</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
               </details>
 
@@ -2303,7 +2323,17 @@
 <span class="normal"><a href="#__codelineno-0-210">210</a></span>
 <span class="normal"><a href="#__codelineno-0-211">211</a></span>
 <span class="normal"><a href="#__codelineno-0-212">212</a></span>
-<span class="normal"><a href="#__codelineno-0-213">213</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-176"><a id="__codelineno-0-176" name="__codelineno-0-176"></a><span class="nd">@staticmethod</span>
+<span class="normal"><a href="#__codelineno-0-213">213</a></span>
+<span class="normal"><a href="#__codelineno-0-214">214</a></span>
+<span class="normal"><a href="#__codelineno-0-215">215</a></span>
+<span class="normal"><a href="#__codelineno-0-216">216</a></span>
+<span class="normal"><a href="#__codelineno-0-217">217</a></span>
+<span class="normal"><a href="#__codelineno-0-218">218</a></span>
+<span class="normal"><a href="#__codelineno-0-219">219</a></span>
+<span class="normal"><a href="#__codelineno-0-220">220</a></span>
+<span class="normal"><a href="#__codelineno-0-221">221</a></span>
+<span class="normal"><a href="#__codelineno-0-222">222</a></span>
+<span class="normal"><a href="#__codelineno-0-223">223</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-176"><a id="__codelineno-0-176" name="__codelineno-0-176"></a><span class="nd">@staticmethod</span>
 </span><span id="__span-0-177"><a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span>
 </span><span id="__span-0-178"><a id="__codelineno-0-178" name="__codelineno-0-178"></a>    <span class="n">db_root</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ScrubyDB&quot;</span><span class="p">,</span>
 </span><span id="__span-0-179"><a id="__codelineno-0-179" name="__codelineno-0-179"></a>    <span class="n">hash_reduce_left</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
@@ -2340,7 +2370,17 @@
 </span><span id="__span-0-210"><a id="__codelineno-0-210" name="__codelineno-0-210"></a>    <span class="n">ScrubyConfig</span><span class="o">.</span><span class="n">init_params</span><span class="p">()</span>
 </span><span id="__span-0-211"><a id="__codelineno-0-211" name="__codelineno-0-211"></a>    <span class="n">ScrubyConfig</span><span class="o">.</span><span class="n">check_hash_reduce_left</span><span class="p">()</span>
 </span><span id="__span-0-212"><a id="__codelineno-0-212" name="__codelineno-0-212"></a>    <span class="n">Migration</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">db_root</span><span class="p">,</span> <span class="n">subclasses</span><span class="p">)</span>
-</span><span id="__span-0-213"><a id="__codelineno-0-213" name="__codelineno-0-213"></a>    <span class="n">DocCache</span><span class="o">.</span><span class="n">load_cache</span><span class="p">(</span><span class="n">subclasses</span><span class="p">)</span>
+</span><span id="__span-0-213"><a id="__codelineno-0-213" name="__codelineno-0-213"></a>
+</span><span id="__span-0-214"><a id="__codelineno-0-214" name="__codelineno-0-214"></a>    <span class="n">max_number_branch</span> <span class="o">=</span> <span class="n">ScrubyConfig</span><span class="o">.</span><span class="n">MAX_NUMBER_BRANCH</span>
+</span><span id="__span-0-215"><a id="__codelineno-0-215" name="__codelineno-0-215"></a>    <span class="k">for</span> <span class="n">subclass</span> <span class="ow">in</span> <span class="n">subclasses</span><span class="p">:</span>
+</span><span id="__span-0-216"><a id="__codelineno-0-216" name="__codelineno-0-216"></a>        <span class="n">Metadata</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span id="__span-0-217"><a id="__codelineno-0-217" name="__codelineno-0-217"></a>            <span class="n">db_root</span><span class="p">,</span>
+</span><span id="__span-0-218"><a id="__codelineno-0-218" name="__codelineno-0-218"></a>            <span class="n">hash_reduce_left</span><span class="p">,</span>
+</span><span id="__span-0-219"><a id="__codelineno-0-219" name="__codelineno-0-219"></a>            <span class="n">max_number_branch</span><span class="p">,</span>
+</span><span id="__span-0-220"><a id="__codelineno-0-220" name="__codelineno-0-220"></a>            <span class="n">subclass</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+</span><span id="__span-0-221"><a id="__codelineno-0-221" name="__codelineno-0-221"></a>        <span class="p">)</span>
+</span><span id="__span-0-222"><a id="__codelineno-0-222" name="__codelineno-0-222"></a>
+</span><span id="__span-0-223"><a id="__codelineno-0-223" name="__codelineno-0-223"></a>    <span class="n">DocCache</span><span class="o">.</span><span class="n">load_cache</span><span class="p">(</span><span class="n">subclasses</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>

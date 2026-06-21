@@ -1650,7 +1650,17 @@
 <span class="normal"><a href="#__codelineno-0-57">57</a></span>
 <span class="normal"><a href="#__codelineno-0-58">58</a></span>
 <span class="normal"><a href="#__codelineno-0-59">59</a></span>
-<span class="normal"><a href="#__codelineno-0-60">60</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="k">class</span><span class="w"> </span><span class="nc">Collection</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-60">60</a></span>
+<span class="normal"><a href="#__codelineno-0-61">61</a></span>
+<span class="normal"><a href="#__codelineno-0-62">62</a></span>
+<span class="normal"><a href="#__codelineno-0-63">63</a></span>
+<span class="normal"><a href="#__codelineno-0-64">64</a></span>
+<span class="normal"><a href="#__codelineno-0-65">65</a></span>
+<span class="normal"><a href="#__codelineno-0-66">66</a></span>
+<span class="normal"><a href="#__codelineno-0-67">67</a></span>
+<span class="normal"><a href="#__codelineno-0-68">68</a></span>
+<span class="normal"><a href="#__codelineno-0-69">69</a></span>
+<span class="normal"><a href="#__codelineno-0-70">70</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="k">class</span><span class="w"> </span><span class="nc">Collection</span><span class="p">:</span>
 </span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Methods for working with collections.&quot;&quot;&quot;</span>
 </span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22"></a>
 </span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23"></a>    <span class="nd">@final</span>
@@ -1680,17 +1690,27 @@
 </span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">        Returns:</span>
 </span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="sd">            None.</span>
 </span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50"></a>        <span class="c1"># Delete collection on file system</span>
-</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51"></a>        <span class="n">target_directory</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ScrubyConfig</span><span class="o">.</span><span class="n">db_root</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">collection_name</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52"></a>        <span class="n">rmtree</span><span class="p">(</span><span class="n">target_directory</span><span class="p">)</span>
-</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a>        <span class="c1"># Create collection and metadata</span>
-</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54"></a>        <span class="n">Metadata</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">collection_name</span><span class="p">)</span>
-</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55"></a>
-</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56"></a>        <span class="c1"># Clear collection in cache</span>
-</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57"></a>        <span class="k">if</span> <span class="n">ScrubyConfig</span><span class="o">.</span><span class="n">HASH_REDUCE_LEFT</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58"></a>            <span class="k">del</span> <span class="n">DocCache</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">collection_name</span><span class="p">]</span>
-</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59"></a>            <span class="n">DocCache</span><span class="o">.</span><span class="n">create_structure</span><span class="p">(</span><span class="n">collection_name</span><span class="p">)</span>
-</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60"></a>        <span class="k">return</span>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50"></a>        <span class="n">db_root</span> <span class="o">=</span> <span class="n">ScrubyConfig</span><span class="o">.</span><span class="n">db_root</span>
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51"></a>        <span class="n">hash_reduce_left</span> <span class="o">=</span> <span class="n">ScrubyConfig</span><span class="o">.</span><span class="n">HASH_REDUCE_LEFT</span>
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52"></a>        <span class="n">max_number_branch</span> <span class="o">=</span> <span class="n">ScrubyConfig</span><span class="o">.</span><span class="n">MAX_NUMBER_BRANCH</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a>
+</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54"></a>        <span class="c1"># Delete collection on file system</span>
+</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55"></a>        <span class="n">target_directory</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">db_root</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">collection_name</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56"></a>        <span class="n">rmtree</span><span class="p">(</span><span class="n">target_directory</span><span class="p">)</span>
+</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57"></a>
+</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58"></a>        <span class="c1"># Create a directory for the collection and add metadata</span>
+</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59"></a>        <span class="n">Metadata</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60"></a>            <span class="n">db_root</span><span class="p">,</span>
+</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61"></a>            <span class="n">hash_reduce_left</span><span class="p">,</span>
+</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62"></a>            <span class="n">max_number_branch</span><span class="p">,</span>
+</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63"></a>            <span class="n">collection_name</span><span class="p">,</span>
+</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64"></a>        <span class="p">)</span>
+</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a>
+</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a>        <span class="c1"># Clear collection in cache</span>
+</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a>        <span class="k">if</span> <span class="n">hash_reduce_left</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a>            <span class="k">del</span> <span class="n">DocCache</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">collection_name</span><span class="p">]</span>
+</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69"></a>            <span class="n">DocCache</span><span class="o">.</span><span class="n">create_structure</span><span class="p">(</span><span class="n">collection_name</span><span class="p">)</span>
+</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70"></a>        <span class="k">return</span>
 </span></code></pre></div></td></tr></table></div>
               </details>
 
@@ -1802,7 +1822,17 @@
 <span class="normal"><a href="#__codelineno-0-57">57</a></span>
 <span class="normal"><a href="#__codelineno-0-58">58</a></span>
 <span class="normal"><a href="#__codelineno-0-59">59</a></span>
-<span class="normal"><a href="#__codelineno-0-60">60</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="nd">@final</span>
+<span class="normal"><a href="#__codelineno-0-60">60</a></span>
+<span class="normal"><a href="#__codelineno-0-61">61</a></span>
+<span class="normal"><a href="#__codelineno-0-62">62</a></span>
+<span class="normal"><a href="#__codelineno-0-63">63</a></span>
+<span class="normal"><a href="#__codelineno-0-64">64</a></span>
+<span class="normal"><a href="#__codelineno-0-65">65</a></span>
+<span class="normal"><a href="#__codelineno-0-66">66</a></span>
+<span class="normal"><a href="#__codelineno-0-67">67</a></span>
+<span class="normal"><a href="#__codelineno-0-68">68</a></span>
+<span class="normal"><a href="#__codelineno-0-69">69</a></span>
+<span class="normal"><a href="#__codelineno-0-70">70</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="nd">@final</span>
 </span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="nd">@staticmethod</span>
 </span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="k">def</span><span class="w"> </span><span class="nf">clear_collection</span><span class="p">(</span><span class="n">collection_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Synchronous method to remove all documents from a collection.</span>
@@ -1813,17 +1843,27 @@
 </span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">    Returns:</span>
 </span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="sd">        None.</span>
 </span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="c1"># Delete collection on file system</span>
-</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51"></a>    <span class="n">target_directory</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ScrubyConfig</span><span class="o">.</span><span class="n">db_root</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">collection_name</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52"></a>    <span class="n">rmtree</span><span class="p">(</span><span class="n">target_directory</span><span class="p">)</span>
-</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a>    <span class="c1"># Create collection and metadata</span>
-</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54"></a>    <span class="n">Metadata</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">collection_name</span><span class="p">)</span>
-</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55"></a>
-</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="c1"># Clear collection in cache</span>
-</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57"></a>    <span class="k">if</span> <span class="n">ScrubyConfig</span><span class="o">.</span><span class="n">HASH_REDUCE_LEFT</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58"></a>        <span class="k">del</span> <span class="n">DocCache</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">collection_name</span><span class="p">]</span>
-</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59"></a>        <span class="n">DocCache</span><span class="o">.</span><span class="n">create_structure</span><span class="p">(</span><span class="n">collection_name</span><span class="p">)</span>
-</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60"></a>    <span class="k">return</span>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="n">db_root</span> <span class="o">=</span> <span class="n">ScrubyConfig</span><span class="o">.</span><span class="n">db_root</span>
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51"></a>    <span class="n">hash_reduce_left</span> <span class="o">=</span> <span class="n">ScrubyConfig</span><span class="o">.</span><span class="n">HASH_REDUCE_LEFT</span>
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52"></a>    <span class="n">max_number_branch</span> <span class="o">=</span> <span class="n">ScrubyConfig</span><span class="o">.</span><span class="n">MAX_NUMBER_BRANCH</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a>
+</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54"></a>    <span class="c1"># Delete collection on file system</span>
+</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55"></a>    <span class="n">target_directory</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">db_root</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">collection_name</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="n">rmtree</span><span class="p">(</span><span class="n">target_directory</span><span class="p">)</span>
+</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57"></a>
+</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="c1"># Create a directory for the collection and add metadata</span>
+</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59"></a>    <span class="n">Metadata</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60"></a>        <span class="n">db_root</span><span class="p">,</span>
+</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61"></a>        <span class="n">hash_reduce_left</span><span class="p">,</span>
+</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62"></a>        <span class="n">max_number_branch</span><span class="p">,</span>
+</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63"></a>        <span class="n">collection_name</span><span class="p">,</span>
+</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64"></a>    <span class="p">)</span>
+</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a>
+</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a>    <span class="c1"># Clear collection in cache</span>
+</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a>    <span class="k">if</span> <span class="n">hash_reduce_left</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a>        <span class="k">del</span> <span class="n">DocCache</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">collection_name</span><span class="p">]</span>
+</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69"></a>        <span class="n">DocCache</span><span class="o">.</span><span class="n">create_structure</span><span class="p">(</span><span class="n">collection_name</span><span class="p">)</span>
+</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70"></a>    <span class="k">return</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
