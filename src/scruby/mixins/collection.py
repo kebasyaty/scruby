@@ -56,7 +56,7 @@ class Collection:
         rmtree(target_directory)
 
         # Create a directory for the collection and add metadata
-        Metadata.create_one(
+        Metadata.create(
             db_root,
             hash_reduce_left,
             max_number_branch,

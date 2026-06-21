@@ -210,10 +210,14 @@ class Scruby(
         ScrubyConfig.init_params()
         ScrubyConfig.check_hash_reduce_left()
         Migration.run(db_root, subclasses)
-        Metadata.create(
-            db_root,
-            hash_reduce_left,
-            ScrubyConfig.MAX_NUMBER_BRANCH,
-            subclasses,
-        )
+
+        max_number_branch = ScrubyConfig.MAX_NUMBER_BRANCH
+        for subclass in subclasses:
+            Metadata.create(
+                db_root,
+                hash_reduce_left,
+                max_number_branch,
+                subclass.__name__,
+            )
+
         DocCache.load_cache(subclasses)
