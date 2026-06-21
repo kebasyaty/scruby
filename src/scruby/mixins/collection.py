@@ -47,14 +47,24 @@ class Collection:
         Returns:
             None.
         """
+        db_root = ScrubyConfig.db_root
+        hash_reduce_left = ScrubyConfig.HASH_REDUCE_LEFT
+        max_number_branch = ScrubyConfig.MAX_NUMBER_BRANCH
+
         # Delete collection on file system
-        target_directory = f"{ScrubyConfig.db_root}/{collection_name}"
+        target_directory = f"{db_root}/{collection_name}"
         rmtree(target_directory)
-        # Create collection and metadata
-        Metadata.create(collection_name)
+
+        # Create a directory for the collection and add metadata
+        Metadata.create(
+            db_root,
+            hash_reduce_left,
+            max_number_branch,
+            collection_name,
+        )
 
         # Clear collection in cache
-        if ScrubyConfig.HASH_REDUCE_LEFT != 0:
+        if hash_reduce_left != 0:
             del DocCache.cache[collection_name]
             DocCache.create_structure(collection_name)
         return

@@ -14,8 +14,6 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
-from scruby.config import ScrubyConfig
-
 
 class Meta(BaseModel):
     """Structure of metadata for collection."""
@@ -30,17 +28,15 @@ class Metadata:
     """Metadata management."""
 
     @staticmethod
-    def create(collection_name: str) -> None:
-        """Create metadata for collection.
-
-        Args:
-            collection_name (str): Collection name.
-
-        Returns:
-            None.
-        """
+    def create(
+        db_root: Path | str,
+        hash_reduce_left: int,
+        max_number_branch: int,
+        collection_name: str,
+    ) -> None:
+        """Create metadata for collections."""
         meta_dir_path = Path(
-            ScrubyConfig.db_root,
+            db_root,
             collection_name,
             "meta",
         )
@@ -48,8 +44,8 @@ class Metadata:
             meta_dir_path.mkdir(parents=True)
             meta = Meta(
                 collection_name=collection_name,
-                hash_reduce_left=ScrubyConfig.HASH_REDUCE_LEFT,
-                max_number_branch=ScrubyConfig.MAX_NUMBER_BRANCH,
+                hash_reduce_left=hash_reduce_left,
+                max_number_branch=max_number_branch,
                 counter_documents=0,
             )
             meta_json = meta.model_dump_json()
