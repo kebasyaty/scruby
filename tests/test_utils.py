@@ -3,16 +3,13 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Annotated
+from typing import Annotated, Any
 
 import pytest
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyModel
-from scruby.utils import Utils
-
-pytestmark = pytest.mark.asyncio(loop_scope="module")
+from scruby import Scruby, ScrubyConfig, ScrubyModel, Utils
 
 # Delete DB.
 # Hint: If the previous test failed and the database remains.
@@ -100,6 +97,14 @@ def test_db_collection_list() -> None:
         match=r"Utils - `db_collection_list` => `db_root` must not be the empty string.",
     ):
         Utils.db_collection_list(db_root="")
+
+    db_collection_list: list[str] | None = Utils.db_collection_list(db_root=ScrubyConfig.db_root)
+    subclasses: list[Any] = [subclass.__name__ for subclass in ScrubyModel.__subclasses__()]
+
+    assert db_collection_list is not None
+
+    for collection_name in db_collection_list:
+        assert collection_name in subclasses
     #
     # Delete DB.
     Scruby.napalm()

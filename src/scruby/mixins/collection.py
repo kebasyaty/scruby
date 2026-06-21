@@ -47,10 +47,10 @@ class Collection:
         Returns:
             None.
         """
-        # Clear collection on file system
+        # Delete collection on file system
         target_directory = f"{ScrubyConfig.db_root}/{collection_name}"
         rmtree(target_directory)
-        # Create metadata for collection
+        # Create collection and metadata
         Metadata.create(collection_name)
 
         # Clear collection in cache
