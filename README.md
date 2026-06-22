@@ -49,7 +49,7 @@
 
 <img src="https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/attention.svg" alt="Attention">
 <p>
-<b>Parameter `ScrubyConfig.HASH_REDUCE_LEFT - Scruby.run(hash_reduce_left = 7)`:</b>
+<b>Parameter `Scruby.run(hash_reduce_left = 7)`:</b>
 <br>
 7 = 16 branches in collection (is default) -> Docs: ~16000+, RAM: ~2G+, CPU: ~2+ (for development).
 <br>
@@ -102,7 +102,7 @@ from zoneinfo import ZoneInfo
 from typing import Annotated
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
-from scruby import Scruby, ScrubyModel, ScrubyConfig
+from scruby import Scruby, ScrubyModel
 
 
 class User(ScrubyModel):
@@ -186,7 +186,7 @@ The search effectiveness depends on the number of processor threads.
 
 import anyio
 from pydantic import Field
-from scruby import ReturnType, Scruby, ScrubyConfig, ScrubyModel
+from scruby import ReturnType, Scruby, ScrubyModel
 
 
 class Phone(ScrubyModel):
@@ -263,7 +263,7 @@ The search effectiveness depends on the number of processor threads.
 import anyio
 from typing import Annotated
 from pydantic import Field
-from scruby import ReturnType, Scruby, ScrubyConfig, ScrubyModel
+from scruby import ReturnType, Scruby, ScrubyModel
 
 
 class Car(ScrubyModel):
