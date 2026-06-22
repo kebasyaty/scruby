@@ -13,12 +13,8 @@ from typing import Annotated, Any
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyModel, ScrubyConfig
+from scruby import Scruby, ScrubyModel
 from scruby.aggregation import Average
-
-ScrubyConfig.db_root = "ScrubyDB"  # Default = "ScrubyDB"
-ScrubyConfig.max_workers = None  # Default = None
-ScrubyConfig.plugins = []  # Default = []
 
 
 class User(ScrubyModel):
@@ -117,7 +113,7 @@ from typing import Annotated, Any
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyModel, ScrubyConfig
+from scruby import Scruby, ScrubyModel
 from scruby.aggregation import Counter
 
 
@@ -230,7 +226,7 @@ from typing import Annotated, Any
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyModel, ScrubyConfig
+from scruby import Scruby, ScrubyModel
 from scruby.aggregation import Max
 
 
@@ -327,7 +323,7 @@ from typing import Annotated, Any
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyModel, ScrubyConfig
+from scruby import Scruby, ScrubyModel
 from scruby.aggregation import Min
 
 
@@ -424,7 +420,7 @@ from typing import Annotated, Any
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyModel, ScrubyConfig
+from scruby import Scruby, ScrubyModel
 from scruby.aggregation import Sum
 
 

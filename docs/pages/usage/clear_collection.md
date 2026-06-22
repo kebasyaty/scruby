@@ -8,7 +8,7 @@ from datetime import datetime
 from typing import Annotated
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
-from scruby import Scruby, ScrubyModel, ScrubyConfig
+from scruby import Scruby, ScrubyModel
 
 
 class User(ScrubyModel):

@@ -16,7 +16,7 @@ from typing import Annotated, Any
 from collections.abc import Callable
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
-from scruby import Scruby, ScrubyModel, ScrubyConfig
+from scruby import Scruby, ScrubyModel
 from scruby.aggregation import Counter
 
 
