@@ -14,11 +14,11 @@ class TestConfigParams:
     """Testing configuration parameters."""
 
     def test_db_id(self) -> None:
-        """ScrubyConfig.db_id."""
+        """Test a db_id parameter."""
         assert ScrubyConfig.db_id is None
 
     def test_db_root(self) -> None:
-        """Test a DB_ROOT parameter."""
+        """Test a db_root parameter."""
         assert ScrubyConfig.db_root == "ScrubyDB"
 
     def test_hash_reduce_left(self) -> None:
@@ -30,12 +30,16 @@ class TestConfigParams:
         assert ScrubyConfig.MAX_NUMBER_BRANCH == 16
 
     def test_max_workers(self) -> None:
-        """Test a MAX_WORKERS parameter."""
+        """Test a max_workers parameter."""
         assert ScrubyConfig.max_workers is None
 
     def test_plugins(self) -> None:
-        """Test a PLUGINS parameter."""
+        """Test a plugins parameter."""
         assert ScrubyConfig.plugins is None
+
+    def test_mode(self) -> None:
+        """Test a mode parameter."""
+        assert ScrubyConfig.mode == 0o777
 
 
 class TestConfigMethods:

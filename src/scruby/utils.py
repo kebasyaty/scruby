@@ -35,6 +35,7 @@ class Utils:
         key: str,
         value: str,
         dotenv_path: Path | str = ".env",
+        mode: int = 0o777,
     ) -> str | None:
         """Add key-value to .env file."""
         assert len(key) > 0, "Utils - `add_to_env` => `key` must not be the empty string."
@@ -53,7 +54,7 @@ class Utils:
                 raise KeyError(f"`add_to_env` => Key `{key}` already exists.")
         else:
             target_dir: str = "/".join(str(dotenv_path).split("/")[:-1])
-            Path(target_dir).mkdir(parents=True, exist_ok=True)
+            Path(target_dir).mkdir(mode=mode, parents=True, exist_ok=True)
             content = f"{key}={value}"
             dotenv_path.write_text(data=content, encoding="utf-8")
 

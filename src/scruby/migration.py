@@ -15,12 +15,17 @@ class Migration:
     """Migration."""
 
     @classmethod
-    def run(cls, db_root: Path | str, subclasses: list[Any]) -> None:
+    def run(
+        cls,
+        db_root: Path | str,
+        subclasses: list[Any],
+        mode: int = 0o777,
+    ) -> None:
         """Run migration."""
         # Delete collections whose models have been deleted
         cls.delete_orphan_collections(db_root, subclasses)
         # Add collection directories if they are missing
-        cls.add_collection_directories(db_root, subclasses)
+        cls.add_collection_directories(db_root, subclasses, mode)
 
     @staticmethod
     def delete_orphan_collections(db_root: Path | str, subclasses: list[Any]) -> None:
@@ -35,10 +40,14 @@ class Migration:
                     rmtree(target_directory)
 
     @staticmethod
-    def add_collection_directories(db_root: Path | str, subclasses: list[Any]) -> None:
+    def add_collection_directories(
+        db_root: Path | str,
+        subclasses: list[Any],
+        mode: int = 0o777,
+    ) -> None:
         """Add collection directories if they are missing."""
         for subclass in subclasses:
             collection_name = subclass.__name__
             coll_dir_path = Path(db_root, collection_name)
             if not coll_dir_path.exists():
-                coll_dir_path.mkdir(parents=True)
+                coll_dir_path.mkdir(mode=mode, parents=True)
