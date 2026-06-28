@@ -33,6 +33,7 @@ class Metadata:
         hash_reduce_left: int,
         max_number_branch: int,
         collection_name: str,
+        mode: int = 0o777,
     ) -> None:
         """Create metadata for collections."""
         meta_dir_path = Path(
@@ -41,7 +42,7 @@ class Metadata:
             "meta",
         )
         if not meta_dir_path.exists():
-            meta_dir_path.mkdir(parents=True)
+            meta_dir_path.mkdir(mode=mode, parents=True)
             meta = Meta(
                 collection_name=collection_name,
                 hash_reduce_left=hash_reduce_left,

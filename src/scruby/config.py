@@ -17,6 +17,7 @@ The settings class contains the following parameters:
 - `max_workers` - The maximum number of processes that can be used (default = None).
 - `plugins` - For adding plugins.
 - `sys_platform` - Information about the operating system.
+- `mode` - Access mode to directories and files.
 """
 
 from __future__ import annotations
@@ -34,11 +35,11 @@ from scruby.utils import Utils
 class ScrubyConfig:
     """Database settings."""
 
-    # Database ID
+    # Database ID.
     # Will be automatically assigned.
     db_id: ClassVar[str | None] = None
 
-    # Path to root directory of database
+    # Path to root directory of database.
     # By default = "ScrubyDB" (in root of project).
     db_root: ClassVar[str] = "ScrubyDB"
 
@@ -63,6 +64,9 @@ class ScrubyConfig:
 
     # Information about the operating system.
     sys_platform: ClassVar[str] = sys.platform  # "linux", "win32", "cygwin", "darwin", "os2", "os2emx"
+
+    # Access mode to directories and files.
+    mode: ClassVar[int] = 0o777
 
     @classmethod
     def init_params(cls) -> None:

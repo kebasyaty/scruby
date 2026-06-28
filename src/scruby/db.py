@@ -56,6 +56,7 @@ class Scruby(
         self._hash_reduce_left = ScrubyConfig.HASH_REDUCE_LEFT
         self._max_number_branch = ScrubyConfig.MAX_NUMBER_BRANCH
         self._max_workers = ScrubyConfig.max_workers
+        self._mode = ScrubyConfig.mode
         self._meta = Meta
         self._meta_path = Path(
             ScrubyConfig.db_root,
@@ -150,7 +151,7 @@ class Scruby(
         )
         # If the branch does not exist, need to create it.
         if not await branch_path.exists():
-            await branch_path.mkdir(parents=True)
+            await branch_path.mkdir(self._mode, parents=True)
         # Get the path to the collection cell.
         leaf_path: Path = Path(*(branch_path, "leaf.json"))
         return (leaf_path, prepared_key, key_as_hash)
@@ -179,6 +180,7 @@ class Scruby(
         hash_reduce_left: Literal[7, 6, 5, 0] = 7,
         max_workers: int | None = None,
         plugins: list[Any] | None = None,
+        mode: int = 0o777,
     ) -> None:
         """Activate database.
 
@@ -189,6 +191,7 @@ class Scruby(
                                        If None, then as many worker processes will be
                                        created as the machine has processors.
             plugins (list[Any] | None): To connect plugins.
+            mode (int): Access mode to directories and files.
 
         Returns:
             None.
@@ -207,9 +210,10 @@ class Scruby(
         ScrubyConfig.HASH_REDUCE_LEFT = hash_reduce_left
         ScrubyConfig.max_workers = max_workers
         ScrubyConfig.plugins = plugins
+        ScrubyConfig.mode = mode
         ScrubyConfig.init_params()
         ScrubyConfig.check_hash_reduce_left()
-        Migration.run(db_root, subclasses)
+        Migration.run(db_root, subclasses, mode=mode)
 
         max_number_branch = ScrubyConfig.MAX_NUMBER_BRANCH
         for subclass in subclasses:
@@ -218,6 +222,7 @@ class Scruby(
                 hash_reduce_left,
                 max_number_branch,
                 subclass.__name__,
+                mode,
             )
 
         DocCache.load_cache(subclasses)
