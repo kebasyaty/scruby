@@ -14,7 +14,7 @@ from typing import final
 from scruby.cache import DocCache
 from scruby.config import ScrubyConfig
 from scruby.meta import Metadata
-from scruby.model import ScrubyModel
+from scruby.models import ScrubyModel
 
 
 class Collection:
