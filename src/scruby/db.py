@@ -22,7 +22,7 @@ from scruby.cache import DocCache
 from scruby.config import ScrubyConfig
 from scruby.meta import Meta, Metadata
 from scruby.migration import Migration
-from scruby.model import ScrubyModel
+from scruby.models import ScrubyModel
 
 
 @final

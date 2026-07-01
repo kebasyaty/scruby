@@ -1,4 +1,4 @@
-"""Model."""
+"""Models."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ from pydantic import BaseModel
 
 
 class ScrubyModel(BaseModel):
-    """Additional fields for models."""
+    """A base class for creating Scruby models."""
 
     created_at: datetime | None = None
     updated_at: datetime | None = None
