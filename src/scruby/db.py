@@ -197,6 +197,7 @@ class Scruby(
             None.
         """
         subclasses: list[Any] = ScrubyModel.__subclasses__()
+
         if __debug__:
             # Raise an exception if no models were created
             if len(subclasses) == 0:
