@@ -22,17 +22,19 @@ from scruby.aggregation import Counter
 
 class User(ScrubyModel):
     """User model."""
-    first_name: str = Field(strict=True)
-    last_name: str = Field(strict=True)
-    birthday: datetime = Field(strict=True)
-    email: EmailStr = Field(strict=True)
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
+    first_name: str
+    last_name: str
+    birthday: datetime
+    email: EmailStr
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164"), Field(strict=False)]
     # key is always at bottom
-    key: str = Field(
-        strict=True,
-        frozen=True,
-        default_factory=lambda data: data["phone"],
-    )
+    key: Annotated[
+        str,
+        Field(
+            frozen=True,
+            default_factory=lambda data: data["phone"],
+        ),
+    ]
 
 
 def task_counter(
