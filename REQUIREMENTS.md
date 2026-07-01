@@ -11,11 +11,12 @@
 - [pydantic](https://pypi.org/project/pydantic/ "pydantic")
 - [pydantic-extra-types](https://pypi.org/project/pydantic-extra-types/ "pydantic-extra-types")
 - [phonenumbers](https://pypi.org/project/phonenumbers/ "phonenumbers")
+- [bcrypt](https://pypi.org/project/bcrypt/ "bcrypt")
 
 #### Dev-Dependencies
 
 - [ruff](https://pypi.org/project/ruff/ "ruff")
-- [pyrefly](https://pypi.org/project/pyrefly/ "")
+- [pyrefly](https://pypi.org/project/pyrefly/)
 - [pre-commit](https://pypi.org/project/pre-commit/ "pre-commit")
 - [pytest](https://pypi.org/project/pytest/ "pytest")
 - [pytest-asyncio](https://pypi.org/project/pytest-asyncio/ "pytest-asyncio")
