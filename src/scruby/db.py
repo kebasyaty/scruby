@@ -198,8 +198,10 @@ class Scruby(
         """
         subclasses: list[Any] = ScrubyModel.__subclasses__()
         if __debug__:
+            # Raise an exception if no models were created
             if len(subclasses) == 0:
                 raise AssertionError("Create least one model of document for your project.")
+            # Raise an exception if the plugin does not match the Scruby version
             if plugins is not None:
                 for plugin in plugins:
                     if plugin.SCRUBY_VERSION != 2:
