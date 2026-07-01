@@ -19,16 +19,19 @@ from scruby.aggregation import Average
 
 class User(ScrubyModel):
     """User model."""
-    first_name: str = Field(strict=True)
-    age: int = Field(strict=True)
-    email: EmailStr = Field(strict=True)
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
+    first_name: str
+    last_name: str
+    birthday: datetime
+    email: EmailStr
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164"), Field(strict=False)]
     # key is always at bottom
-    key: str = Field(
-        strict=True,
-        frozen=True,
-        default_factory=lambda data: data["phone"],
-    )
+    key: Annotated[
+        str,
+        Field(
+            frozen=True,
+            default_factory=lambda data: data["phone"],
+        ),
+    ]
 
 
 def task_calculate_average(
@@ -117,18 +120,21 @@ from scruby import Scruby, ScrubyModel
 from scruby.aggregation import Counter
 
 
-class User(BaseModel):
+class User(ScrubyModel):
     """User model."""
-    first_name: str = Field(strict=True)
-    age: int = Field(strict=True)
-    email: EmailStr = Field(strict=True)
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
+    first_name: str
+    last_name: str
+    birthday: datetime
+    email: EmailStr
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164"), Field(strict=False)]
     # key is always at bottom
-    key: str = Field(
-        strict=True,
-        frozen=True,
-        default_factory=lambda data: data["phone"],
-    )
+    key: Annotated[
+        str,
+        Field(
+            frozen=True,
+            default_factory=lambda data: data["phone"],
+        ),
+    ]
 
 
 def task_counter(
@@ -232,16 +238,19 @@ from scruby.aggregation import Max
 
 class User(ScrubyModel):
     """User model."""
-    first_name: str = Field(strict=True)
-    age: int = Field(strict=True)
-    email: EmailStr = Field(strict=True)
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
+    first_name: str
+    last_name: str
+    birthday: datetime
+    email: EmailStr
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164"), Field(strict=False)]
     # key is always at bottom
-    key: str = Field(
-        strict=True,
-        frozen=True,
-        default_factory=lambda data: data["phone"],
-    )
+    key: Annotated[
+        str,
+        Field(
+            frozen=True,
+            default_factory=lambda data: data["phone"],
+        ),
+    ]
 
 
 def task_calculate_max(
@@ -329,16 +338,19 @@ from scruby.aggregation import Min
 
 class User(ScrubyModel):
     """User model."""
-    first_name: str = Field(strict=True)
-    age: int = Field(strict=True)
-    email: EmailStr = Field(strict=True)
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
+    first_name: str
+    last_name: str
+    birthday: datetime
+    email: EmailStr
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164"), Field(strict=False)]
     # key is always at bottom
-    key: str = Field(
-        strict=True,
-        frozen=True,
-        default_factory=lambda data: data["phone"],
-    )
+    key: Annotated[
+        str,
+        Field(
+            frozen=True,
+            default_factory=lambda data: data["phone"],
+        ),
+    ]
 
 
 def task_calculate_min(
@@ -426,16 +438,19 @@ from scruby.aggregation import Sum
 
 class User(ScrubyModel):
     """User model."""
-    first_name: str = Field(strict=True)
-    age: int = Field(strict=True)
-    email: EmailStr = Field(strict=True)
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
+    first_name: str
+    last_name: str
+    birthday: datetime
+    email: EmailStr
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164"), Field(strict=False)]
     # key is always at bottom
-    key: str = Field(
-        strict=True,
-        frozen=True,
-        default_factory=lambda data: data["phone"],
-    )
+    key: Annotated[
+        str,
+        Field(
+            frozen=True,
+            default_factory=lambda data: data["phone"],
+        ),
+    ]
 
 
 def task_calculate_sum(

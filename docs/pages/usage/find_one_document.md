@@ -16,16 +16,18 @@ from pprint import pprint as pp
 
 class Phone(ScrubyModel):
     """Phone model."""
-    brand: str = Field(strict=True, frozen=True)
-    model: str = Field(strict=True, frozen=True)
-    screen_diagonal: float = Field(strict=True)
-    matrix_type: str = Field(strict=True)
+    brand: Annotated[str, Field(frozen=True)]
+    model: Annotated[str, Field(frozen=True)]
+    screen_diagonal: float
+    matrix_type: str
     # key is always at bottom
-    key: str = Field(
-        strict=True,
-        frozen=True,
-        default_factory=lambda data: f"{data['brand']}:{data['model']}",
-    )
+    key: Annotated[
+        str,
+        Field(
+            frozen=True,
+            default_factory=lambda data: f"{data['brand']}:{data['model']}",
+        ),
+    ]
 
 
 async def main() -> None:

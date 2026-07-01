@@ -1,7 +1,4 @@
-"""Meta.
-
-Metadata management.
-"""
+"""Metadata management."""
 
 from __future__ import annotations
 
