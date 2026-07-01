@@ -107,17 +107,19 @@ from scruby import Scruby, ScrubyModel
 
 class User(ScrubyModel):
     """User model."""
-    first_name: str = Field(strict=True)
-    last_name: str = Field(strict=True)
-    birthday: datetime = Field(strict=True)
-    email: EmailStr = Field(strict=True)
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
+    first_name: str
+    last_name: str
+    birthday: datetime
+    email: EmailStr
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164"), Field(strict=False)]
     # key is always at bottom
-    key: str = Field(
-        strict=True,
-        frozen=True,
-        default_factory=lambda data: data["phone"],
-    )
+    key: Annotated[
+        str,
+        Field(
+            frozen=True,
+            default_factory=lambda data: data["phone"],
+        ),
+    ]
 
 
 async def main() -> None:
@@ -185,22 +187,25 @@ The search effectiveness depends on the number of processor threads.
 """
 
 import anyio
+from typing import Annotated
 from pydantic import Field
 from scruby import ReturnType, Scruby, ScrubyModel
 
 
 class Phone(ScrubyModel):
     """Phone model."""
-    brand: str = Field(strict=True, frozen=True)
-    model: str = Field(strict=True, frozen=True)
-    screen_diagonal: float = Field(strict=True)
-    matrix_type: str = Field(strict=True)
+    brand: Annotated[str, Field(frozen=True)]
+    model: Annotated[str, Field(frozen=True)]
+    screen_diagonal: float
+    matrix_type: str
     # key is always at bottom
-    key: str = Field(
-        strict=True,
-        frozen=True,
-        default_factory=lambda data: f"{data['brand']}:{data['model']}",
-    )
+    key: Annotated[
+        str,
+        Field(
+            frozen=True,
+            default_factory=lambda data: f"{data['brand']}:{data['model']}",
+        ),
+    ]
 
 
 async def main() -> None:
@@ -268,16 +273,18 @@ from scruby import ReturnType, Scruby, ScrubyModel
 
 class Car(ScrubyModel):
     """Car model."""
-    brand: str = Field(strict=True, frozen=True)
-    model: str = Field(strict=True, frozen=True)
-    year: int = Field(strict=True)
-    power_reserve: int = Field(strict=True)
+    brand: Annotated[str, Field(frozen=True)]
+    model: Annotated[str, Field(frozen=True)]
+    year: int
+    power_reserve: int
     # key is always at bottom
-    key: str = Field(
-        strict=True,
-        frozen=True,
-        default_factory=lambda data: f"{data['brand']}:{data['model']}",
-    )
+    key: Annotated[
+        str,
+        Field(
+            frozen=True,
+            default_factory=lambda data: f"{data['brand']}:{data['model']}",
+        ),
+    ]
 
 
 async def main() -> None:
