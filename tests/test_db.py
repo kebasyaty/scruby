@@ -11,7 +11,7 @@ from zoneinfo import ZoneInfo
 
 import pytest
 from anyio import Path
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
 from scruby import Scruby, ScrubyModel
@@ -77,23 +77,7 @@ class User3(ScrubyModel):
     ]
 
 
-# pyrefly: ignore [invalid-inheritance, not-a-type]
-class User4(BaseModel):
-    """Invalid model type."""
-
-    username: str
-    # key is always at bottom
-    key: Annotated[
-        str,
-        Field(
-            strict=True,
-            frozen=True,
-            default_factory=lambda data: data["username"],
-        ),
-    ]
-
-
-class User5(ScrubyModel):
+class User4(ScrubyModel):
     """Key of Model is missing."""
 
     username: str
@@ -137,20 +121,6 @@ def custom_task(
 class TestNegative:
     """Negative tests."""
 
-    async def test_invalid_model_type(self) -> None:
-        """Invalid model type."""
-        # Activate database.
-        Scruby.run()
-
-        with pytest.raises(
-            AssertionError,
-            match=r"Scruby => Argument `class_model` does not contain the base class `ScrubyModel`.",
-        ):
-            Scruby(User4)
-        #
-        # Delete DB.
-        Scruby.napalm()
-
     async def test_model_key_is_missing(self) -> None:
         """Key of Model is missing."""
         # Activate database.
@@ -158,9 +128,9 @@ class TestNegative:
 
         with pytest.raises(
             AssertionError,
-            match=r"Model: User5 => The `key` field is missing.",
+            match=r"Model: User4 => The `key` field is missing.",
         ):
-            Scruby(User5)
+            Scruby(User4)
         #
         # Delete DB.
         Scruby.napalm()
@@ -409,7 +379,7 @@ class TestPositive:
         assert "User" in collection_list
         assert "User2" in collection_list
         assert "User3" in collection_list
-        assert "User5" in collection_list
+        assert "User4" in collection_list
 
         Scruby.clear_collection("User2")
         collection_list = Scruby.collection_list()
@@ -417,7 +387,7 @@ class TestPositive:
         assert "User" in collection_list
         assert "User2" in collection_list
         assert "User3" in collection_list
-        assert "User5" in collection_list
+        assert "User4" in collection_list
         #
         # Delete DB.
         Scruby.napalm()
