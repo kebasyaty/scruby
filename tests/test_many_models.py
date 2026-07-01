@@ -19,50 +19,56 @@ pytestmark = pytest.mark.asyncio(loop_scope="module")
 Scruby.napalm()
 
 
-class UserTest(ScrubyModel):
+class User(ScrubyModel):
     """User model."""
 
-    first_name: str = Field(strict=True)
-    last_name: str = Field(strict=True)
-    birthday: datetime = Field(strict=True)
-    email: EmailStr = Field(strict=True)
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164")] = Field(frozen=True)
+    first_name: str
+    last_name: str
+    birthday: datetime
+    email: EmailStr
+    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164"), Field(strict=False)]
     # key is always at bottom
-    key: str = Field(
-        strict=True,
-        frozen=True,
-        default_factory=lambda data: data["phone"],
-    )
+    key: Annotated[
+        str,
+        Field(
+            frozen=True,
+            default_factory=lambda data: data["phone"],
+        ),
+    ]
 
 
-class PhoneTest(ScrubyModel):
+class Phone(ScrubyModel):
     """Phone model."""
 
-    brand: str = Field(strict=True, frozen=True)
-    model: str = Field(strict=True, frozen=True)
-    screen_diagonal: float = Field(strict=True)
-    matrix_type: str = Field(strict=True)
+    brand: str = Field(frozen=True)
+    model: str = Field(frozen=True)
+    screen_diagonal: float
+    matrix_type: str
     # key is always at bottom
-    key: str = Field(
-        strict=True,
-        frozen=True,
-        default_factory=lambda data: f"{data['brand']}:{data['model']}",
-    )
+    key: Annotated[
+        str,
+        Field(
+            frozen=True,
+            default_factory=lambda data: f"{data['brand']}:{data['model']}",
+        ),
+    ]
 
 
-class CarTest(ScrubyModel):
+class Car(ScrubyModel):
     """Car model."""
 
-    brand: str = Field(strict=True, frozen=True)
-    model: str = Field(strict=True, frozen=True)
-    year: int = Field(strict=True)
-    power_reserve: int = Field(strict=True)
+    brand: str = Field(frozen=True)
+    model: str = Field(frozen=True)
+    year: int
+    power_reserve: int
     # key is always at bottom
-    key: str = Field(
-        strict=True,
-        frozen=True,
-        default_factory=lambda data: f"{data['brand']}:{data['model']}",
-    )
+    key: Annotated[
+        str,
+        Field(
+            frozen=True,
+            default_factory=lambda data: f"{data['brand']}:{data['model']}",
+        ),
+    ]
 
 
 # Activate database.
@@ -72,10 +78,10 @@ Scruby.run()
 async def test_user() -> None:
     """Test User 1."""
     # Get collection `User`.
-    user_coll = Scruby(UserTest)
+    user_coll = Scruby(User)
 
     # Create user.
-    user = UserTest(
+    user = User(
         first_name="John",
         last_name="Smith",
         birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
@@ -89,10 +95,10 @@ async def test_user() -> None:
 async def test_user_2() -> None:
     """Test User 2."""
     # Get collection `User`.
-    user_coll = Scruby(UserTest)
+    user_coll = Scruby(User)
 
     # Create user.
-    user = UserTest(
+    user = User(
         first_name="John_2",
         last_name="Smith_2",
         birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
@@ -106,10 +112,10 @@ async def test_user_2() -> None:
 async def test_phone() -> None:
     """Test Phone."""
     # Get collection `Phone`.
-    phone_coll = Scruby(PhoneTest)
+    phone_coll = Scruby(Phone)
 
     # Create phone.
-    phone = PhoneTest(
+    phone = Phone(
         brand="Samsung",
         model="Galaxy A26",
         screen_diagonal=6.7,
@@ -123,10 +129,10 @@ async def test_phone() -> None:
 async def test_car() -> None:
     """Test Car."""
     # Get collection `Car`.
-    car_coll = Scruby(CarTest)
+    car_coll = Scruby(Car)
 
     # Create car.
-    car = CarTest(
+    car = Car(
         brand="Mazda",
         model="EZ-6",
         year=2025,
