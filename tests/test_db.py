@@ -128,7 +128,7 @@ class TestNegative:
 
         with pytest.raises(
             AssertionError,
-            match=r"Model: User5 => The `key` field is missing.",
+            match=r"Model: User4 => The `key` field is missing.",
         ):
             Scruby(User4)
         #
@@ -379,7 +379,7 @@ class TestPositive:
         assert "User" in collection_list
         assert "User2" in collection_list
         assert "User3" in collection_list
-        assert "User5" in collection_list
+        assert "User4" in collection_list
 
         Scruby.clear_collection("User2")
         collection_list = Scruby.collection_list()
@@ -387,7 +387,7 @@ class TestPositive:
         assert "User" in collection_list
         assert "User2" in collection_list
         assert "User3" in collection_list
-        assert "User5" in collection_list
+        assert "User4" in collection_list
         #
         # Delete DB.
         Scruby.napalm()
