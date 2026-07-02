@@ -1,4 +1,4 @@
-"""Test heredity."""
+"""Test inheritance."""
 
 from __future__ import annotations
 
@@ -35,11 +35,13 @@ class UserInvalid(BaseModel):
 class User(ScrubyModel):
     """User model."""
 
+    username: str
     first_name: str
     last_name: str
     birthday: datetime
     email: EmailStr
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164"), Field(strict=False)]
+    is_archival: Annotated[bool, Field(title="This is an archival document?")]
     # key is always at bottom
     key: Annotated[
         str,
@@ -53,8 +55,9 @@ class User(ScrubyModel):
 class UserProfile(User):
     """User profile model."""
 
-    username: str
     profession: str
+    salary: int
+    hobby: str
 
 
 # Activate database.
