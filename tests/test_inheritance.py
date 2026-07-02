@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from enum import StrEnum
+from enum import StrEnum, auto
 from typing import Annotated
 
 import pytest
@@ -99,24 +99,24 @@ class Vehicle(BaseModel):
 class CarType(StrEnum):
     """Car classification."""
 
-    Sedan = "Sedan"
-    Liftback = "Liftback"
-    SUV = "SUV"
-    Hatchback = "Hatchback"
-    Coupe = "Coupe"
-    Convertible = "Convertible"
-    Pickup = "Pickup"
-    Minivan = "Minivan"
+    SEDAN = auto()
+    LIFTBACK = auto()
+    SUV = auto()
+    HATCHBACK = auto()
+    COUPE = "Coupe"
+    CONVERTIBLE = auto()
+    PICKUP = auto()
+    MINIVAN = auto()
 
 
 class MotorcycleType(StrEnum):
     """Motorcycle classification."""
 
-    Cruiser = "Cruiser"
-    Sportbike = "Sportbike"
-    Naked = "Naked"
-    Touring = "Touring"
-    Scooters = "Scooter"
+    CRUISER = auto()
+    SPORTBIKE = auto()
+    NAKED = auto()
+    TOURING = auto()
+    SCOOTERS = auto()
 
 
 class Car(ScrubyModel, Vehicle):
@@ -165,7 +165,7 @@ async def test_multiple_inheritance() -> None:
         model="EZ-6",
         year=2025,
         power_reserve=600,
-        type=CarType.Liftback,
+        type=CarType.LIFTBACK,
     )
     await car_coll.add_doc(car)
     car_details: Car | None = car_coll.find_one(
@@ -176,7 +176,8 @@ async def test_multiple_inheritance() -> None:
     assert car_details.model == "EZ-6"
     assert car_details.year == 2025
     assert car_details.power_reserve == 600
-    assert car_details.type == CarType.Liftback
+    assert car_details.type == CarType.LIFTBACK
+    assert car_details.type.value == "liftback"
     #
     # Motorcycle
     motorcycle_coll = Scruby(Motorcycle)
@@ -185,7 +186,7 @@ async def test_multiple_inheritance() -> None:
         model="V9",
         year=2025,
         power_reserve=100,
-        type=MotorcycleType.Sportbike,
+        type=MotorcycleType.SPORTBIKE,
     )
     await motorcycle_coll.add_doc(motorcycle)
     car_details: Car | None = motorcycle_coll.find_one(
@@ -196,7 +197,8 @@ async def test_multiple_inheritance() -> None:
     assert car_details.model == "V9"
     assert car_details.year == 2025
     assert car_details.power_reserve == 100
-    assert car_details.type == MotorcycleType.Sportbike
+    assert car_details.type == MotorcycleType.SPORTBIKE
+    assert car_details.type.value == "sportbike"
     #
     # Delete DB.
     Scruby.napalm()
