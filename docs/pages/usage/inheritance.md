@@ -4,7 +4,7 @@
 """Multiple inheritance."""
 
 import anyio
-from enum import StrEnum
+from enum import StrEnum, auto
 from typing import Annotated
 from pydantic import Field
 from scruby import Scruby, ScrubyModel
@@ -14,24 +14,24 @@ from pprint import pprint as pp
 class CarType(StrEnum):
     """Car classification."""
 
-    Sedan = "Sedan"
-    Liftback = "Liftback"
-    SUV = "SUV"
-    Hatchback = "Hatchback"
-    Coupe = "Coupe"
-    Convertible = "Convertible"
-    Pickup = "Pickup"
-    Minivan = "Minivan"
+    SEDAN = auto()
+    LIFTBACK = auto()
+    SUV = auto()
+    HATCHBACK = auto()
+    COUPE = "Coupe"
+    CONVERTIBLE = auto()
+    PICKUP = auto()
+    MINIVAN = auto()
 
 
 class MotorcycleType(StrEnum):
     """Motorcycle classification."""
 
-    Cruiser = "Cruiser"
-    Sportbike = "Sportbike"
-    Naked = "Naked"
-    Touring = "Touring"
-    Scooters = "Scooter"
+    CRUISER = auto()
+    SPORTBIKE = auto()
+    NAKED = auto()
+    TOURING = auto()
+    SCOOTERS = auto()
 
 
 class Vehicle(BaseModel):
@@ -89,10 +89,10 @@ async def main() -> None:
     )
 
     # Print to console
-    if phone_details is not None:
-        pp(phone_details)
+    if car_details is not None:
+        pp(car_details)
     else:
-        print("No Phone!")
+        print("No Car!")
 
     # Full database deletion.
     # Hint: The main purpose is tests.
