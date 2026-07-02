@@ -158,6 +158,7 @@ def test_indirect_inheritance_from_scruby_model() -> None:
 @pytest.mark.asyncio
 async def test_multiple_inheritance() -> None:
     """Multiple inheritance."""
+    # Car
     car_coll = Scruby(Car)
     car = Car(
         brand="Mazda",
@@ -177,6 +178,7 @@ async def test_multiple_inheritance() -> None:
     assert car_details.power_reserve == 600
     assert car_details.type == CarType.Liftback
     #
+    # Motorcycle
     motorcycle_coll = Scruby(Motorcycle)
     motorcycle = Motorcycle(
         brand="Wuxi Jose Electric",
