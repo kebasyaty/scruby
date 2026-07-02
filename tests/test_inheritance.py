@@ -103,7 +103,7 @@ class CarType(StrEnum):
     LIFTBACK = auto()
     SUV = auto()
     HATCHBACK = auto()
-    COUPE = "Coupe"
+    COUPE = auto()
     CONVERTIBLE = auto()
     PICKUP = auto()
     MINIVAN = auto()
