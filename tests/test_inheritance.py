@@ -59,7 +59,7 @@ class User(ScrubyModel):
     ]
 
 
-class UserProfile(User):
+class InvalidUserProfile(User):
     """User profile model."""
 
     profession: str
@@ -88,7 +88,7 @@ def test_indirect_inheritance_from_scruby_model() -> None:
         match=r"Scruby => Argument `class_model` does not contain the base class `ScrubyModel`.",
     ):
         # Access a user's profile collection
-        Scruby(UserProfile)
+        Scruby(InvalidUserProfile)
     #
     # Delete DB.
     Scruby.napalm()
