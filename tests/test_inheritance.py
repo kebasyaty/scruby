@@ -17,7 +17,7 @@ Scruby.napalm()
 
 
 # pyrefly: ignore [invalid-inheritance, not-a-type]
-class UserInvalid(BaseModel):
+class InvalidModel(BaseModel):
     """Invalid model type."""
 
     username: str
@@ -40,8 +40,15 @@ class User(ScrubyModel):
     last_name: str
     birthday: datetime
     email: EmailStr
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164"), Field(strict=False)]
-    is_archival: Annotated[bool, Field(title="This is an archival document?")]
+    phone: Annotated[
+        PhoneNumber,
+        PhoneNumberValidator(number_format="E164"),
+        Field(strict=False),
+    ]
+    is_archival: Annotated[
+        bool,
+        Field(title="This is an archival document?", default=False),
+    ]
     # key is always at bottom
     key: Annotated[
         str,
@@ -71,7 +78,7 @@ def test_inheritance_from_base_model() -> None:
         match=r"Scruby => Argument `class_model` does not contain the base class `ScrubyModel`.",
     ):
         # Access a user's profile collection
-        Scruby(UserInvalid)
+        Scruby(InvalidModel)
 
 
 def test_indirect_inheritance_from_scruby_model() -> None:
