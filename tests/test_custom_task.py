@@ -95,7 +95,7 @@ def salary_info(
         result["sum_salaries"] = sum_salaries.get()
         result["count_sellers"] = count_sellers
         result["salesman_list"] = salesman_list
-    return result if count_sellers > 0 else None
+    return result or None
 
 
 async def test_run_custom_task() -> None:
