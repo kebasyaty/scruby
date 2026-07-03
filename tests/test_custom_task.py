@@ -53,7 +53,7 @@ def salary_info(
 ) -> dict[str, Any] | None:
     """Custom task.
 
-    Calculate the maximum and minimum salaries for sales peoples.
+    Get information about sales salaries.
 
     The result should be the fields:
     `max_salary`, `min_salary`, `average_salary`, `sum_salaries`, `count_sellers`, and `salesman_list`.
