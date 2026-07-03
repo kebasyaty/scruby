@@ -143,9 +143,6 @@ if __name__ == "__main__":
 ```py title="main.py" linenums="1"
 """Run a salary_info_as_json custom task.
 
-Additionally install:
-uv add orjson
-
 This method running a task created on the basis of a quantum loop.
 Effectiveness running task depends on the number of processor threads.
 """
