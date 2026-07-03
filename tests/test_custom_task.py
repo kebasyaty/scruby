@@ -26,6 +26,7 @@ Scruby.napalm()
 class Salesman(ScrubyModel):
     """Salesman model."""
 
+    username: str
     first_name: str
     last_name: str
     birthday: datetime
@@ -37,7 +38,7 @@ class Salesman(ScrubyModel):
         str,
         Field(
             frozen=True,
-            default_factory=lambda data: data["phone"],
+            default_factory=lambda data: data["username"],
         ),
     ]
 
@@ -107,6 +108,7 @@ async def test_run_custom_task() -> None:
 
     for num in range(1, 10):
         user = Salesman(
+            username=f"salesman_{num}",
             first_name="John",
             last_name="Smith",
             birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
