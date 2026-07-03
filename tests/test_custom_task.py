@@ -38,7 +38,7 @@ class Salesman(ScrubyModel):
         str,
         Field(
             frozen=True,
-            default_factory=lambda data: data["username"],
+            default_factory=lambda data: data["phone"],
         ),
     ]
 
