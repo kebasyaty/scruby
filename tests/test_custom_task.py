@@ -104,10 +104,12 @@ async def test_run_custom_task() -> None:
     # Activate database.
     Scruby.run()
 
-    user_coll = Scruby(Salesman)
+    # Get collection `Salesman`
+    salesman_coll = Scruby(Salesman)
 
+    # Create sellers
     for num in range(1, 10):
-        user = Salesman(
+        salesman = Salesman(
             username=f"salesman_{num}",
             first_name="John",
             last_name="Smith",
@@ -116,12 +118,15 @@ async def test_run_custom_task() -> None:
             phone=f"+44798612345{num}",
             salary=num,
         )
-        await user_coll.add_doc(user)
+        await salesman_coll.add_doc(salesman)
 
-    result: dict[str, Any] | None = user_coll.run_custom_task(
+    # Get salary information for sellers named John
+    result: dict[str, Any] | None = salesman_coll.run_custom_task(
         custom_task_fn=salary_info,
         filter_fn=lambda doc: doc.first_name == "John",
     )
+
+    # Check
     assert result is not None
     assert result["max_salary"] == 9
     assert result["min_salary"] == 1
