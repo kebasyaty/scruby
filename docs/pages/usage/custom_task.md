@@ -17,16 +17,20 @@ from collections.abc import Callable
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 from scruby import Scruby, ScrubyModel
-from scruby.aggregation import Counter
+from scruby.aggregation import Average, Max, Min, Sum
+from pprint import pprint as pp
 
 
-class User(ScrubyModel):
-    """User model."""
+class Salesman(ScrubyModel):
+    """Salesman model."""
+
+    username: str
     first_name: str
     last_name: str
     birthday: datetime
     email: EmailStr
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164"), Field(strict=False)]
+    salary: int
     # key is always at bottom
     key: Annotated[
         str,
@@ -37,7 +41,7 @@ class User(ScrubyModel):
     ]
 
 
-def task_counter(
+def salary_info(
     search_task_fn: Callable,
     filter_fn: Callable,
     hash_reduce_left: int,
@@ -45,15 +49,20 @@ def task_counter(
     class_model: Any,
     max_workers: int | None,
     stop_signal: Event,
-    limit_docs: int = 1000,  # custom parameter
-) -> list[User]:
+) -> dict[str, Any] | None:
     """Custom task.
 
-    This task implements a counter of documents.
+    Get information about sales salaries.
+
+    The result should be the fields:
+    `max_salary`, `min_salary`, `average_salary`, `sum_salaries`, `count_sellers`, and `salesman_list`.
     """
-    stop_outer_loop: bool = False
-    counter = Counter(limit=limit_docs)  # `limit` by default = 1000
-    users: list[User] = []
+    max_salary = Max()
+    min_salary = Min()
+    average_salary = Average()
+    sum_salaries = Sum()
+    salesman_list: list[Any] = []
+    result: dict[str, Any] = {}
     # Run quantum loop
     with ThreadPoolExecutor(max_workers) as executor:
         futures: list[Future] = [
@@ -71,46 +80,52 @@ def task_counter(
             docs = future.result()
             if docs is not None:
                 for doc in docs:
-                    if counter.check():
-                        # Cancel all pending tasks in the queue instantly
-                        executor.shutdown(wait=False, cancel_futures=True)
-                        # Trigger the event to tell running tasks to exit
-                        stop_signal.set()
-                        # Stop loops
-                        stop_outer_loop = True
-                        break
-                    users.append(doc)
-                    counter.next()
-            if stop_outer_loop:
-                break
-    return users
+                    max_salary.set(doc.salary)
+                    min_salary.set(doc.salary)
+                    average_salary.set(doc.salary)
+                    sum_salaries.set(doc.salary)
+                    salesman_list.append(doc)
+    # Return
+    count_sellers = len(salesman_list)
+    if count_sellers > 0:
+        result["max_salary"] = max_salary.get()
+        result["min_salary"] = min_salary.get()
+        result["average_salary"] = float(average_salary.get())
+        result["sum_salaries"] = sum_salaries.get()
+        result["count_sellers"] = count_sellers
+        result["salesman_list"] = salesman_list
+    return result or None
 
 
 async def main() -> None:
     """Example."""
-    # Activate database.
+    # Activate database
     Scruby.run()
 
-    # Get collection `User`.
-    user_coll = Scruby(User)
+    # Get collection `Salesman`
+    salesman_coll = Scruby(Salesman)
 
-    # Create users.
+    # Create sellers
     for num in range(1, 10):
-        user = User(
+        salesman = Salesman(
+            username=f"salesman_{num}",
             first_name="John",
             last_name="Smith",
             birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
         )
-        await user_coll.add_doc(user)
+        await salesman_coll.add_doc(salesman)
 
-    result = user_coll.run_custom_task(
-        custom_task_fn=task_counter,
+    # Get salary information for sellers named John
+    result: dict[str, Any] | None = salesman_coll.run_custom_task(
+        custom_task_fn=salary_info,
         filter_fn=lambda doc: doc.first_name == "John",
-        limit_docs=5,  # custom parameter
     )
-    print(result)  # => 9
+    if result is not None
+        pp(result)
+    else:
+        print("No sellers named John")
 
     # Full database deletion.
     # Hint: The main purpose is tests.
