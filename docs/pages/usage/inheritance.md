@@ -77,7 +77,7 @@ async def main() -> None:
         model="EZ-6",
         year=2025,
         power_reserve=600,
-        type=CarType.Liftback,
+        type=CarType.LIFTBACK,
     )
 
     # Add car to collection

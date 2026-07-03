@@ -1,24 +1,27 @@
-#### Run a salary_info custom task
+"""Test."""
 
-```py title="main.py" linenums="1"
-"""Run a salary_info custom task.
+from __future__ import annotations
 
-This method running a task created on the basis of a quantum loop.
-Effectiveness running task depends on the number of processor threads.
-"""
-
-import anyio
-from datetime import datetime
-from zoneinfo import ZoneInfo
+from collections.abc import Callable
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed
+from datetime import datetime
 from threading import Event
 from typing import Annotated, Any
-from collections.abc import Callable
+from zoneinfo import ZoneInfo
+
+import orjson
+import pytest
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
+
 from scruby import Scruby, ScrubyModel
 from scruby.aggregation import Average, Max, Min, Sum
-from pprint import pprint as pp
+
+pytestmark = pytest.mark.asyncio(loop_scope="module")
+
+# Delete DB.
+# Hint: If the previous test failed and the database remains.
+Scruby.napalm()
 
 
 class Salesman(ScrubyModel):
@@ -98,93 +101,6 @@ def salary_info(
     return result or None
 
 
-async def main() -> None:
-    """Example."""
-    # Activate database
-    Scruby.run()
-
-    # Get collection `Salesman`
-    salesman_coll = Scruby(Salesman)
-
-    # Create sellers
-    for num in range(1, 10):
-        salesman = Salesman(
-            username=f"salesman_{num}",
-            first_name="John",
-            last_name="Smith",
-            birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
-            email=f"John_Smith_{num}@gmail.com",
-            phone=f"+44798612345{num}",
-        )
-        await salesman_coll.add_doc(salesman)
-
-    # Get salary information for sellers named John
-    result: dict[str, Any] | None = salesman_coll.run_custom_task(
-        custom_task_fn=salary_info,
-        filter_fn=lambda doc: doc.first_name == "John",
-    )
-    # Print to console
-    if result is not None
-        pp(result)
-    else:
-        print("No sellers named John")
-
-    # Full database deletion.
-    # Hint: The main purpose is tests.
-    Scruby.napalm()
-
-
-if __name__ == "__main__":
-    anyio.run(main)
-```
-
-#### Run a salary_info_as_json custom task
-
-```py title="main.py" linenums="1"
-"""Run a salary_info_as_json custom task.
-
-Additionally install:
-uv add orjson
-
-This method running a task created on the basis of a quantum loop.
-Effectiveness running task depends on the number of processor threads.
-"""
-
-import anyio
-import orjson
-from datetime import datetime
-from zoneinfo import ZoneInfo
-from concurrent.futures import Future, ThreadPoolExecutor, as_completed
-from threading import Event
-from typing import Annotated, Any
-from collections.abc import Callable
-from pydantic import EmailStr, Field
-from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
-from scruby import Scruby, ScrubyModel
-from scruby.aggregation import Average, Max, Min, Sum
-from pprint import pprint as pp
-
-
-class Salesman(ScrubyModel):
-    """Salesman model."""
-
-    username: str
-    first_name: str
-    last_name: str
-    birthday: datetime
-    email: EmailStr
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164"), Field(strict=False)]
-    salary: int
-    # key is always at bottom
-    key: Annotated[
-        str,
-        Field(
-            frozen=True,
-            default_factory=lambda data: data["phone"],
-        ),
-    ]
-
-
 def salary_info_as_json(
     search_task_fn: Callable,
     filter_fn: Callable,
@@ -244,9 +160,9 @@ def salary_info_as_json(
     return result_json if count_sellers > 0 else None
 
 
-async def main() -> None:
-    """Example."""
-    # Activate database
+async def test_salary_info() -> None:
+    """Test a salary_info custom task."""
+    # Activate database.
     Scruby.run()
 
     # Get collection `Salesman`
@@ -261,26 +177,68 @@ async def main() -> None:
             birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
             email=f"John_Smith_{num}@gmail.com",
             phone=f"+44798612345{num}",
+            salary=num,
+        )
+        await salesman_coll.add_doc(salesman)
+
+    # Get salary information for sellers named John
+    result: dict[str, Any] | None = salesman_coll.run_custom_task(
+        custom_task_fn=salary_info,
+        filter_fn=lambda doc: doc.first_name == "John",
+    )
+
+    # Check
+    assert result is not None
+    assert result["max_salary"] == 9
+    assert result["min_salary"] == 1
+    assert result["average_salary"] == pytest.approx(5.0)
+    assert result["sum_salaries"] == 45
+    assert result["count_sellers"] == 9
+    assert isinstance(result["salesman_list"][0], Salesman)
+    #
+    # Delete DB.
+    Scruby.napalm()
+
+
+async def test_salary_info_as_json() -> None:
+    """Test a salary_info_as_json custom task."""
+    # Activate database.
+    Scruby.run()
+
+    # Get collection `Salesman`
+    salesman_coll = Scruby(Salesman)
+
+    # Create sellers
+    for num in range(1, 10):
+        salesman = Salesman(
+            username=f"salesman_{num}",
+            first_name="John",
+            last_name="Smith",
+            birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
+            email=f"John_Smith_{num}@gmail.com",
+            phone=f"+44798612345{num}",
+            salary=num,
         )
         await salesman_coll.add_doc(salesman)
 
     # Get salary information for sellers named John
     result_json: str | None = salesman_coll.run_custom_task(
-        custom_task_fn=salary_info,
+        custom_task_fn=salary_info_as_json,
         filter_fn=lambda doc: doc.first_name == "John",
     )
-    # Print to console
-    if result is not None
-        result = orjson.loads(result_json)
-        pp(result)
-    else:
-        print("No sellers named John")
 
-    # Full database deletion.
-    # Hint: The main purpose is tests.
+    # Check
+    assert result_json is not None
+    assert isinstance(result_json, str)
+    #
+    result = orjson.loads(result_json)
+    #
+    assert result["max_salary"] == 9
+    assert result["min_salary"] == 1
+    assert result["average_salary"] == pytest.approx(5.0)
+    assert result["sum_salaries"] == 45
+    assert result["count_sellers"] == 9
+    assert isinstance(result["salesman_list"][0], dict)
+    #
+    # Delete DB.
     Scruby.napalm()
-
-
-if __name__ == "__main__":
-    anyio.run(main)
-```

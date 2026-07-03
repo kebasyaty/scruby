@@ -2,11 +2,8 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
-from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from datetime import datetime
-from threading import Event
-from typing import Annotated, Any
+from typing import Annotated
 from zoneinfo import ZoneInfo
 
 import pytest
@@ -81,41 +78,6 @@ class User4(ScrubyModel):
     """Key of Model is missing."""
 
     username: str
-
-
-def custom_task(
-    search_task_fn: Callable,
-    filter_fn: Callable,
-    hash_reduce_left: int,
-    branch_numbers: range,
-    class_model: Any,
-    max_workers: int | None,
-    stop_signal: Event,
-) -> Any:
-    """Custom task.
-
-    Calculate the number of users named John.
-    """
-    counter: int = 0
-    # Run quantum loop
-    with ThreadPoolExecutor(max_workers) as executor:
-        futures: list[Future] = [
-            executor.submit(
-                search_task_fn,
-                filter_fn,
-                hash_reduce_left,
-                branch_number,
-                class_model,
-                stop_signal,
-            )
-            for branch_number in branch_numbers
-        ]
-        for future in as_completed(futures):
-            docs = future.result()
-            if docs is not None:
-                for _ in docs:
-                    counter += 1
-    return counter
 
 
 class TestNegative:
@@ -718,32 +680,6 @@ class TestPositive:
             filter_fn=lambda _: True,
         )
         assert result == 7
-        #
-        # Delete DB.
-        Scruby.napalm()
-
-    async def test_run_custom_task(self) -> None:
-        """Test a run_custom_task method."""
-        # Activate database.
-        Scruby.run()
-
-        user_coll = Scruby(User)
-
-        for num in range(1, 10):
-            user = User(
-                first_name="John",
-                last_name="Smith",
-                birthday=datetime(1970, 1, num, tzinfo=ZoneInfo("UTC")),
-                email=f"John_Smith_{num}@gmail.com",
-                phone=f"+44798612345{num}",
-            )
-            await user_coll.add_doc(user)
-
-        result = user_coll.run_custom_task(
-            custom_task_fn=custom_task,
-            filter_fn=lambda doc: doc.first_name == "John",
-        )
-        assert result == 9
         #
         # Delete DB.
         Scruby.napalm()
