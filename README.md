@@ -133,7 +133,7 @@ async def main() -> None:
 
     # Create user
     user = User(
-        username=f"user_1",
+        username="user_1",
         first_name="John",
         last_name="Smith",
         birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
