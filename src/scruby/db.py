@@ -9,6 +9,7 @@ from __future__ import annotations
 __all__ = ("Scruby",)
 
 import contextlib
+import logging
 import re
 import zlib
 from shutil import rmtree
@@ -196,6 +197,8 @@ class Scruby(
         Returns:
             None.
         """
+        logging.info("Start database activation")
+
         subclasses: list[Any] = ScrubyModel.__subclasses__()
 
         if __debug__:
@@ -214,10 +217,15 @@ class Scruby(
         ScrubyConfig.max_workers = max_workers
         ScrubyConfig.plugins = plugins
         ScrubyConfig.mode = mode
+
+        logging.info("Initializing Configuration Parameters")
         ScrubyConfig.init_params()
+        logging.info("Checking the HASH_REDUCE_LEFT parameter")
         ScrubyConfig.check_hash_reduce_left()
+        logging.info("Start database migration")
         Migration.run(db_root, subclasses, mode=mode)
 
+        logging.info("Add metadata to new collections")
         max_number_branch = ScrubyConfig.MAX_NUMBER_BRANCH
         for subclass in subclasses:
             Metadata.create(
@@ -228,4 +236,10 @@ class Scruby(
                 mode,
             )
 
-        DocCache.load_cache(subclasses)
+        if ScrubyConfig.HASH_REDUCE_LEFT > 0:
+            logging.info("Load data into cache")
+            DocCache.load_cache(subclasses)
+        else:
+            logging.info("Skip data caching for HASH_REDUCE_LEFT = 0")
+
+        logging.info("Database activated")
