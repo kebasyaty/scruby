@@ -11,7 +11,7 @@ from anyio import Path
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyModel
+from scruby import ReturnType, Scruby, ScrubyModel
 from scruby.errors import (
     KeyAlreadyExistsError,
     KeyNotExistsError,
@@ -553,6 +553,30 @@ class TestPositive:
             filter_fn=lambda doc: doc.first_name == "???",
         )
         assert result_3 is None
+
+        # include fields
+        result_dict: dict | None = user_coll.find_one(
+            filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com",
+            include_fields={"email", "phone"},
+            return_type=ReturnType.DICT,
+        )
+        assert result_dict is not None
+        assert isinstance(result_dict, dict)
+        assert len(result_dict) == 2
+        assert result_dict["email"] == "John_Smith_5@gmail.com"
+        assert result_dict["phone"] == "+447986123455"
+
+        # exclude fields
+        result_dict: dict | None = user_coll.find_one(
+            filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com",
+            exclude_fields={"key", "created_at", "updated_at", "first_name", "last_name", "birthday"},
+            return_type=ReturnType.DICT,
+        )
+        assert result_dict is not None
+        assert isinstance(result_dict, dict)
+        assert len(result_dict) == 2
+        assert result_dict["email"] == "John_Smith_5@gmail.com"
+        assert result_dict["phone"] == "+447986123455"
         #
         # Delete DB.
         Scruby.napalm()
@@ -611,6 +635,30 @@ class TestPositive:
             filter_fn=lambda doc: doc.last_name == "???",
         )
         assert result_5 is None
+
+        # include fields
+        result_dict: list[User] | str | None = user_coll.find_many(
+            filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com",
+            include_fields={"email", "phone"},
+            return_type=ReturnType.DICT,
+        )
+        assert result_dict is not None
+        assert isinstance(result_dict[0], dict)
+        assert len(result_dict[0]) == 2
+        assert result_dict[0]["email"] == "John_Smith_5@gmail.com"
+        assert result_dict[0]["phone"] == "+447986123455"
+
+        # exclude fields
+        result_dict: list[User] | str | None = user_coll.find_many(
+            filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com",
+            exclude_fields={"key", "created_at", "updated_at", "first_name", "last_name", "birthday"},
+            return_type=ReturnType.DICT,
+        )
+        assert result_dict is not None
+        assert isinstance(result_dict[0], dict)
+        assert len(result_dict[0]) == 2
+        assert result_dict[0]["email"] == "John_Smith_5@gmail.com"
+        assert result_dict[0]["phone"] == "+447986123455"
         #
         # Delete DB.
         Scruby.napalm()
