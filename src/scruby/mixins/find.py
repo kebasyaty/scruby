@@ -82,6 +82,8 @@ class Find:
     def find_one(
         self,
         filter_fn: Callable,
+        include_fields: set[str] | None = None,
+        exclude_fields: set[str] | None = None,
         return_type: ReturnType = ReturnType.MODEL,
     ) -> Any | None:
         """Synchronous method for find one document matching the filter.
@@ -92,6 +94,10 @@ class Find:
 
         Args:
             filter_fn (Callable): A function that execute the conditions of filtering.
+            include_fields: (set[str] | None): A set of fields to include in the output.
+                                               Available for `ReturnType.JSON` and `ReturnType.DICT`.
+            exclude_fields: (set[str] | None): A set of fields to exclude from the output.
+                                               Available for `ReturnType.JSON` and `ReturnType.DICT`.
             return_type (ReturnType): ScrubyModel, JSON-string or Dictionary.
 
         Returns:
@@ -101,6 +107,7 @@ class Find:
         hash_reduce_left: int = self._hash_reduce_left
         assert hash_reduce_left != 0, "Scruby.run(hash_reduce_left = 0) - Not valid for `find_one` method."
 
+        model_dump_kwargs = {"include": include_fields, "exclude": exclude_fields}
         search_task_fn: Callable = self._task_find
         branch_numbers: range = range(self._max_number_branch)
         class_model: Any = self._class_model
@@ -136,9 +143,9 @@ class Find:
             case 1:
                 return doc
             case 2:
-                return doc.model_dump_json() if doc is not None else None
+                return doc.model_dump_json(**model_dump_kwargs) if doc is not None else None
             case 3:
-                return doc.model_dump() if doc is not None else None
+                return doc.model_dump(**model_dump_kwargs) if doc is not None else None
             case _ as unreachable:
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
@@ -150,6 +157,8 @@ class Find:
         page_number: int = 1,
         sort_fn: Callable | None = lambda doc: doc.created_at,
         sort_reverse: bool = True,
+        include_fields: set[str] | None = None,
+        exclude_fields: set[str] | None = None,
         return_type: ReturnType = ReturnType.MODEL,
     ) -> list[Any] | str | None:
         """Synchronous method for find many documents matching the filter.
@@ -170,6 +179,10 @@ class Find:
                                        By default, documents are sorted by creation date.
             sort_reverse: (bool): Sorting direction.
                                   By default, sort descending (newest to oldest).
+            include_fields: (set[str] | None): A set of fields to include in the output.
+                                               Available for `ReturnType.JSON` and `ReturnType.DICT`.
+            exclude_fields: (set[str] | None): A set of fields to exclude from the output.
+                                               Available for `ReturnType.JSON` and `ReturnType.DICT`.
             return_type (ReturnType): ScrubyModel, JSON-string or Dictionary.
 
         Returns:
@@ -186,6 +199,7 @@ class Find:
         hash_reduce_left: int = self._hash_reduce_left
         assert hash_reduce_left != 0, "Scruby.run(hash_reduce_left = 0) - Not valid for `find_many` method."
 
+        model_dump_kwargs = {"include": include_fields, "exclude": exclude_fields}
         search_task_fn: Callable = self._task_find
         branch_numbers: range = range(self._max_number_branch)
         class_model: Any = self._class_model
@@ -235,8 +249,12 @@ class Find:
             case 1:
                 return result or None
             case 2:
-                return f"[{','.join([doc.model_dump_json() for doc in result])}]" if result is not None else None
+                return (
+                    f"[{','.join([doc.model_dump_json(**model_dump_kwargs) for doc in result])}]"
+                    if result is not None
+                    else None
+                )
             case 3:
-                return [doc.model_dump() for doc in result] if result is not None else None
+                return [doc.model_dump(**model_dump_kwargs) for doc in result] if result is not None else None
             case _ as unreachable:
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
