@@ -19,7 +19,7 @@ from scruby.cache import DocCache
 
 
 class ReturnType(Enum):
-    """Return type.
+    """Return type for a find_one and find_many methods.
 
     Members:
         - `MODEL:` ScrubyModel type.
