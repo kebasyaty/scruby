@@ -197,7 +197,8 @@ class Scruby(
         Returns:
             None.
         """
-        logging.info("Scruby - Start database activation")
+        logger = logging.getLogger("Scruby.run()")
+        logger.info("Start database activation")
 
         subclasses: list[Any] = ScrubyModel.__subclasses__()
 
@@ -218,14 +219,14 @@ class Scruby(
         ScrubyConfig.plugins = plugins
         ScrubyConfig.mode = mode
 
-        logging.info("Scruby - Initializing Configuration Parameters")
+        logger.info("Initializing Configuration Parameters")
         ScrubyConfig.init_params()
-        logging.info("Scruby - Checking the HASH_REDUCE_LEFT parameter")
+        logger.info("Checking the HASH_REDUCE_LEFT parameter")
         ScrubyConfig.check_hash_reduce_left()
-        logging.info("Scruby - Start database migration")
+        logger.info("Start database migration")
         Migration.run(db_root, subclasses, mode=mode)
 
-        logging.info("Scruby - Add metadata to new collections")
+        logger.info("Add metadata to new collections")
         max_number_branch = ScrubyConfig.MAX_NUMBER_BRANCH
         for subclass in subclasses:
             Metadata.create(
@@ -237,9 +238,9 @@ class Scruby(
             )
 
         if ScrubyConfig.HASH_REDUCE_LEFT > 0:
-            logging.info("Scruby - Load data into cache")
+            logger.info("Load data into cache")
             DocCache.load_cache(subclasses)
         else:
-            logging.info("Scruby - Skip data caching for HASH_REDUCE_LEFT = 0")
+            logger.info("Skip data caching for HASH_REDUCE_LEFT = 0")
 
-        logging.info("Scruby - Database activated")
+        logger.info("Database activated")
