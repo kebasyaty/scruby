@@ -3,6 +3,7 @@
 The module contains the following classes:
 
 - `ScrubyModel` - A base class for creating Scruby models.
+- `CryptModel` - Add password support to the Scruby model.
 """
 
 from __future__ import annotations
@@ -59,7 +60,6 @@ class CryptModel(BaseModel):
 
         Uses the bcrypt library.
         """
-        assert isinstance(value, (str, SecretStr)), "Valid type: str | SecretStr"
         # Extract the plain text string regardless of input format
         plain_password = value.get_secret_value() if isinstance(value, SecretStr) else value
         # Securely hash using bcrypt
@@ -74,6 +74,7 @@ class CryptModel(BaseModel):
 
         Uses the bcrypt library.
         """
+        assert isinstance(value, (str, SecretStr)), "Valid type: str | SecretStr"
         hashed_db_string = self.hash_raw_password(value)
         # To temporarily bypass the `frozen=True` limitation
         setattr(self, "password", hashed_db_string.encode("utf-8"))  # noqa: B010
@@ -87,3 +88,15 @@ class CryptModel(BaseModel):
         assert isinstance(value, (str, SecretStr)), "Valid type: str | SecretStr"
         value_hashed = self.hash_raw_password(value)
         return bcrypt.checkpw(value_hashed.encode("utf-8"), self.password.encode("utf-8"))
+
+    def update_password(
+        self,
+        old_password: str | SecretStr,
+        new_password: str | SecretStr,
+    ) -> None:
+        """???"""
+        assert isinstance(old_password, (str, SecretStr)), "Valid type: str | SecretStr"
+        assert isinstance(new_password, (str, SecretStr)), "Valid type: str | SecretStr"
+        if not self.password_is_valid(old_password):
+            raise ValueError("Old password doesn't match")
+        self.set_password(new_password)
