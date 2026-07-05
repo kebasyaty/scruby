@@ -101,10 +101,12 @@ class CryptModel(BaseModel):
         assert isinstance(old_password, (str, SecretStr)), "Valid type: str | SecretStr"
         assert isinstance(new_password, (str, SecretStr)), "Valid type: str | SecretStr"
         #
-        #
+        # Throw an exception if the current password is missing
         if self.password is None:
             msg = "The current password cannot be updated because it is missing"
             raise ValueError(msg)
+        # Throw an exception if the old password does not match the current one
         if not self.password_is_valid(old_password):
             raise ValueError("Old password doesn't match")
+        # Replace the current password with a new one
         self.set_password(new_password)
