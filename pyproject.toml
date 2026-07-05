@@ -121,6 +121,10 @@ missing-attribute = false
 
 [tool.pytest]
 addopts = ["--strict-markers"]
+log_cli = true
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+log_cli_format = "%(levelname)s  %(name)s:%(filename)s:%(lineno)s %(message)s"
+log_cli_level = "DEBUG"
 testpaths = ["tests"]
 
 [tool.ruff]
