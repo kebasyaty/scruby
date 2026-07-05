@@ -60,6 +60,12 @@ class CryptModel(BaseModel):
         """Takes a string and converts it to a hash.
 
         Uses the bcrypt library.
+
+        Args:
+            value (str | SecretStr): User password.
+
+        Returns:
+            Secure hash string.
         """
         # Extract the plain text string regardless of input format
         plain_password = value.get_secret_value() if isinstance(value, SecretStr) else value
@@ -74,6 +80,12 @@ class CryptModel(BaseModel):
         """Converts the value to a hash and adds it to the password field.
 
         Uses the bcrypt library.
+
+        Args:
+            value (str | SecretStr): User password.
+
+        Returns:
+            None
         """
         assert isinstance(value, (str, SecretStr)), "Valid type: str | SecretStr"
         #
@@ -86,6 +98,12 @@ class CryptModel(BaseModel):
 
         Takes some password and matches it with an existing one.
         Can be used to verify a login attempt.
+
+        Args:
+            value (str | SecretStr): User password.
+
+        Returns:
+            True if the passwords are the same and False if they are not the same.
         """
         assert isinstance(value, (str, SecretStr)), "Valid type: str | SecretStr"
         #
@@ -97,7 +115,19 @@ class CryptModel(BaseModel):
         old_password: str | SecretStr,
         new_password: str | SecretStr,
     ) -> None:
-        """Update existing password."""
+        """Update existing password.
+
+        Args:
+            old_password (str | SecretStr): Old user password.
+            new_password (str | SecretStr): New user password.
+
+        Returns:
+            None
+
+        Raises:
+            ValueError: If the current password cannot be updated because it is missing.
+            ValueError: If the old password does not match the current one.
+        """
         assert isinstance(old_password, (str, SecretStr)), "Valid type: str | SecretStr"
         assert isinstance(new_password, (str, SecretStr)), "Valid type: str | SecretStr"
         #
