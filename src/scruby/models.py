@@ -46,10 +46,11 @@ class CryptModel(BaseModel):
     """
 
     password: Annotated[
-        str,
+        str | None,
         Field(
             title="Password",
             frozen=True,
+            default=None,
             min_length=8,
             max_length=256,
         ),
@@ -100,6 +101,10 @@ class CryptModel(BaseModel):
         assert isinstance(old_password, (str, SecretStr)), "Valid type: str | SecretStr"
         assert isinstance(new_password, (str, SecretStr)), "Valid type: str | SecretStr"
         #
+        #
+        if self.password is None:
+            msg = "The current password cannot be updated because it is missing"
+            raise ValueError(msg)
         if not self.password_is_valid(old_password):
             raise ValueError("Old password doesn't match")
         self.set_password(new_password)
