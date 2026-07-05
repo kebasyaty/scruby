@@ -75,6 +75,7 @@ class CryptModel(BaseModel):
         Uses the bcrypt library.
         """
         assert isinstance(value, (str, SecretStr)), "Valid type: str | SecretStr"
+        #
         hashed_db_string = self.hash_raw_password(value)
         # To temporarily bypass the `frozen=True` limitation
         setattr(self, "password", hashed_db_string.encode("utf-8"))  # noqa: B010
@@ -86,6 +87,7 @@ class CryptModel(BaseModel):
         Can be used to verify a login attempt.
         """
         assert isinstance(value, (str, SecretStr)), "Valid type: str | SecretStr"
+        #
         value_hashed = self.hash_raw_password(value)
         return bcrypt.checkpw(value_hashed.encode("utf-8"), self.password.encode("utf-8"))
 
@@ -97,6 +99,7 @@ class CryptModel(BaseModel):
         """Update existing password."""
         assert isinstance(old_password, (str, SecretStr)), "Valid type: str | SecretStr"
         assert isinstance(new_password, (str, SecretStr)), "Valid type: str | SecretStr"
+        #
         if not self.password_is_valid(old_password):
             raise ValueError("Old password doesn't match")
         self.set_password(new_password)
