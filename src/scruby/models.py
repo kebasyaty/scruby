@@ -94,7 +94,7 @@ class CryptModel(BaseModel):
         old_password: str | SecretStr,
         new_password: str | SecretStr,
     ) -> None:
-        """???"""
+        """Update existing password."""
         assert isinstance(old_password, (str, SecretStr)), "Valid type: str | SecretStr"
         assert isinstance(new_password, (str, SecretStr)), "Valid type: str | SecretStr"
         if not self.password_is_valid(old_password):
