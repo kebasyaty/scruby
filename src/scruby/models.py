@@ -13,7 +13,8 @@ __all__ = ("ScrubyModel",)
 from datetime import datetime
 from typing import Annotated
 
-from pydantic import BaseModel, ConfigDict, Field
+import bcrypt
+from pydantic import BaseModel, ConfigDict, Field, SecretStr
 
 
 class ScrubyModel(BaseModel):
@@ -35,3 +36,54 @@ class ScrubyModel(BaseModel):
             default=None,
         ),
     ]
+
+
+class CryptModel(BaseModel):
+    """Add password support to the Scruby model.
+
+    The bcrypt library is used to hash passwords.
+    """
+
+    password: Annotated[
+        str,
+        Field(
+            title="Password",
+            frozen=True,
+            min_length=8,
+            max_length=256,
+        ),
+    ]
+
+    def hash_raw_password(self, value: str | SecretStr) -> str:
+        """Takes a string and converts it to a hash.
+
+        Uses the bcrypt library.
+        """
+        assert isinstance(value, (str, SecretStr)), "Valid type: str | SecretStr"
+        # Extract the plain text string regardless of input format
+        plain_password = value.get_secret_value() if isinstance(value, SecretStr) else value
+        # Securely hash using bcrypt
+        password_bytes = plain_password.encode("utf-8")
+        salt = bcrypt.gensalt()
+        hashed_bytes = bcrypt.hashpw(password_bytes, salt)
+        # Return the decoded hash string
+        return hashed_bytes.decode("utf-8")
+
+    def set_password(self, value: str | SecretStr) -> None:
+        """Converts the value to a hash and adds it to the password field.
+
+        Uses the bcrypt library.
+        """
+        hashed_db_string = self.hash_raw_password(value)
+        # To temporarily bypass the `frozen=True` limitation
+        setattr(self, "password", hashed_db_string.encode("utf-8"))  # noqa: B010
+
+    def password_is_valid(self, value: str | SecretStr) -> bool:
+        """Check password validity.
+
+        Takes some password and matches it with an existing one.
+        Can be used to verify a login attempt.
+        """
+        assert isinstance(value, (str, SecretStr)), "Valid type: str | SecretStr"
+        value_hashed = self.hash_raw_password(value)
+        return bcrypt.checkpw(value_hashed.encode("utf-8"), self.password.encode("utf-8"))
