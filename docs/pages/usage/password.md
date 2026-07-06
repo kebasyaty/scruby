@@ -62,7 +62,7 @@ async def main() -> None:
     await user_coll.add_doc(user)
 
     # Get user details
-    user_details = await user_coll.get_doc("+447986123456")
+    user_details = await user_coll.get_doc("user_1")
 
     # Check a password
     user_details.password_is_valid(test_pass)  # True
