@@ -1,42 +1,17 @@
-"""Scruby Models.
+"""Crypt Model.
 
-The module contains the following classes:
-
-- `ScrubyModel` - A base class for creating Scruby models.
-- `CryptModel` - Add password support to the Scruby model.
+For operations with passwords in Scruby models.
 """
 
 from __future__ import annotations
 
-__all__ = ("ScrubyModel",)
+__all__ = ("CryptModel",)
 
 
-from datetime import datetime
 from typing import Annotated
 
 import bcrypt
-from pydantic import BaseModel, ConfigDict, Field, SecretStr
-
-
-class ScrubyModel(BaseModel):
-    """A base class for creating Scruby models."""
-
-    model_config = ConfigDict(strict=True)
-
-    created_at: Annotated[
-        datetime | None,
-        Field(
-            title="Created at",
-            default=None,
-        ),
-    ]
-    updated_at: Annotated[
-        datetime | None,
-        Field(
-            title="Updated at",
-            default=None,
-        ),
-    ]
+from pydantic import BaseModel, Field, SecretStr
 
 
 class CryptModel(BaseModel):
