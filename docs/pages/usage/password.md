@@ -1,7 +1,11 @@
 #### Operations with passwords
 
 ```py title="main.py" linenums="1"
-"""Operations with passwords."""
+"""Operations with passwords.
+
+To operations with a password, use only special methods.
+Do not use this field directly.
+"""
 
 import anyio
 from datetime import datetime
