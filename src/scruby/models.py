@@ -58,19 +58,19 @@ class CryptModel(BaseModel):
         ),
     ]
 
-    def hash_raw_password(self, value: str | SecretStr) -> str:
+    def hash_raw_password(self, password: str | SecretStr) -> str:
         """Takes a string and converts it to a hash.
 
         Uses the bcrypt library.
 
         Args:
-            value (str | SecretStr): User password.
+            password (str | SecretStr): User password.
 
         Returns:
             Secure hash string.
         """
         # Extract the plain text string regardless of input format
-        plain_password = value.get_secret_value() if isinstance(value, SecretStr) else value
+        plain_password = password.get_secret_value() if isinstance(password, SecretStr) else password
         # Securely hash using bcrypt
         password_bytes = plain_password.encode("utf-8")
         salt = bcrypt.gensalt()
@@ -78,22 +78,22 @@ class CryptModel(BaseModel):
         # Return the decoded hash string
         return hashed_bytes.decode("utf-8")
 
-    def set_password(self, value: str | SecretStr) -> None:
+    def set_password(self, password: str | SecretStr) -> None:
         """Converts the value to a hash and adds it to the password field.
 
         Uses the bcrypt library.
 
         Args:
-            value (str | SecretStr): User password.
+            password (str | SecretStr): User password.
 
         Returns:
             None
         """
-        assert isinstance(value, (str, SecretStr)), "Valid type: str | SecretStr"
+        assert isinstance(password, (str, SecretStr)), "Valid type: str | SecretStr"
         #
-        hashed_string = self.hash_raw_password(value)
+        hashed_password = self.hash_raw_password(password)
         # To temporarily bypass the `frozen=True` limitation
-        object.__setattr__(self, "password", hashed_string)  # noqa: PLC2801
+        object.__setattr__(self, "password", hashed_password)  # noqa: PLC2801
 
     def password_is_valid(self, password: str | SecretStr) -> bool:
         """Check password validity.
@@ -102,7 +102,7 @@ class CryptModel(BaseModel):
         Can be used to verify a login attempt.
 
         Args:
-            value (str | SecretStr): User password.
+            password (str | SecretStr): User password.
 
         Returns:
             True if the passwords are the same and False if they are not the same.
