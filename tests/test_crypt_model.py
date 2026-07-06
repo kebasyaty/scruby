@@ -85,7 +85,8 @@ async def test_crypt_model() -> None:
     await user_coll.add_doc(user)
 
     # Get user details
-    user_details = await user_coll.get_doc("+447986123456")
+    user_details = await user_coll.get_doc("user_1")
+    assert user_details is not None
 
     # Check a password
     assert user_details.password_is_valid(test_pass)
