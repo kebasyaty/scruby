@@ -46,7 +46,7 @@ class Keys:
             )
             raise TypeError(msg)
         # If a password field is present, it must not be empty
-        if "password" in self.key_list and bool(doc.password):
+        if "password" in self.key_list and not bool(doc.password):
             msg = "Method: `add_doc` => The `password` field is empty"
             raise ValueError(msg)
         # Get the path to the collection cell
@@ -108,7 +108,7 @@ class Keys:
             )
             raise TypeError(msg)
         # If a password field is present, it must not be empty
-        if "password" in self.key_list and bool(doc.password):
+        if "password" in self.key_list and not bool(doc.password):
             msg = "Method: `add_doc` => The `password` field is empty"
             raise ValueError(msg)
         # Get the path to the collection cell
