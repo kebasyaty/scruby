@@ -1,22 +1,15 @@
-"""Test CryptModel."""
+#### Operations with passwords
 
-from __future__ import annotations
+```py title="main.py" linenums="1"
+"""Operations with passwords."""
 
+import anyio
 from datetime import datetime
-from typing import Annotated
 from zoneinfo import ZoneInfo
-
-import pytest
+from typing import Annotated
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
-
 from scruby import CryptModel, Scruby, ScrubyModel
-
-pytestmark = pytest.mark.asyncio(loop_scope="module")
-
-# Delete DB.
-# Hint: If the previous test failed and the database remains.
-Scruby.napalm()
 
 
 class User(ScrubyModel, CryptModel):
@@ -42,12 +35,12 @@ class User(ScrubyModel, CryptModel):
     ]
 
 
-async def test_crypt_model() -> None:
-    """Test CryptModel."""
+async def main() -> None:
+    """Example."""
     # Activate database.
     Scruby.run()
 
-    # Get access to the collection
+    # Create/get the `User` collection.
     user_coll = Scruby(User)
 
     # Create user
@@ -60,26 +53,10 @@ async def test_crypt_model() -> None:
         phone="+447986123456",
     )
 
-    test_pass = "user_pass_123"  # noqa: S105
-
-    # Check for the presence of the `password` field
-    assert "password" in list(User.model_fields.keys())
-
-    # Check a password empty
-    assert not user.password_is_valid(test_pass)
-
-    # Add user to collection with password empty
-    with pytest.raises(
-        ValueError,
-        match=r"Method: `add_doc` => The `password` field is empty",
-    ):
-        await user_coll.add_doc(user)
+    test_pass = "user_pass_123"
 
     # Add user password
     user.set_password(test_pass)
-
-    # Check a password
-    assert user.password_is_valid(test_pass)
 
     # Add user to collection
     await user_coll.add_doc(user)
@@ -88,21 +65,19 @@ async def test_crypt_model() -> None:
     user_details = await user_coll.get_doc("+447986123456")
 
     # Check a password
-    assert user_details.password_is_valid(test_pass)
+    user_details.password_is_valid(test_pass)  # True
 
     # Update existing password
-    new_test_pass = "new_user_pass_123"  # noqa: S105
-    with pytest.raises(
-        ValueError,
-        match=r"Old password doesn't match",
-    ):
-        user_details.update_password("invalid_old_password", new_test_pass)
-
     user_details.update_password(test_pass, new_test_pass)
-    assert user_details.password_is_valid(new_test_pass)
 
     # Update user data in a collection
     await user_coll.update_doc(user_details)
-    #
-    # Delete DB.
+
+    # Full database deletion.
+    # Hint: The main purpose is tests.
     Scruby.napalm()
+
+
+if __name__ == "__main__":
+    anyio.run(main)
+```

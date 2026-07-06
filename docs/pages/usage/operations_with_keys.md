@@ -1,7 +1,7 @@
-#### Working with keys
+#### Operations with keys
 
 ```py title="main.py" linenums="1"
-"""Working with keys."""
+"""Ooperations with keys."""
 
 import anyio
 from datetime import datetime
