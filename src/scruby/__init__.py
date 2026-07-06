@@ -30,6 +30,7 @@ from __future__ import annotations
 __all__ = (
     "Scruby",
     "ScrubyModel",
+    "CryptModel",
     "ScrubyConfig",
     "ReturnType",
     "Utils",
@@ -39,5 +40,5 @@ __all__ = (
 from scruby.config import ScrubyConfig
 from scruby.db import Scruby
 from scruby.mixins.find import ReturnType
-from scruby.models import ScrubyModel
+from scruby.models import CryptModel, ScrubyModel
 from scruby.utils import Utils
