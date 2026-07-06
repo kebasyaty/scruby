@@ -103,10 +103,14 @@ class Keys:
             doc_class_name = doc.__class__.__name__
             collection_name = self._class_model.__name__
             msg = (
-                f"(update_doc) Parameter `doc` => Model `{doc_class_name}` "
+                f"Method: `add_doc` > Parameter: `doc` => Model `{doc_class_name}` "
                 f"does not match collection `{collection_name}`!"
             )
             raise TypeError(msg)
+        # If a password field is present, it must not be empty
+        if "password" in self.key_list and bool(doc.password):
+            msg = "Method: `add_doc` => The `password` field is empty"
+            raise ValueError(msg)
         # Get the path to the collection cell
         leaf_path, prepared_key, key_as_hash = await self._get_leaf_path(doc.key)
         # Update a `updated_at` field
