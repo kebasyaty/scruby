@@ -42,26 +42,33 @@ class User(ScrubyModel, CryptModel):
     ]
 
 
-class TestPositive:
-    """Positive tests."""
+async def test_crypt_model() -> None:
+    """Test CryptModel."""
+    # Activate database.
+    Scruby.run()
 
-    async def test_create_db(self) -> None:
-        """Create instance of database by default."""
-        # Activate database.
-        Scruby.run()
+    # Get access to the collection
+    user_coll = Scruby(User)
 
-        # Get access to the collection
-        user_coll = Scruby(User)
+    # Create user
+    user = User(
+        username="user_1",
+        first_name="John",
+        last_name="Smith",
+        birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
+        email="John_Smith@gmail.com",
+        phone="+447986123456",
+    )
 
-        # Create user
-        user = User(
-            username="user_1",
-            first_name="John",
-            last_name="Smith",
-            birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
-            email="John_Smith@gmail.com",
-            phone="+447986123456",
-        )
+    # Check for the presence of the `password` field
+    assert "password" in list(User.model_fields.keys())
 
-        # Add user to collection
+    # Add user to collection with password empty
+    with pytest.raises(
+        ValueError,
+        match=r"Method: `add_doc` => The `password` field is empty",
+    ):
         await user_coll.add_doc(user)
+    #
+    # Delete DB.
+    Scruby.napalm()
