@@ -263,7 +263,7 @@ class TestNegative:
         # limit docs = 5, page number = 0
         with pytest.raises(
             AssertionError,
-            match=r"`Method: `find_many` => The `page_number` parameter must not be less than one.",
+            match=r"Method: `find_many` => The `page_number` parameter must not be less than one.",
         ):
             user_coll.find_many(
                 filter_fn=lambda doc: doc.last_name == "Smith",
