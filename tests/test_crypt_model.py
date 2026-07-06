@@ -83,6 +83,9 @@ async def test_crypt_model() -> None:
 
     # Add user to collection
     await user_coll.add_doc(user)
+
+    # Get user details
+    user = await user_coll.get_doc("+447986123456")
     #
     # Delete DB.
     Scruby.napalm()
