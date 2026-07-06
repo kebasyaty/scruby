@@ -78,14 +78,17 @@ async def test_crypt_model() -> None:
     # Add user password
     user.set_password(test_pass)
 
-    # # Check a password
+    # Check a password
     assert user.password_is_valid(test_pass)
 
     # Add user to collection
     await user_coll.add_doc(user)
 
     # Get user details
-    user = await user_coll.get_doc("+447986123456")
+    user_details = await user_coll.get_doc("+447986123456")
+
+    # Check a password
+    assert user_details.password_is_valid(test_pass)
     #
     # Delete DB.
     Scruby.napalm()
