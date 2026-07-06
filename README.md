@@ -112,7 +112,11 @@ class User(ScrubyModel):
     last_name: str
     birthday: datetime
     email: EmailStr
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164"), Field(strict=False)]
+    phone: Annotated[
+        PhoneNumber,
+        PhoneNumberValidator(number_format="E164"),
+        Field(strict=False),
+    ]
     # key is always at bottom
     key: Annotated[
         str,
