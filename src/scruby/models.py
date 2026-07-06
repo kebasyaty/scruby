@@ -91,9 +91,9 @@ class CryptModel(BaseModel):
         """
         assert isinstance(value, (str, SecretStr)), "Valid type: str | SecretStr"
         #
-        hashed_db_string = self.hash_raw_password(value)
+        hashed_string = self.hash_raw_password(value)
         # To temporarily bypass the `frozen=True` limitation
-        setattr(self, "password", hashed_db_string.encode("utf-8"))  # noqa: B010
+        object.__setattr__(self, "password", hashed_string.encode("utf-8"))  # noqa: PLC2801
 
     def password_is_valid(self, value: str | SecretStr) -> bool:
         """Check password validity.
