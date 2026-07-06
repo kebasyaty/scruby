@@ -77,6 +77,9 @@ async def test_crypt_model() -> None:
 
     # Add user password
     user.set_password(test_pass)
+
+    # # Check a password
+    assert user.password_is_valid(test_pass)
     #
     # Delete DB.
     Scruby.napalm()

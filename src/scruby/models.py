@@ -93,9 +93,9 @@ class CryptModel(BaseModel):
         #
         hashed_string = self.hash_raw_password(value)
         # To temporarily bypass the `frozen=True` limitation
-        object.__setattr__(self, "password", hashed_string.encode("utf-8"))  # noqa: PLC2801
+        object.__setattr__(self, "password", hashed_string)  # noqa: PLC2801
 
-    def password_is_valid(self, value: str | SecretStr) -> bool:
+    def password_is_valid(self, password: str | SecretStr) -> bool:
         """Check password validity.
 
         Takes some password and matches it with an existing one.
@@ -107,13 +107,12 @@ class CryptModel(BaseModel):
         Returns:
             True if the passwords are the same and False if they are not the same.
         """
-        assert isinstance(value, (str, SecretStr)), "Valid type: str | SecretStr"
+        assert isinstance(password, (str, SecretStr)), "Valid type: str | SecretStr"
         #
         if not bool(self.password):
             return False
         #
-        value_hashed = self.hash_raw_password(value)
-        return bcrypt.checkpw(value_hashed.encode("utf-8"), self.password.encode("utf-8"))
+        return bcrypt.checkpw(password.encode("utf-8"), self.password.encode("utf-8"))
 
     def update_password(
         self,
