@@ -89,6 +89,11 @@ async def test_crypt_model() -> None:
 
     # Check a password
     assert user_details.password_is_valid(test_pass)
+
+    # Update existing password
+    new_test_pass = "new_user_pass_123"  # noqa: S105
+    user_details.update_password(test_pass, new_test_pass)
+    assert user_details.password_is_valid(new_test_pass)
     #
     # Delete DB.
     Scruby.napalm()
