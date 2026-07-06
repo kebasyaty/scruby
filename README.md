@@ -94,7 +94,7 @@ uv run python -OOP main.py
 [![Examples](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/examples.svg "Examples")](https://kebasyaty.github.io/scruby/latest/pages/usage/ "Examples")
 
 ```python
-"""Working with keys."""
+"""Operations with keys."""
 
 import anyio
 from datetime import datetime
