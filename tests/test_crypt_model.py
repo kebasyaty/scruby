@@ -63,6 +63,10 @@ async def test_crypt_model() -> None:
     # Check for the presence of the `password` field
     assert "password" in list(User.model_fields.keys())
 
+    # hash for user_pass_123
+    hash_password = "$2b$12$8Gcbt3Oz3nz8TG/7MjOxoeDbwlw6QxpIemBiKfLZPQojv2RKE6kyu"  # noqa: S105
+    assert hash_password == user.hash_raw_password("user_pass_123")
+
     # Add user to collection with password empty
     with pytest.raises(
         ValueError,
