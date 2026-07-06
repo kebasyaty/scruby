@@ -109,7 +109,7 @@ class Keys:
             raise TypeError(msg)
         # If a password field is present, it must not be empty
         if "password" in self.key_list and not bool(doc.password):
-            msg = "Method: `add_doc` => The `password` field is empty"
+            msg = "Method: `update_doc` => The `password` field is empty"
             raise ValueError(msg)
         # Get the path to the collection cell
         leaf_path, prepared_key, key_as_hash = await self._get_leaf_path(doc.key)
