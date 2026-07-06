@@ -60,11 +60,13 @@ async def test_crypt_model() -> None:
         phone="+447986123456",
     )
 
+    test_pass = "user_pass_123"  # noqa: S105
+
     # Check for the presence of the `password` field
     assert "password" in list(User.model_fields.keys())
 
-    # check password = user_pass_123
-    assert not user.password_is_valid("user_pass_123")
+    # Check a password empty
+    assert not user.password_is_valid(test_pass)
 
     # Add user to collection with password empty
     with pytest.raises(
@@ -72,6 +74,9 @@ async def test_crypt_model() -> None:
         match=r"Method: `add_doc` => The `password` field is empty",
     ):
         await user_coll.add_doc(user)
+
+    # Add user password
+    user.set_password(test_pass)
     #
     # Delete DB.
     Scruby.napalm()
