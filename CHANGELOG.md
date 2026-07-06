@@ -1,5 +1,11 @@
 ### CHANGELOG
 
+#### v2.7.0 2026-07-6
+
+- Added `CryptModel` model for password operations.
+- Updated documentation.
+- Fixed README.md
+
 #### v1.1.1 2026-06-05
 
 - Fixed a `find_many` method.
