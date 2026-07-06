@@ -109,8 +109,11 @@ class CryptModel(BaseModel):
         """
         assert isinstance(value, (str, SecretStr)), "Valid type: str | SecretStr"
         #
-        value_hashed = self.hash_raw_password(value)
-        return bcrypt.checkpw(value_hashed.encode("utf-8"), self.password.encode("utf-8"))
+        try:
+            value_hashed = self.hash_raw_password(value)
+            return bcrypt.checkpw(value_hashed.encode("utf-8"), self.password.encode("utf-8"))
+        except AttributeError:
+            return False
 
     def update_password(
         self,
