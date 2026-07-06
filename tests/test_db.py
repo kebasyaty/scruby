@@ -114,7 +114,7 @@ class TestNegative:
 
         with pytest.raises(
             TypeError,
-            match=r"\(add_doc\) Parameter `doc` => Model `User2` does not match collection `User`!",
+            match=r"Method: `add_doc` > Parameter: `doc` => Model `User2` does not match collection `User`!",
         ):
             await user_coll.add_doc(user2)
         #
@@ -147,7 +147,7 @@ class TestNegative:
 
         with pytest.raises(
             TypeError,
-            match=r"\(update_doc\) Parameter `doc` => Model `User2` does not match collection `User`!",
+            match=r"Method: `update_doc` > Parameter: `doc` => Model `User2` does not match collection `User`!",
         ):
             await user_coll.update_doc(user2)
         #
@@ -263,7 +263,7 @@ class TestNegative:
         # limit docs = 5, page number = 0
         with pytest.raises(
             AssertionError,
-            match=r"`find_many` => The `page_number` parameter must not be less than one.",
+            match=r"Method: `find_many` => The `page_number` parameter must not be less than one.",
         ):
             user_coll.find_many(
                 filter_fn=lambda doc: doc.last_name == "Smith",
@@ -274,7 +274,7 @@ class TestNegative:
         # limit docs = 5, page number = -1
         with pytest.raises(
             AssertionError,
-            match=r"`find_many` => The `page_number` parameter must not be less than one.",
+            match=r"Method: `find_many` => The `page_number` parameter must not be less than one.",
         ):
             user_coll.find_many(
                 filter_fn=lambda doc: doc.last_name == "Smith",

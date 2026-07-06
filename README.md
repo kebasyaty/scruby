@@ -94,7 +94,7 @@ uv run python -OOP main.py
 [![Examples](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/examples.svg "Examples")](https://kebasyaty.github.io/scruby/latest/pages/usage/ "Examples")
 
 ```python
-"""Working with keys."""
+"""Operations with keys."""
 
 import anyio
 from datetime import datetime
@@ -112,7 +112,11 @@ class User(ScrubyModel):
     last_name: str
     birthday: datetime
     email: EmailStr
-    phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164"), Field(strict=False)]
+    phone: Annotated[
+        PhoneNumber,
+        PhoneNumberValidator(number_format="E164"),
+        Field(strict=False),
+    ]
     # key is always at bottom
     key: Annotated[
         str,
@@ -133,7 +137,6 @@ async def main() -> None:
 
     # Create user
     user = User(
-        username="user_1",
         first_name="John",
         last_name="Smith",
         birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
@@ -148,7 +151,7 @@ async def main() -> None:
     await user_coll.update_doc(user)
 
     # Get user details
-    await user = user_coll.get_doc("+447986123456")
+    user = await user_coll.get_doc("+447986123456")
     await user_coll.get_doc("key missing")  # => None
 
     # Check for the presence of a key in the collection

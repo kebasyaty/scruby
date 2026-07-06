@@ -42,11 +42,13 @@ class Scruby(
         self,
         class_model: Any,
     ) -> None:
+        self.key_list = list(class_model.model_fields.keys())
+        #
         if __debug__:
             if ScrubyModel not in class_model.__bases__:
                 msg = "Scruby => Argument `class_model` does not contain the base class `ScrubyModel`."
                 raise AssertionError(msg)
-            if "key" not in list(class_model.model_fields.keys()):
+            if "key" not in self.key_list:
                 msg = f"Model: {class_model.__name__} => The `key` field is missing."
                 raise AssertionError(msg)
 

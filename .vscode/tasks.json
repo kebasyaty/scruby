@@ -79,6 +79,7 @@
         "uv run pytest -v tests/test_custom_task.py;",
         "uv run pytest -v tests/test_cache.py;",
         "uv run pytest -v tests/test_hash_reduce_left_0.py;",
+        "uv run pytest -v tests/test_crypt_model.py;",
         "uv run python pyhelpers/remove_pycache.py"
       ],
       "problemMatcher": []
@@ -102,10 +103,10 @@
       "problemMatcher": []
     },
     {
-      "label": "MkDocs: Run Deploy 2.6",
+      "label": "MkDocs: Run Deploy 2.7",
       "type": "shell",
       "command": [
-        "uv run mike deploy --push --update-aliases 2.6 latest;",
+        "uv run mike deploy --push --update-aliases 2.7 latest;",
         "uv run mike set-default --push latest"
       ],
       "problemMatcher": []

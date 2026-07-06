@@ -190,10 +190,10 @@ class Find:
         """
         if __debug__:
             if limit_docs <= 0:
-                msg = "`find_many` => The `limit_docs` parameter must not be less than one."
+                msg = "Method: `find_many` => The `limit_docs` parameter must not be less than one."
                 raise AssertionError(msg)
             if page_number <= 0:
-                msg = "`find_many` => The `page_number` parameter must not be less than one."
+                msg = "Method: `find_many` => The `page_number` parameter must not be less than one."
                 raise AssertionError(msg)
         # Variable initialization
         hash_reduce_left: int = self._hash_reduce_left
