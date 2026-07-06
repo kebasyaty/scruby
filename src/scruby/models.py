@@ -43,6 +43,7 @@ class CryptModel(BaseModel):
     """Add password support to the Scruby model.
 
     The bcrypt library is used to hash passwords.
+    To work with a password, use only special methods.
     """
 
     password: Annotated[
