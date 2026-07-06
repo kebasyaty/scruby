@@ -100,6 +100,9 @@ async def test_crypt_model() -> None:
 
     user_details.update_password(test_pass, new_test_pass)
     assert user_details.password_is_valid(new_test_pass)
+
+    # Update user data in a collection
+    await user_coll.update_doc(user_details)
     #
     # Delete DB.
     Scruby.napalm()
