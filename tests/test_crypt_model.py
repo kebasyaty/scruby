@@ -92,6 +92,12 @@ async def test_crypt_model() -> None:
 
     # Update existing password
     new_test_pass = "new_user_pass_123"  # noqa: S105
+    with pytest.raises(
+        ValueError,
+        match=r"Old password doesn't match",
+    ):
+        user_details.update_password("invalid_old_password", new_test_pass)
+
     user_details.update_password(test_pass, new_test_pass)
     assert user_details.password_is_valid(new_test_pass)
     #
