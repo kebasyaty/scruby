@@ -114,7 +114,7 @@ class TestNegative:
 
         with pytest.raises(
             TypeError,
-            match=r"\(add_doc\) Parameter `doc` => Model `User2` does not match collection `User`!",
+            match=r"Method: `add_doc` > Parameter: `doc` => Model `User2` does not match collection `User`!",
         ):
             await user_coll.add_doc(user2)
         #
@@ -147,7 +147,7 @@ class TestNegative:
 
         with pytest.raises(
             TypeError,
-            match=r"\(update_doc\) Parameter `doc` => Model `User2` does not match collection `User`!",
+            match=r"Method: `add_doc` > Parameter: `doc` => Model `User2` does not match collection `User`!",
         ):
             await user_coll.update_doc(user2)
         #
