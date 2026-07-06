@@ -44,6 +44,7 @@ class CryptModel(BaseModel):
 
     The bcrypt library is used to hash passwords.
     To work with a password, use only special methods.
+    Do not use this field directly.
     """
 
     password: Annotated[
