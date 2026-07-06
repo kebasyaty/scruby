@@ -48,7 +48,7 @@ class Keys:
         # If a password field is present, it must not be empty
         if "password" in self.key_list and bool(doc.password):
             msg = "Method: `add_doc` => The `password` field is empty"
-            raise AssertionError(msg)
+            raise ValueError(msg)
         # Get the path to the collection cell
         leaf_path, prepared_key, key_as_hash = await self._get_leaf_path(doc.key)
         # Init a `created_at` and `updated_at` fields
