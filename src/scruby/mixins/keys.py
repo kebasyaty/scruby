@@ -103,7 +103,7 @@ class Keys:
             doc_class_name = doc.__class__.__name__
             collection_name = self._class_model.__name__
             msg = (
-                f"Method: `add_doc` > Parameter: `doc` => Model `{doc_class_name}` "
+                f"Method: `update_doc` > Parameter: `doc` => Model `{doc_class_name}` "
                 f"does not match collection `{collection_name}`!"
             )
             raise TypeError(msg)
