@@ -145,7 +145,7 @@ class Keys:
             else:
                 raise KeyNotExistsError()
         else:
-            msg: str = f"`update_doc` - The key `{doc.key}` is missing!"
+            msg: str = f"Method: `update_doc` => The key `{doc.key}` is missing!"
             raise KeyError(msg)
 
     @final
@@ -272,5 +272,5 @@ class Keys:
             else:
                 raise KeyNotExistsError()
         else:
-            msg: str = f"`delete_doc` - The key `{key}` is missing!"
+            msg: str = f"Method: `delete_doc` => The key `{key}` is missing!"
             raise KeyError(msg)
