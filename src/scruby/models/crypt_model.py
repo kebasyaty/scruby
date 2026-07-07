@@ -34,7 +34,7 @@ class CryptModel(BaseModel):
     ]
 
     def hash_raw_password(self, password: str | SecretStr) -> str:
-        """Takes a string and converts it to a hash.
+        """Takes the raw password string and converts it into a hash.
 
         Uses the bcrypt library.
 
@@ -54,7 +54,7 @@ class CryptModel(BaseModel):
         return hashed_bytes.decode("utf-8")
 
     def set_password(self, password: str | SecretStr) -> None:
-        """Converts the value to a hash and adds it to the password field.
+        """Converts the raw password to a hash and adds it to the password field.
 
         Uses the bcrypt library.
 
@@ -72,7 +72,8 @@ class CryptModel(BaseModel):
             raise ValueError(msg)
         #
         hashed_password = self.hash_raw_password(password)
-        # To temporarily bypass the `frozen=True` limitation
+        # Set user password.
+        # Hint: To temporarily bypass the `frozen=True` limitation.
         object.__setattr__(self, "password", hashed_password)  # noqa: PLC2801
 
     def password_is_valid(self, password: str | SecretStr) -> bool:
@@ -127,5 +128,8 @@ class CryptModel(BaseModel):
         # Throw an exception if the old password does not match the current one
         if not self.password_is_valid(old_password):
             raise ValueError("Old password doesn't match.")
+        # Pre-reset the password to default state.
+        # Hint: To temporarily bypass the `frozen=True` limitation.
+        object.__setattr__(self, "password", None)  # noqa: PLC2801
         # Replace the current password with a new one
         self.set_password(new_password)
