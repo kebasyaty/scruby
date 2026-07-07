@@ -34,7 +34,7 @@ class CryptModel(BaseModel):
     ]
 
     def hash_raw_password(self, password: str | SecretStr) -> str:
-        """Takes a string and converts it to a hash.
+        """Takes the raw password string and converts it into a hash.
 
         Uses the bcrypt library.
 
@@ -54,7 +54,7 @@ class CryptModel(BaseModel):
         return hashed_bytes.decode("utf-8")
 
     def set_password(self, password: str | SecretStr) -> None:
-        """Converts the value to a hash and adds it to the password field.
+        """Converts the raw password to a hash and adds it to the password field.
 
         Uses the bcrypt library.
 
@@ -64,10 +64,16 @@ class CryptModel(BaseModel):
         Returns:
             None
         """
-        assert isinstance(password, (str, SecretStr)), "Valid type: str | SecretStr"
+        assert isinstance(password, (str, SecretStr)), "Valid type: str | SecretStr."
+        #
+        # Throw an exception if the password is present
+        if bool(self.password):
+            msg = "The password already exists. To update it, use the `update_password` method."
+            raise ValueError(msg)
         #
         hashed_password = self.hash_raw_password(password)
-        # To temporarily bypass the `frozen=True` limitation
+        # Set user password.
+        # Hint: To temporarily bypass the `frozen=True` limitation.
         object.__setattr__(self, "password", hashed_password)  # noqa: PLC2801
 
     def password_is_valid(self, password: str | SecretStr) -> bool:
@@ -82,7 +88,7 @@ class CryptModel(BaseModel):
         Returns:
             True if the passwords are the same and False if they are not the same.
         """
-        assert isinstance(password, (str, SecretStr)), "Valid type: str | SecretStr"
+        assert isinstance(password, (str, SecretStr)), "Valid type: str | SecretStr."
         #
         if not bool(self.password):
             return False
@@ -107,15 +113,23 @@ class CryptModel(BaseModel):
             ValueError: If the current password cannot be updated because it is missing.
             ValueError: If the old password does not match the current one.
         """
-        assert isinstance(old_password, (str, SecretStr)), "Valid type: str | SecretStr"
-        assert isinstance(new_password, (str, SecretStr)), "Valid type: str | SecretStr"
+        if __debug__:
+            if not isinstance(old_password, (str, SecretStr)):
+                msg = "Argument: `old_password` => Valid type: str | SecretStr."
+                raise AssertionError(msg)
+            if not isinstance(new_password, (str, SecretStr)):
+                msg = "Argument: `new_password` => Valid type: str | SecretStr."
+                raise AssertionError(msg)
         #
         # Throw an exception if the current password is missing
-        if self.password is None:
-            msg = "The current password cannot be updated because it is missing"
+        if not bool(self.password):
+            msg = "The current password cannot be updated because it is missing."
             raise ValueError(msg)
         # Throw an exception if the old password does not match the current one
         if not self.password_is_valid(old_password):
-            raise ValueError("Old password doesn't match")
+            raise ValueError("Old password doesn't match.")
+        # Pre-reset the password to default state.
+        # Hint: To temporarily bypass the `frozen=True` limitation.
+        object.__setattr__(self, "password", None)  # noqa: PLC2801
         # Replace the current password with a new one
         self.set_password(new_password)

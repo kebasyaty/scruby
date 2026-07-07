@@ -77,6 +77,12 @@ async def test_crypt_model() -> None:
 
     # Add user password
     user.set_password(test_pass)
+    # Throw an exception if the password is present
+    with pytest.raises(
+        ValueError,
+        match=r"The password already exists. To update it, use the `update_password` method.",
+    ):
+        user.set_password(test_pass)
 
     # Check a password
     assert user.password_is_valid(test_pass)
@@ -95,7 +101,7 @@ async def test_crypt_model() -> None:
     new_test_pass = "new_user_pass_123"  # noqa: S105
     with pytest.raises(
         ValueError,
-        match=r"Old password doesn't match",
+        match=r"Old password doesn't match.",
     ):
         user_details.update_password("invalid_old_password", new_test_pass)
 
