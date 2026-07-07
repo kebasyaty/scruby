@@ -72,6 +72,7 @@ async def main() -> None:
     user_details.password_is_valid(test_pass)  # True
 
     # Update existing password
+    new_test_pass = "new_user_pass_123"
     user_details.update_password(test_pass, new_test_pass)
 
     # Update user data in a collection
