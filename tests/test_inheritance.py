@@ -139,7 +139,7 @@ def test_inheritance_from_base_model() -> None:
     """Testing inheritance from BaseModel."""
     with pytest.raises(
         AssertionError,
-        match=r"Scruby => Argument `class_model` does not contain the base class `ScrubyModel`.",
+        match=r"Argument `class_model` does not contain the base class `ScrubyModel`.",
     ):
         # Access a user's profile collection
         Scruby(InvalidModel)
@@ -149,7 +149,7 @@ def test_indirect_inheritance_from_scruby_model() -> None:
     """Test indirect inheritance from ScrubyModel."""
     with pytest.raises(
         AssertionError,
-        match=r"Scruby => Argument `class_model` does not contain the base class `ScrubyModel`.",
+        match=r"Argument `class_model` does not contain the base class `ScrubyModel`.",
     ):
         # Access a user's profile collection
         Scruby(InvalidUserProfile)
