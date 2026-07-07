@@ -64,7 +64,7 @@ class CryptModel(BaseModel):
         Returns:
             None
         """
-        assert isinstance(password, (str, SecretStr)), "Valid type: str | SecretStr"
+        assert isinstance(password, (str, SecretStr)), "Valid type: str | SecretStr."
         #
         # Throw an exception if the password is present
         if bool(self.password):
@@ -87,7 +87,7 @@ class CryptModel(BaseModel):
         Returns:
             True if the passwords are the same and False if they are not the same.
         """
-        assert isinstance(password, (str, SecretStr)), "Valid type: str | SecretStr"
+        assert isinstance(password, (str, SecretStr)), "Valid type: str | SecretStr."
         #
         if not bool(self.password):
             return False
@@ -112,15 +112,20 @@ class CryptModel(BaseModel):
             ValueError: If the current password cannot be updated because it is missing.
             ValueError: If the old password does not match the current one.
         """
-        assert isinstance(old_password, (str, SecretStr)), "Valid type: str | SecretStr"
-        assert isinstance(new_password, (str, SecretStr)), "Valid type: str | SecretStr"
+        if __debug__:
+            if not isinstance(old_password, (str, SecretStr)):
+                msg = "Argument: `old_password` => Valid type: str | SecretStr."
+                raise AssertionError(msg)
+            if not isinstance(new_password, (str, SecretStr)):
+                msg = "Argument: `new_password` => Valid type: str | SecretStr."
+                raise AssertionError(msg)
         #
         # Throw an exception if the current password is missing
         if not bool(self.password):
-            msg = "The current password cannot be updated because it is missing"
+            msg = "The current password cannot be updated because it is missing."
             raise ValueError(msg)
         # Throw an exception if the old password does not match the current one
         if not self.password_is_valid(old_password):
-            raise ValueError("Old password doesn't match")
+            raise ValueError("Old password doesn't match.")
         # Replace the current password with a new one
         self.set_password(new_password)
