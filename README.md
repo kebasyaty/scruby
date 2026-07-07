@@ -258,6 +258,7 @@ async def main() -> None:
     user_details.update_password(test_pass, new_test_pass)
 
     # Update user data in a collection
+    new_test_pass = "new_user_pass_123"
     await user_coll.update_doc(user_details)
 
     # Full database deletion.
