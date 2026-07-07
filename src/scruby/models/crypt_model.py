@@ -66,6 +66,11 @@ class CryptModel(BaseModel):
         """
         assert isinstance(password, (str, SecretStr)), "Valid type: str | SecretStr"
         #
+        # Throw an exception if the password is present
+        if bool(self.password):
+            msg = "The password already exists. To update it, use the `update_password` method."
+            raise ValueError(msg)
+        #
         hashed_password = self.hash_raw_password(password)
         # To temporarily bypass the `frozen=True` limitation
         object.__setattr__(self, "password", hashed_password)  # noqa: PLC2801
@@ -111,7 +116,7 @@ class CryptModel(BaseModel):
         assert isinstance(new_password, (str, SecretStr)), "Valid type: str | SecretStr"
         #
         # Throw an exception if the current password is missing
-        if self.password is None:
+        if not bool(self.password):
             msg = "The current password cannot be updated because it is missing"
             raise ValueError(msg)
         # Throw an exception if the old password does not match the current one
