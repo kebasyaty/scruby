@@ -63,6 +63,9 @@ class CryptModel(BaseModel):
 
         Returns:
             None
+
+        Raises:
+            ValueError: If the password already exists.
         """
         assert isinstance(password, (str, SecretStr)), "Valid type: str | SecretStr."
         #
