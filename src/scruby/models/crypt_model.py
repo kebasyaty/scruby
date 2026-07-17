@@ -77,7 +77,7 @@ class CryptModel(BaseModel):
         hashed_password = self.hash_raw_password(password)
         # Set user password.
         # Hint: To temporarily bypass the `frozen=True` limitation.
-        object.__setattr__(self, "password", hashed_password)  # noqa: PLC2801
+        object.__setattr__(self, "password", hashed_password)  # ruff:ignore[unnecessary-dunder-call]
 
     def password_is_valid(self, password: str | SecretStr) -> bool:
         """Check password validity.
@@ -133,6 +133,6 @@ class CryptModel(BaseModel):
             raise ValueError("Old password doesn't match.")
         # Pre-reset the password to default state.
         # Hint: To temporarily bypass the `frozen=True` limitation.
-        object.__setattr__(self, "password", None)  # noqa: PLC2801
+        object.__setattr__(self, "password", None)  # ruff:ignore[unnecessary-dunder-call]
         # Replace the current password with a new one
         self.set_password(new_password)

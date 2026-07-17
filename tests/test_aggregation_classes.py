@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 from scruby.aggregation import Average, Counter, Max, Min, Sum
 
 
@@ -11,7 +13,7 @@ def test_average_int() -> None:
     avg.set(5)
     avg.set(10)
     avg.set(15)
-    assert int(avg.get()) == 10.0  # noqa: RUF069
+    assert int(avg.get()) == pytest.approx(10.0)
 
 
 def test_average_float() -> None:
@@ -20,7 +22,7 @@ def test_average_float() -> None:
     avg.set(5.0)
     avg.set(10.0)
     avg.set(15.0)
-    assert float(avg.get()) == 10.0  # noqa: RUF069
+    assert float(avg.get()) == pytest.approx(10.0)
 
 
 def test_counter() -> None:
@@ -48,7 +50,7 @@ def test_max_float() -> None:
     max_num.set(5.0)
     max_num.set(10.0)
     max_num.set(15.0)
-    assert max_num.get() == 15.0  # noqa: RUF069
+    assert max_num.get() == pytest.approx(15.0)
 
 
 def test_min_int() -> None:
@@ -66,7 +68,7 @@ def test_min_float() -> None:
     max_num.set(5.0)
     max_num.set(10.0)
     max_num.set(15.0)
-    assert max_num.get() == 5.0  # noqa: RUF069
+    assert max_num.get() == pytest.approx(5.0)
 
 
 def test_sum_int() -> None:
@@ -84,4 +86,4 @@ def test_sum_float() -> None:
     sum_num.set(5.0)
     sum_num.set(10.0)
     sum_num.set(15.0)
-    assert float(sum_num.get()) == 30.0  # noqa: RUF069
+    assert float(sum_num.get()) == pytest.approx(30.0)

@@ -38,7 +38,7 @@ class Scruby(
 ):
     """Creation and management of database."""
 
-    def __init__(  # noqa: D107
+    def __init__(  # ruff:ignore[undocumented-public-init]
         self,
         class_model: Any,
     ) -> None:

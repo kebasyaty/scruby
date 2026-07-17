@@ -60,7 +60,7 @@ async def test_crypt_model() -> None:
         phone="+447986123456",
     )
 
-    test_pass = "user_pass_123"  # noqa: S105
+    test_pass = "user_pass_123"  # ruff:ignore[hardcoded-password-string]
 
     # Check for the presence of the `password` field
     assert "password" in list(User.model_fields.keys())
@@ -98,7 +98,7 @@ async def test_crypt_model() -> None:
     assert user_details.password_is_valid(test_pass)
 
     # Update existing password
-    new_test_pass = "new_user_pass_123"  # noqa: S105
+    new_test_pass = "new_user_pass_123"  # ruff:ignore[hardcoded-password-string]
     with pytest.raises(
         ValueError,
         match=r"Old password doesn't match.",

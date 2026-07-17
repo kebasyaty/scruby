@@ -27,7 +27,7 @@ class Average:
         rounding: Rounding mode. `By default = ROUND_HALF_EVEN`
     """
 
-    def __init__(  # noqa: D107
+    def __init__(  # ruff:ignore[undocumented-public-init]
         self,
         precision: str = ".00",
         rounding: str = ROUND_HALF_EVEN,
@@ -66,7 +66,7 @@ class Counter:
         limit: The maximum counter value.
     """
 
-    def __init__(self, limit: int = 1000) -> None:  # noqa: D107
+    def __init__(self, limit: int = 1000) -> None:  # ruff:ignore[undocumented-public-init]
         self.limit = limit
         self.counter = 0
 
@@ -87,7 +87,7 @@ class Counter:
 class Max:
     """Aggregation class for calculating the maximum value."""
 
-    def __init__(self) -> None:  # noqa: D107
+    def __init__(self) -> None:  # ruff:ignore[undocumented-public-init]
         self.value: Any = 0
 
     def set(self, number: int | float) -> None:
@@ -112,7 +112,7 @@ class Max:
 class Min:
     """Aggregation class for calculating the minimum value."""
 
-    def __init__(self) -> None:  # noqa: D107
+    def __init__(self) -> None:  # ruff:ignore[undocumented-public-init]
         self.value: Any = 0
 
     def set(self, number: int | float) -> None:
@@ -137,7 +137,7 @@ class Min:
 class Sum:
     """Aggregation class for calculating sum of values."""
 
-    def __init__(self) -> None:  # noqa: D107
+    def __init__(self) -> None:  # ruff:ignore[undocumented-public-init]
         self.value = Decimal()
 
     def set(self, number: int | float) -> None:
