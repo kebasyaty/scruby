@@ -38,7 +38,7 @@ class Scruby(
 ):
     """Creation and management of database."""
 
-    def __init__(  # noqa: D107
+    def __init__(  # ruff:ignore[undocumented-public-init]
         self,
         class_model: Any,
     ) -> None:
@@ -210,9 +210,12 @@ class Scruby(
                 raise AssertionError("Create least one model of document for your project.")
             # Raise an exception if the plugin does not match the Scruby version
             if plugins is not None:
+                if hash_reduce_left == 0:
+                    msg = "For `hash_reduce_left = 0` there is no access to plugins."
+                    raise AssertionError(msg)
                 for plugin in plugins:
                     if plugin.SCRUBY_VERSION != 2:
-                        msg = f"Plugin {plugin.__name__} does not apply to version 2."
+                        msg = f"Plugin `{plugin.__name__}` does not apply to version 2."
                         raise AssertionError(msg)
 
         ScrubyConfig.db_root = db_root
