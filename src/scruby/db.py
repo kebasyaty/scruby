@@ -224,14 +224,14 @@ class Scruby(
         ScrubyConfig.plugins = plugins
         ScrubyConfig.mode = mode
 
-        logger.info("Initializing Configuration Parameters")
+        logger.info("Initializing Configuration Parameters.")
         ScrubyConfig.init_params()
-        logger.info("Checking the HASH_REDUCE_LEFT parameter")
+        logger.info("Checking the HASH_REDUCE_LEFT parameter.")
         ScrubyConfig.check_hash_reduce_left()
-        logger.info("Start database migration")
+        logger.info("Start database migration.")
         Migration.run(db_root, subclasses, mode=mode)
 
-        logger.info("Add metadata to new collections")
+        logger.info("Add metadata to new collections.")
         max_number_branch = ScrubyConfig.MAX_NUMBER_BRANCH
         for subclass in subclasses:
             Metadata.create(
@@ -243,9 +243,9 @@ class Scruby(
             )
 
         if ScrubyConfig.HASH_REDUCE_LEFT > 0:
-            logger.info("Load data into cache")
+            logger.info("Load data into cache.")
             DocCache.load_cache(subclasses)
         else:
-            logger.info("Skip data caching for HASH_REDUCE_LEFT = 0")
+            logger.info("Skip data caching for `HASH_REDUCE_LEFT = 0`.")
 
-        logger.info("Database activated")
+        logger.info("Database successfully activated.")
