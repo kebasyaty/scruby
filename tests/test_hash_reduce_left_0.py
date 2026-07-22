@@ -114,7 +114,7 @@ async def test_create_db() -> None:
     for num in range(9):
         car = Car(
             brand="Mazda",
-            model=f"EZ-6 {num}",  # {num} - there is no need to do this, this is just an example
+            model=f"EZ-6 {num}",  # {num} - there is no need to do this, this is just a test
             year=2025,
             power_reserve=600,
         )
