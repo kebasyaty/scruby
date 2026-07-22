@@ -42,7 +42,7 @@ async def main() -> None:
     for num in range(1, 10):
         car = Car(
             brand="Mazda",
-            model=f"EZ-6 {num}",
+            model=f"EZ-6 {num}",  # {num} - there is no need to do this, this is just an example
             year=2025,
             power_reserve=600,
         )
