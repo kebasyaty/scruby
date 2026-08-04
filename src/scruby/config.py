@@ -9,9 +9,8 @@ The settings class contains the following parameters:
 - `db_id` - Database ID.
 - `db_root` - Path to root directory of database. `Default = "ScrubyDB" (in root of project)`.
 - `HASH_REDUCE_LEFT` - The length of the hash reduction on the left side.
-    - `7` - 16 branches in collection (is default).
+    - `7` - 16 branches in collection (default).
     - `6` - 256 branches in collection.
-    - `5` - 4096 branches in collection.
     - `0` - 4294967296 branches in collection.
 - `MAX_NUMBER_BRANCH` - Maximum number of branches in a collection.
 - `max_workers` - The maximum number of processes that can be used (default = None).
@@ -44,15 +43,14 @@ class ScrubyConfig:
     db_root: ClassVar[str] = "ScrubyDB"
 
     # The length of the hash reduction on the left side.
-    # 7 = 16 branches in collection.
-    # 6 = 256 branches in collection (is default).
-    # 5 = 4096 branches in collection.
+    # 7 = 16 branches in collection (default).
+    # 6 = 256 branches in collection.
     # 0 = 4294967296 branches in collection.
-    HASH_REDUCE_LEFT: ClassVar[Literal[7, 6, 5, 0]] = 7
+    HASH_REDUCE_LEFT: ClassVar[Literal[7, 6, 0]] = 7
 
     # Maximum number of branches in a collection.
-    # 16**(8 - HASH_REDUCE_LEFT) = 16 | 256 | 4096 | 4294967296
-    MAX_NUMBER_BRANCH: ClassVar[Literal[16, 256, 4096, 4294967296]] = 16
+    # 16**(8 - HASH_REDUCE_LEFT) = 16 | 256 | 4294967296
+    MAX_NUMBER_BRANCH: ClassVar[Literal[16, 256, 4294967296]] = 16
 
     # The maximum number of processes that can be used to execute the given calls.
     # If None, then as many worker processes will be
@@ -106,8 +104,6 @@ class ScrubyConfig:
                 cls.MAX_NUMBER_BRANCH = 16
             case 6:
                 cls.MAX_NUMBER_BRANCH = 256
-            case 5:
-                cls.MAX_NUMBER_BRANCH = 4096
             case 0:
                 cls.MAX_NUMBER_BRANCH = 4294967296
             case _ as unreachable:

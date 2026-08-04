@@ -49,14 +49,14 @@ async def main() -> None:
         await car_coll.add_doc(car)
 
     # Find all cars.
-    car_list: list[Car] | None = car_coll.find_many()
+    car_list: list[Car] | None = await car_coll.find_many()
     if car_list is not None:
         pp(car_list)
     else:
         print("No cars!")
 
     # Find cars by brand and year.
-    car_list: list[Car] | None = car_coll.find_many(
+    car_list: list[Car] | None = await car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda" and doc.year == 2025,
     )
     if car_list is not None:
@@ -65,7 +65,7 @@ async def main() -> None:
         print("No cars!")
 
     # Pagination
-    car_list: list[Car] | None = car_coll.find_many(
+    car_list: list[Car] | None = await car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
         limit_docs=5,
         page_number=2,
@@ -76,7 +76,7 @@ async def main() -> None:
         print("No cars!")
 
     # Sorting
-    car_list: list[Car] | None = car_coll.find_many(
+    car_list: list[Car] | None = await car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
         sort_fn=lambda doc: (doc.brand, doc.updated_at),
         sort_reverse=True,
@@ -87,13 +87,13 @@ async def main() -> None:
         print("No cars!")
 
     # Return cars in JSON format
-    car_list: str | None = car_coll.find_many(
+    car_list: str | None = await car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
         return_type=ReturnType.JSON,
     )
 
     # Return cars in Dict format
-    car_list: list[dict] | None = car_coll.find_many(
+    car_list: list[dict] | None = await car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
         return_type=ReturnType.DICT,
     )

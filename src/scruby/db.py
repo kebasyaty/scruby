@@ -19,7 +19,6 @@ from anyio import Path
 from xloft import NamedTuple
 
 from scruby import mixins
-from scruby.cache import DocCache
 from scruby.config import ScrubyConfig
 from scruby.meta import Meta, Metadata
 from scruby.migration import Migration
@@ -120,7 +119,7 @@ class Scruby(
         meta_json = meta.model_dump_json()
         await meta_path.write_text(meta_json, "utf-8")
 
-    async def _get_leaf_path(self, key: str) -> tuple[Path, str, str]:
+    async def _get_leaf_path(self, key: str) -> tuple[Path, str]:
         """Asynchronous method for getting path to collection cell by key.
 
         This method is for internal use.
@@ -157,7 +156,7 @@ class Scruby(
             await branch_path.mkdir(self._mode, parents=True)
         # Get the path to the collection cell.
         leaf_path: Path = Path(*(branch_path, "leaf.json"))
-        return (leaf_path, prepared_key, key_as_hash)
+        return (leaf_path, prepared_key)
 
     @staticmethod
     def napalm() -> None:
@@ -171,7 +170,6 @@ class Scruby(
         Returns:
             None.
         """
-        DocCache.cache = {}
         with contextlib.suppress(FileNotFoundError):
             rmtree(ScrubyConfig.db_root)
         ScrubyConfig.restore()
@@ -180,7 +178,7 @@ class Scruby(
     @staticmethod
     def run(
         db_root: str = "ScrubyDB",
-        hash_reduce_left: Literal[7, 6, 5, 0] = 7,
+        hash_reduce_left: Literal[7, 6, 0] = 7,
         max_workers: int | None = None,
         plugins: list[Any] | None = None,
         mode: int = 0o777,
@@ -190,6 +188,10 @@ class Scruby(
         Args:
             db_root (str): Path to root directory of database.
                            Default = "ScrubyDB" (in root of project).
+            hash_reduce_left (Literal[7, 6, 0]): The length of the hash reduction on the left side.
+                                                 7 = 16 branches in collection (default).
+                                                 6 = 256 branches in collection.
+                                                 0 = 4294967296 branches in collection.
             max_workers (int | None ): The maximum number of processes that can be used to execute the given calls.
                                        If None, then as many worker processes will be
                                        created as the machine has processors.
@@ -213,9 +215,10 @@ class Scruby(
                 if hash_reduce_left == 0:
                     msg = "For `hash_reduce_left = 0` there is no access to plugins."
                     raise AssertionError(msg)
+                current_version = 3
                 for plugin in plugins:
-                    if plugin.SCRUBY_VERSION != 2:
-                        msg = f"Plugin `{plugin.__name__}` does not apply to version 2."
+                    if current_version != plugin.SCRUBY_VERSION:
+                        msg = f"Plugin `{plugin.__name__}` does not apply to version {current_version}."
                         raise AssertionError(msg)
 
         ScrubyConfig.db_root = db_root
@@ -241,11 +244,5 @@ class Scruby(
                 subclass.__name__,
                 mode,
             )
-
-        if ScrubyConfig.HASH_REDUCE_LEFT > 0:
-            logger.info("Load data into cache.")
-            DocCache.load_cache(subclasses)
-        else:
-            logger.info("Skip data caching for `HASH_REDUCE_LEFT = 0`.")
 
         logger.info("Database successfully activated.")

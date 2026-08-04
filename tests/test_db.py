@@ -265,7 +265,7 @@ class TestNegative:
             AssertionError,
             match=r"Method: `find_many` => The `page_number` parameter must not be less than one.",
         ):
-            user_coll.find_many(
+            await user_coll.find_many(
                 filter_fn=lambda doc: doc.last_name == "Smith",
                 limit_docs=5,
                 page_number=0,
@@ -276,7 +276,7 @@ class TestNegative:
             AssertionError,
             match=r"Method: `find_many` => The `page_number` parameter must not be less than one.",
         ):
-            user_coll.find_many(
+            await user_coll.find_many(
                 filter_fn=lambda doc: doc.last_name == "Smith",
                 limit_docs=5,
                 page_number=-1,
@@ -297,11 +297,10 @@ class TestPositive:
         user_coll = Scruby(User)
 
         key_name = "key name"
-        leaf_path, prepared_key, key_as_hash = await user_coll._get_leaf_path(key_name)
+        leaf_path, prepared_key = await user_coll._get_leaf_path(key_name)
 
         assert leaf_path == Path("ScrubyDB/User/1/leaf.json")
         assert prepared_key == key_name
-        assert key_as_hash == "1"
         #
         # Delete DB.
         Scruby.napalm()
@@ -505,13 +504,13 @@ class TestPositive:
 
         user_coll = Scruby(User)
         control_path = Path("ScrubyDB/User/1/leaf.json")
-        leaf_path, _, _ = await user_coll._get_leaf_path("key name")
+        leaf_path, _ = await user_coll._get_leaf_path("key name")
         assert leaf_path == control_path
 
         Scruby.napalm()
         user_coll = Scruby(User)
         control_path = Path("ScrubyDB/User/1/leaf.json")
-        leaf_path, _, _ = await user_coll._get_leaf_path("key name")
+        leaf_path, _ = await user_coll._get_leaf_path("key name")
         assert leaf_path == control_path
         #
         # Delete DB.
@@ -535,27 +534,27 @@ class TestPositive:
             await user_coll.add_doc(user)
 
         # by email
-        result: User | None = user_coll.find_one(
+        result: User | None = await user_coll.find_one(
             filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com",
         )
         assert result is not None
         assert result.email == "John_Smith_5@gmail.com"
 
         # by birthday
-        result_2: User | None = user_coll.find_one(
+        result_2: User | None = await user_coll.find_one(
             filter_fn=lambda doc: doc.birthday == datetime(1970, 1, 8, tzinfo=ZoneInfo("UTC")),
         )
         assert result_2 is not None
         assert result_2.birthday == datetime(1970, 1, 8, tzinfo=ZoneInfo("UTC"))
 
         # result is None
-        result_3: User | None = user_coll.find_one(
+        result_3: User | None = await user_coll.find_one(
             filter_fn=lambda doc: doc.first_name == "???",
         )
         assert result_3 is None
 
         # include fields
-        result_dict: dict | None = user_coll.find_one(
+        result_dict: dict | None = await user_coll.find_one(
             filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com",
             include_fields={"email", "phone"},
             return_type=ReturnType.DICT,
@@ -567,7 +566,7 @@ class TestPositive:
         assert result_dict["phone"] == "+447986123455"
 
         # exclude fields
-        result_dict: dict | None = user_coll.find_one(
+        result_dict: dict | None = await user_coll.find_one(
             filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com",
             exclude_fields={"key", "created_at", "updated_at", "first_name", "last_name", "birthday"},
             return_type=ReturnType.DICT,
@@ -599,12 +598,12 @@ class TestPositive:
             await user_coll.add_doc(user)
 
         # all arguments by default
-        result_1: list[User] | str | None = user_coll.find_many()
+        result_1: list[User] | str | None = await user_coll.find_many()
         assert result_1 is not None
         assert len(result_1) == 9
 
         # all args by default
-        result_2: list[User] | str | None = user_coll.find_many(
+        result_2: list[User] | str | None = await user_coll.find_many(
             filter_fn=lambda doc: doc.email == "John_Smith_1@gmail.com" or doc.email == "John_Smith_9@gmail.com",
         )
         assert result_2 is not None
@@ -613,7 +612,7 @@ class TestPositive:
         assert result_2[1].email in ["John_Smith_1@gmail.com", "John_Smith_9@gmail.com"]
 
         # limit docs = 5, page number = 1
-        result_3: list[User] | str | None = user_coll.find_many(
+        result_3: list[User] | str | None = await user_coll.find_many(
             filter_fn=lambda doc: doc.last_name == "Smith",
             limit_docs=5,
             page_number=1,
@@ -622,7 +621,7 @@ class TestPositive:
         assert len(result_3) == 5
 
         # limit docs = 5, page number = 2
-        result_4: list[User] | str | None = user_coll.find_many(
+        result_4: list[User] | str | None = await user_coll.find_many(
             filter_fn=lambda doc: doc.last_name == "Smith",
             limit_docs=5,
             page_number=2,
@@ -631,13 +630,13 @@ class TestPositive:
         assert len(result_4) == 4
 
         # result is None
-        result_5: list[User] | str | None = user_coll.find_many(
+        result_5: list[User] | str | None = await user_coll.find_many(
             filter_fn=lambda doc: doc.last_name == "???",
         )
         assert result_5 is None
 
         # include fields
-        result_dict: list[User] | str | None = user_coll.find_many(
+        result_dict: list[User] | str | None = await user_coll.find_many(
             filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com",
             include_fields={"email", "phone"},
             return_type=ReturnType.DICT,
@@ -649,7 +648,7 @@ class TestPositive:
         assert result_dict[0]["phone"] == "+447986123455"
 
         # exclude fields
-        result_dict: list[User] | str | None = user_coll.find_many(
+        result_dict: list[User] | str | None = await user_coll.find_many(
             filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com",
             exclude_fields={"key", "created_at", "updated_at", "first_name", "last_name", "birthday"},
             return_type=ReturnType.DICT,
@@ -693,7 +692,7 @@ class TestPositive:
             await user_coll.add_doc(user)
 
         assert await user_coll.estimated_document_count() == 9
-        result: int = user_coll.count_documents(
+        result: int = await user_coll.count_documents(
             filter_fn=lambda doc: doc.email == "John_Smith_5@gmail.com" or doc.email == "John_Smith_8@gmail.com",
         )
         assert result == 2
@@ -724,7 +723,7 @@ class TestPositive:
         )
         assert result == 2
         assert await user_coll.estimated_document_count() == 7
-        result = user_coll.count_documents(
+        result = await user_coll.count_documents(
             filter_fn=lambda _: True,
         )
         assert result == 7
@@ -753,7 +752,7 @@ class TestPositive:
         assert number_updated_users == 9
         #
         # by email
-        users: list[User] | str | None = user_coll.find_many()
+        users: list[User] | str | None = await user_coll.find_many()
         assert users is not None
         for user in users:
             assert user.first_name == "Georg"

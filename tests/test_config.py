@@ -67,10 +67,6 @@ class TestConfigMethods:
         ScrubyConfig.HASH_REDUCE_LEFT = 6
         ScrubyConfig.init_max_number_branch()
         assert ScrubyConfig.MAX_NUMBER_BRANCH == 256
-        # 5
-        ScrubyConfig.HASH_REDUCE_LEFT = 5
-        ScrubyConfig.init_max_number_branch()
-        assert ScrubyConfig.MAX_NUMBER_BRANCH == 4096
         # 0
         ScrubyConfig.HASH_REDUCE_LEFT = 0
         ScrubyConfig.init_max_number_branch()
@@ -107,30 +103,6 @@ class TestConfigMethods:
         #
         # 6
         test_num = 6
-        ScrubyConfig.HASH_REDUCE_LEFT = test_num
-        ScrubyConfig.check_hash_reduce_left()
-        delimiter: str = "/" if ScrubyConfig.sys_platform != "win32" else ""
-        hash_reduce_left = Utils.get_from_env(
-            key="hash_reduce_left",
-            dotenv_path=f"{ScrubyConfig.db_root}{delimiter}.env.meta",
-        )
-        assert hash_reduce_left is not None
-        assert int(hash_reduce_left) == test_num
-        # repeat
-        ScrubyConfig.check_hash_reduce_left()
-        delimiter: str = "/" if ScrubyConfig.sys_platform != "win32" else ""
-        hash_reduce_left = Utils.get_from_env(
-            key="hash_reduce_left",
-            dotenv_path=f"{ScrubyConfig.db_root}{delimiter}.env.meta",
-        )
-        assert hash_reduce_left is not None
-        assert int(hash_reduce_left) == test_num
-        #
-        # Delete DB.
-        Scruby.napalm()
-        #
-        # 5
-        test_num = 5
         ScrubyConfig.HASH_REDUCE_LEFT = test_num
         ScrubyConfig.check_hash_reduce_left()
         delimiter: str = "/" if ScrubyConfig.sys_platform != "win32" else ""

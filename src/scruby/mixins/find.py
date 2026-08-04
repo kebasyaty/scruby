@@ -15,7 +15,8 @@ from enum import Enum
 from threading import Event
 from typing import Any, Never, assert_never, final
 
-from scruby.cache import DocCache
+import orjson
+from anyio import Path
 
 
 class ReturnType(Enum):
@@ -37,10 +38,11 @@ class Find:
 
     @final
     @staticmethod
-    def _task_find(
+    async def _task_find(
         filter_fn: Callable,
-        hash_reduce_left: int,
         branch_number: int,
+        hash_reduce_left: int,
+        db_root: str,
         class_model: Any,
         stop_event: Event,
     ) -> list[Any] | None:
@@ -54,39 +56,37 @@ class Find:
         # Suppress warning - RuntimeWarning: coroutine 'Find._task_find' was never awaited
         warnings.filterwarnings("ignore", category=RuntimeWarning)
         # Variable initialization
-        collection_name = class_model.__name__
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
-        docs: dict[str, Any] = {}
-        result: list[Any] = []
-
-        match hash_reduce_left:
-            case 7:
-                docs = DocCache.cache[collection_name][branch_number_as_hash[0]]
-            case 6:
-                docs = DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]]
-            case 5:
-                docs = DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
-                    branch_number_as_hash[2]
-                ]
-            case _ as unreachable:
-                assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
-
-        for _, doc in docs.items():
-            if stop_event.is_set():
-                return None
-            if filter_fn(doc):
-                result.append(doc)
-        return result or None
+        separated_hash: str = "/".join(list(branch_number_as_hash))
+        leaf_path = Path(
+            *(
+                db_root,
+                class_model.__name__,
+                separated_hash,
+                "leaf.json",
+            ),
+        )
+        docs: list[Any] = []
+        if await leaf_path.exists():
+            data_json: bytes = await leaf_path.read_bytes()
+            data: dict[str, str] = orjson.loads(data_json) or {}
+            for _, val in data.items():
+                if stop_event.is_set():
+                    return None
+                doc = class_model.model_validate_json(val)
+                if filter_fn(doc):
+                    docs.append(doc)
+        return docs or None
 
     @final
-    def find_one(
+    async def find_one(
         self,
         filter_fn: Callable,
         include_fields: set[str] | None = None,
         exclude_fields: set[str] | None = None,
         return_type: ReturnType = ReturnType.MODEL,
     ) -> Any | None:
-        """Synchronous method for find one document matching the filter.
+        """Asynchronous method for find one document matching the filter.
 
         Attention:
             - The search is based on the effect of a quantum loop.
@@ -110,6 +110,7 @@ class Find:
         model_dump_kwargs = {"include": include_fields, "exclude": exclude_fields}
         search_task_fn: Callable = self._task_find
         branch_numbers: range = range(self._max_number_branch)
+        db_root: str = self._db_root
         class_model: Any = self._class_model
         stop_signal = Event()
         doc: Any | None = None
@@ -120,15 +121,16 @@ class Find:
                 executor.submit(
                     search_task_fn,
                     filter_fn,
-                    hash_reduce_left,
                     branch_number,
+                    hash_reduce_left,
+                    db_root,
                     class_model,
                     stop_signal,
                 )
                 for branch_number in branch_numbers
             ]
             for future in as_completed(futures):
-                docs = future.result()
+                docs = await future.result()
                 if docs is not None:
                     # Get first document
                     doc = docs[0]
@@ -150,7 +152,7 @@ class Find:
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
     @final
-    def find_many(
+    async def find_many(
         self,
         filter_fn: Callable = lambda _: True,
         limit_docs: int = 100,
@@ -161,7 +163,7 @@ class Find:
         exclude_fields: set[str] | None = None,
         return_type: ReturnType = ReturnType.MODEL,
     ) -> list[Any] | str | None:
-        """Synchronous method for find many documents matching the filter.
+        """Asynchronous method for find many documents matching the filter.
 
         Attention:
             - The search is based on the effect of a quantum loop.
@@ -202,6 +204,7 @@ class Find:
         model_dump_kwargs = {"include": include_fields, "exclude": exclude_fields}
         search_task_fn: Callable = self._task_find
         branch_numbers: range = range(self._max_number_branch)
+        db_root: str = self._db_root
         class_model: Any = self._class_model
         stop_signal = Event()
         stop_outer_loop: bool = False
@@ -215,15 +218,16 @@ class Find:
                 executor.submit(
                     search_task_fn,
                     filter_fn,
-                    hash_reduce_left,
                     branch_number,
+                    hash_reduce_left,
+                    db_root,
                     class_model,
                     stop_signal,
                 )
                 for branch_number in branch_numbers
             ]
             for future in as_completed(futures):
-                docs = future.result()
+                docs = await future.result()
                 if docs is not None:
                     for doc in docs:
                         if number_docs_skippe == 0:

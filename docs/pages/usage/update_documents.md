@@ -57,7 +57,7 @@ async def main() -> None:
     )
     print(number_updated_users)  # => 9
 
-    users: list[User] | None = user_coll.find_many()
+    users: list[User] | None = await user_coll.find_many()
     for user in users:
         print(user.first_name)  # => Georg
 

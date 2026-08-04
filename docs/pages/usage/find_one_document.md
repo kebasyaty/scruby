@@ -50,7 +50,7 @@ async def main() -> None:
     await phone_coll.add_doc(phone)
 
     # Find phone by brand.
-    phone_details: Phone | None = phone_coll.find_one(
+    phone_details: Phone | None = await phone_coll.find_one(
         filter_fn=lambda doc: doc.brand == "Samsung",
     )
     if phone_details is not None:
@@ -59,7 +59,7 @@ async def main() -> None:
         print("No Phone!")
 
     # Find phone by model.
-    phone_details: Phone | None = phone_coll.find_one(
+    phone_details: Phone | None = await phone_coll.find_one(
         filter_fn=lambda doc: doc.model == "Galaxy A26",
     )
     if phone_details is not None:
@@ -68,13 +68,13 @@ async def main() -> None:
         print("No Phone!")
 
     # Return phone in JSON format
-    phone_details: str | None = phone_coll.find_one(
+    phone_details: str | None = await phone_coll.find_one(
         filter_fn=lambda doc: doc.model == "Galaxy A26",
         return_type=ReturnType.JSON,
     )
 
     # Return phone in Dict format
-    phone_details: dict | None = phone_coll.find_one(
+    phone_details: dict | None = await phone_coll.find_one(
         filter_fn=lambda doc: doc.model == "Galaxy A26",
         return_type=ReturnType.DICT,
     )

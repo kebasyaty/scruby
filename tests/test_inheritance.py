@@ -168,7 +168,7 @@ async def test_multiple_inheritance() -> None:
         type=CarType.LIFTBACK,
     )
     await car_coll.add_doc(car)
-    car_details: Car | None = car_coll.find_one(
+    car_details: Car | None = await car_coll.find_one(
         filter_fn=lambda doc: doc.model == "EZ-6",
     )
     assert car_details is not None
@@ -189,7 +189,7 @@ async def test_multiple_inheritance() -> None:
         type=MotorcycleType.SPORTBIKE,
     )
     await motorcycle_coll.add_doc(motorcycle)
-    car_details: Car | None = motorcycle_coll.find_one(
+    car_details: Car | None = await motorcycle_coll.find_one(
         filter_fn=lambda doc: doc.model == "V9",
     )
     assert car_details is not None

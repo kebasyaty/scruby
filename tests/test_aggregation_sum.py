@@ -38,11 +38,12 @@ class User(ScrubyModel):
     ]
 
 
-def task_calculate_sum(
+async def task_calculate_sum(
     search_task_fn: Callable,
     filter_fn: Callable,
-    hash_reduce_left: int,
     branch_numbers: range,
+    hash_reduce_left: int,
+    db_root: str,
     class_model: Any,
     max_workers: int | None,
     stop_signal: Event,
@@ -58,15 +59,16 @@ def task_calculate_sum(
             executor.submit(
                 search_task_fn,
                 filter_fn,
-                hash_reduce_left,
                 branch_number,
+                hash_reduce_left,
+                db_root,
                 class_model,
                 stop_signal,
             )
             for branch_number in branch_numbers
         ]
         for future in as_completed(futures):
-            docs = future.result()
+            docs = await future.result()
             if docs is not None:
                 for doc in docs:
                     sum_age.set(doc.age)
@@ -90,7 +92,7 @@ async def test_task_calculate_sum() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = user_coll.run_custom_task(task_calculate_sum)
+    result = await user_coll.run_custom_task(task_calculate_sum)
     assert result == pytest.approx(450.0)
     #
     # Delete DB.
