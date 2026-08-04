@@ -11,7 +11,6 @@ __all__ = ("Collection",)
 from shutil import rmtree
 from typing import final
 
-from scruby.cache import DocCache
 from scruby.config import ScrubyConfig
 from scruby.meta import Metadata
 from scruby.models import ScrubyModel
@@ -37,8 +36,8 @@ class Collection:
         return collections or None
 
     @final
-    @staticmethod
-    def clear_collection(collection_name: str) -> None:
+    @classmethod
+    def clear_collection(cls, collection_name: str) -> None:
         """Synchronous method to remove all documents from a collection.
 
         Args:
@@ -63,8 +62,4 @@ class Collection:
             collection_name,
         )
 
-        # Clear collection in cache
-        if hash_reduce_left != 0:
-            del DocCache.cache[collection_name]
-            DocCache.create_structure(collection_name)
         return

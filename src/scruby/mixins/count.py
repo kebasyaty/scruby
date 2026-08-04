@@ -30,11 +30,11 @@ class Count:
         return meta.counter_documents
 
     @final
-    def count_documents(
+    async def count_documents(
         self,
         filter_fn: Callable,
     ) -> int:
-        """Synchronous method.
+        """Asynchronous method.
 
         Count the number of documents a matching the filter in this collection.
 
@@ -55,6 +55,7 @@ class Count:
         search_task_fn: Callable = self._task_find
         branch_numbers: range = range(self._max_number_branch)
         hash_reduce_left: int = self._hash_reduce_left
+        db_root: str = self._db_root
         class_model: Any = self._class_model
         stop_signal = Event()
         counter: int = 0
@@ -64,15 +65,16 @@ class Count:
                 executor.submit(
                     search_task_fn,
                     filter_fn,
-                    hash_reduce_left,
                     branch_number,
+                    hash_reduce_left,
+                    db_root,
                     class_model,
                     stop_signal,
                 )
                 for branch_number in branch_numbers
             ]
             for future in as_completed(futures):
-                docs = future.result()
+                docs = await future.result()
                 if docs is not None:
                     counter += len(docs)
         return counter

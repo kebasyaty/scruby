@@ -11,7 +11,6 @@ from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
 from scruby import Scruby, ScrubyConfig, ScrubyModel
-from scruby.cache import DocCache
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
@@ -82,8 +81,6 @@ async def test_create_db() -> None:
     assert ScrubyConfig.HASH_REDUCE_LEFT == 0
     assert ScrubyConfig.MAX_NUMBER_BRANCH == 4294967296
 
-    assert len(DocCache.cache) == 0
-
     # Create users
     user_coll = Scruby(User)
     for num in range(9):
@@ -121,8 +118,6 @@ async def test_create_db() -> None:
         # Add car to collection
         await car_coll.add_doc(car)
 
-    assert len(DocCache.cache) == 0
-
 
 async def test_hash_reduce_left_0() -> None:
     """Testing the parameter hash_reduce_left = 0."""
@@ -130,11 +125,8 @@ async def test_hash_reduce_left_0() -> None:
     assert ScrubyConfig.HASH_REDUCE_LEFT == 0
     assert ScrubyConfig.MAX_NUMBER_BRANCH == 4294967296
 
-    assert len(DocCache.cache) == 0
-
     # Get collection `User`.
     user_coll = Scruby(User)
-    assert len(DocCache.cache) == 0
 
     # collection_name
     assert user_coll.collection_name() == "User"
@@ -152,7 +144,7 @@ async def test_hash_reduce_left_0() -> None:
         AssertionError,
         match=r"Scruby.run\(hash_reduce_left = 0\) - Not valid for `count_documents` method.",
     ):
-        assert user_coll.count_documents(filter_fn=lambda doc: doc.first_name == "John") == 9
+        assert await user_coll.count_documents(filter_fn=lambda doc: doc.first_name == "John") == 9
 
     # add_doc
     user = User(
@@ -164,7 +156,6 @@ async def test_hash_reduce_left_0() -> None:
     )
     await user_coll.add_doc(user)
     assert await user_coll.estimated_document_count() == 10
-    assert len(DocCache.cache) == 0
 
     # update_doc and get_doc
     user = User(
@@ -178,15 +169,12 @@ async def test_hash_reduce_left_0() -> None:
     user: User | None = await user_coll.get_doc("+447986123459")
     assert user is not None
     assert user.birthday == datetime(1972, 11, 7, tzinfo=ZoneInfo("UTC"))
-    assert len(DocCache.cache) == 0
 
     # has_key
     assert await user_coll.has_key("+447986123459")
-    assert len(DocCache.cache) == 0
 
     # delete_doc
     await user_coll.delete_doc("+447986123459")
-    assert len(DocCache.cache) == 0
     assert not await user_coll.has_key("+447986123459")
     assert await user_coll.estimated_document_count() == 9
 
@@ -195,14 +183,14 @@ async def test_hash_reduce_left_0() -> None:
         AssertionError,
         match=r"Scruby.run\(hash_reduce_left = 0\) - Not valid for `find_one` method.",
     ):
-        assert user_coll.find_one(filter_fn=lambda doc: doc.phone == "+447986123457") is not None
+        assert await user_coll.find_one(filter_fn=lambda doc: doc.phone == "+447986123457") is not None
 
     # find_many
     with pytest.raises(
         AssertionError,
         match=r"Scruby.run\(hash_reduce_left = 0\) - Not valid for `find_many` method.",
     ):
-        assert user_coll.find_many() is not None
+        assert await user_coll.find_many() is not None
 
     # update_many
     with pytest.raises(
@@ -228,7 +216,6 @@ async def test_hash_reduce_left_0() -> None:
     Scruby.clear_collection("User")
     coll_list = Scruby.collection_list()
     assert coll_list is not None
-    assert len(DocCache.cache) == 0
     for coll_name in coll_list:
         assert coll_name in ["User", "Phone", "Car"]
     #

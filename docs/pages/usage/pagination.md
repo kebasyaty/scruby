@@ -52,7 +52,7 @@ async def main() -> None:
         await car_coll.add_doc(car)
 
     # Pagination.
-    car_list: list[Car] | None = car_coll.find_many(
+    car_list: list[Car] | None = await car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
         limit_docs=5,
         page_number=2,

@@ -44,11 +44,12 @@ class Salesman(ScrubyModel):
     ]
 
 
-def salary_info(
+async def salary_info(
     search_task_fn: Callable,
     filter_fn: Callable,
-    hash_reduce_left: int,
     branch_numbers: range,
+    hash_reduce_left: int,
+    db_root: str,
     class_model: Any,
     max_workers: int | None,
     stop_signal: Event,
@@ -72,15 +73,16 @@ def salary_info(
             executor.submit(
                 search_task_fn,
                 filter_fn,
-                hash_reduce_left,
                 branch_number,
+                hash_reduce_left,
+                db_root,
                 class_model,
                 stop_signal,
             )
             for branch_number in branch_numbers
         ]
         for future in as_completed(futures):
-            docs = future.result()
+            docs = await future.result()
             if docs is not None:
                 for doc in docs:
                     max_salary.set(doc.salary)
@@ -101,11 +103,12 @@ def salary_info(
     return result or None
 
 
-def salary_info_as_json(
+async def salary_info_as_json(
     search_task_fn: Callable,
     filter_fn: Callable,
-    hash_reduce_left: int,
     branch_numbers: range,
+    hash_reduce_left: int,
+    db_root: str,
     class_model: Any,
     max_workers: int | None,
     stop_signal: Event,
@@ -129,15 +132,16 @@ def salary_info_as_json(
             executor.submit(
                 search_task_fn,
                 filter_fn,
-                hash_reduce_left,
                 branch_number,
+                hash_reduce_left,
+                db_root,
                 class_model,
                 stop_signal,
             )
             for branch_number in branch_numbers
         ]
         for future in as_completed(futures):
-            docs = future.result()
+            docs = await future.result()
             if docs is not None:
                 for doc in docs:
                     max_salary.set(doc.salary)
@@ -182,7 +186,7 @@ async def test_salary_info() -> None:
         await salesman_coll.add_doc(salesman)
 
     # Get salary information for sellers named John
-    result: dict[str, Any] | None = salesman_coll.run_custom_task(
+    result: dict[str, Any] | None = await salesman_coll.run_custom_task(
         custom_task_fn=salary_info,
         filter_fn=lambda doc: doc.first_name == "John",
     )
@@ -222,7 +226,7 @@ async def test_salary_info_as_json() -> None:
         await salesman_coll.add_doc(salesman)
 
     # Get salary information for sellers named John
-    result_json: str | None = salesman_coll.run_custom_task(
+    result_json: str | None = await salesman_coll.run_custom_task(
         custom_task_fn=salary_info_as_json,
         filter_fn=lambda doc: doc.first_name == "John",
     )

@@ -1,5 +1,10 @@
 ### CHANGELOG
 
+#### v3.0.0 2026-08-04
+
+- All reasons that could lead to inadequate production requirements have been eliminated.
+- See README.md and documentation.
+
 #### v2.7.0 2026-07-6
 
 - Added `CryptModel` model for password operations.

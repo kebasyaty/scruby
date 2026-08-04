@@ -9,14 +9,12 @@ from __future__ import annotations
 __all__ = ("Keys",)
 
 
-import zlib
 from datetime import datetime
-from typing import Any, Never, assert_never, final
+from typing import Any, final
 from zoneinfo import ZoneInfo
 
 import orjson
 
-from scruby.cache import DocCache
 from scruby.errors import (
     KeyAlreadyExistsError,
     KeyNotExistsError,
@@ -50,7 +48,7 @@ class Keys:
             msg = "Method: `add_doc` => The `password` field is empty"
             raise ValueError(msg)
         # Get the path to the collection cell
-        leaf_path, prepared_key, key_as_hash = await self._get_leaf_path(doc.key)
+        leaf_path, prepared_key = await self._get_leaf_path(doc.key)
         # Init a `created_at` and `updated_at` fields
         tz = ZoneInfo("UTC")
         doc.created_at = datetime.now(tz)
@@ -74,19 +72,6 @@ class Keys:
             await leaf_path.write_bytes(orjson.dumps({prepared_key: doc_json}))
         # Update document counter
         await self._counter_documents(1)
-        # Add new document to cache
-        collection_name = self._class_model.__name__
-        match self._hash_reduce_left:
-            case 7:
-                DocCache.cache[collection_name][key_as_hash[0]][prepared_key] = doc
-            case 6:
-                DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][prepared_key] = doc
-            case 5:
-                DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][prepared_key] = doc
-            case 0:
-                pass
-            case _ as unreachable:
-                assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
     @final
     async def update_doc(self, doc: Any) -> None:
@@ -112,7 +97,7 @@ class Keys:
             msg = "Method: `update_doc` => The `password` field is empty"
             raise ValueError(msg)
         # Get the path to the collection cell
-        leaf_path, prepared_key, key_as_hash = await self._get_leaf_path(doc.key)
+        leaf_path, prepared_key = await self._get_leaf_path(doc.key)
         # Update a `updated_at` field
         doc.updated_at = datetime.now(ZoneInfo("UTC"))
         # Convert doc to json.
@@ -127,21 +112,6 @@ class Keys:
                 # Update a document from database
                 data[prepared_key] = doc_json
                 await leaf_path.write_bytes(orjson.dumps(data))
-                # Update a document from cache
-                collection_name = self._class_model.__name__
-                match self._hash_reduce_left:
-                    case 7:
-                        DocCache.cache[collection_name][key_as_hash[0]][prepared_key] = doc
-                    case 6:
-                        DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][prepared_key] = doc
-                    case 5:
-                        DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][
-                            prepared_key
-                        ] = doc
-                    case 0:
-                        pass
-                    case _ as unreachable:
-                        assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
             else:
                 raise KeyNotExistsError()
         else:
@@ -162,28 +132,17 @@ class Keys:
             raise KeyError("The key is not a string.")
 
         # Get the path to the collection cell
-        leaf_path, prepared_key, key_as_hash = await self._get_leaf_path(key)
+        leaf_path, prepared_key = await self._get_leaf_path(key)
 
-        # Get value of key from cache
-        collection_name = self._class_model.__name__
-        match self._hash_reduce_left:
-            case 7:
-                return DocCache.cache[collection_name][key_as_hash[0]].get(prepared_key)
-            case 6:
-                return DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]].get(prepared_key)
-            case 5:
-                return DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get(prepared_key)
-            case 0:
-                doc: Any | None = None
-                if await leaf_path.exists():
-                    data_json: bytes = await leaf_path.read_bytes()
-                    data: dict = orjson.loads(data_json) or {}
-                    doc_json: str | None = data.get(prepared_key)
-                    if doc_json is not None:
-                        doc = self._class_model.model_validate_json(doc_json)
-                return doc
-            case _ as unreachable:
-                assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
+        doc: Any | None = None
+        # Get value of key.
+        if await leaf_path.exists():
+            data_json: bytes = await leaf_path.read_bytes()
+            data: dict = orjson.loads(data_json) or {}
+            doc_json: str | None = data.get(prepared_key)
+            if doc_json is not None:
+                doc = self._class_model.model_validate_json(doc_json)
+        return doc
 
     @final
     async def has_key(self, key: str) -> bool:
@@ -195,40 +154,14 @@ class Keys:
         Returns:
             True, if the key is present.
         """
-        if not isinstance(key, str):
-            raise KeyError("The key is not a string.")
-
-        # Get the path to the collection cell
-        leaf_path, prepared_key, key_as_hash = await self._get_leaf_path(key)
-
-        # Check the key for an empty string
-        if len(prepared_key) == 0:
-            raise KeyError("The key should not be empty.")
-        # Key to crc32 sum
-        key_as_hash: str = f"{zlib.crc32(prepared_key.encode('utf-8')):08x}"[self._hash_reduce_left :]
-        # Get value of key from cache
-        collection_name = self._class_model.__name__
+        # Get path to cell of collection.
+        leaf_path, prepared_key = await self._get_leaf_path(key)
         is_exists: bool = False
-        match self._hash_reduce_left:
-            case 7:
-                is_exists = DocCache.cache[collection_name][key_as_hash[0]].get(prepared_key) is not None
-            case 6:
-                is_exists = (
-                    DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]].get(prepared_key) is not None
-                )
-            case 5:
-                is_exists = (
-                    DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]].get(prepared_key)
-                    is not None
-                )
-            case 0:
-                if await leaf_path.exists():
-                    data_json: bytes = await leaf_path.read_bytes()
-                    data: dict = orjson.loads(data_json) or {}
-                    is_exists = data.get(prepared_key) is not None
-                return is_exists
-            case _ as unreachable:
-                assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
+        # Checking whether there is a key.
+        if await leaf_path.exists():
+            data_json: bytes = await leaf_path.read_bytes()
+            data: dict = orjson.loads(data_json) or {}
+            is_exists = data.get(prepared_key) is not None
         return is_exists
 
     @final
@@ -241,12 +174,10 @@ class Keys:
         Returns:
             None.
         """
-        # The path to the database cell
-        leaf_path, prepared_key, key_as_hash = await self._get_leaf_path(key)
-
+        # The path to the database cell.
+        leaf_path, prepared_key = await self._get_leaf_path(key)
         # Deleting key.
         if await leaf_path.exists():
-            # Delete a document from the file system
             data_json: bytes = await leaf_path.read_bytes()
             data: dict = orjson.loads(data_json) or {}
             if data.get(prepared_key) is not None:
@@ -254,23 +185,8 @@ class Keys:
                 del data[prepared_key]
                 await leaf_path.write_bytes(orjson.dumps(data))
                 await self._counter_documents(-1)
-                # Delete a document from cache
-                collection_name = self._class_model.__name__
-                match self._hash_reduce_left:
-                    case 7:
-                        del DocCache.cache[collection_name][key_as_hash[0]][prepared_key]
-                    case 6:
-                        del DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][prepared_key]
-                    case 5:
-                        del DocCache.cache[collection_name][key_as_hash[0]][key_as_hash[1]][key_as_hash[2]][
-                            prepared_key
-                        ]
-                    case 0:
-                        pass
-                    case _ as unreachable:
-                        assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
             else:
                 raise KeyNotExistsError()
         else:
-            msg: str = f"Method: `delete_doc` => The key `{key}` is missing!"
+            msg: str = f"Method: `delete_doc` - The key `{key}` is missing!"
             raise KeyError(msg)

@@ -4,7 +4,7 @@
       <img
         width="100%"
         alt="Logo"
-        src="https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/logo.png">
+        src="https://raw.githubusercontent.com/kebasyaty/scruby/v3/assets/logo.png">
     </a>
   </p>
   <p>
@@ -21,15 +21,15 @@
       <a href="https://docs.astral.sh/ruff/" alt="Code style: Ruff"><img src="https://img.shields.io/badge/code%20style-Ruff-FDD835.svg" alt="Code style: Ruff"></a>
       <a href="https://pypi.org/project/scruby"><img src="https://img.shields.io/pypi/format/scruby" alt="Format"></a>
       <a href="https://pepy.tech/projects/scruby"><img src="https://static.pepy.tech/badge/scruby" alt="PyPI Downloads"></a>
-      <a href="https://github.com/kebasyaty/scruby/blob/v2/MIT-LICENSE" alt="License: MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
-      <a href="https://github.com/kebasyaty/scruby/blob/v2/GPL-3.0-LICENSE" alt="License: GPL v3"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
+      <a href="https://github.com/kebasyaty/scruby/blob/v3/MIT-LICENSE" alt="License: MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+      <a href="https://github.com/kebasyaty/scruby/blob/v3/GPL-3.0-LICENSE" alt="License: GPL v3"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
     </p>
     <p align="center">
       The library uses fractal-tree addressing and<br>
       the search for documents based on the effect of a quantum loop.
       <br>
       <br>
-      The size of each collection is 16|256|4096|4294967296 branches,<br>
+      The size of each collection is 16|256|4294967296 branches,<br>
       each branch can store one or more keys.
       <br>
       <br>
@@ -47,32 +47,40 @@
 
 <br>
 
-<img src="https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/attention.svg" alt="Attention">
+<img src="https://raw.githubusercontent.com/kebasyaty/scruby/v3/assets/attention.svg" alt="Attention">
 <p>
-<b>Parameter `Scruby.run(hash_reduce_left = 7)`:</b>
+  <b>Version 3.0</b>
+  <br>
+  All reasons that could lead to inadequate production requirements have been eliminated.
+  <br>
+  <a href="https://kebasyaty.github.io/scruby/latest/" alt="See documentation">See documentation.</a>
+</p>
+
 <br>
-7 = 16 branches in collection (default) -> Docs: ~16000+, RAM: ~2G+, CPU: ~2+ (for development).
-<br>
-6 = 256 branches in collection -> Docs: ~256000+, RAM: ~4G+, CPU: ~2+ (for small projects).
-<br>
-5 = 4096 branches in collection -> Docs: ~4096000+, RAM: ~6G+, CPU: ~4+ (for large projects).
-<br>
-0 = 4294967296 branches in collection -> Docs: ~4,294967296×10¹²+, RAM: ~2G+, CPU: ~2+ (access only by keys).
-<br>
-<br>
-<b>If you notice the production server slowing down,</b><br>
-<b>you will need to add RAM and CPU.</b>
+
+<p>
+  <b>Parameter `Scruby.run(hash_reduce_left = 7)`:</b>
+  <br>
+  7 = 16 branches in collection (default) -> Docs: ~16000+, RAM: 2G+, CPU: 2+ (for development).
+  <br>
+  6 = 256 branches in collection -> Docs: ~256000+, RAM: 2G+, CPU: 2+ (for small projects).
+  <br>
+  0 = 4294967296 branches in collection -> Docs: ~4,294967296×10¹²+, RAM: 2G+, CPU: 2+ (access only by keys).
+  <br>
+  <br>
+  <b>If you notice the production server slowing down,</b><br>
+  <b>you will need to add CPU.</b>
 </p>
 
 <br>
 <br>
 <br>
 
-[![List of plugins](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/plugins.svg "List of plugins")](https://github.com/kebasyaty/scruby/blob/v2/PLUGINS.md "List of plugins")
+[![List of plugins](https://raw.githubusercontent.com/kebasyaty/scruby/v3/assets/links/plugins.svg "List of plugins")](https://github.com/kebasyaty/scruby/blob/v3/PLUGINS.md "List of plugins")
 
-[![Documentation](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/documentation.svg "Documentation")](https://kebasyaty.github.io/scruby/ "Documentation")
+[![Documentation](https://raw.githubusercontent.com/kebasyaty/scruby/v3/assets/links/documentation.svg "Documentation")](https://kebasyaty.github.io/scruby/ "Documentation")
 
-[![Requirements](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/requirements.svg "Requirements")](https://github.com/kebasyaty/scruby/blob/v2/REQUIREMENTS.md "Requirements")
+[![Requirements](https://raw.githubusercontent.com/kebasyaty/scruby/v3/assets/links/requirements.svg "Requirements")](https://github.com/kebasyaty/scruby/blob/v3/REQUIREMENTS.md "Requirements")
 
 ## Installation
 
@@ -91,7 +99,7 @@ uv run python -OOP main.py
 
 ## Usage
 
-[![Examples](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/more-examples.svg "Examples")](https://kebasyaty.github.io/scruby/latest/pages/usage/ "Examples")
+[![Examples](https://raw.githubusercontent.com/kebasyaty/scruby/v3/assets/links/more-examples.svg "Examples")](https://kebasyaty.github.io/scruby/latest/pages/usage/ "Examples")
 
 ```python
 """Operations with keys."""
@@ -169,7 +177,7 @@ async def main() -> None:
     await user_coll.estimated_document_count()  # => 1
 
     # Get the number of documents comparable to the filter
-    user_coll.count_documents(filter_fn=lambda doc: doc.first_name == "John") == 1
+    await user_coll.count_documents(filter_fn=lambda doc: doc.first_name == "John") == 1
 
     # Clear collection
     Scruby.clear_collection("User")
@@ -271,11 +279,7 @@ if __name__ == "__main__":
 ```
 
 ```python
-"""Find one document matching the filter.
-
-The search is based on the effect of a quantum loop.
-The search effectiveness depends on the number of processor threads.
-"""
+"""Find one document matching the filter."""
 
 import anyio
 from typing import Annotated
@@ -319,23 +323,23 @@ async def main() -> None:
     await phone_coll.add_doc(phone)
 
     # Find phone by brand
-    phone_details: Phone | None = phone_coll.find_one(
+    phone_details: Phone | None = await phone_coll.find_one(
         filter_fn=lambda doc: doc.brand == "Samsung",
     )
 
     # Find phone by model
-    phone_details: Phone | None = phone_coll.find_one(
+    phone_details: Phone | None = await phone_coll.find_one(
         filter_fn=lambda doc: doc.model == "Galaxy A26",
     )
 
     # Return phone in JSON format
-    phone_details: str | None = phone_coll.find_one(
+    phone_details: str | None = await phone_coll.find_one(
         filter_fn=lambda doc: doc.model == "Galaxy A26",
         return_type=ReturnType.JSON,
     )
 
     # Return phone in Dictionary format
-    phone_details: dict | None = phone_coll.find_one(
+    phone_details: dict | None = await phone_coll.find_one(
         filter_fn=lambda doc: doc.model == "Galaxy A26",
         return_type=ReturnType.DICT,
     )
@@ -350,11 +354,7 @@ if __name__ == "__main__":
 ```
 
 ```python
-"""Find many documents matching the filter.
-
-The search is based on the effect of a quantum loop.
-The search effectiveness depends on the number of processor threads.
-"""
+"""Find many documents matching the filter."""
 
 import anyio
 from typing import Annotated
@@ -397,35 +397,35 @@ async def main() -> None:
         await car_coll.add_doc(car)
 
     # Find all cars
-    car_list: list[Car] | None = car_coll.find_many()
+    car_list: list[Car] | None = await car_coll.find_many()
 
     # Find cars by brand and year
-    car_list: list[Car] | None = car_coll.find_many(
+    car_list: list[Car] | None = await car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda" and doc.year == 2025,
     )
 
     # Pagination
-    car_list: list[Car] | None = car_coll.find_many(
+    car_list: list[Car] | None = await car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
         limit_docs=5,
         page_number=2,
     )
 
     # Sorting
-    car_list: list[Car] | None = car_coll.find_many(
+    car_list: list[Car] | None = await car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
         sort_fn=lambda doc: (doc.brand, doc.updated_at),
         sort_reverse=True,
     )
 
     # Return cars in JSON format
-    car_list: str | None = car_coll.find_many(
+    car_list: str | None = await car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
         return_type=ReturnType.JSON,
     )
 
     # Return cars in Dictionary format
-    car_list: list[dict] | None = car_coll.find_many(
+    car_list: list[dict] | None = await car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
         return_type=ReturnType.DICT,
     )
@@ -452,8 +452,8 @@ if __name__ == "__main__":
 
 <br>
 
-[![Changelog](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/changelog.svg "Changelog")](https://github.com/kebasyaty/scruby/blob/v2/CHANGELOG.md "Changelog")
+[![Changelog](https://raw.githubusercontent.com/kebasyaty/scruby/v3/assets/links/changelog.svg "Changelog")](https://github.com/kebasyaty/scruby/blob/v3/CHANGELOG.md "Changelog")
 
-[![MIT](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/mit.svg "MIT")](https://github.com/kebasyaty/scruby/blob/v2/MIT-LICENSE "MIT")
+[![MIT](https://raw.githubusercontent.com/kebasyaty/scruby/v3/assets/links/mit.svg "MIT")](https://github.com/kebasyaty/scruby/blob/v3/MIT-LICENSE "MIT")
 
-[![GPL-3.0](https://raw.githubusercontent.com/kebasyaty/scruby/v2/assets/links/gpl-3.0-or-later.svg "GPL-3.0")](https://github.com/kebasyaty/scruby/blob/v2/GPL-3.0-LICENSE "GPL-3.0")
+[![GPL-3.0](https://raw.githubusercontent.com/kebasyaty/scruby/v3/assets/links/gpl-3.0-or-later.svg "GPL-3.0")](https://github.com/kebasyaty/scruby/blob/v3/GPL-3.0-LICENSE "GPL-3.0")

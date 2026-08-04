@@ -84,7 +84,7 @@ async def main() -> None:
     await car_coll.add_doc(car)
 
     # Find car by model
-    car_details: Car | None = car_coll.find_one(
+    car_details: Car | None = await car_coll.find_one(
         filter_fn=lambda doc: doc.model == "EZ-6",
     )
 

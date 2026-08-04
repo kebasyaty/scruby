@@ -11,12 +11,10 @@ __all__ = ("Update",)
 import copy
 from collections.abc import Callable
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed
-from typing import Any, Never, assert_never, final
+from typing import Any, final
 
 import orjson
 from anyio import Path
-
-from scruby.cache import DocCache
 
 
 class Update:
@@ -26,9 +24,9 @@ class Update:
     @staticmethod
     async def _task_update(
         filter_fn: Callable,
-        db_root: str,
-        hash_reduce_left: int,
         branch_number: int,
+        hash_reduce_left: int,
+        db_root: str,
         class_model: Any,
         new_data: dict[str, Any],
     ) -> int:
@@ -39,48 +37,30 @@ class Update:
         Returns:
             The number of updated documents.
         """
-        collection_name = class_model.__name__
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]
         separated_hash: str = "/".join(list(branch_number_as_hash))
         leaf_path = Path(
             *(
                 db_root,
-                collection_name,
+                class_model.__name__,
                 separated_hash,
                 "leaf.json",
             ),
         )
         counter: int = 0
-
         if await leaf_path.exists():
             data_json: bytes = await leaf_path.read_bytes()
             data: dict[str, str] = orjson.loads(data_json) or {}
             new_state: dict[str, str] = {}
-            for doc_name, val in data.items():
-                doc = class_model.model_validate_json(val)
+            for doc_name, doc_json in data.items():
+                doc = class_model.model_validate_json(doc_json)
                 if filter_fn(doc):
                     for field_name, value in new_data.items():
                         doc.__dict__[field_name] = value
                     new_state[doc_name] = doc.model_dump_json()
-                    # Save updated documents to cache
-                    match hash_reduce_left:
-                        case 7:
-                            DocCache.cache[collection_name][branch_number_as_hash[0]][doc_name] = doc
-                        case 6:
-                            DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
-                                doc_name
-                            ] = doc
-                        case 5:
-                            DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
-                                branch_number_as_hash[2]
-                            ][doc_name] = doc
-                        case _ as unreachable:
-                            assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
-                    # Update counter
                     counter += 1
                 else:
-                    new_state[doc_name] = val
-            # Save updated documents to the database
+                    new_state[doc_name] = doc_json
             await leaf_path.write_bytes(orjson.dumps(new_state))
         return counter
 
@@ -122,9 +102,9 @@ class Update:
                 executor.submit(
                     update_task_fn,
                     filter_fn,
-                    db_root,
-                    hash_reduce_left,
                     branch_number,
+                    hash_reduce_left,
+                    db_root,
                     class_model,
                     copy.deepcopy(new_data),
                 )
