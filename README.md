@@ -53,7 +53,7 @@
   <br>
   All reasons that could lead to inadequate production requirements have been eliminated.
   <br>
-  See documentation.
+  <a href="https://kebasyaty.github.io/scruby/latest/" alt="See documentation">See documentation.</a>
 </p>
 
 <br>
