@@ -33,7 +33,7 @@
   the search for documents based on the effect of a quantum loop.
   <br>
   <br>
-  The size of each collection is 16|256|4096|4294967296 branches,<br>
+  The size of each collection is 16|256|4294967296 branches,<br>
   each branch can store one or more keys.
   <br>
   <br>
