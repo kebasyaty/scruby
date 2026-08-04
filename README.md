@@ -51,8 +51,9 @@
 <p>
   <b>Version 3.0</b>
   <br>
-  - All reasons that could lead to inadequate production requirements have been eliminated.
-  - See documentation.
+  All reasons that could lead to inadequate production requirements have been eliminated.
+  <br>
+  See documentation.
 </p>
 
 <br>
