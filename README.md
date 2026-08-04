@@ -57,8 +57,6 @@
 </p>
 
 <br>
-<br>
-<br>
 
 <p>
   <b>Parameter `Scruby.run(hash_reduce_left = 7)`:</b>
