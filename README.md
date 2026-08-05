@@ -69,7 +69,7 @@
   <br>
   <br>
   <b>If you notice the production server slowing down,</b><br>
-  <b>you will need to add CPU.</b>
+  <b>you will need to add RAM and CPU.</b>
 </p>
 
 <br>
