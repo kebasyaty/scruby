@@ -45,6 +45,7 @@ async def task_counter(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
+    mode: int,
     max_workers: int | None,
     stop_signal: Event,
     limit_docs=5,  # custom parameter
@@ -66,6 +67,7 @@ async def task_counter(
                 hash_reduce_left,
                 db_root,
                 class_model,
+                mode,
                 stop_signal,
             )
             for branch_number in branch_numbers
