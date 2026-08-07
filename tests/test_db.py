@@ -85,6 +85,9 @@ class TestNegative:
 
     async def test_model_key_is_missing(self) -> None:
         """Key of Model is missing."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -99,6 +102,9 @@ class TestNegative:
 
     async def test_add_doc_value_does_not_match_collection(self) -> None:
         """add_doc() - Parameter `value` does not match current collection."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -123,6 +129,9 @@ class TestNegative:
 
     async def test_update_doc_value_does_not_match_collection(self) -> None:
         """update_doc() - Parameter `value` does not match current collection."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -156,6 +165,9 @@ class TestNegative:
 
     async def test_del_non_existent_key(self) -> None:
         """Delete a non-existent key."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -169,6 +181,9 @@ class TestNegative:
 
     async def test_key_is_empty(self) -> None:
         """The key should not be empty."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -195,6 +210,9 @@ class TestNegative:
 
     async def test_key_already_exists(self) -> None:
         """If the key already exists."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -218,6 +236,9 @@ class TestNegative:
 
     async def test_key_not_exists(self) -> None:
         """If the key not exists."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -245,6 +266,9 @@ class TestNegative:
 
     async def test_find_many_page_number_less_than_one(self) -> None:
         """The `page_number` parameter must not be less than one."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -291,6 +315,9 @@ class TestPositive:
 
     async def test_create_db(self) -> None:
         """Create instance of database by default."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -307,6 +334,9 @@ class TestPositive:
 
     async def test_collection_list(self) -> None:
         """Testing a `collection_list` methopd."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -355,6 +385,9 @@ class TestPositive:
 
     async def test_metadata(self) -> None:
         """Test metadata of collection."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -380,6 +413,9 @@ class TestPositive:
 
     async def test_add_doc(self) -> None:
         """Testing a add_doc method."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -402,6 +438,9 @@ class TestPositive:
 
     async def test_update_doc(self) -> None:
         """Testing a update_doc method."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -426,6 +465,9 @@ class TestPositive:
 
     async def test_get_doc(self) -> None:
         """Testing a get_doc method."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -452,6 +494,9 @@ class TestPositive:
 
     async def test_has_key(self) -> None:
         """Testing a has_key method."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -474,6 +519,9 @@ class TestPositive:
 
     async def test_delete_key(self) -> None:
         """Testing a delete_key method."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -499,6 +547,9 @@ class TestPositive:
 
     async def test_hash_reduce_left(self) -> None:
         """Length of reduction hash."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -518,6 +569,9 @@ class TestPositive:
 
     async def test_find_one(self) -> None:
         """Find a single document."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -582,6 +636,9 @@ class TestPositive:
 
     async def test_find_many(self) -> None:
         """Find documents."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -664,6 +721,9 @@ class TestPositive:
 
     async def test_collection_name(self) -> None:
         """Test a collection_name method."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -676,6 +736,9 @@ class TestPositive:
 
     async def test_count_documents(self) -> None:
         """Test a count_documents method."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -702,6 +765,9 @@ class TestPositive:
 
     async def test_delete_many(self) -> None:
         """Test a delete_many method."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -733,6 +799,9 @@ class TestPositive:
 
     async def test_update_many(self) -> None:
         """Test a update_many method."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
@@ -762,6 +831,9 @@ class TestPositive:
 
     async def test_extra_fields(self) -> None:
         """Test extra fields - `created_att` and `updated_at`."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run()
 
