@@ -42,7 +42,7 @@ class Scruby(
         class_model: Any,
     ) -> None:
         self.key_list = list(class_model.model_fields.keys())
-        #
+
         if __debug__:
             if ScrubyModel not in class_model.__bases__:
                 msg = "Argument `class_model` does not contain the base class `ScrubyModel`."
