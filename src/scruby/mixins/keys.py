@@ -102,7 +102,7 @@ class Keys:
 
         async with aiodbm.open(str(leaf_path), flag="c", mode=self._mode) as leaf_db:
             # Raise an exception if the key is missing
-            if await leaf_db.exists(prepared_key):
+            if not await leaf_db.exists(prepared_key):
                 raise KeyNotExistsError()
             # Update document to the database
             await leaf_db.set(prepared_key, doc_json)
@@ -123,15 +123,16 @@ class Keys:
         # Get the path to the collection cell
         leaf_path, prepared_key = await self._get_leaf_path(key)
 
-        doc: Any | None = None
-        # Get value of key.
-        if await leaf_path.exists():
-            data_json: bytes = await leaf_path.read_bytes()
-            data: dict = orjson.loads(data_json) or {}
-            doc_json: str | None = data.get(prepared_key)
-            if doc_json is not None:
-                doc = self._class_model.model_validate_json(doc_json)
-        return doc
+        doc_json: bytes | None = None
+
+        async with aiodbm.open(str(leaf_path), flag="c", mode=self._mode) as leaf_db:
+            # Raise an exception if the key is missing
+            if not await leaf_db.exists(prepared_key):
+                raise KeyNotExistsError()
+
+            doc_json = await leaf_db.get(prepared_key)
+
+        return self._class_model.model_validate_json(doc_json)
 
     @final
     async def has_key(self, key: str) -> bool:
