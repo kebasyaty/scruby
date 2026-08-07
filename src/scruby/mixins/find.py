@@ -15,7 +15,7 @@ from enum import Enum
 from threading import Event
 from typing import Any, Never, assert_never, final
 
-import orjson
+import aiodbm
 from anyio import Path
 
 
@@ -44,6 +44,7 @@ class Find:
         hash_reduce_left: int,
         db_root: str,
         class_model: Any,
+        mode: int,
         stop_event: Event,
     ) -> list[Any] | None:
         """Task for find documents.
@@ -67,15 +68,18 @@ class Find:
             ),
         )
         docs: list[Any] = []
+
         if await leaf_path.exists():
-            data_json: bytes = await leaf_path.read_bytes()
-            data: dict[str, str] = orjson.loads(data_json) or {}
-            for _, val in data.items():
-                if stop_event.is_set():
-                    return None
-                doc = class_model.model_validate_json(val)
-                if filter_fn(doc):
-                    docs.append(doc)
+            async with aiodbm.open(str(leaf_path), flag="c", mode=mode) as leaf_db:
+                keys = await leaf_db.keys()
+
+                for key in keys:
+                    if stop_event.is_set():
+                        return None
+                    doc_json = await leaf_db.get(key)
+                    doc = class_model.model_validate_json(doc_json)
+                    if filter_fn(doc):
+                        docs.append(doc)
         return docs or None
 
     @final
@@ -112,6 +116,7 @@ class Find:
         branch_numbers: range = range(self._max_number_branch)
         db_root: str = self._db_root
         class_model: Any = self._class_model
+        mode = self._mode
         stop_signal = Event()
         doc: Any | None = None
 
@@ -125,6 +130,7 @@ class Find:
                     hash_reduce_left,
                     db_root,
                     class_model,
+                    mode,
                     stop_signal,
                 )
                 for branch_number in branch_numbers
@@ -206,6 +212,7 @@ class Find:
         branch_numbers: range = range(self._max_number_branch)
         db_root: str = self._db_root
         class_model: Any = self._class_model
+        mode = self._mode
         stop_signal = Event()
         stop_outer_loop: bool = False
         counter: int = 0
@@ -222,6 +229,7 @@ class Find:
                     hash_reduce_left,
                     db_root,
                     class_model,
+                    mode,
                     stop_signal,
                 )
                 for branch_number in branch_numbers

@@ -49,6 +49,7 @@ class Update:
             ),
         )
         counter: int = 0
+
         if await leaf_path.exists():
             async with aiodbm.open(str(leaf_path), flag="c", mode=mode) as leaf_db:
                 keys = await leaf_db.keys()
