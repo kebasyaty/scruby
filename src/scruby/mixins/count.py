@@ -60,6 +60,7 @@ class Count:
         mode = self._mode
         stop_signal = Event()
         counter: int = 0
+
         # Run quantum loop
         with ThreadPoolExecutor(self._max_workers) as executor:
             futures: list[Future] = [
