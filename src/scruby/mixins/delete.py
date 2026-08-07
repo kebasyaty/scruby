@@ -12,7 +12,7 @@ from collections.abc import Callable
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from typing import Any, final
 
-import orjson
+import aiodbm
 from anyio import Path
 
 
@@ -27,6 +27,7 @@ class Delete:
         hash_reduce_left: int,
         db_root: str,
         class_model: Any,
+        mode: int,
     ) -> int:
         """Asynchronous task for find and delete documents.
 
@@ -46,17 +47,17 @@ class Delete:
             ),
         )
         counter: int = 0
+
         if await leaf_path.exists():
-            data_json: bytes = await leaf_path.read_bytes()
-            data: dict[str, str] = orjson.loads(data_json) or {}
-            new_state: dict[str, str] = {}
-            for key, val in data.items():
-                doc = class_model.model_validate_json(val)
-                if filter_fn(doc):
-                    counter -= 1
-                else:
-                    new_state[key] = val
-            await leaf_path.write_bytes(orjson.dumps(new_state))
+            async with aiodbm.open(str(leaf_path), flag="c", mode=mode) as leaf_db:
+                keys = await leaf_db.keys()
+
+                for key in keys:
+                    doc_json = await leaf_db.get(key)
+                    doc = class_model.model_validate_json(doc_json)
+                    if filter_fn(doc):
+                        await leaf_db.delete(key)
+                        counter -= 1
         return counter
 
     @final
@@ -84,6 +85,7 @@ class Delete:
         branch_numbers: range = range(self._max_number_branch)
         db_root: str = self._db_root
         class_model: Any = self._class_model
+        mode = self._mode
         counter: int = 0
 
         # Run quantum loop
@@ -96,6 +98,7 @@ class Delete:
                     hash_reduce_left,
                     db_root,
                     class_model,
+                    mode,
                 )
                 for branch_number in branch_numbers
             ]
