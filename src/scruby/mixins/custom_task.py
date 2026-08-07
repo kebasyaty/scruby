@@ -45,6 +45,7 @@ class CustomTask:
             hash_reduce_left=hash_reduce_left,
             db_root=self._db_root,
             class_model=self._class_model,
+            mode=self._mode,
             max_workers=self._max_workers,
             stop_signal=Event(),
             **kwargs,
