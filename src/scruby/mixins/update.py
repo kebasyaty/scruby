@@ -49,19 +49,29 @@ class Update:
         )
         counter: int = 0
         if await leaf_path.exists():
-            data_json: bytes = await leaf_path.read_bytes()
-            data: dict[str, str] = orjson.loads(data_json) or {}
-            new_state: dict[str, str] = {}
-            for doc_name, doc_json in data.items():
-                doc = class_model.model_validate_json(doc_json)
-                if filter_fn(doc):
-                    for field_name, value in new_data.items():
-                        doc.__dict__[field_name] = value
-                    new_state[doc_name] = doc.model_dump_json()
-                    counter += 1
-                else:
-                    new_state[doc_name] = doc_json
-            await leaf_path.write_bytes(orjson.dumps(new_state))
+            async with await leaf_path.open("br") as f_json:
+                new_state = []
+
+                async for line in f_json:
+                    # Skip empty lines if present
+                    if not line.strip():
+                        continue
+
+                    data = orjson.loads(line)
+                    doc_name, doc_json = data.items()
+                    doc = class_model.model_validate_json(doc_json)
+                    if filter_fn(doc):
+                        for field_name, value in new_data.items():
+                            doc.__dict__[field_name] = value
+                        new_state.append({doc_name: doc.model_dump_json()})
+                        counter += 1
+                    else:
+                        new_state.append({doc_name: doc_json})
+
+                result_json = b""
+                for item in new_state:
+                    result_json += orjson.dumps(item) + b"\n"
+                await leaf_path.write_bytes(result_json)
         return counter
 
     @final
