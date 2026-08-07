@@ -173,7 +173,7 @@ class TestNegative:
 
         user_coll = Scruby(User)
 
-        with pytest.raises(KeyError):
+        with pytest.raises(KeyNotExistsError):
             await user_coll.delete_doc("key missing")
         #
         # Delete DB.
