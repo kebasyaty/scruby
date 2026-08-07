@@ -12,6 +12,7 @@
 - [pydantic-extra-types](https://pypi.org/project/pydantic-extra-types/ "pydantic-extra-types")
 - [phonenumbers](https://pypi.org/project/phonenumbers/ "phonenumbers")
 - [bcrypt](https://pypi.org/project/bcrypt/ "bcrypt")
+- [aiodbm](https://pypi.org/project/aiodbm/ "aiodbm")
 
 #### Dev-Dependencies
 

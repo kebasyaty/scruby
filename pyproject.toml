@@ -1,6 +1,6 @@
 [project]
 name = "scruby"
-version = "3.0.4"
+version = "3.1.0"
 description = "Asynchronous library for building and managing a hybrid database, by scheme of key-value."
 readme = "README.md"
 requires-python = ">=3.12,<4.0"
@@ -11,7 +11,7 @@ keywords = ["async", "database", "scruby", "store"]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
-  "Operating System :: MacOS :: MacOS X",
+  # "Operating System :: MacOS :: MacOS X",
   # "Operating System :: Microsoft :: Windows",
   "Operating System :: POSIX",
   "Operating System :: POSIX :: Linux",
@@ -27,6 +27,7 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
+  "aiodbm>=0.4.2",
   "anyio>=4.10.0",
   "bcrypt>=5.0.0",
   "orjson>=3.11.3",
@@ -124,7 +125,7 @@ addopts = ["--strict-markers"]
 log_cli = true
 log_cli_date_format = "%Y-%m-%d %H:%M:%S"
 log_cli_format = "%(levelname)s  %(name)s:%(filename)s:%(lineno)s %(message)s"
-log_cli_level = "DEBUG"
+log_cli_level = "ERROR"
 testpaths = ["tests"]
 
 [tool.ruff]

@@ -41,6 +41,7 @@ async def task_calculate_average(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
+    mode: int,
     max_workers: int | None,
     stop_signal: Event,
 ) -> float:
@@ -62,6 +63,7 @@ async def task_calculate_average(
                 hash_reduce_left,
                 db_root,
                 class_model,
+                mode,
                 stop_signal,
             )
             for branch_number in branch_numbers
@@ -146,6 +148,7 @@ async def task_counter(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
+    mode: int,
     max_workers: int | None,
     stop_signal: Event,
     limit_docs: int = 1000,  # custom parameter
@@ -166,6 +169,7 @@ async def task_counter(
                 hash_reduce_left,
                 db_root,
                 class_model,
+                mode,
                 stop_signal,
             )
             for branch_number in branch_numbers
@@ -264,6 +268,7 @@ async def task_calculate_max(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
+    mode: int,
     max_workers: int | None,
     stop_signal: Event,
 ) -> int:
@@ -282,6 +287,7 @@ async def task_calculate_max(
                 hash_reduce_left,
                 db_root,
                 class_model,
+                mode,
                 stop_signal,
             )
             for branch_number in branch_numbers
@@ -366,6 +372,7 @@ async def task_calculate_min(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
+    mode: int,
     max_workers: int | None,
     stop_signal: Event,
 ) -> int:
@@ -384,6 +391,7 @@ async def task_calculate_min(
                 hash_reduce_left,
                 db_root,
                 class_model,
+                mode,
                 stop_signal,
             )
             for branch_number in branch_numbers
@@ -468,6 +476,7 @@ async def task_calculate_sum(
     hash_reduce_left: int,
     db_root: str,
     class_model: Any,
+    mode: int,
     max_workers: int | None,
     stop_signal: Event,
 ) -> int:
@@ -486,6 +495,7 @@ async def task_calculate_sum(
                 hash_reduce_left,
                 db_root,
                 class_model,
+                mode,
                 stop_signal,
             )
             for branch_number in branch_numbers
