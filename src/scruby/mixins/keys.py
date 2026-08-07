@@ -166,3 +166,4 @@ class Keys:
                 raise KeyNotExistsError()
 
             await leaf_db.delete(prepared_key)
+            await self._counter_documents(-1)
