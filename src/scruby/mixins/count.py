@@ -57,6 +57,7 @@ class Count:
         hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
         class_model: Any = self._class_model
+        mode = self._mode
         stop_signal = Event()
         counter: int = 0
         # Run quantum loop
@@ -69,6 +70,7 @@ class Count:
                     hash_reduce_left,
                     db_root,
                     class_model,
+                    mode,
                     stop_signal,
                 )
                 for branch_number in branch_numbers
