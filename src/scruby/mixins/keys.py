@@ -123,9 +123,9 @@ class Keys:
         leaf_path, prepared_key = await self._get_leaf_path(key)
 
         async with aiodbm.open(str(leaf_path), flag="c", mode=self._mode) as leaf_db:
-            # Raise an exception if the key is missing
+            # If the key is missing, return None
             if not await leaf_db.exists(prepared_key):
-                raise KeyNotExistsError()
+                return None
 
             doc_json = await leaf_db.get(prepared_key)
             return self._class_model.model_validate_json(doc_json)
