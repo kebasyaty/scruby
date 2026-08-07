@@ -87,31 +87,25 @@ class Keys:
                 f"does not match collection `{collection_name}`!"
             )
             raise TypeError(msg)
+
         # If a password field is present, it must not be empty
         if "password" in self.model_fields and not bool(doc.password):
             msg = "Method: `update_doc` => The `password` field is empty"
             raise ValueError(msg)
+
         # Get the path to the collection cell
         leaf_path, prepared_key = await self._get_leaf_path(doc.key)
         # Update a `updated_at` field
         doc.updated_at = datetime.now(ZoneInfo("UTC"))
         # Convert doc to json.
         doc_json: str = doc.model_dump_json()
-        # Check if a collection cell exists
-        if await leaf_path.exists():
-            # Get a document from the database
-            data_json: bytes = await leaf_path.read_bytes()
-            data: dict = orjson.loads(data_json) or {}
-            # Check if the document key exists
-            if data.get(prepared_key) is not None:
-                # Update a document from database
-                data[prepared_key] = doc_json
-                await leaf_path.write_bytes(orjson.dumps(data))
-            else:
+
+        async with aiodbm.open(str(leaf_path), flag="c", mode=self._mode) as leaf_db:
+            # Raise an exception if the key is missing
+            if await leaf_db.exists(prepared_key):
                 raise KeyNotExistsError()
-        else:
-            msg: str = f"Method: `update_doc` => The key `{doc.key}` is missing!"
-            raise KeyError(msg)
+            # Update document to the database
+            await leaf_db.set(prepared_key, doc_json)
 
     @final
     async def get_doc(self, key: str) -> Any | None:
