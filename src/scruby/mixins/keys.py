@@ -13,6 +13,7 @@ from datetime import datetime
 from typing import Any, final
 from zoneinfo import ZoneInfo
 
+import aiodbm
 import orjson
 
 from scruby.errors import (
@@ -43,10 +44,12 @@ class Keys:
                 + f"Model `{doc_class_name}` does not match collection `{collection_name}`!"
             )
             raise TypeError(msg)
+
         # If a password field is present, it must not be empty
-        if "password" in self.key_list and not bool(doc.password):
+        if "password" in self.model_fields and not bool(doc.password):
             msg = "Method: `add_doc` => The `password` field is empty"
             raise ValueError(msg)
+
         # Get the path to the collection cell
         leaf_path, prepared_key = await self._get_leaf_path(doc.key)
         # Init a `created_at` and `updated_at` fields
@@ -55,21 +58,13 @@ class Keys:
         doc.updated_at = datetime.now(tz)
         # Convert doc to json
         doc_json: str = doc.model_dump_json()
-        # Check if a collection cell exists
-        if await leaf_path.exists():
-            # Get a document from the database
-            data_json: bytes = await leaf_path.read_bytes()
-            data: dict = orjson.loads(data_json) or {}
-            # Check to see if the document key is missing
-            if data.get(prepared_key) is None:
-                # Add a new document to the database
-                data[prepared_key] = doc_json
-                await leaf_path.write_bytes(orjson.dumps(data))
-            else:
+
+        async with aiodbm.open(str(leaf_path), flag="c", mode=self._mode) as leaf_db:
+            # Raise an exception if the key is exists
+            if await leaf_db.exists(prepared_key):
                 raise KeyAlreadyExistsError()
-        else:
-            # Add new document to a blank leaf
-            await leaf_path.write_bytes(orjson.dumps({prepared_key: doc_json}))
+            # Add a new document to the database
+            await leaf_db.set(prepared_key, doc_json)
         # Update document counter
         await self._counter_documents(1)
 
@@ -93,7 +88,7 @@ class Keys:
             )
             raise TypeError(msg)
         # If a password field is present, it must not be empty
-        if "password" in self.key_list and not bool(doc.password):
+        if "password" in self.model_fields and not bool(doc.password):
             msg = "Method: `update_doc` => The `password` field is empty"
             raise ValueError(msg)
         # Get the path to the collection cell
