@@ -155,7 +155,7 @@ class Scruby(
         if not await branch_path.exists():
             await branch_path.mkdir(self._mode, parents=True)
         # Get the path to the collection cell.
-        leaf_path: Path = Path(*(branch_path, "leaf.json"))
+        leaf_path: Path = Path(*(branch_path, "leaf.dbm"))
         return (leaf_path, prepared_key)
 
     @staticmethod

@@ -13,7 +13,7 @@ from collections.abc import Callable
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from typing import Any, final
 
-import orjson
+import aiodbm
 from anyio import Path
 
 
@@ -28,6 +28,7 @@ class Update:
         hash_reduce_left: int,
         db_root: str,
         class_model: Any,
+        mode: int,
         new_data: dict[str, Any],
     ) -> int:
         """Asynchronous task for find documents.
@@ -44,34 +45,22 @@ class Update:
                 db_root,
                 class_model.__name__,
                 separated_hash,
-                "leaf.json",
+                "leaf.dbm",
             ),
         )
         counter: int = 0
         if await leaf_path.exists():
-            async with await leaf_path.open("br") as f_json:
-                new_state = []
+            async with aiodbm.open(str(leaf_path), flag="c", mode=mode) as leaf_db:
+                keys = await leaf_db.keys()
 
-                async for line in f_json:
-                    # Skip empty lines if present
-                    if not line.strip():
-                        continue
-
-                    data = orjson.loads(line)
-                    doc_name, doc_json = data.items()
+                for key in keys:
+                    doc_json = await leaf_db.get(key)
                     doc = class_model.model_validate_json(doc_json)
                     if filter_fn(doc):
                         for field_name, value in new_data.items():
                             doc.__dict__[field_name] = value
-                        new_state.append({doc_name: doc.model_dump_json()})
+                        await leaf_db.set(key, doc.model_dump_json())
                         counter += 1
-                    else:
-                        new_state.append({doc_name: doc_json})
-
-                result_json = b""
-                for item in new_state:
-                    result_json += orjson.dumps(item) + b"\n"
-                await leaf_path.write_bytes(result_json)
         return counter
 
     @final
@@ -104,6 +93,7 @@ class Update:
         hash_reduce_left: int = self._hash_reduce_left
         db_root: str = self._db_root
         class_model: Any = self._class_model
+        mode = self._mode
         counter: int = 0
 
         # Run quantum loop
@@ -116,6 +106,7 @@ class Update:
                     hash_reduce_left,
                     db_root,
                     class_model,
+                    mode,
                     copy.deepcopy(new_data),
                 )
                 for branch_number in branch_numbers

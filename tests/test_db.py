@@ -299,7 +299,7 @@ class TestPositive:
         key_name = "key name"
         leaf_path, prepared_key = await user_coll._get_leaf_path(key_name)
 
-        assert leaf_path == Path("ScrubyDB/User/1/leaf.json")
+        assert leaf_path == Path("ScrubyDB/User/1/leaf.dbm")
         assert prepared_key == key_name
         #
         # Delete DB.
@@ -503,13 +503,13 @@ class TestPositive:
         Scruby.run()
 
         user_coll = Scruby(User)
-        control_path = Path("ScrubyDB/User/1/leaf.json")
+        control_path = Path("ScrubyDB/User/1/leaf.dbm")
         leaf_path, _ = await user_coll._get_leaf_path("key name")
         assert leaf_path == control_path
 
         Scruby.napalm()
         user_coll = Scruby(User)
-        control_path = Path("ScrubyDB/User/1/leaf.json")
+        control_path = Path("ScrubyDB/User/1/leaf.dbm")
         leaf_path, _ = await user_coll._get_leaf_path("key name")
         assert leaf_path == control_path
         #

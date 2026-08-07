@@ -42,7 +42,7 @@ class Delete:
                 db_root,
                 class_model.__name__,
                 separated_hash,
-                "leaf.json",
+                "leaf.dbm",
             ),
         )
         counter: int = 0

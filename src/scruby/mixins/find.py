@@ -63,7 +63,7 @@ class Find:
                 db_root,
                 class_model.__name__,
                 separated_hash,
-                "leaf.json",
+                "leaf.dbm",
             ),
         )
         docs: list[Any] = []
