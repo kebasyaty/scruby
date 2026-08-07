@@ -14,7 +14,6 @@ from typing import Any, final
 from zoneinfo import ZoneInfo
 
 import aiodbm
-import orjson
 
 from scruby.errors import (
     KeyAlreadyExistsError,
@@ -123,16 +122,13 @@ class Keys:
         # Get the path to the collection cell
         leaf_path, prepared_key = await self._get_leaf_path(key)
 
-        doc_json: bytes | None = None
-
         async with aiodbm.open(str(leaf_path), flag="c", mode=self._mode) as leaf_db:
             # Raise an exception if the key is missing
             if not await leaf_db.exists(prepared_key):
                 raise KeyNotExistsError()
 
             doc_json = await leaf_db.get(prepared_key)
-
-        return self._class_model.model_validate_json(doc_json)
+            return self._class_model.model_validate_json(doc_json)
 
     @final
     async def has_key(self, key: str) -> bool:
@@ -146,13 +142,9 @@ class Keys:
         """
         # Get path to cell of collection.
         leaf_path, prepared_key = await self._get_leaf_path(key)
-        is_exists: bool = False
-        # Checking whether there is a key.
-        if await leaf_path.exists():
-            data_json: bytes = await leaf_path.read_bytes()
-            data: dict = orjson.loads(data_json) or {}
-            is_exists = data.get(prepared_key) is not None
-        return is_exists
+
+        async with aiodbm.open(str(leaf_path), flag="c", mode=self._mode) as leaf_db:
+            return await leaf_db.exists(prepared_key)
 
     @final
     async def delete_doc(self, key: str) -> None:
@@ -166,17 +158,11 @@ class Keys:
         """
         # The path to the database cell.
         leaf_path, prepared_key = await self._get_leaf_path(key)
+
         # Deleting key.
-        if await leaf_path.exists():
-            data_json: bytes = await leaf_path.read_bytes()
-            data: dict = orjson.loads(data_json) or {}
-            if data.get(prepared_key) is not None:
-                # Delete a document from database
-                del data[prepared_key]
-                await leaf_path.write_bytes(orjson.dumps(data))
-                await self._counter_documents(-1)
-            else:
+        async with aiodbm.open(str(leaf_path), flag="c", mode=self._mode) as leaf_db:
+            # Raise an exception if the key is missing
+            if not await leaf_db.exists(prepared_key):
                 raise KeyNotExistsError()
-        else:
-            msg: str = f"Method: `delete_doc` - The key `{key}` is missing!"
-            raise KeyError(msg)
+
+            await leaf_db.delete(prepared_key)
