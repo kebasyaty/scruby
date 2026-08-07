@@ -3,6 +3,15 @@ revision = 3
 requires-python = ">=3.12, <4.0"
 
 [[package]]
+name = "aiodbm"
+version = "0.4.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/bd/64/a630bf3500dfe2660d80539d8f5d73adc56bfb84fec2e9dac730a4125bf2/aiodbm-0.4.2.tar.gz", hash = "sha256:b59f270ca509fc4edf630f5310666bb51a9308b787235d37d60cf522daedaf2f", size = 6028, upload-time = "2023-06-08T18:02:57.992Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/92/96/9c24381069bd997106adf3f0374542642a96f2fac7546108e5391c34a52b/aiodbm-0.4.2-py3-none-any.whl", hash = "sha256:423bb51519d0e16ac2c12e52331afef99b073c6f424329402b6498e687721000", size = 6990, upload-time = "2023-06-08T18:02:56.432Z" },
+]
+
+[[package]]
 name = "annotated-types"
 version = "0.8.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1049,6 +1058,7 @@ name = "scruby"
 version = "3.0.4"
 source = { editable = "." }
 dependencies = [
+    { name = "aiodbm" },
     { name = "anyio" },
     { name = "bcrypt" },
     { name = "orjson" },
@@ -1082,6 +1092,7 @@ test = [
 
 [package.metadata]
 requires-dist = [
+    { name = "aiodbm", specifier = ">=0.4.2" },
     { name = "anyio", specifier = ">=4.10.0" },
     { name = "bcrypt", specifier = ">=5.0.0" },
     { name = "orjson", specifier = ">=3.11.3" },

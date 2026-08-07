@@ -27,6 +27,7 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
+  "aiodbm>=0.4.2",
   "anyio>=4.10.0",
   "bcrypt>=5.0.0",
   "orjson>=3.11.3",
