@@ -252,7 +252,7 @@ class TestNegative:
             phone="+447986123456",
         )
 
-        with pytest.raises(KeyError):
+        with pytest.raises(KeyNotExistsError):
             await user_coll.update_doc(user)
 
         await user_coll.add_doc(user)
