@@ -1,4 +1,4 @@
-#### Run a salary_info custom task
+#### Run a SalaryInfo custom task
 
 ```py title="main.py" linenums="1"
 """Run a salary_info custom task.
@@ -9,14 +9,13 @@ Effectiveness running task depends on the number of processor threads.
 
 import anyio
 from datetime import datetime
-from zoneinfo import ZoneInfo
-from concurrent.futures import Future, ThreadPoolExecutor, as_completed
-from threading import Event
 from typing import Annotated, Any
-from collections.abc import Callable
+from zoneinfo import ZoneInfo
+
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
-from scruby import Scruby, ScrubyModel
+
+from scruby import CustomTask, Scruby, ScrubyModel
 from scruby.aggregation import Average, Max, Min, Sum
 from pprint import pprint as pp
 
@@ -41,15 +40,7 @@ class Salesman(ScrubyModel):
     ]
 
 
-def salary_info(
-    search_task_fn: Callable,
-    filter_fn: Callable,
-    hash_reduce_left: int,
-    branch_numbers: range,
-    class_model: Any,
-    max_workers: int | None,
-    stop_signal: Event,
-) -> dict[str, Any] | None:
+class SalaryInfo(CustomTask):
     """Custom task.
 
     Get information about sales salaries.
@@ -57,45 +48,38 @@ def salary_info(
     The result should be the fields:
     `max_salary`, `min_salary`, `average_salary`, `sum_salaries`, `count_sellers`, and `salesman_list`.
     """
-    max_salary = Max()
-    min_salary = Min()
-    average_salary = Average()
-    sum_salaries = Sum()
-    salesman_list: list[Any] = []
-    result: dict[str, Any] = {}
-    # Run quantum loop
-    with ThreadPoolExecutor(max_workers) as executor:
-        futures: list[Future] = [
-            executor.submit(
-                search_task_fn,
-                filter_fn,
-                hash_reduce_left,
-                branch_number,
-                class_model,
-                stop_signal,
-            )
-            for branch_number in branch_numbers
-        ]
-        for future in as_completed(futures):
-            docs = future.result()
-            if docs is not None:
-                for doc in docs:
-                    max_salary.set(doc.salary)
-                    min_salary.set(doc.salary)
-                    average_salary.set(doc.salary)
-                    sum_salaries.set(doc.salary)
-                    salesman_list.append(doc)
-    # Add data to result
-    count_sellers = len(salesman_list)
-    if count_sellers > 0:
-        result["max_salary"] = max_salary.get()
-        result["min_salary"] = min_salary.get()
-        result["average_salary"] = float(average_salary.get())
-        result["sum_salaries"] = int(sum_salaries.get())
-        result["count_sellers"] = count_sellers
-        result["salesman_list"] = salesman_list
-    # Return
-    return result or None
+
+    def __init__(self) -> None:
+        """Initializing the task."""
+        self.stop_signal = False
+        self.max_salary = Max()
+        self.min_salary = Min()
+        self.average_salary = Average()
+        self.sum_salaries = Sum()
+        self.salesman_list: list[Any] = []
+        self.salary_info: dict[str, Any] = {}
+
+    def accept(self, doc: Any) -> None:
+        """Operation with a document."""
+        self.max_salary.set(doc.salary)
+        self.min_salary.set(doc.salary)
+        self.average_salary.set(doc.salary)
+        self.sum_salaries.set(doc.salary)
+        self.salesman_list.append(doc)
+
+    def result(self) -> Any | None:
+        """Return result."""
+        # Add data to result
+        count_sellers = len(self.salesman_list)
+        if count_sellers > 0:
+            self.salary_info["max_salary"] = self.max_salary.get()
+            self.salary_info["min_salary"] = self.min_salary.get()
+            self.salary_info["average_salary"] = float(self.average_salary.get())
+            self.salary_info["sum_salaries"] = int(self.sum_salaries.get())
+            self.salary_info["count_sellers"] = count_sellers
+            self.salary_info["salesman_list"] = self.salesman_list
+        # Return
+        return self.salary_info or None
 
 
 async def main() -> None:
@@ -120,7 +104,7 @@ async def main() -> None:
 
     # Get salary information for sellers named John
     result: dict[str, Any] | None = salesman_coll.run_custom_task(
-        custom_task_fn=salary_info,
+        custom_task=SalaryInfo(),
         filter_fn=lambda doc: doc.first_name == "John",
     )
     # Print to console
@@ -138,7 +122,7 @@ if __name__ == "__main__":
     anyio.run(main)
 ```
 
-#### Run a salary_info_as_json custom task
+#### Run a SalaryInfoAsJson custom task
 
 ```py title="main.py" linenums="1"
 """Run a salary_info_as_json custom task.
@@ -148,16 +132,15 @@ Effectiveness running task depends on the number of processor threads.
 """
 
 import anyio
-import orjson
 from datetime import datetime
-from zoneinfo import ZoneInfo
-from concurrent.futures import Future, ThreadPoolExecutor, as_completed
-from threading import Event
 from typing import Annotated, Any
-from collections.abc import Callable
+from zoneinfo import ZoneInfo
+
+import orjson
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
-from scruby import Scruby, ScrubyModel
+
+from scruby import CustomTask, Scruby, ScrubyModel
 from scruby.aggregation import Average, Max, Min, Sum
 from pprint import pprint as pp
 
@@ -182,17 +165,7 @@ class Salesman(ScrubyModel):
     ]
 
 
-async def salary_info_as_json(
-    search_task_fn: Callable,
-    filter_fn: Callable,
-    branch_numbers: range,
-    hash_reduce_left: int,
-    db_root: str,
-    class_model: Any,
-    mode: int,
-    max_workers: int | None,
-    stop_signal: Event,
-) -> str | None:
+class SalaryInfoAsJson(CustomTask):
     """Custom task.
 
     Get information about sales salaries in json format.
@@ -200,49 +173,40 @@ async def salary_info_as_json(
     The result should be the fields:
     `max_salary`, `min_salary`, `average_salary`, `sum_salaries`, `count_sellers`, and `salesman_list`.
     """
-    max_salary = Max()
-    min_salary = Min()
-    average_salary = Average()
-    sum_salaries = Sum()
-    salesman_list: list[Any] = []
-    result: dict[str, Any] = {}
-    # Run quantum loop
-    with ThreadPoolExecutor(max_workers) as executor:
-        futures: list[Future] = [
-            executor.submit(
-                search_task_fn,
-                filter_fn,
-                branch_number,
-                hash_reduce_left,
-                db_root,
-                class_model,
-                mode,
-                stop_signal,
-            )
-            for branch_number in branch_numbers
-        ]
-        for future in as_completed(futures):
-            docs = await future.result()
-            if docs is not None:
-                for doc in docs:
-                    max_salary.set(doc.salary)
-                    min_salary.set(doc.salary)
-                    average_salary.set(doc.salary)
-                    sum_salaries.set(doc.salary)
-                    salesman_list.append(doc)
-    # Add data to result
-    count_sellers = len(salesman_list)
-    if count_sellers > 0:
-        result["max_salary"] = max_salary.get()
-        result["min_salary"] = min_salary.get()
-        result["average_salary"] = float(average_salary.get())
-        result["sum_salaries"] = int(sum_salaries.get())
-        result["count_sellers"] = count_sellers
-        result["salesman_list"] = [doc.model_dump() for doc in salesman_list]
-    # Convert to JSON-string
-    result_json: str = orjson.dumps(result).decode("utf-8")
-    # Return
-    return result_json if count_sellers > 0 else None
+
+    def __init__(self, **kwargs) -> None:
+        """Initializing the task."""
+        self.stop_signal = False
+        self.max_salary = Max()
+        self.min_salary = Min()
+        self.average_salary = Average()
+        self.sum_salaries = Sum()
+        self.salesman_list: list[Any] = []
+        self.salary_info: dict[str, Any] = {}
+
+    def accept(self, doc: Any) -> None:
+        """Operation with a document."""
+        self.max_salary.set(doc.salary)
+        self.min_salary.set(doc.salary)
+        self.average_salary.set(doc.salary)
+        self.sum_salaries.set(doc.salary)
+        self.salesman_list.append(doc)
+
+    def result(self) -> Any | None:
+        """Return result."""
+        # Add data to result
+        count_sellers = len(self.salesman_list)
+        if count_sellers > 0:
+            self.salary_info["max_salary"] = self.max_salary.get()
+            self.salary_info["min_salary"] = self.min_salary.get()
+            self.salary_info["average_salary"] = float(self.average_salary.get())
+            self.salary_info["sum_salaries"] = int(self.sum_salaries.get())
+            self.salary_info["count_sellers"] = count_sellers
+            self.salary_info["salesman_list"] = [doc.model_dump() for doc in self.salesman_list]
+        # Convert to JSON-string
+        result_json: str = orjson.dumps(self.salary_info).decode("utf-8")
+        # Return
+        return result_json if count_sellers > 0 else None
 
 
 async def main() -> None:
@@ -267,7 +231,7 @@ async def main() -> None:
 
     # Get salary information for sellers named John
     result_json: str | None = await salesman_coll.run_custom_task(
-        custom_task_fn=salary_info,
+        custom_task=SalaryInfoAsJson(),
         filter_fn=lambda doc: doc.first_name == "John",
     )
     # Print to console

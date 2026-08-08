@@ -135,6 +135,7 @@ class Find:
                 )
                 for branch_number in branch_numbers
             ]
+
             for future in as_completed(futures):
                 docs = await future.result()
                 if docs is not None:
@@ -146,6 +147,7 @@ class Find:
                     stop_signal.set()
                     # Stop loop
                     break
+
         # Return document
         match return_type.value:
             case 1:
@@ -234,6 +236,7 @@ class Find:
                 )
                 for branch_number in branch_numbers
             ]
+
             for future in as_completed(futures):
                 docs = await future.result()
                 if docs is not None:
@@ -251,11 +254,14 @@ class Find:
                             counter += 1
                         else:
                             number_docs_skippe -= 1
-                if stop_outer_loop:
-                    break
+
+                    if stop_outer_loop:
+                        break
+
         # Sorting
         if sort_fn is not None:
             result.sort(key=sort_fn, reverse=sort_reverse)
+
         # Return a document list
         match return_type.value:
             case 1:

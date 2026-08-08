@@ -2,10 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
-from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from decimal import ROUND_HALF_EVEN
-from threading import Event
 from typing import Annotated, Any
 
 import pytest
@@ -15,7 +12,7 @@ from pydantic_extra_types.phone_numbers import (
     PhoneNumberValidator,
 )
 
-from scruby import Scruby, ScrubyModel
+from scruby import CustomTask, Scruby, ScrubyModel
 from scruby.aggregation import Average
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
@@ -42,46 +39,24 @@ class User(ScrubyModel):
     ]
 
 
-async def task_calculate_average(
-    search_task_fn: Callable,
-    filter_fn: Callable,
-    branch_numbers: range,
-    hash_reduce_left: int,
-    db_root: str,
-    class_model: Any,
-    mode: int,
-    max_workers: int | None,
-    stop_signal: Event,
-) -> float:
-    """Custom task.
+class CalculateAverageAgeUsers(CustomTask):
+    """Calculate the average age of users."""
 
-    Calculate the average value.
-    """
-    average_age = Average(
-        precision=".00",  # Default = .00
-        rounding=ROUND_HALF_EVEN,  # Default = ROUND_HALF_EVEN
-    )
-    # Run quantum loop
-    with ThreadPoolExecutor(max_workers) as executor:
-        futures: list[Future] = [
-            executor.submit(
-                search_task_fn,
-                filter_fn,
-                branch_number,
-                hash_reduce_left,
-                db_root,
-                class_model,
-                mode,
-                stop_signal,
-            )
-            for branch_number in branch_numbers
-        ]
-        for future in as_completed(futures):
-            docs = await future.result()
-            if docs is not None:
-                for doc in docs:
-                    average_age.set(doc.age)
-    return float(average_age.get())
+    def __init__(self) -> None:
+        """Initializing the task."""
+        self.stop_signal = False
+        self.average_age = Average(
+            precision=".00",  # Default = .00
+            rounding=ROUND_HALF_EVEN,  # Default = ROUND_HALF_EVEN
+        )
+
+    def accept(self, doc: Any) -> None:
+        """Operation with a document."""
+        self.average_age.set(doc.age)
+
+    def result(self) -> Any | None:
+        """Return result."""
+        return float(self.average_age.get())
 
 
 # Activate database.
@@ -101,7 +76,7 @@ async def test_task_calculate_average() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(task_calculate_average)
+    result = await user_coll.run_custom_task(custom_task=CalculateAverageAgeUsers())
     assert result == pytest.approx(50.0)
     #
     # Delete DB.

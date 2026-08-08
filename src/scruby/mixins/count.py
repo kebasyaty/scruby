@@ -76,8 +76,10 @@ class Count:
                 )
                 for branch_number in branch_numbers
             ]
+
             for future in as_completed(futures):
                 docs = await future.result()
                 if docs is not None:
                     counter += len(docs)
+
         return counter
