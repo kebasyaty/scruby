@@ -4,24 +4,25 @@
 """Aggregation class for calculating the average value."""
 
 import anyio
-from concurrent.futures import Future, ThreadPoolExecutor, as_completed
-from threading import Event
-from collections.abc import Callable
 from decimal import ROUND_HALF_EVEN
 from typing import Annotated, Any
 
+import pytest
 from pydantic import EmailStr, Field
-from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
+from pydantic_extra_types.phone_numbers import (
+    PhoneNumber,
+    PhoneNumberValidator,
+)
 
-from scruby import Scruby, ScrubyModel
+from scruby import CustomTask, Scruby, ScrubyModel
 from scruby.aggregation import Average
 
 
 class User(ScrubyModel):
     """User model."""
+
     first_name: str
-    last_name: str
-    birthday: datetime
+    age: int
     email: EmailStr
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164"), Field(strict=False)]
     # key is always at bottom
@@ -33,47 +34,24 @@ class User(ScrubyModel):
         ),
     ]
 
+class CalculateAverageAgeUsers(CustomTask):
+    """Calculate the average age of users."""
 
-async def task_calculate_average(
-    search_task_fn: Callable,
-    filter_fn: Callable,
-    branch_numbers: range,
-    hash_reduce_left: int,
-    db_root: str,
-    class_model: Any,
-    mode: int,
-    max_workers: int | None,
-    stop_signal: Event,
-) -> float:
-    """Custom task.
+    def __init__(self) -> None:
+        """Initializing the task."""
+        self.stop_signal = False
+        self.average_age = Average(
+            precision=".00",  # Default = .00
+            rounding=ROUND_HALF_EVEN,  # Default = ROUND_HALF_EVEN
+        )
 
-    Calculate the average value.
-    """
-    average_age = Average(
-        precision=".00",           # Default = .00
-        rounding=ROUND_HALF_EVEN,  # Default = ROUND_HALF_EVEN
-    )
-    # Run quantum loop
-    with ThreadPoolExecutor(max_workers) as executor:
-        futures: list[Future] = [
-            executor.submit(
-                search_task_fn,
-                filter_fn,
-                branch_number,
-                hash_reduce_left,
-                db_root,
-                class_model,
-                mode,
-                stop_signal,
-            )
-            for branch_number in branch_numbers
-        ]
-        for future in as_completed(futures):
-            docs = await future.result()
-            if docs is not None:
-                for doc in docs:
-                    average_age.set(doc.age)
-    return float(average_age.get())
+    def accept(self, doc: Any) -> None:
+        """Operation with a document."""
+        self.average_age.set(doc.age)
+
+    def result(self) -> Any | None:
+        """Return result."""
+        return float(self.average_age.get())
 
 
 async def main() -> None:
@@ -94,7 +72,7 @@ async def main() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(task_calculate_average)
+    result = await user_coll.run_custom_task(CalculateAverageAgeUsers())
     print(result)  # => 50.0
 
     # Full database deletion.
@@ -112,23 +90,18 @@ if __name__ == "__main__":
 """Aggregation class for calculating sum of values."""
 
 import anyio
-from concurrent.futures import Future, ThreadPoolExecutor, as_completed
-from threading import Event
-from collections.abc import Callable
-from typing import Annotated, Any
-
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyModel
+from scruby import CustomTask, Scruby, ScrubyModel
 from scruby.aggregation import Counter
 
 
 class User(ScrubyModel):
     """User model."""
+
     first_name: str
-    last_name: str
-    birthday: datetime
+    age: int
     email: EmailStr
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164"), Field(strict=False)]
     # key is always at bottom
@@ -141,56 +114,26 @@ class User(ScrubyModel):
     ]
 
 
-async def task_counter(
-    search_task_fn: Callable,
-    filter_fn: Callable,
-    branch_numbers: range,
-    hash_reduce_left: int,
-    db_root: str,
-    class_model: Any,
-    mode: int,
-    max_workers: int | None,
-    stop_signal: Event,
-    limit_docs: int = 1000,  # custom parameter
-) -> list[User]:
-    """Custom task.
+class LimitUserSelection(CustomTask):
+    """Limit user selection."""
 
-    This task implements a counter of documents.
-    """
-    counter = Counter(limit=limit_docs)  # `limit` by default = 1000
-    users: list[User] = []
-    # Run quantum loop
-    with ThreadPoolExecutor(max_workers) as executor:
-        futures: list[Future] = [
-            executor.submit(
-                search_task_fn,
-                filter_fn,
-                branch_number,
-                hash_reduce_left,
-                db_root,
-                class_model,
-                mode,
-                stop_signal,
-            )
-            for branch_number in branch_numbers
-        ]
-        for future in as_completed(futures):
-            docs = await future.result()
-            if docs is not None:
-                for doc in docs:
-                    if counter.check():
-                        # Cancel all pending tasks in the queue instantly
-                        executor.shutdown(wait=False, cancel_futures=True)
-                        # Trigger the event to tell running tasks to exit
-                        stop_signal.set()
-                        # Stop loops
-                        stop_outer_loop = True
-                        break
-                    users.append(doc)
-                    counter.next()
-            if stop_outer_loop:
-                break
-    return users
+    def __init__(self, limit_docs: int = 5) -> None:
+        """Initializing the task."""
+        self.stop_signal = False
+        self.counter = Counter(limit=limit_docs)  # `limit` by default = 1000
+        self.users: list[User] = []
+
+    def accept(self, doc: Any) -> None:
+        """Operation with a document."""
+        if self.counter.check():
+            self.stop_signal = True
+            return
+        self.users.append(doc)
+        self.counter.next()
+
+    def result(self) -> Any | None:
+        """Return result."""
+        return self.users
 
 
 async def main() -> None:
@@ -212,7 +155,7 @@ async def main() -> None:
         await user_coll.add_doc(user)
 
     result = await user_coll.run_custom_task(
-        custom_task_fn=task_counter,
+        custom_task=LimitUserSelection(limit_docs=5),
         limit_docs=5,  # custom parameter
     )
     print(len(result))  # => 5
@@ -232,23 +175,18 @@ if __name__ == "__main__":
 """Aggregation class for calculating the maximum value."""
 
 import anyio
-from concurrent.futures import Future, ThreadPoolExecutor, as_completed
-from threading import Event
-from collections.abc import Callable
-from typing import Annotated, Any
-
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyModel
+from scruby import CustomTask, Scruby, ScrubyModel
 from scruby.aggregation import Max
 
 
 class User(ScrubyModel):
     """User model."""
+
     first_name: str
-    last_name: str
-    birthday: datetime
+    age: int
     email: EmailStr
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164"), Field(strict=False)]
     # key is always at bottom
@@ -261,43 +199,21 @@ class User(ScrubyModel):
     ]
 
 
-async def task_calculate_max(
-    search_task_fn: Callable,
-    filter_fn: Callable,
-    branch_numbers: range,
-    hash_reduce_left: int,
-    db_root: str,
-    class_model: Any,
-    mode: int,
-    max_workers: int | None,
-    stop_signal: Event,
-) -> int:
-    """Custom task.
+class CalculateMaxAgeUsers(CustomTask):
+    """Calculate the maximum age of users."""
 
-    Calculate the max value.
-    """
-    max_age = Max()
-    # Run quantum loop
-    with ThreadPoolExecutor(max_workers) as executor:
-        futures: list[Future] = [
-            executor.submit(
-                search_task_fn,
-                filter_fn,
-                branch_number,
-                hash_reduce_left,
-                db_root,
-                class_model,
-                mode,
-                stop_signal,
-            )
-            for branch_number in branch_numbers
-        ]
-        for future in as_completed(futures):
-            docs = await future.result()
-            if docs is not None:
-                for doc in docs:
-                    max_age.set(doc.age)
-    return max_age.get()
+    def __init__(self) -> None:
+        """Initializing the task."""
+        self.stop_signal = False
+        self.max_age = Max()
+
+    def accept(self, doc: Any) -> None:
+        """Operation with a document."""
+        self.max_age.set(doc.age)
+
+    def result(self) -> Any | None:
+        """Return result."""
+        return self.max_age.get()
 
 
 async def main() -> None:
@@ -318,7 +234,7 @@ async def main() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(task_calculate_max)
+    result = await user_coll.run_custom_task(CalculateMaxAgeUsers())
     print(result)  # => 90.0
 
     # Full database deletion.
@@ -336,23 +252,18 @@ if __name__ == "__main__":
 """Aggregation class for calculating the minimum value."""
 
 import anyio
-from concurrent.futures import Future, ThreadPoolExecutor, as_completed
-from threading import Event
-from collections.abc import Callable
-from typing import Annotated, Any
-
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyModel
+from scruby import CustomTask, Scruby, ScrubyModel
 from scruby.aggregation import Min
 
 
 class User(ScrubyModel):
     """User model."""
+
     first_name: str
-    last_name: str
-    birthday: datetime
+    age: int
     email: EmailStr
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164"), Field(strict=False)]
     # key is always at bottom
@@ -365,43 +276,21 @@ class User(ScrubyModel):
     ]
 
 
-async def task_calculate_min(
-    search_task_fn: Callable,
-    filter_fn: Callable,
-    branch_numbers: range,
-    hash_reduce_left: int,
-    db_root: str,
-    class_model: Any,
-    mode: int,
-    max_workers: int | None,
-    stop_signal: Event,
-) -> int:
-    """Custom task.
+class CalculateMinAgeUsers(CustomTask):
+    """Calculate the minimum age of users."""
 
-    Calculate the min value.
-    """
-    min_age = Min()
-    # Run quantum loop
-    with ThreadPoolExecutor(max_workers) as executor:
-        futures: list[Future] = [
-            executor.submit(
-                search_task_fn,
-                filter_fn,
-                branch_number,
-                hash_reduce_left,
-                db_root,
-                class_model,
-                mode,
-                stop_signal,
-            )
-            for branch_number in branch_numbers
-        ]
-        for future in as_completed(futures):
-            docs = await future.result()
-            if docs is not None:
-                for doc in docs:
-                    min_age.set(doc.age)
-    return min_age.get()
+    def __init__(self) -> None:
+        """Initializing the task."""
+        self.stop_signal = False
+        self.min_age = Min()
+
+    def accept(self, doc: Any) -> None:
+        """Operation with a document."""
+        self.min_age.set(doc.age)
+
+    def result(self) -> Any | None:
+        """Return result."""
+        return self.min_age.get()
 
 
 async def main() -> None:
@@ -422,7 +311,7 @@ async def main() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(task_calculate_min)
+    result = await user_coll.run_custom_task(CalculateMinAgeUsers())
     print(result)  # => 10.0
 
     # Full database deletion.
@@ -440,23 +329,18 @@ if __name__ == "__main__":
 """Aggregation class for calculating sum of values."""
 
 import anyio
-from concurrent.futures import Future, ThreadPoolExecutor, as_completed
-from threading import Event
-from collections.abc import Callable
-from typing import Annotated, Any
-
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyModel
+from scruby import CustomTask, Scruby, ScrubyModel
 from scruby.aggregation import Sum
 
 
 class User(ScrubyModel):
     """User model."""
+
     first_name: str
-    last_name: str
-    birthday: datetime
+    age: int
     email: EmailStr
     phone: Annotated[PhoneNumber, PhoneNumberValidator(number_format="E164"), Field(strict=False)]
     # key is always at bottom
@@ -469,43 +353,21 @@ class User(ScrubyModel):
     ]
 
 
-async def task_calculate_sum(
-    search_task_fn: Callable,
-    filter_fn: Callable,
-    branch_numbers: range,
-    hash_reduce_left: int,
-    db_root: str,
-    class_model: Any,
-    mode: int,
-    max_workers: int | None,
-    stop_signal: Event,
-) -> int:
-    """Custom task.
+class CalculateTotalAgeUsers(CustomTask):
+    """Calculate the total age of users."""
 
-    Calculate the sum of values.
-    """
-    sum_age = Sum()
-    # Run quantum loop
-    with ThreadPoolExecutor(max_workers) as executor:
-        futures: list[Future] = [
-            executor.submit(
-                search_task_fn,
-                filter_fn,
-                branch_number,
-                hash_reduce_left,
-                db_root,
-                class_model,
-                mode,
-                stop_signal,
-            )
-            for branch_number in branch_numbers
-        ]
-        for future in as_completed(futures):
-            docs = await future.result()
-            if docs is not None:
-                for doc in docs:
-                    sum_age.set(doc.age)
-    return int(sum_age.get())
+    def __init__(self) -> None:
+        """Initializing the task."""
+        self.stop_signal = False
+        self.sum_age = Sum()
+
+    def accept(self, doc: Any) -> None:
+        """Operation with a document."""
+        self.sum_age.set(doc.age)
+
+    def result(self) -> Any | None:
+        """Return result."""
+        return int(self.sum_age.get())
 
 
 async def main() -> None:
@@ -526,7 +388,7 @@ async def main() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(task_calculate_sum)
+    result = await user_coll.run_custom_task(CalculateTotalAgeUsers())
     print(result)  # => 450.0
 
     # Full database deletion.
