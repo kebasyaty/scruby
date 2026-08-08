@@ -2,6 +2,9 @@
 
 #### v4.0.0 2026-08-08
 
+- All reasons that could lead to unrealistic production requirements have been eliminated.
+- Now uses `aiodbm` to work with documents on the file system.
+- The principle of creating custom tasks has been updated.
 - [See documentation](https://kebasyaty.github.io/scruby/latest/pages/usage/ "See documentation").
 
 #### v3.0.0 2026-08-04
