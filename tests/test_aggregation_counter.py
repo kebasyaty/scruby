@@ -35,7 +35,7 @@ class User(ScrubyModel):
     ]
 
 
-class CounterUser(CustomTask):
+class LimitUserSelection(CustomTask):
     """Limit user selection."""
 
     def __init__(self, limit_docs: int = 5) -> None:
@@ -75,12 +75,12 @@ async def test_task_counter() -> None:
         await coll_user.add_doc(user)
 
     result = await coll_user.run_custom_task(
-        custom_task=CounterUser(limit_docs=5),
+        custom_task=LimitUserSelection(limit_docs=5),
     )
     assert len(result) == 5
 
     result = await coll_user.run_custom_task(
-        custom_task=CounterUser(),
+        custom_task=LimitUserSelection(),
         filter_fn=lambda doc: doc.first_name == "John",
     )
     assert len(result) == 5
