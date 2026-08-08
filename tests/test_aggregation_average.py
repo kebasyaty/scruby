@@ -39,7 +39,7 @@ class User(ScrubyModel):
     ]
 
 
-class CalculateAverageAge(CustomTask):
+class CalculateAverageAgeUsers(CustomTask):
     """Calculate the average age of users."""
 
     def __init__(self) -> None:
@@ -76,7 +76,7 @@ async def test_task_calculate_average() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(custom_task=CalculateAverageAge())
+    result = await user_coll.run_custom_task(custom_task=CalculateAverageAgeUsers())
     assert result == pytest.approx(50.0)
     #
     # Delete DB.
