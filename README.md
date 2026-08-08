@@ -4,7 +4,7 @@
       <img
         width="100%"
         alt="Logo"
-        src="https://raw.githubusercontent.com/kebasyaty/scruby/v3/assets/logo.png">
+        src="https://raw.githubusercontent.com/kebasyaty/scruby/v4/assets/logo.png">
     </a>
   </p>
   <p>
@@ -21,8 +21,8 @@
       <a href="https://docs.astral.sh/ruff/" alt="Code style: Ruff"><img src="https://img.shields.io/badge/code%20style-Ruff-FDD835.svg" alt="Code style: Ruff"></a>
       <a href="https://pypi.org/project/scruby"><img src="https://img.shields.io/pypi/format/scruby" alt="Format"></a>
       <a href="https://pepy.tech/projects/scruby"><img src="https://static.pepy.tech/badge/scruby" alt="PyPI Downloads"></a>
-      <a href="https://github.com/kebasyaty/scruby/blob/v3/MIT-LICENSE" alt="License: MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
-      <a href="https://github.com/kebasyaty/scruby/blob/v3/GPL-3.0-LICENSE" alt="License: GPL v3"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
+      <a href="https://github.com/kebasyaty/scruby/blob/v4/MIT-LICENSE" alt="License: MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+      <a href="https://github.com/kebasyaty/scruby/blob/v4/GPL-3.0-LICENSE" alt="License: GPL v3"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
     </p>
     <p align="center">
       The library uses fractal-tree addressing and<br>
@@ -47,7 +47,7 @@
 
 <br>
 
-<img src="https://raw.githubusercontent.com/kebasyaty/scruby/v3/assets/attention.svg" alt="Attention">
+<img src="https://raw.githubusercontent.com/kebasyaty/scruby/v4/assets/attention.svg" alt="Attention">
 <p>
   <b>Version 3.0</b>
   <br>
@@ -76,11 +76,11 @@
 <br>
 <br>
 
-[![List of plugins](https://raw.githubusercontent.com/kebasyaty/scruby/v3/assets/links/plugins.svg "List of plugins")](https://github.com/kebasyaty/scruby/blob/v3/PLUGINS.md "List of plugins")
+[![List of plugins](https://raw.githubusercontent.com/kebasyaty/scruby/v4/assets/links/plugins.svg "List of plugins")](https://github.com/kebasyaty/scruby/blob/v4/PLUGINS.md "List of plugins")
 
-[![Documentation](https://raw.githubusercontent.com/kebasyaty/scruby/v3/assets/links/documentation.svg "Documentation")](https://kebasyaty.github.io/scruby/ "Documentation")
+[![Documentation](https://raw.githubusercontent.com/kebasyaty/scruby/v4/assets/links/documentation.svg "Documentation")](https://kebasyaty.github.io/scruby/ "Documentation")
 
-[![Requirements](https://raw.githubusercontent.com/kebasyaty/scruby/v3/assets/links/requirements.svg "Requirements")](https://github.com/kebasyaty/scruby/blob/v3/REQUIREMENTS.md "Requirements")
+[![Requirements](https://raw.githubusercontent.com/kebasyaty/scruby/v4/assets/links/requirements.svg "Requirements")](https://github.com/kebasyaty/scruby/blob/v4/REQUIREMENTS.md "Requirements")
 
 ## Installation
 
@@ -99,7 +99,7 @@ uv run python -OOP main.py
 
 ## Usage
 
-[![Examples](https://raw.githubusercontent.com/kebasyaty/scruby/v3/assets/links/more-examples.svg "Examples")](https://kebasyaty.github.io/scruby/latest/pages/usage/ "Examples")
+[![Examples](https://raw.githubusercontent.com/kebasyaty/scruby/v4/assets/links/more-examples.svg "Examples")](https://kebasyaty.github.io/scruby/latest/pages/usage/ "Examples")
 
 ```python
 """Operations with keys."""
@@ -452,8 +452,8 @@ if __name__ == "__main__":
 
 <br>
 
-[![Changelog](https://raw.githubusercontent.com/kebasyaty/scruby/v3/assets/links/changelog.svg "Changelog")](https://github.com/kebasyaty/scruby/blob/v3/CHANGELOG.md "Changelog")
+[![Changelog](https://raw.githubusercontent.com/kebasyaty/scruby/v4/assets/links/changelog.svg "Changelog")](https://github.com/kebasyaty/scruby/blob/v4/CHANGELOG.md "Changelog")
 
-[![MIT](https://raw.githubusercontent.com/kebasyaty/scruby/v3/assets/links/mit.svg "MIT")](https://github.com/kebasyaty/scruby/blob/v3/MIT-LICENSE "MIT")
+[![MIT](https://raw.githubusercontent.com/kebasyaty/scruby/v4/assets/links/mit.svg "MIT")](https://github.com/kebasyaty/scruby/blob/v4/MIT-LICENSE "MIT")
 
-[![GPL-3.0](https://raw.githubusercontent.com/kebasyaty/scruby/v3/assets/links/gpl-3.0-or-later.svg "GPL-3.0")](https://github.com/kebasyaty/scruby/blob/v3/GPL-3.0-LICENSE "GPL-3.0")
+[![GPL-3.0](https://raw.githubusercontent.com/kebasyaty/scruby/v4/assets/links/gpl-3.0-or-later.svg "GPL-3.0")](https://github.com/kebasyaty/scruby/blob/v4/GPL-3.0-LICENSE "GPL-3.0")

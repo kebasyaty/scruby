@@ -2,16 +2,13 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
-from concurrent.futures import Future, ThreadPoolExecutor, as_completed
-from threading import Event
 from typing import Annotated, Any
 
 import pytest
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyModel
+from scruby import CustomTask, Scruby, ScrubyModel
 from scruby.aggregation import Max
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
@@ -38,43 +35,21 @@ class User(ScrubyModel):
     ]
 
 
-async def task_calculate_max(
-    search_task_fn: Callable,
-    filter_fn: Callable,
-    branch_numbers: range,
-    hash_reduce_left: int,
-    db_root: str,
-    class_model: Any,
-    mode: int,
-    max_workers: int | None,
-    stop_signal: Event,
-) -> int:
-    """Custom task.
+class CalculateMaxAge(CustomTask):
+    """Calculate the maximum age of users."""
 
-    Calculate the max value.
-    """
-    max_age = Max()
-    # Run quantum loop
-    with ThreadPoolExecutor(max_workers) as executor:
-        futures: list[Future] = [
-            executor.submit(
-                search_task_fn,
-                filter_fn,
-                branch_number,
-                hash_reduce_left,
-                db_root,
-                class_model,
-                mode,
-                stop_signal,
-            )
-            for branch_number in branch_numbers
-        ]
-        for future in as_completed(futures):
-            docs = await future.result()
-            if docs is not None:
-                for doc in docs:
-                    max_age.set(doc.age)
-    return max_age.get()
+    def __init__(self) -> None:
+        """Initializing the task."""
+        self.stop_signal = False
+        self.max_age = Max()
+
+    def accept(self, doc: Any) -> None:
+        """Operation with a document."""
+        self.max_age.set(doc.age)
+
+    def result(self) -> Any | None:
+        """Return result."""
+        return self.max_age.get()
 
 
 # Activate database.
@@ -94,7 +69,7 @@ async def test_task_calculate_max() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(task_calculate_max)
+    result = await user_coll.run_custom_task(CalculateMaxAge())
     assert result == pytest.approx(90.0)
     #
     # Delete DB.

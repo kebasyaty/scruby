@@ -112,6 +112,8 @@ class Update:
                 )
                 for branch_number in branch_numbers
             ]
+
             for future in as_completed(futures):
                 counter += await future.result()
+
         return counter

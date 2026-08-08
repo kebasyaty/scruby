@@ -58,6 +58,7 @@ class Delete:
                     if filter_fn(doc):
                         await leaf_db.delete(key)
                         counter -= 1
+
         return counter
 
     @final
@@ -102,8 +103,11 @@ class Delete:
                 )
                 for branch_number in branch_numbers
             ]
+
             for future in as_completed(futures):
                 counter += await future.result()
+
         if counter < 0:
             await self._counter_documents(counter)
+
         return abs(counter)

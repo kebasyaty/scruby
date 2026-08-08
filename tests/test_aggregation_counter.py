@@ -2,16 +2,13 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
-from concurrent.futures import Future, ThreadPoolExecutor, as_completed
-from threading import Event
 from typing import Annotated, Any
 
 import pytest
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
 
-from scruby import Scruby, ScrubyModel
+from scruby import CustomTask, Scruby, ScrubyModel
 from scruby.aggregation import Counter
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
@@ -38,57 +35,26 @@ class User(ScrubyModel):
     ]
 
 
-async def task_counter(
-    search_task_fn: Callable,
-    filter_fn: Callable,
-    branch_numbers: range,
-    hash_reduce_left: int,
-    db_root: str,
-    class_model: Any,
-    mode: int,
-    max_workers: int | None,
-    stop_signal: Event,
-    limit_docs=5,  # custom parameter
-) -> list[User]:
-    """Custom task.
+class TestCounter(CustomTask):
+    """Test Counter."""
 
-    This task implements a counter of documents.
-    """
-    stop_outer_loop: bool = False
-    counter = Counter(limit=limit_docs)  # `limit` by default = 1000
-    users: list[User] = []
-    # Run quantum loop
-    with ThreadPoolExecutor(max_workers) as executor:
-        futures: list[Future] = [
-            executor.submit(
-                search_task_fn,
-                filter_fn,
-                branch_number,
-                hash_reduce_left,
-                db_root,
-                class_model,
-                mode,
-                stop_signal,
-            )
-            for branch_number in branch_numbers
-        ]
-        for future in as_completed(futures):
-            docs = await future.result()
-            if docs is not None:
-                for doc in docs:
-                    if counter.check():
-                        # Cancel all pending tasks in the queue instantly
-                        executor.shutdown(wait=False, cancel_futures=True)
-                        # Trigger the event to tell running tasks to exit
-                        stop_signal.set()
-                        # Stop loops
-                        stop_outer_loop = True
-                        break
-                    users.append(doc)
-                    counter.next()
-            if stop_outer_loop:
-                break
-    return users
+    def __init__(self, limit_docs: int = 5) -> None:
+        """Initializing the task."""
+        self.stop_signal = False
+        self.counter = Counter(limit=limit_docs)  # `limit` by default = 1000
+        self.users: list[User] = []
+
+    def accept(self, doc: Any) -> None:
+        """Operation with a document."""
+        if self.counter.check():
+            self.stop_signal = True
+            return
+        self.users.append(doc)
+        self.counter.next()
+
+    def result(self) -> Any | None:
+        """Return result."""
+        return self.users
 
 
 # Activate database.
@@ -109,15 +75,13 @@ async def test_task_counter() -> None:
         await coll_user.add_doc(user)
 
     result = await coll_user.run_custom_task(
-        custom_task_fn=task_counter,
-        limit_docs=5,  # optional
+        custom_task=TestCounter(limit_docs=5),
     )
     assert len(result) == 5
 
     result = await coll_user.run_custom_task(
-        custom_task_fn=task_counter,
+        custom_task=TestCounter(),
         filter_fn=lambda doc: doc.first_name == "John",
-        limit_docs=5,  # custom parameter
     )
     assert len(result) == 5
     #
