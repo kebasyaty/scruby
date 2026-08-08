@@ -35,7 +35,7 @@ class User(ScrubyModel):
     ]
 
 
-class CalculateMinAge(CustomTask):
+class CalculateMinAgeUsers(CustomTask):
     """Calculate the minimum age of users."""
 
     def __init__(self) -> None:
@@ -69,7 +69,7 @@ async def test_task_calculate_min() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(CalculateMinAge())
+    result = await user_coll.run_custom_task(CalculateMinAgeUsers())
     assert result == pytest.approx(10.0)
     #
     # Delete DB.
