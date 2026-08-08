@@ -122,7 +122,7 @@ class SalaryInfoAsJson(CustomTask):
             self.salary_info["count_sellers"] = count_sellers
             self.salary_info["salesman_list"] = [doc.model_dump() for doc in self.salesman_list]
         # Convert to JSON-string
-        result_json: str = orjson.dumps(self.salesman_list).decode("utf-8")
+        result_json: str = orjson.dumps(self.salary_info).decode("utf-8")
         # Return
         return result_json if count_sellers > 0 else None
 
