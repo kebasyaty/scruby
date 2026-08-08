@@ -35,7 +35,7 @@ class User(ScrubyModel):
     ]
 
 
-class CalculateMaxAge(CustomTask):
+class CalculateMaxAgeUsers(CustomTask):
     """Calculate the maximum age of users."""
 
     def __init__(self) -> None:
@@ -69,7 +69,7 @@ async def test_task_calculate_max() -> None:
         )
         await user_coll.add_doc(user)
 
-    result = await user_coll.run_custom_task(CalculateMaxAge())
+    result = await user_coll.run_custom_task(CalculateMaxAgeUsers())
     assert result == pytest.approx(90.0)
     #
     # Delete DB.
