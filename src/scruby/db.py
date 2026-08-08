@@ -215,7 +215,7 @@ class Scruby(
                 if hash_reduce_left == 0:
                     msg = "For `hash_reduce_left = 0` there is no access to plugins."
                     raise AssertionError(msg)
-                current_version = 3
+                current_version = 4
                 for plugin in plugins:
                     if current_version != plugin.SCRUBY_VERSION:
                         msg = f"Plugin `{plugin.__name__}` does not apply to version {current_version}."
