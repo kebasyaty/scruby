@@ -115,6 +115,7 @@ from scruby import Scruby, ScrubyModel
 
 class User(ScrubyModel):
     """User model."""
+
     first_name: str
     last_name: str
     birthday: datetime
@@ -289,6 +290,7 @@ from scruby import ReturnType, Scruby, ScrubyModel
 
 class Phone(ScrubyModel):
     """Phone model."""
+
     brand: Annotated[str, Field(frozen=True)]
     model: Annotated[str, Field(frozen=True)]
     screen_diagonal: float
@@ -364,6 +366,7 @@ from scruby import ReturnType, Scruby, ScrubyModel
 
 class Car(ScrubyModel):
     """Car model."""
+
     brand: Annotated[str, Field(frozen=True)]
     model: Annotated[str, Field(frozen=True)]
     year: int
