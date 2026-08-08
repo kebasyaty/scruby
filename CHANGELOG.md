@@ -1,9 +1,13 @@
 ### CHANGELOG
 
+#### v4.0.0 2026-08-08
+
+- [See documentation](https://kebasyaty.github.io/scruby/latest/pages/usage/ "See documentation").
+
 #### v3.0.0 2026-08-04
 
 - All reasons that could lead to inadequate production requirements have been eliminated.
-- See README.md and documentation.
+- See README.md and [documentation](https://kebasyaty.github.io/scruby/latest/pages/usage/ "documentation").
 
 #### v2.7.0 2026-07-6
 
