@@ -49,9 +49,13 @@
 
 <img src="https://raw.githubusercontent.com/kebasyaty/scruby/v4/assets/attention.svg" alt="Attention">
 <p>
-  <b>Version 3.0</b>
+  <b>Version 4.0</b>
   <br>
   All reasons that could lead to unrealistic production requirements have been eliminated.
+  <br>
+  Now uses `aiodbm` to work with documents on the file system.
+  <br>
+  The principle of creating custom tasks has been updated.
   <br>
   <a href="https://kebasyaty.github.io/scruby/latest/pages/usage/" alt="See documentation">See documentation.</a>
 </p>
