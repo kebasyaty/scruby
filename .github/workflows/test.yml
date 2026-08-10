@@ -41,6 +41,8 @@ jobs:
 
       - name: Run tests
         run: |
+          uv run pytest -v tests/test_migration.py
+          uv run pytest -v tests/test_migration_2.py
           uv run pytest -v tests/test_utils.py
           uv run pytest -v tests/test_config.py
           uv run pytest -v tests/test_inheritance.py

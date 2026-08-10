@@ -1,4 +1,4 @@
-"""Test usage of database."""
+"""Test Migration."""
 
 from __future__ import annotations
 
@@ -71,32 +71,16 @@ class Car(ScrubyModel):
     ]
 
 
-# Activate database.
-Scruby.run()
+async def test_migration() -> None:
+    """Test Migration.
 
+    Add collections and docs to databse.
+    """
+    # Activate database.
+    Scruby.run()
 
-async def test_user() -> None:
-    """Test User 1."""
     # Get collection `User`.
     user_coll = Scruby(User)
-
-    # Create user.
-    user = User(
-        first_name="John",
-        last_name="Smith",
-        birthday=datetime(1970, 1, 1, tzinfo=ZoneInfo("UTC")),
-        email="John_Smith@gmail.com",
-        phone="+447986123456",
-    )
-
-    await user_coll.add_doc(user)
-
-
-async def test_user_2() -> None:
-    """Test User 2."""
-    # Get collection `User`.
-    user_coll = Scruby(User)
-
     # Create user.
     user = User(
         first_name="John_2",
@@ -105,16 +89,11 @@ async def test_user_2() -> None:
         email="John_Smith_2@gmail.com",
         phone="+447986123457",
     )
-
     # Add user to collection.
     await user_coll.add_doc(user)
 
-
-async def test_phone() -> None:
-    """Test Phone."""
     # Get collection `Phone`.
     phone_coll = Scruby(Phone)
-
     # Create phone.
     phone = Phone(
         brand="Samsung",
@@ -122,16 +101,11 @@ async def test_phone() -> None:
         screen_diagonal=6.7,
         matrix_type="Super AMOLED",
     )
-
     # Add phone to collection.
     await phone_coll.add_doc(phone)
 
-
-async def test_car() -> None:
-    """Test Car."""
     # Get collection `Car`.
     car_coll = Scruby(Car)
-
     # Create car.
     car = Car(
         brand="Mazda",
@@ -139,9 +113,11 @@ async def test_car() -> None:
         year=2025,
         power_reserve=600,
     )
-
     # Add car to collection.
     await car_coll.add_doc(car)
+
     #
-    # Delete DB.
-    Scruby.napalm()
+    collection_name_list: list[str] = [item.__name__ for item in ScrubyModel.__subclasses__()]
+    assert "User" in collection_name_list
+    assert "Phone" in collection_name_list
+    assert "Car" in collection_name_list
