@@ -111,12 +111,18 @@ class Keys:
     async def get_doc(
         self,
         key: str,
+        include_fields: set[str] | None = None,
+        exclude_fields: set[str] | None = None,
         return_type: ReturnType = ReturnType.MODEL,
     ) -> Any | None:
         """Asynchronous method for getting document from collection the by key.
 
         Args:
             key (str): Key name.
+            include_fields: (set[str] | None): A set of fields to include in the output.
+                                               Available for `ReturnType.JSON` and `ReturnType.DICT`.
+            exclude_fields: (set[str] | None): A set of fields to exclude from the output.
+                                               Available for `ReturnType.JSON` and `ReturnType.DICT`.
             return_type (ReturnType): ScrubyModel, JSON-string or Dictionary.
 
         Returns:
@@ -128,22 +134,24 @@ class Keys:
         # Get the path to the collection cell
         leaf_path, prepared_key = await self._get_leaf_path(key)
 
+        model_dump_kwargs = {"include": include_fields, "exclude": exclude_fields}
+
         async with aiodbm.open(str(leaf_path), flag="c", mode=self._mode) as leaf_db:
             # If the key is missing, return None
             if not await leaf_db.exists(prepared_key):
                 return None
 
             # Get json by key
-            doc_json = await leaf_db.get(prepared_key)
+            doc = self._class_model.model_validate_json(await leaf_db.get(prepared_key))
 
             # Return document
             match return_type.value:
                 case 1:
-                    return self._class_model.model_validate_json(doc_json)
+                    return doc
                 case 2:
-                    return doc_json
+                    return doc.model_dump_json(**model_dump_kwargs)
                 case 3:
-                    return self._class_model.model_validate_json(doc_json).model_dump()
+                    return doc.model_dump(**model_dump_kwargs)
                 case _ as unreachable:
                     assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
