@@ -488,7 +488,7 @@ class TestPositive:
         assert isinstance(doc, ScrubyModel)
         assert doc.phone == "+447986123456"
 
-        # Get as JSON
+        # Get user in json format
         doc_json: str | None = await user_coll.get_doc(
             "+447986123456",
             return_type=ReturnType.JSON,
@@ -497,7 +497,7 @@ class TestPositive:
         doc = user.model_validate_json(doc_json)
         assert doc.phone == "+447986123456"
 
-        # Get as Dict
+        # Get user in dictionary format
         doc_dict: dict | None = await user_coll.get_doc(
             "+447986123456",
             return_type=ReturnType.DICT,
