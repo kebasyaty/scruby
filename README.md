@@ -114,7 +114,7 @@ from zoneinfo import ZoneInfo
 from typing import Annotated
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
-from scruby import Scruby, ScrubyModel
+from scruby import ReturnType, Scruby, ScrubyModel
 
 
 class User(ScrubyModel):
@@ -165,6 +165,18 @@ async def main() -> None:
     # Get user details
     user = await user_coll.get_doc("+447986123456")
     await user_coll.get_doc("key missing")  # => None
+
+    # Get user in json format
+    user_json: str | None = await user_coll.get_doc(
+        "+447986123456",
+        return_type=ReturnType.JSON,
+    )
+
+    # Get user in dictionary format
+    user_dict: str | None = await user_coll.get_doc(
+        "+447986123456",
+        return_type=ReturnType.DICT,
+    )
 
     # Check for the presence of a key in the collection
     await user_coll.has_key("+447986123456")  # => True
@@ -338,13 +350,13 @@ async def main() -> None:
         filter_fn=lambda doc: doc.model == "Galaxy A26",
     )
 
-    # Return phone in JSON format
+    # Get phone in json format
     phone_details: str | None = await phone_coll.find_one(
         filter_fn=lambda doc: doc.model == "Galaxy A26",
         return_type=ReturnType.JSON,
     )
 
-    # Return phone in Dictionary format
+    # Get phone in dictionary format
     phone_details: dict | None = await phone_coll.find_one(
         filter_fn=lambda doc: doc.model == "Galaxy A26",
         return_type=ReturnType.DICT,
@@ -425,13 +437,13 @@ async def main() -> None:
         sort_reverse=True,
     )
 
-    # Return cars in JSON format
+    # Get cars in json format
     car_list: str | None = await car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
         return_type=ReturnType.JSON,
     )
 
-    # Return cars in Dictionary format
+    # Get cars in dictionary format
     car_list: list[dict] | None = await car_coll.find_many(
         filter_fn=lambda doc: doc.brand == "Mazda",
         return_type=ReturnType.DICT,

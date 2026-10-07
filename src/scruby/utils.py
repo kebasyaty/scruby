@@ -5,9 +5,24 @@ from __future__ import annotations
 __all__ = ("Utils",)
 
 
+from enum import Enum
 from pathlib import Path
 
 from dotenv import dotenv_values
+
+
+class ReturnType(Enum):
+    """Return type for a get_doc, find_one and find_many methods.
+
+    Members:
+        - `MODEL:` ScrubyModel type.
+        - `JSON:` JSON-string type.
+        - `DICT:` Dictionary type.
+    """
+
+    MODEL = 1
+    JSON = 2
+    DICT = 3
 
 
 class Utils:
