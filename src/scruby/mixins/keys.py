@@ -10,7 +10,7 @@ __all__ = ("Keys",)
 
 
 from datetime import datetime
-from typing import Any, final
+from typing import Any, Never, assert_never, final
 from zoneinfo import ZoneInfo
 
 import aiodbm
@@ -19,6 +19,7 @@ from scruby.errors import (
     KeyAlreadyExistsError,
     KeyNotExistsError,
 )
+from scruby.utils import ReturnType
 
 
 class Keys:
@@ -107,11 +108,16 @@ class Keys:
             await leaf_db.set(prepared_key, doc_json)
 
     @final
-    async def get_doc(self, key: str) -> Any | None:
+    async def get_doc(
+        self,
+        key: str,
+        return_type: ReturnType = ReturnType.MODEL,
+    ) -> Any | None:
         """Asynchronous method for getting document from collection the by key.
 
         Args:
             key (str): Key name.
+            return_type (ReturnType): ScrubyModel, JSON-string or Dictionary.
 
         Returns:
             Value of key or KeyError.
@@ -127,8 +133,19 @@ class Keys:
             if not await leaf_db.exists(prepared_key):
                 return None
 
+            # Get json by key
             doc_json = await leaf_db.get(prepared_key)
-            return self._class_model.model_validate_json(doc_json)
+
+            # Return document
+            match return_type.value:
+                case 1:
+                    return self._class_model.model_validate_json(doc_json)
+                case 2:
+                    return doc_json
+                case 3:
+                    return self._class_model.model_validate_json(doc_json).model_dump()
+                case _ as unreachable:
+                    assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
     @final
     async def has_key(self, key: str) -> bool:
