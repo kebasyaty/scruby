@@ -32,15 +32,14 @@ __all__ = (
     "ScrubyModel",
     "CryptModel",
     "ScrubyConfig",
-    "ReturnType",
     "CustomTask",
+    "ReturnType",
     "Utils",
 )
 
 
 from scruby.config import ScrubyConfig
 from scruby.db import Scruby
-from scruby.mixins.find import ReturnType
 from scruby.models import CryptModel, ScrubyModel
 from scruby.task import CustomTask
-from scruby.utils import Utils
+from scruby.utils import ReturnType, Utils

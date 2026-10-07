@@ -11,26 +11,13 @@ __all__ = ("Find",)
 import warnings
 from collections.abc import Callable
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed
-from enum import Enum
 from threading import Event
 from typing import Any, Never, assert_never, final
 
 import aiodbm
 from anyio import Path
 
-
-class ReturnType(Enum):
-    """Return type for a find_one and find_many methods.
-
-    Members:
-        - `MODEL:` ScrubyModel type.
-        - `JSON:` JSON-string type.
-        - `DICT:` Dictionary type.
-    """
-
-    MODEL = 1
-    JSON = 2
-    DICT = 3
+from scruby.utils import ReturnType
 
 
 class Find:
