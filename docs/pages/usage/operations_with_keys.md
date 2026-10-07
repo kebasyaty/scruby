@@ -9,7 +9,7 @@ from zoneinfo import ZoneInfo
 from typing import Annotated
 from pydantic import EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber, PhoneNumberValidator
-from scruby import Scruby, ScrubyModel
+from scruby import ReturnType, Scruby, ScrubyModel
 from pprint import pprint as pp
 
 
@@ -57,6 +57,18 @@ async def main() -> None:
     user = await user_coll.get_doc("+447986123456")
     pp(user)
     await user_coll.get_doc("key missing")  # => None
+
+    # Get user in json format
+    user_json: str | None = await user_coll.get_doc(
+        "+447986123456",
+        return_type=ReturnType.JSON,
+    )
+
+    # Get user in dictionary format
+    user_dict: str | None = await user_coll.get_doc(
+        "+447986123456",
+        return_type=ReturnType.DICT,
+    )
 
     await user_coll.has_key("+447986123456")  # => True
     await user_coll.has_key("key missing")  # => False
