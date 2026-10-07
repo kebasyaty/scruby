@@ -482,11 +482,30 @@ class TestPositive:
         )
 
         await user_coll.add_doc(user)
-        data: User | None = await user_coll.get_doc("+447986123456")
-        assert data.model_dump() == user.model_dump()
-        assert data.phone == "+447986123456"
 
-        # result is None
+        # Get as Model
+        doc: User | None = await user_coll.get_doc("+447986123456")
+        assert isinstance(doc, ScrubyModel)
+        assert doc.phone == "+447986123456"
+
+        # Get as JSON
+        doc_json: str | None = await user_coll.get_doc(
+            "+447986123456",
+            return_type=ReturnType.JSON,
+        )
+        assert isinstance(doc_json, str)
+        doc = user.model_validate_json(doc_json)
+        assert doc.phone == "+447986123456"
+
+        # Get as Dict
+        doc_dict: dict | None = await user_coll.get_doc(
+            "+447986123456",
+            return_type=ReturnType.DICT,
+        )
+        assert isinstance(doc_dict, dict)
+        assert doc_dict["phone"] == "+447986123456"
+
+        # None if using a non-existent key
         assert await user_coll.get_doc("key missing") is None
         #
         # Delete DB.
