@@ -1,5 +1,12 @@
 ### CHANGELOG
 
+#### v4.1.0 2026-10-07
+
+- Added `include_fields`, `exclude_fields` and `return_type` parameters to the `get_doc` method.
+- Updated README.md
+- Updated documentation.
+- Upgraded dependencies.
+
 #### v4.0.0 2026-08-08
 
 - All reasons that could lead to unrealistic production requirements have been eliminated.
