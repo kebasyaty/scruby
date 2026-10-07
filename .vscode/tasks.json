@@ -104,10 +104,10 @@
       "problemMatcher": []
     },
     {
-      "label": "MkDocs: Run Deploy 4.0",
+      "label": "MkDocs: Run Deploy 4.1",
       "type": "shell",
       "command": [
-        "uv run mike deploy --push --update-aliases 4.0 latest;",
+        "uv run mike deploy --push --update-aliases 4.1 latest;",
         "uv run mike set-default --push latest"
       ],
       "problemMatcher": []
