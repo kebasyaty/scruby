@@ -1137,7 +1137,7 @@ wheels = [
 
 [[package]]
 name = "scruby"
-version = "4.1.0"
+version = "4.1.1"
 source = { editable = "." }
 default-groups = ["dev", "docs", "lint", "test", "types"]
 dependencies = [
