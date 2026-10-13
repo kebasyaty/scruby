@@ -134,8 +134,6 @@ class Keys:
         # Get the path to the collection cell
         leaf_path, prepared_key = await self._get_leaf_path(key)
 
-        model_dump_kwargs = {"include": include_fields, "exclude": exclude_fields}
-
         async with aiodbm.open(str(leaf_path), flag="c", mode=self._mode) as leaf_db:
             # If the key is missing, return None
             if not await leaf_db.exists(prepared_key):
@@ -149,9 +147,9 @@ class Keys:
                 case 1:
                     return doc
                 case 2:
-                    return doc.model_dump_json(**model_dump_kwargs)
+                    return doc.model_dump_json(include=include_fields, exclude=exclude_fields)
                 case 3:
-                    return doc.model_dump(**model_dump_kwargs)
+                    return doc.model_dump(include=include_fields, exclude=exclude_fields)
                 case _ as unreachable:
                     assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 

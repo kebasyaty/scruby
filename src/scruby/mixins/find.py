@@ -98,7 +98,6 @@ class Find:
         hash_reduce_left: int = self._hash_reduce_left
         assert hash_reduce_left != 0, "Scruby.run(hash_reduce_left = 0) - Not valid for `find_one` method."
 
-        model_dump_kwargs = {"include": include_fields, "exclude": exclude_fields}
         search_task_fn: Callable = self._task_find
         branch_numbers: range = range(self._max_number_branch)
         db_root: str = self._db_root
@@ -140,9 +139,23 @@ class Find:
             case 1:
                 return doc
             case 2:
-                return doc.model_dump_json(**model_dump_kwargs) if doc is not None else None
+                return (
+                    doc.model_dump_json(
+                        include=include_fields,
+                        exclude=exclude_fields,
+                    )
+                    if doc is not None
+                    else None
+                )
             case 3:
-                return doc.model_dump(**model_dump_kwargs) if doc is not None else None
+                return (
+                    doc.model_dump(
+                        include=include_fields,
+                        exclude=exclude_fields,
+                    )
+                    if doc is not None
+                    else None
+                )
             case _ as unreachable:
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
@@ -196,7 +209,6 @@ class Find:
         hash_reduce_left: int = self._hash_reduce_left
         assert hash_reduce_left != 0, "Scruby.run(hash_reduce_left = 0) - Not valid for `find_many` method."
 
-        model_dump_kwargs = {"include": include_fields, "exclude": exclude_fields}
         search_task_fn: Callable = self._task_find
         branch_numbers: range = range(self._max_number_branch)
         db_root: str = self._db_root
@@ -255,11 +267,31 @@ class Find:
                 return result or None
             case 2:
                 return (
-                    f"[{','.join([doc.model_dump_json(**model_dump_kwargs) for doc in result])}]"
+                    f"[{
+                        ','.join(
+                            [
+                                doc.model_dump_json(
+                                    include=include_fields,
+                                    exclude=exclude_fields,
+                                )
+                                for doc in result
+                            ]
+                        )
+                    }]"
                     if result is not None
                     else None
                 )
             case 3:
-                return [doc.model_dump(**model_dump_kwargs) for doc in result] if result is not None else None
+                return (
+                    [
+                        doc.model_dump(
+                            include=include_fields,
+                            exclude=exclude_fields,
+                        )
+                        for doc in result
+                    ]
+                    if result is not None
+                    else None
+                )
             case _ as unreachable:
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
